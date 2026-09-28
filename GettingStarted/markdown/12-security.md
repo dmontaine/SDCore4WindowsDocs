@@ -19,6 +19,15 @@ apply — it is what `create.account` and the installer already do:
 | The API | off (`APIPORT` unset in `sd.conf`) until an administrator turns it on — see [API access](09-api-access.html) |
 | The console and Remote Desktop | denied to every ordinary account (`sdsshonly`) — see [Accounts](05-account-types.html) |
 
+**Only SDSYS administers SD.** No other account, whatever its Windows group
+membership and whether or not it is elevated, can create, change or delete
+accounts, grant `os.users`, or catalogue globally.
+
+**An ssh session's reach is bounded by NTFS, not by SD.** Every file it
+touches, inside SD or through a granted `sh` or `OS.EXECUTE`, is opened under
+that user's own Windows token, so the account's file permissions are the
+boundary.
+
 **The administrator can open any of it up — `os-on`, `sdapi`, `sdssh` — and
 that is a decision for their own environment, not a default to second-guess.**
 Securing the transport and shipping a closed-by-default system is what this
