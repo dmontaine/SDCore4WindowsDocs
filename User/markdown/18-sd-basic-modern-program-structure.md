@@ -16,7 +16,7 @@ it.
 **Everything on this page was compiled and run** on SD Core for Windows W1.0-0
 before it was written down. Where a listing shows an error, that error was
 produced, not composed. The programs are in the documentation repository —
-<https://github.com/dmontaine/SDCoreWindowsDocs> — as
+<https://github.com/dmontaine/SDCore4WindowsDocs> — as
 `tools\probes\p18-class-base.b`, `p18-class.b` and `p18-objects.b`.
 
 ## Scope, and the one thing to get straight first

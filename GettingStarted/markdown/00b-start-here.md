@@ -110,7 +110,7 @@ installed tree carries it as a file.
 | | |
 |---|---|
 | The server, the client libraries and the installer | <https://github.com/dmontaine/sd4windows> |
-| These pages | <https://github.com/dmontaine/SDCoreWindowsDocs> |
+| These pages | <https://github.com/dmontaine/SDCore4WindowsDocs> |
 
 **Neither repository contains a built binary, deliberately** — no `.exe`, no
 `.dll`, no object files. A clone builds. That is why installing means building,
