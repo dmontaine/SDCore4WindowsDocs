@@ -47,6 +47,14 @@ Two limits are worth knowing before you rely on it.
 > exception: a locked verb is updated anyway, and you are told which. The
 > administrator documentation covers it under *Accounts and security*.
 
+### Upgrading from W1.1-0 to W1.1-1
+
+W1.1-1 removes the language commands. **SD Core is English only:** `NLS`,
+`SET.LANGUAGE` and `LOAD.LANGUAGE` no longer exist, and messages, month names
+and day names are English. None of the three was in any account's VOC in
+W1.1-0, so no account loses a command it could type. Everything else in this
+upgrade is as described above.
+
 ## Uninstalling
 
 It is the standard Windows uninstall — Settings ▸ Apps, or `unins000.exe`.

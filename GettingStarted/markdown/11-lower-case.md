@@ -83,24 +83,6 @@ Because SD only ever *adds* VOC records at an update, an old account will end
 up holding both spellings after **`update.accounts`**. That is harmless — they
 dispatch to the same programs.
 
-## The Turkish and Azeri fix
-
-The installer creates an SD account for whoever authorises the install, and to
-do that it matches your Windows user name against SD's copy of it — which means
-changing both to the same case.
-
-**Windows and SD did not change case the same way everywhere.** On a Turkish
-or Azeri system Windows turns `I` into a dotless `ı`, and SD does not. A user
-name containing that letter did not match itself, and the install finished
-**without giving you an SD account at all.**
-
-Both sides now use the same rule, which does not vary by locale. Nothing
-changes on a system whose locale was never affected.
-
-> If you are testing on a Turkish or Azeri locale, this is worth exercising
-> specifically — it is the kind of fault that only appears on the machine you
-> do not have.
-
 ## Two related refusals that no longer depend on case
 
 **`delete.file`**'s refusal to delete `voc` and `$acc` no longer depends on the

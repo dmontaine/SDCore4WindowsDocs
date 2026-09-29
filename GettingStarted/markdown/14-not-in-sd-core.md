@@ -110,8 +110,8 @@ was gone.
 
 ## Language and locale
 
-`NLS`, `SET.LANGUAGE` and `LOAD.LANGUAGE` are removed. **SD Core is English
-only**, and these were the only callers of the message-language machinery.
+**SD Core is English only.** `NLS`, `SET.LANGUAGE` and `LOAD.LANGUAGE` do not
+exist.
 
 ## Embedded Python — reversed again, and reversed differently
 
