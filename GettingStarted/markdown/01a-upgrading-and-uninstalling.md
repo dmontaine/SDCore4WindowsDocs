@@ -49,11 +49,13 @@ Two limits are worth knowing before you rely on it.
 
 ### Upgrading from W1.1-0 to W1.1-1
 
-W1.1-1 removes the language commands. **SD Core is English only:** `NLS`,
+W1.1-1 removes the language commands. **SD Core is English only:**
 `SET.LANGUAGE` and `LOAD.LANGUAGE` no longer exist, and messages, month names
-and day names are English. None of the three was in any account's VOC in
-W1.1-0, so no account loses a command it could type. Everything else in this
-upgrade is as described above.
+and day names are English. Neither was in any account's VOC in W1.1-0, so no
+account loses a command it could type. **`NLS` is back:** W1.0-0 and W1.1-0 had
+no `NLS` command in any VOC, and W1.1-1 puts it in new ones. Accounts that
+already exist get it from `update.accounts`. Everything else in this upgrade is
+as described above.
 
 ## Uninstalling
 

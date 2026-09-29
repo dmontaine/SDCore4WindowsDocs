@@ -110,8 +110,9 @@ was gone.
 
 ## Language and locale
 
-**SD Core is English only.** `NLS`, `SET.LANGUAGE` and `LOAD.LANGUAGE` do not
-exist.
+**SD Core is English only.** `SET.LANGUAGE` and `LOAD.LANGUAGE` do not exist.
+`NLS` does: it shows and sets the currency symbol and the thousands and decimal
+separators.
 
 ## Embedded Python — reversed again, and reversed differently
 

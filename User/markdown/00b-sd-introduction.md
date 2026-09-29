@@ -154,7 +154,7 @@ are not in SD Core for Windows:
 | `ENCRYPT.FIELD` verb | Removed; `sdencrypt()` and `sddecrypt()` in SDBasic are the supported route |
 | `sed`, `update.record`, `modify` editors | Gone; use `edit`, `micro` or `ed` |
 | PROC language | Removed; use paragraphs instead |
-| NLS, `SET.LANGUAGE`, `LOAD.LANGUAGE` | Removed; SD Core is English only |
+| `SET.LANGUAGE`, `LOAD.LANGUAGE` | Removed; SD Core is English only |
 | Silent install | Refused deliberately; the installer asks questions that cannot be defaulted |
 | Multi-user Remote Desktop | Not supported; accounts SD creates are denied the console and RDP |
 
