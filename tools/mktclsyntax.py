@@ -202,7 +202,11 @@ out.append('|---|---|---|')
 
 WHOMARK = {'ordinary': '', 'sdsys': 'S'}
 for v in sorted(verbs):
-    out.append('| **`%s`** | %s | %s |' % (v, shapes[v], WHOMARK[verbs[v][2]]))
+    # 29 Sep 26 - a shape's own "|" means "this or that", and a bare one ENDS the
+    # table cell: 38 rows rendered their alternatives as extra cells and lost the
+    # who column (found by the Linux port on its copy of this script).  Escaped.
+    out.append('| **`%s`** | %s | %s |'
+               % (v, shapes[v].replace('|', '\\|'), WHOMARK[verbs[v][2]]))
 
 out.append('')
 out.append('**Blank in the who column means every account has it**; `S` is SDSYS')
