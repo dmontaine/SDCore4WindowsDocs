@@ -1,5 +1,5 @@
 Title: Account Maintenance
-Subtitle: Emptying scratch files, refreshing a VOC, keeping local versions of records, configuration, the system date, and deleting an account.
+Subtitle: Emptying scratch files, refreshing a VOC, keeping local versions of records, configuration, the session's date, and deleting an account.
 
 This page continues [Accounts and Security](01-accounts-and-security.html).
 
@@ -194,14 +194,15 @@ for changing an installation.
 running a pager over a file, so they work in any account and need no
 operating-system access.
 
-## Setting the machine's date: `set.date`
+## Setting the session's date: `set.date`
 
 ```
 set.date date
 ```
 
-Sets the **machine's** date, not a session preference — it changes the clock the
-whole installation reads. The argument goes through SD's `D` conversion, so
+Sets the date **this session** reports, and nothing else. It does not change the
+computer's clock, and it does not touch any other session: SD keeps an offset
+from the real date inside the running process. The argument goes through SD's `D` conversion, so
 anything `iconv(…, 'D')` accepts will do, and anything it does not is refused:
 
 | | |
@@ -209,15 +210,11 @@ anything `iconv(…, 'D')` accepts will do, and anything it does not is refused:
 | *Date required* | `set.date` with nothing after it |
 | *Invalid date format* | the argument is not a date SD can read |
 
-**There is no confirmation and no undo.** It is described here from source
-rather than shown running, because demonstrating it would move the clock of
-whatever machine it ran on. **On Windows, changing the system date is itself a
-privileged operation**, so a session that has the verb may
-still be refused by the operating system underneath it.
-
-**Moving a live machine's date backwards is not a neutral act**: file
-timestamps, licence expiry, scheduled tasks and anything that reasons about
-elapsed time all read it. Treat it as a maintenance operation on a quiet system.
+**There is no confirmation.** The change lasts until the session ends, and the
+next session starts from the real date. It is described here from source rather
+than shown running. Everything in the session that asks SD for the date, such as
+`date`, `time` and BASIC's `date()`, sees the adjusted one; file timestamps that
+Windows writes do not.
 
 ## Deleting an account: `delete.account`
 

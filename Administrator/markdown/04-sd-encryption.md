@@ -1,7 +1,7 @@
 Title: Encryption and the SDEXT interface
 Subtitle: What libsodium provides, what an application can reach, and why field encryption has no key route in W1.0-0.
 
-SD Core for Windows links libsodium and ships it as `libsodium-26.dll` beside
+SD Core for Windows links libsodium and ships it as `cygsodium-26.dll` beside
 the server. Two things are built on it: the credential exchange that
 authenticates an API login, and a pair of BASIC functions that encrypt and
 decrypt a string.
@@ -120,14 +120,17 @@ character about one time in nine.
 | `SDEXT_TestIt` | 1 | any | Prints each argument and returns a count. A diagnostic |
 | `SD_SALT` | 100 | none | A fresh salt, base64 |
 | `SD_KEYFROMPW` | 101 | password, salt | A 256-bit key derived from the password |
-| `SD_EUID_SET` | 102 | user name | Sets the process effective user and group |
-| `SD_EUID_RESTORE` | 103 | none | Restores what they were on entry |
 | `SD_SHA256` | 104 | one | SHA-256 of the argument |
 | `SD_HMACSHA256` | 105 | base64 key, text message | HMAC-SHA256 |
 | `SD_PBKDF2` | 106 | password, salt, iterations, length | Derived key |
 | `SD_RANDBYTES` | 107 | count | Random bytes |
 | `SD_XORBYTES` | 108 | two equal-length values | Their exclusive-or |
 | `SD_CTEQUAL` | 109 | two values | `1` or `0`, compared in constant time |
+| `SD_TLS_CBIND` | 110 | none | The TLS channel binding the API login carries, base64, or empty when the session is not TLS |
+
+Numbers 102 and 103 were the POSIX effective-identity calls. They were removed
+and the numbers are not reused, so a program calling one gets the unknown-key
+response rather than a different function.
 
 `SD_CTEQUAL` reports a malformed argument as an error rather than as `0`,
 because by the time the login path compares these values both sides are the
@@ -135,18 +138,15 @@ server's own — a decode failure there is a defect, not a wrong password. A
 caller deciding whether to admit a login must still treat the error as a
 refusal.
 
-`SD_EUID_SET` and `SD_EUID_RESTORE` call the POSIX identity functions provided
-by the server's runtime. They do not change the Windows process token, and SD's
-own identity model does not use them.
-
 ### What uses it
 
-Eight shipped programs call `sdext()`, and they are the whole of its use:
-`APISRVR`, `CRED_SET`, `CRED_VERIFY`, `SD_GET_SALT`, `SD_KEY_FROM_PW`,
-`SDCLIENT`, `EUID_SET` and `EUID_RESTORE`. Between them they set a credential,
-verify one, and run the API's SCRAM exchange.
+Six shipped programs call `sdext()` for the cryptographic keys, and they are the
+whole of that use: `APISRVR`, `CRED_SET`, `CRED_VERIFY`, `SD_GET_SALT`,
+`SD_KEY_FROM_PW` and `SDCLIENT`. Between them they set a credential, verify
+one, and run the API's SCRAM exchange. (The `PY_` functions also go through
+`sdext()`, with their own keys.)
 
-None of the eight is catalogued for general use, and none has a VOC entry, so
+None of the six is catalogued for general use, and none has a VOC entry, so
 they are not an indirect route to the interface either.
 
 ## Two constants that are not SDEXT keys
