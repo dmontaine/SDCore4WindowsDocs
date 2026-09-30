@@ -12,7 +12,7 @@ folds case, so any of this may be typed in either case.
 > **This page is generated, and it is checked for completeness rather
 > than proof-read for it.** The roster is computed from SD's own VOC:
 > every verb record in `newvoc`, plus the ones only `voc_template`
-> has, which is **148** verbs, and `tools/mktclsyntax.py` refuses to
+> has, which is **149** verbs, and `tools/mktclsyntax.py` refuses to
 > write the page if any of them has no line. The shapes come from the
 > subject documents, where each verb is described in full.
 
@@ -23,7 +23,7 @@ not refused — the name is simply not recognised.**
 
 | | | |
 |---|---|---|
-| **every account** | 128 verbs | `newvoc`, identical for every ordinary account |
+| **every account** | 129 verbs | `newvoc`, identical for every ordinary account |
 | **SDSYS only** | 20 more | in `voc_template` but not `newvoc` |
 
 ## The verbs
@@ -125,6 +125,7 @@ not refused — the name is simply not recognised.**
 | **`modify.account`** | **`modify.account`** *account* **`add`** | **`delete`** *user*  ·  *account* **`ssh`** | **`api`** | **`both`** | **`none`**  ·  *account* **`sh-on`** | **`sh-off`** | **`os-on`** | **`os-off`**  ·  *account* **`suspended`** | **`unsuspended`** | S |
 | **`modify.password`** | **`modify.password`** {*account*} |  |
 | **`nano`** | **`nano`** {**`dict`**} *file* *record* |  |
+| **`nls`** | **`nls`** {**`currency`** | **`thousands`** | **`decimal`** {*value*}}  ·  **`nls default`** |  |
 | **`nselect`** | **`nselect`** *file* {*list.no*} |  |
 | **`off`** | **`off`** |  |
 | **`option`** | **`option`** *name* {**`on`** | **`off`** | **`display`**}  ·  **`option all off`**  ·  **`option`** |  |

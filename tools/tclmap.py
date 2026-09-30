@@ -123,7 +123,7 @@ DOCS = [
  """),
  ('User', '29-sd-tcl-the-terminal-and-the-session.md', """
    autologout bell clear.prompts clearinput clearprompts date date.format echo
-   hush logmsg pterm sleep term time
+   hush logmsg nls pterm sleep term time
  """),
  ('User', '30-sd-tcl-processes-and-phantoms.md', """
    pdebug pdump phantom pstat status
