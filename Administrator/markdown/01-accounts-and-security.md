@@ -67,10 +67,6 @@ create.account other <name> <pathname> {no.query}
 `ssh`, `api` or `none` to be narrower — an account meant to be reached only
 with `logto` says `none` and means it.
 
-**Do not name an account `sduser`.** SD Core Solo's one account is always
-called `sduser`, so keep the name free if you want both products installed on
-the same computer. SD does not refuse it; this is the only warning.
-
 > **It prompts for a password and `no.query` does not suppress that.**
 > `no.query` covers the confirmation, not the credential — a password is
 > never an argument anywhere in SD. **`create.account user` therefore
