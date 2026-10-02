@@ -183,9 +183,10 @@ powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\api-firewall.ps1" 
 ```
 
 Exit **0** applied, **1** failed, **2** refused. `-Show` changes nothing.
-`-Open` allows any address, `-Restrict` this machine only; add *{-Port n}* for
-a port other than 4243. **This script owns its rule** - it created it, and
-`-Remove` takes it away.
+`-Open` allows any address, `-Restrict` this machine only. The port is always
+4247; the script takes no port. `-Retarget` moves a rule an older release left
+on port 4243 to 4247 and keeps who may reach it as it was (an upgrade runs it).
+**This script owns its rule** - it created it, and `-Remove` takes it away.
 
 ### Who may reach ssh from other computers
 

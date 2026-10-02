@@ -93,7 +93,7 @@ or `off`.
 
 | | Default |
 |---|---|
-| Provide the SD Core API (port 4243) | **unticked** |
+| Provide the SD Core API (port 4247) | **unticked** |
 | Let other computers on your network reach it | **unticked** |
 
 **The API is off unless you ask for it.** Decline it and SD is installed with a
@@ -393,7 +393,7 @@ PowerShell prompt. This is what each failure means until it is put right:
 | The ssh and API access groups were NOT set up | ssh is refused to everyone except administrators |
 | ssh was NOT limited | Usually OpenSSH has not started yet: restart and run the command. It also stops if `sshd_config` already says who may connect, and that setting is left alone |
 | Who may reach ssh could not be set | Port 22 is open to the local network, which is the Windows default |
-| Who may reach the SD Core API could not be set | No firewall rule was created, so other computers cannot reach port 4243 |
+| Who may reach the SD Core API could not be set | No firewall rule was created, so other computers cannot reach port 4247 |
 | SD Core could NOT create its administrator account | There is no way into SD Core until it exists; the reason is in `install-sdsys.log` |
 | SD Core could NOT create an SD Core account for you | SD only admits accounts it creates and will not create one for a Windows account that already exists, so this is the one moment such an account can be made: running the installer again will not create it. The reason is in `attach-account.log` |
 | The OpenSSH server could NOT be installed | Usually a policy that blocks optional features, a metered connection, or no connection. Accounts cannot sign in over ssh until it is there (API-only accounts can use the API meanwhile) |

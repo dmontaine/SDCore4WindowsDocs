@@ -114,6 +114,15 @@ Discarding the shared segment left by the previous boot -
 SD did not shut down cleanly.
 ```
 
+### SD Core for Windows has shared memory and semaphores of its own
+
+The shared memory and semaphores every SD session uses once had the same names
+as upstream SD's. They now have names of their own, different from upstream SD's
+and from each other SD Core product's, so SD Core for Windows can run beside
+either. **The installer stops SD before an upgrade, as it always did, and that
+matters more now:** an SD left running from the old version could not be stopped
+by the new one, because the two no longer share a name.
+
 ## Upgrading
 
 Installing a new release over an existing one replaces the shipped files and

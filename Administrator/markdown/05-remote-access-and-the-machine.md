@@ -161,8 +161,8 @@ remote.api {on | local | off}
 
 | | |
 |---|---|
-| `on` | SD listens on port 4243 and other computers may connect |
-| `local` | SD listens on port 4243 and only this computer may connect |
+| `on` | SD listens on port 4247 and other computers may connect |
+| `local` | SD listens on port 4247 and only this computer may connect |
 | `off` | SD opens no API socket at all |
 
 **There are two axes here and the verb sets both.** `APIPORT` in `sd.conf`

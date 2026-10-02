@@ -74,7 +74,7 @@ input has no business in a directory that goes on the PATH.
 
 | | |
 |---|---|
-| `SDConnect(host, port, user, pass, account)` | over the network, to port **4243** |
+| `SDConnect(host, port, user, pass, account)` | over the network, to port **4247** (the default when you name none) |
 | `SDConnectLocal(account)` | on the same machine. Sends no password and never did |
 
 > `SDConnectUDS` (Unix Domain Socket) appears in the header but is not
@@ -93,7 +93,7 @@ connection: there is no `sd.exe` there. Two ways round it:
 | | |
 |---|---|
 | Load the copy in `usr\bin` | it is beside `sd.exe`, which is why that copy exists |
-| Use `SDConnect` instead | connect to `127.0.0.1` on port 4243 like any other client |
+| Use `SDConnect` instead | connect to `127.0.0.1` on port 4247 like any other client |
 
 `SDConnectLocal` sends no password at all. It takes the identity of the process
 that called it and checks that account's grants, so the account has to be one

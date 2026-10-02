@@ -144,6 +144,9 @@ DOCS = [
  ('Administrator', '01a-account-maintenance.md', """
    clean.account config delete.account set.date update.accounts
  """),
+ ('Administrator', '01b-backup-and-restore.md', """
+   backup.account restore.account set.backup.directory settings.report
+ """),
  ('Administrator', '02-sessions-and-locks.md', """
    clear.locks list.locks list.readu listu lock logout unlock
  """),

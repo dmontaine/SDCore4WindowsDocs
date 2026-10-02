@@ -158,7 +158,7 @@ config contrib             display the contributors
 :config
 Virtual Machine Version Number W1.1-1
 APILOGIN  1
-APIPORT   4243
+APIPORT   4247
 CMDSTACK  99
 DEADLOCK  0
 DUMPDIR
@@ -265,6 +265,7 @@ share.
 
 ## See also
 
+[Backing Up and Restoring Accounts](01b-backup-and-restore.html) ·
 [Sessions and Locks](02-sessions-and-locks.html) ·
 [Operating System Access](03-operating-system-access.html).
 

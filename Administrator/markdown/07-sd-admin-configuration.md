@@ -62,7 +62,7 @@ The `config` verb reports what is in force:
 :config
 Virtual Machine Version Number W1.1-1
 APILOGIN  1
-APIPORT   4243
+APIPORT   4247
 CMDSTACK  99
 DEADLOCK  0
 DUMPDIR   C:\ProgramData\SD\sdsys\dumps
@@ -172,7 +172,8 @@ server's runtime addresses them. `C:\WINDOWS\TEMP` and
 
 | Parameter | Default | Effect |
 |---|---|---|
-| `APIPORT` | 4243 | The port the API listens on. If the line is absent no socket is created at all, which is how the API is turned off |
+| `APIPORT` | 4247 | Switches the API on. Any number above zero means on, and SD listens on port 4247 whatever the number is; the port cannot be changed. If the line is absent no socket is created at all, which is how the API is turned off. A file that says `APIPORT=4243` still means on |
+| `BACKUPDIR` | unset | The folder `BACKUP.ACCOUNT` and `RESTORE.ACCOUNT` use. Set by `SET.BACKUP.DIRECTORY`, not by hand - see [Backing Up and Restoring Accounts](01b-backup-and-restore.html) |
 | `APILOGIN` | 1 | Whether the API requires authentication. `0` is the weaker setting, not the safer one |
 | `NETDIRS` | unset | Directories outside its own account an API session may open, separated by semicolons because a Windows path contains a colon |
 | `SDCLIENT` | 0 | Restricts what an API session may do. Non-zero disables file access outright; `2` additionally refuses any subroutine not compiled as callable from a client |

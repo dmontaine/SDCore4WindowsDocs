@@ -176,7 +176,7 @@ off
    way in is a short BASIC program that reads your exported data and writes the
    records. Then query it — the query processor is where most of the surface
    area is.
-2. **A client program against the API.** Point it at port 4243 — **not** an ssh
+2. **A client program against the API.** Point it at port 4247 — **not** an ssh
    tunnel any more. It needs a client library from this release, because the
    old cleartext login is gone. **The architecture must match the
    application**, and **The DLL goes in the same directory as the application

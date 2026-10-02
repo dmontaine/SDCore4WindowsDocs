@@ -67,13 +67,17 @@ never did.
 
 ## The port
 
-**`sd.conf` sets `APIPORT=4243`**, and the server accepts API connections on
-any network interface. **Earlier builds of this port shipped it commented out
+**The API port is 4247, and nothing can change it.** It used to be 4243, which
+OpenQM and ScarletDME also use. `sd.conf`'s `APIPORT` now only switches the API
+on: any number above zero means on, and SD listens on 4247 whatever the number
+is. A file that says `APIPORT=4243` keeps working and means 4247. A program that
+names port 4243 must name 4247 instead; one that names no port needs no change.
+The server accepts API connections on any network interface. **Earlier builds of this port shipped it commented out
 and listened on `127.0.0.1` only**, which is why an ssh tunnel was needed.
 
-**If you tunnel, stop.** `ssh -L 4243:127.0.0.1:4243 user@host` still works
+**If you tunnel, stop.** `ssh -L 4247:127.0.0.1:4247 user@host` still works
 but is no longer what the design expects, and it is not tested. Point the
-client straight at port 4243 on the server.
+client straight at port 4247 on the server.
 
 **Reaching the port from another computer is off unless you tick the box during
 installation.** To change it afterwards, from an elevated prompt:

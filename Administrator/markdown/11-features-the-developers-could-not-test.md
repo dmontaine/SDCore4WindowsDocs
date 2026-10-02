@@ -108,6 +108,25 @@ ever sent. No UDP or ICMP socket has been opened.
 
 **To settle it.** A datagram to a listener and back.
 
+## Account backup and restore
+
+### `backup.account`, `restore.account` and `set.backup.directory` on a full install
+
+**Known.** The whole path was run on the single-account product, SD Core Solo
+for Windows: the folder prompt and remembering it, a backup, a second backup that
+used the remembered folder, a restore by bare file name, and the setting
+surviving a restart. The zip's counts matched the account's. The shared programs
+are also compiled and unit-checked here.
+
+**Not known.** **The full product's own backup and restore has not been run on an
+installed system.** That includes the elevated route SD uses to write `BACKUPDIR`
+in `C:\ProgramData\SD\sd.conf`, replacing an account that exists, and making one
+that does not (and its password prompt).
+
+**To settle it.** On a test install, back up one account, change it, restore it
+by bare file name, and check that the changes are gone. Then restore it under a
+name that does not exist.
+
 ## Scheduled tasks
 
 ### Task Scheduler with an account that `create.account` made
