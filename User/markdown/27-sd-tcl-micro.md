@@ -24,7 +24,7 @@ marks a word typed as it stands; braces mark an optional part.
 
 > **The keys below are micro's own**, read from the default bindings and the
 > help text inside the executable SD installs — **micro 2.0.15**. The SD half of
-> the page describes SD Core for Windows W1.1-1.
+> the page describes SD Core for Windows W1.1-3.
 
 ## Both editors are installed with SD
 

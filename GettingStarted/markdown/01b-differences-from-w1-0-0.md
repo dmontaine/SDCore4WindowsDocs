@@ -1,7 +1,7 @@
 Title: Differences from W1.0-0
 Subtitle: What changed for someone who already knows SD Core for Windows, grouped by theme rather than by date.
 
-This page is for somebody who used **W1.0-0** and is looking at **W1.1-1**.
+This page is for somebody who used **W1.0-0** and is looking at **W1.1-3**.
 Everything else in this set already describes the current behaviour on its
 own terms; this page exists only to say what is *different*, and to flag
 what might stop working after an upgrade.

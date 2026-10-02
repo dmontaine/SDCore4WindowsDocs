@@ -60,7 +60,7 @@ The `config` verb reports what is in force:
 
 ```
 :config
-Virtual Machine Version Number W1.1-1
+Virtual Machine Version Number W1.1-3
 APILOGIN  1
 APIPORT   4247
 CMDSTACK  99

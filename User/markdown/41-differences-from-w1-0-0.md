@@ -2,7 +2,7 @@ Title: Differences from W1.0-0
 Subtitle: What changed for someone writing SD BASIC or working at TCL, grouped by theme rather than by date.
 
 This page is for someone who already knows **W1.0-0** and is looking at
-**W1.1-1**. The rest of this set describes the current language and command
+**W1.1-3**. The rest of this set describes the current language and command
 processor on their own terms; this page exists only to say what is
 *different*, and to flag what an existing program or habit might trip over.
 

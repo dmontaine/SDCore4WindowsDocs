@@ -2,7 +2,7 @@ Title: Differences from W1.0-0
 Subtitle: What changed for an administrator, grouped by theme rather than by date.
 
 This page is for an administrator who already knows **W1.0-0** and is
-looking at **W1.1-1**. The rest of this set describes the current model on
+looking at **W1.1-3**. The rest of this set describes the current model on
 its own terms, already corrected where W1.1-0 changed it; this page exists
 to say what is *different*, in one place, and to flag what an existing
 install or script might trip over.
