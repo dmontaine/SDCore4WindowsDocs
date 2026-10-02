@@ -52,6 +52,10 @@ account needs an elevated token, and only SDSYS carries the identity that
 makes an elevated session mean anything to SD — see
 [SDSYS is the only administrator](#sdsys-is-the-only-administrator) above.
 
+**Do not name an account `sduser`.** SD Core Solo's one account is always
+called `sduser`, so keep the name free if you want both products installed on
+the same computer. SD does not refuse it; this is the only warning.
+
 ### The route keyword is optional now
 
 **Say nothing and the account gets `both`** (ssh and the API). Name one to be
