@@ -17,8 +17,8 @@ create.account user jane api
 
 Your application code does not change. `SDConnect()` and `SDConnectLocal()`
 take the same arguments and return the same things. **What changed is
-underneath: the login protocol, the port, the identity a session runs as, and
-what it is allowed to open.**
+underneath: the login protocol, the encryption of the connection, the port, the
+identity a session runs as, and what it is allowed to open.**
 
 > **SDSYS is the one exception, and it has no API access at all.** It
 > carries no SD credential to authenticate an API connection with, by
@@ -64,6 +64,34 @@ be running under this release **at both ends**.
 
 **`SDConnectLocal()` connections are unaffected.** They send no password and
 never did.
+
+## The connection is encrypted
+
+**Every API connection — the network port and the local one alike — is wrapped
+in TLS 1.3 before SD sends anything**, and the login is bound to that encrypted
+connection. A machine sitting between a client and the server cannot read the
+traffic or log in on the client's behalf, even by pretending to be the server.
+Until W1.1-0 only the login was protected: the password never crossed the
+network, but every command, record and result after it did, as plain text.
+
+**The client libraries do this automatically.** `sdclilib`, `sdclient` and the
+BASIC `!sdclient` class all negotiate TLS themselves. A program linked against
+an *older* copy of the library cannot connect at all: the server waits for the
+encryption handshake and closes the connection after ten seconds of silence.
+Relink it.
+
+**A client does not yet check the server's certificate.** The encryption stops
+a machine in the middle from reading traffic or logging in on your behalf, but
+such a machine could still record a login attempt and try to guess the password
+later, offline. Use long API passwords that are not reused elsewhere.
+
+**A low-privilege Windows account, `sdrelay`, appears in Computer Management.**
+The small helper program that ends the encryption for each connection
+(`sdtlsrelay.exe`, beside `sd.exe`) runs as `sdrelay`, an account with every
+privilege stripped, at low integrity, unable to sign in interactively and in no
+group. SD's service creates it and removes it. **Leave it alone**: if it is
+deleted by hand, every API connection is refused until the service is
+reinstalled.
 
 ## The port
 

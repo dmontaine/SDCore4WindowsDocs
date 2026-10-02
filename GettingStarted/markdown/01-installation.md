@@ -293,8 +293,10 @@ Every reason, warning and caveat that used to appear on them is here.
   moved.
 - **Sign out and back in afterwards.** Windows applies a new group membership
   only when you sign in. Until you do, `sd` answers that it is not recognized
-  (in a window opened before the install — a new window cures that) or that it
-  cannot open its files (only signing out cures that).
+  (in a window opened before the install — a new window cures that), that it
+  cannot open its files, or `Error 5 getting semaphores`. Only signing out
+  cures those two. Switching to another user and back does not, and
+  `whoami /groups` does not list `sdusers` until you have signed out.
 - **A silent install is refused.** The install ends by asking for a password
   and a silent install has nobody to ask, so it would finish with no password
   set. Run the installer normally, at the keyboard or through Remote Desktop.

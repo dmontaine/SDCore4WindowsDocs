@@ -66,8 +66,8 @@ password without asking for the old one.
 
 ## The API is now encrypted end to end
 
-**This is not documented elsewhere in this set yet — read it here.** Until
-W1.1-0, only the API login was protected: the password never crossed the
+**The full description is [The connection is encrypted](09-api-access.html#the-connection-is-encrypted).**
+Until W1.1-0, only the API login was protected: the password never crossed the
 network, but every command, every record and every result after it did, as
 plain text. **Every API connection — the network port and the local one
 alike — is now wrapped in TLS 1.3 before SD sends anything**, and the login
@@ -117,6 +117,39 @@ Windows will not let a process started the way an API login starts one
 launch anything that needs a desktop — which includes PowerShell. Console
 sessions and ssh are unaffected. See
 [`sh` and `OS.EXECUTE` are refused over the API](09-api-access.html#sh-and-osexecute-are-refused-over-the-api).
+
+## The API port is 4247
+
+**The API listens on port 4247, and nothing can change it.** It was 4243, which
+OpenQM and ScarletDME also use, so SD could not run beside either. No setting,
+installer option or command takes a port, so every SD Core for Windows system
+uses the same one. See [The port](09-api-access.html#the-port).
+
+**`APIPORT` in `sd.conf` now only switches the API on.** Any number above zero
+means on, and SD listens on 4247 whatever the number is, so an `sd.conf` that
+says `APIPORT=4243` keeps working and now means 4247. **An upgrade moves SD's
+own firewall rule**, `SD-API-In-TCP`, from 4243 to 4247 and leaves who may
+reach it as it was. A rule you made yourself for 4243 is not touched, and no
+longer does anything for SD.
+
+**A program that names port 4243 must name 4247 instead.** The client library
+and the BASIC `!sdclient` class both default to 4247, so a program that names
+no port needs no change.
+
+## Backing up and restoring accounts
+
+**Four new commands, all SDSYS's.** `SET.BACKUP.DIRECTORY` makes a backup
+folder and remembers it (in `sd.conf`, as `BACKUPDIR=`). `BACKUP.ACCOUNT` writes
+the accounts you name, or every account but SDSYS, to one zip file there.
+`RESTORE.ACCOUNT` puts accounts back from a zip file, or from the newest backup
+made on this computer if you say `LATEST`. `SETTINGS.REPORT` writes a text
+report of the system's settings for you to keep.
+
+**A backup holds each account's files and what is needed to make the account
+again, and never a password.** An account that no longer exists is made again
+and asks for a new password. While a backup or a restore runs, nobody else may
+be signed in to SD, and new sign-ins are refused until it finishes. The whole
+page is *Backing Up and Restoring Accounts*, in the Administrator set.
 
 ## ssh: port forwarding is off
 
@@ -239,6 +272,21 @@ freely.
 - **`LIST.READU` and `GETLOCKS` no longer risk a crash** when a lock is held
   for a session that has already gone — such a lock now shows its owner as
   `(gone)`.
+- **SD Core for Windows has shared memory and semaphores of its own.** They had
+  the same names as upstream SD's; the names are now different from upstream
+  SD's and from every other SD Core product's. The installer stops SD before
+  an upgrade, as before. An SD left running from the old version could not be
+  stopped by the new one.
+- **`NLS` is back**, so you can view and set the currency symbol and the
+  thousands and decimal separators from the prompt. A new account has it;
+  `UPDATE.ACCOUNTS` adds it to accounts that already exist.
+- **`RUN` works from a deeply nested folder.** It could fail with *Invalid
+  runfile pathname* when the program's folder was about 128 characters deep or
+  more; the path can now be up to 255 characters.
+- **Account commands work when SD is started from PowerShell 7.** Setting a
+  password, creating or changing an account, and the ssh and API settings run
+  steps in Windows PowerShell, and from a PowerShell 7 window they could fail
+  to load one of its modules and report that the command had failed.
 
 ## What might stop working
 
@@ -250,6 +298,12 @@ freely.
 - **An API program built against an older client library** cannot connect at
   all until it is relinked — the server waits for a TLS handshake that an
   old client never starts.
+- **A program or firewall rule that names API port 4243** no longer reaches
+  SD. Name 4247. An upgrade moves SD's own rule; a rule you made is yours to
+  change.
+- **Going back to an older release with a `BACKUPDIR` line in `sd.conf`.** An
+  SD without the backup commands stops at start-up on a key it does not know.
+  Remove the line first.
 - **An API program that reads or writes files your own Windows account
   cannot** will now be refused, where an unprivileged-looking session used
   to have LocalSystem's reach without asking.

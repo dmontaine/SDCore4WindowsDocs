@@ -135,6 +135,36 @@ source for SDSYS's own VOC and nothing on an installed system ever read it;
 an upgrade removes one an earlier release left behind. SDSYS's own VOC is
 unaffected.
 
+## The API port is 4247, and nothing can change it
+
+**The API listens on port 4247.** It was 4243, which OpenQM and ScarletDME also
+use. No setting, installer option or command takes a port. **`APIPORT` in
+`sd.conf` now only switches the API on**: any number above zero means on, and
+SD listens on 4247 whatever the number is, so an `sd.conf` that says
+`APIPORT=4243` keeps working and now means 4247.
+
+**An upgrade moves SD's own firewall rule**, `SD-API-In-TCP`, from 4243 to
+4247 with `api-firewall.ps1 -Retarget`, and leaves who may reach it as it was.
+`api-firewall.ps1` no longer takes a port. A rule you made yourself for 4243
+is not touched and no longer does anything for SD; change it yourself. See
+[Who may reach the API from other computers](09-the-installed-scripts.html#who-may-reach-the-api-from-other-computers).
+
+## Backing up and restoring accounts
+
+**Four new verbs, all SDSYS's:** `set.backup.directory`, `backup.account`,
+`restore.account` (including `LATEST`) and `settings.report`. The backup folder
+is remembered in `sd.conf` as `BACKUPDIR=`. A backup is one zip file per run,
+holds no password, and is checked against its own counts before a restore
+changes anything. While a backup or a restore runs, nobody else may be signed
+in to SD and new sign-ins are refused. The whole page is
+[Backing Up and Restoring Accounts](01b-backup-and-restore.html).
+
+**SD Core for Windows has shared memory and semaphores of its own**, with names
+different from upstream SD's and from each other SD Core product's. The
+installer stops SD before an upgrade; an SD left running from the old version
+could not be stopped by the new one. See
+[SD Core for Windows has shared memory and semaphores of its own](08-sd-installation.html#sd-core-for-windows-has-shared-memory-and-semaphores-of-its-own).
+
 ## Session and lock behaviour
 
 **A session that dies without signing off is cleared automatically, within
@@ -178,11 +208,28 @@ configured; nobody has asked for one.
   answer**, so a script or pipe feeding answers cannot be desynchronised by
   an unexpected repeat of the same question. Two prompts are deliberately
   unchanged, because no is not a safe default for either.
+- **`NLS` is back** in new accounts' VOCs, so the currency symbol and the
+  thousands and decimal separators can be viewed and set from the prompt.
+  `UPDATE.ACCOUNTS` adds it to accounts that already exist.
+- **`RUN` works from a deeply nested folder.** It could fail with *Invalid
+  runfile pathname* from about 128 characters deep; the limit is now 255.
+- **Account commands work when SD is started from PowerShell 7.** Commands
+  that run steps in Windows PowerShell (passwords, accounts, the ssh and API
+  settings) could fail to load one of its modules from a PowerShell 7 window
+  and report that the command had failed.
 
 ## What might stop working
 
 - **A script naming a tier keyword** anywhere — creating, modifying, or
   lifting a suspension — is now a syntax error.
+- **A program or firewall rule that names API port 4243** no longer reaches
+  SD. Name 4247.
+- **Going back to an older release with a `BACKUPDIR` line in `sd.conf`.** An
+  SD without the backup verbs stops at start-up on a key it does not know.
+  Remove the line first.
+- **An existing session after an install or upgrade that adds you to
+  `sdusers`.** Until you sign out and back in, `sd` answers `Error 5 getting
+  semaphores` or cannot open its files. Switching users does not cure it.
 - **A file permission granted only because an API session ran as
   LocalSystem.** Grant the caller's own Windows account the access it
   actually needs.

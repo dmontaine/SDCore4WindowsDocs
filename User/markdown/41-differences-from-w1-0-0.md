@@ -140,17 +140,31 @@ a safe default for either: "delete all data components of multifile" (plain
   without that entry and exiting 0. See
   [Compiling a definition](39-sd-terminfo.html#compiling-a-definition).
 
-## Not yet reflected on the client API page
+## The API port is 4247, `NLS` is back, and `RUN` goes deeper
 
-**`37-sd-client-api.md`'s "A session is confined to its own account"
-describes the pre-W1.1-0 shape.** An API session now runs as the Windows
-user who logged in rather than as the SD service account, and the whole
-connection — network or local — is wrapped in TLS 1.3 before login. Both
-are real, current behaviour; this page states them because the page that
-should carry them does not yet. Until it is updated: `SH` and `OS.EXECUTE`
-do not work at all from a program that logs in over the API in this
-release, and a client built against an older client library cannot connect
-until it is relinked.
+**The API port is 4247 and nothing can change it.** It was 4243. The client
+library (`SDConnect` with no port) and the BASIC `!sdclient` class both default
+to 4247, so a program that names no port needs no change; one that names 4243
+must name 4247. See *The port* in the GettingStarted set's *API access*.
+
+**`NLS` is a TCL verb again**, so you can view and set the currency symbol and
+the thousands and decimal separators from the prompt. `GETNLS` and `SETNLS` in
+SD BASIC, and the `CURRENCY`, `DECIMAL` and `THOUSANDS` keywords, did not change.
+There is no `SET.LANGUAGE` or `LOAD.LANGUAGE`: SD Core is English only.
+
+**`RUN` works from a folder over 128 characters deep.** It could fail with
+*Invalid runfile pathname*; the path can now be up to 255 characters. An error
+message that named a long program could also write past the end of its line
+buffer; the text is now cut short instead.
+
+## API sessions are encrypted, and run as the signed-in user
+
+An API session now runs as the Windows user who logged in rather than as the
+SD service account, and the whole connection — network or local — is wrapped
+in TLS 1.3 before login. `SH` and `OS.EXECUTE` do not work at all from a
+program that logs in over the API in this release, and a client built against
+an older client library cannot connect until it is relinked. See
+[the client API](37-sd-client-api.html#connection).
 
 ## What might stop working
 
@@ -168,6 +182,7 @@ until it is relinked.
   "for me only" rather than all-users, or is older than 3.13.
 - **An API client built against an older client library**, once the server
   it connects to is upgraded.
+- **A program that names API port 4243.** Name 4247.
 
 ## See also
 

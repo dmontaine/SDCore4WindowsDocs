@@ -110,9 +110,19 @@ that grabbed the port before SD started cannot pretend to be SD.
 > ones cannot be converted — the password was never kept anywhere, by
 > design.
 
+**The connection is encrypted.** Every connection, over the network or local,
+is wrapped in TLS 1.3 before the login, and the client library does this
+itself. A program linked against an older copy of the library cannot connect;
+relink it. The GettingStarted set's *API access* page has the whole story.
+
 A session is confined to its own account. An API session can open
 everything inside its own account and the shipped SDSYS files every
 account needs, but cannot open, rename, delete or list anything else.
+
+**An API session runs as the Windows user who logged in**, not as the SD
+service, so it reaches files with that user's access and the records it
+creates are owned by that user. `SH` and `OS.EXECUTE` do not work from an API
+session in this release.
 
 ## Server status codes
 
