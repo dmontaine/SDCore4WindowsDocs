@@ -74,12 +74,15 @@ Puts accounts back from a backup.
 * **A bare file name** is looked for in the remembered folder. A name that
   includes a folder is used as given.
 * **`LATEST` takes the place of the file name** and chooses the newest backup in
-  the remembered folder that was made **on this computer** and holds every account
-  you named. It says which file it chose before it asks. With `ALL` it takes the
-  newest backup that was made with `ALL`. If there is none it says so and changes
-  nothing. The choice is made from the file name, which carries the computer, the
-  accounts and the time, so a backup renamed by hand may not be found. The zip is
-  still checked against its own counts, below, before anything changes.
+  the remembered folder that was made **on this computer** and **holds** every
+  account you named. It finds the computer and the time from the file name, then
+  opens each candidate and reads its record of the accounts it holds (nothing is
+  unpacked), so a backup renamed by hand may not be found. It says which file it
+  chose before it asks. If a newer backup made on this computer does not hold the
+  account, or cannot be read, it says so and names both files. If no backup holds
+  the account it says so and changes nothing. With `ALL` it takes the newest backup
+  that was made with `ALL`, by file name. The zip is still checked against its own
+  counts, below, before anything changes.
 * **Only the accounts you name are restored**, from a file name or from `LATEST`.
   Other accounts in the same zip are left as they are. A named account that is not
   in the zip stops the restore with nothing changed. Only `ALL` restores every
