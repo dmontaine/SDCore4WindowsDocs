@@ -64,10 +64,12 @@ Changed afterwards with `append.sd.path on` or `off`.
 
 ### 2. The ssh server
 
-**Installing an ssh server is optional, and the box is not ticked.** It
-downloads from Windows Update and can take several minutes — up to about an
-hour on a slow machine or connection — which is why it is offered rather than
-done.
+**Installing an ssh server is optional, and the box is not ticked.** When the
+`ssh-server` folder that comes with the installer is beside it, ticking the box
+installs Microsoft's OpenSSH server from that folder as one step of the install,
+with no network. Without that folder the server downloads from Windows Update,
+which can take up to 30 minutes; the Ready to Install page and the progress line
+say so before it starts.
 
 What you see depends on what the machine already has:
 
@@ -307,10 +309,14 @@ Every reason, warning and caveat that used to appear on them is here.
   says so and stops before changing anything. Remove the other server, or
   return the configuration to the way Windows shipped it, and run the
   installer again.
-- **Installing OpenSSH takes time.** It downloads from Windows Update and can
-  take several minutes with nothing on screen — up to about an hour on a slow
-  connection. Do not stop it, and expect it to want a restart: until you
-  restart, nobody can sign in over ssh.
+- **Installing OpenSSH can take time when it has to be downloaded.** From the
+  `ssh-server` folder it is quick. Without that folder it downloads from Windows
+  Update and can take up to 30 minutes. Do not stop it, and expect it to want a
+  restart: until you restart, nobody can sign in over ssh.
+- **Which OpenSSH.** The server from the `ssh-server` folder is Microsoft's
+  OpenSSH, installed in `C:\Program Files\OpenSSH`; the one from Windows Update
+  is in `C:\Windows\System32\OpenSSH`. SD treats both as Windows' own ssh server,
+  and `ssh.server remove` removes whichever it finds.
 - **What ssh does once SD is installed.** SD limits ssh to SD Core users, and
   every ssh session goes straight into SD Core rather than a command prompt,
   so an SD Core account cannot get a shell on the computer. Port forwarding is
