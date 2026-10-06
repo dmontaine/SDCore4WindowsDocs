@@ -142,14 +142,19 @@ powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\install-ssh.ps1"
 ```
 
 Exit **0** installed and running, **2** installed but Windows needs a restart
-before the service exists, **1** failed.
+before the service exists, **1** failed. With `-Show` it changes nothing and
+exits **10** when no download would happen (a server is already here, or a copy
+of Microsoft's OpenSSH installer is in `C:\Program Files\SD\ssh-server`), **0**
+when it would download from Windows Update.
 
 **This is the one that matters most.** Accounts SD creates sign in over ssh
 and nothing else, so until this succeeds nobody but you can use that SD. The
 installer prints this same command in its closing report when it could not
 install the server; it is repeated here because that report is easy to close.
-**It is slow** - `Add-WindowsCapability` downloads from Windows Update and can
-work for minutes in silence. Do not interrupt it.
+**It is slow when it downloads** - `Add-WindowsCapability` downloads from
+Windows Update and can work for minutes in silence. Do not interrupt it. With
+the OpenSSH installer kept in `C:\Program Files\SD\ssh-server` the script
+installs from that copy instead, in seconds.
 
 ### An editor verb does nothing
 

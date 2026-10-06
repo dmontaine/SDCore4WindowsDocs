@@ -49,8 +49,8 @@ they were doing.
 
 | | Called by |
 |---|---|
-| `install-ssh.ps1` | `ssh.server install` |
-| `remove-ssh.ps1` | `ssh.server remove` - takes the Windows OpenSSH server capability off the machine. The removal completes at the next restart |
+| `install-ssh.ps1` | `ssh.server install` - from the OpenSSH installer kept in `ssh-server` under the SD folder when there is one, else the Windows capability. `-Show` reports which and changes nothing |
+| `remove-ssh.ps1` | `ssh.server remove` - takes the OpenSSH server off the machine. The Windows capability's removal completes at the next restart; a server from the OpenSSH installer is removed at once (exit 3) |
 | `ssh-firewall.ps1` | `remote.ssh on` \| `off` - scopes the shared Windows rule `OpenSSH-Server-In-TCP` rather than disabling it |
 | `api-listener.ps1` | `remote.api on` \| `off` - writes or comments out the `APIPORT` line in `sd.conf` |
 | `api-firewall.ps1` | `remote.api on` \| `local` - opens or restricts the API port |

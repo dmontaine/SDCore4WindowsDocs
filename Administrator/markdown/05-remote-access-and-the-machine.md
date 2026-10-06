@@ -101,12 +101,19 @@ Who may reach it is a separate setting - use "remote.ssh" to see or change it.
 
 ### install
 
-The capability comes from Windows Update. It can take several minutes, and up
-to about an hour on a slow machine or connection, with little on screen while
-it runs. The verb asks before starting for that reason.
+Where the server comes from depends on how SD was installed. When the installer
+was given Microsoft's OpenSSH installer (an `ssh-server` folder beside it), it
+keeps a copy in the SD folder, and `ssh.server install` uses that copy: a few
+seconds, no network, and no question first.
 
-Afterwards Windows needs a restart before the service exists, so no SD account
-can sign in until the machine has been restarted.
+Without that copy the server is Windows' own capability, and it comes from
+Windows Update. It can take several minutes, and up to about an hour on a slow
+machine or connection, with little on screen while it runs. The verb asks before
+starting for that reason.
+
+After the capability Windows needs a restart before the service exists, so no
+SD account can sign in until the machine has been restarted. The server from the
+OpenSSH installer normally starts at once.
 
 ### remove
 
@@ -115,17 +122,21 @@ sign in over ssh or over the API and are denied the console and Remote Desktop.
 For an account that has only ssh — including at this keyboard, where it arrives
 by `ssh localhost` — removing the server takes away its only way in.
 
-The removal is staged behind a reboot. Windows reports success while `sshd.exe`
-is still on disk and the service is still running, so ssh continuing to work
-afterwards is expected and is not a fault.
+A server that came from Windows' capability is staged behind a reboot. Windows
+reports success while `sshd.exe` is still on disk and the service is still
+running, so ssh continuing to work afterwards is expected and is not a fault.
+
+A server that came from the OpenSSH installer is removed at once: the service
+and `sshd.exe` are gone when the verb returns, and no restart is needed. The
+verb says which of the two happened.
 
 **One consequence is worth knowing before you remove it.**
-`C:\ProgramData\ssh` is left in place, because Windows does not remove it with
-the capability. It holds the host keys and `sshd_config`. That matters for one
-thing: running the SD installer on this machine again. Setup compares
-`sshd_config` against the copy Windows ships, `sshd_config_default` — and that
-copy went with the capability, so Setup cannot tell whether the configuration
-has been edited and stops rather than guess.
+`C:\ProgramData\ssh` is left in place, because neither removal deletes it. It
+holds the host keys and `sshd_config`. That matters for one thing: running the
+SD installer on this machine again. Setup compares `sshd_config` against the
+copy the server ships, `sshd_config_default` — and that copy went with the
+server, so Setup cannot tell whether the configuration has been edited and stops
+rather than guess.
 
 `ssh.server install` is not affected: it puts the server back and
 `sshd_config_default` comes back with it. Remove the directory as well only if

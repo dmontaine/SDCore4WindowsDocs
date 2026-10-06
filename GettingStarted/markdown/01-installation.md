@@ -88,6 +88,11 @@ direction. `OpenSSH-Server-In-TCP` is Windows' own shared rule and not SD's, so
 defaulting it to unticked and applying that would silently loopback-lock the
 ssh a site already relies on.
 
+When the `ssh-server` folder was beside the installer, the installer keeps a copy
+of Microsoft's OpenSSH installer (about 6.5 MB) in the SD folder, whether or not
+the box was ticked, so that `ssh.server install` can install the server later
+with no network.
+
 Changed afterwards with `ssh.server install` or `remove`, and `remote.ssh on`
 or `off`.
 
@@ -316,7 +321,8 @@ Every reason, warning and caveat that used to appear on them is here.
 - **Which OpenSSH.** The server from the `ssh-server` folder is Microsoft's
   OpenSSH, installed in `C:\Program Files\OpenSSH`; the one from Windows Update
   is in `C:\Windows\System32\OpenSSH`. SD treats both as Windows' own ssh server,
-  and `ssh.server remove` removes whichever it finds.
+  and `ssh.server remove` removes whichever it finds: the first at once, the
+  second at the next restart.
 - **What ssh does once SD is installed.** SD limits ssh to SD Core users, and
   every ssh session goes straight into SD Core rather than a command prompt,
   so an SD Core account cannot get a shell on the computer. Port forwarding is
