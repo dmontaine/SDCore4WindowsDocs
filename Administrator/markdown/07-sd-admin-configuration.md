@@ -219,10 +219,13 @@ about one account.
 | `ERRLOG` | 50 kb | Size of the error log. A non-zero value below 10 KB is raised to 10 KB, and the oldest entries are discarded when it fills |
 | `PDUMP` | 0 | Bit flags controlling when a process dump is written |
 | `DEBUG` | unset | Bit flags enabling debugging features |
-| `STARTUP` | empty | A command run when SD starts |
 | `JNLMODE` | 0 | Journalling mode |
 | `OBJECTS` | 0 (no limit) | Compiled programs held in memory at once |
 | `OBJMEM` | 0 (no limit) | Memory those programs may occupy, in KB |
+
+`STARTUP` (a command run when SD starts) was removed in W1.1-3. It never ran. A
+line that still has it stops SD from starting, with a message that says to remove
+the line.
 
 ## The shell
 
