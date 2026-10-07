@@ -124,9 +124,10 @@ no socket at all — "no API" is a real state, not just a firewall rule.
 > there is no firewall rule to open. The API box is unticked by default.
 > `remote.api on` puts a listener back.
 
-> **`APILOGIN` is not an off switch.** It decides whether the API demands a
-> password. `APILOGIN=0` is the **weaker** setting, not the safer one. Do not
-> reach for it.
+> **`APILOGIN` is not a switch of any kind now.** The API always demands the
+> account's password, whatever `sd.conf` says, and `APILOGIN=0` does not weaken
+> that. It is still accepted, so an old `sd.conf` keeps working, and `CONFIG`
+> still prints it. To turn the API off, take away its listener, `APIPORT`.
 
 ## Reaching the port is not getting in
 
