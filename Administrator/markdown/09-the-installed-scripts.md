@@ -1,5 +1,5 @@
 Title: The Installed Scripts
-Subtitle: The thirty-seven PowerShell scripts installed beside SD - the execution policy they need, what their exit codes mean, and the ones you may need to run yourself.
+Subtitle: The forty-five PowerShell scripts installed beside SD - the execution policy they need, what their exit codes mean, and the ones you may need to run yourself.
 
 SD's installer does most of its work in PowerShell rather than inside the
 installer script, and **it leaves every one of those scripts on the machine**.
@@ -19,7 +19,7 @@ braces an optional part.
 
 ## What is here and what is not
 
-**Thirty-seven scripts ship.** They are the installer's own steps, the helpers
+**Forty-five scripts ship.** They are the installer's own steps, the helpers
 SD launches while it is running, and the ones the administrator verbs call.
 Everything else in the project's
 `gplbld` directory - the verifiers, the probes, the build and test cycle - is
@@ -36,7 +36,7 @@ allows no script at all; on Windows Server it is `RemoteSigned`, which allows
 a script written on the machine itself.
 
 **SD does not depend on that setting, and you should leave it alone.** Every
-one of the thirty-seven scripts is launched with an explicit
+one of the forty-five scripts is launched with an explicit
 `-ExecutionPolicy Bypass` on its own command line — by the installer, by the
 SD service, and by the SD verbs that call one. That switch applies to **that
 one PowerShell process, for that one script**. It changes nothing on the
