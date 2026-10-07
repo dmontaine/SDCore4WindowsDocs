@@ -246,3 +246,9 @@ values recur and mean different things:
 
 `remote.api` adds status 2, which means `sd.conf` could not be read — missing,
 unreadable, or carrying no `APIPORT` line to recognise.
+
+**For a BASIC program that runs one of them**: `remote.api` and `remote.ssh`
+set `@SYSTEM.RETURN.CODE` to 0 when the change was made and to a negative number
+when it was refused or failed, as the account commands do. A change that took
+effect also writes an audit record, `REMOTE.API ON`, `REMOTE.API LOCAL`,
+`REMOTE.API OFF`, `REMOTE.SSH ON` or `REMOTE.SSH OFF`.

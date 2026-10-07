@@ -132,9 +132,9 @@ nothing in BASIC called it, so a list could be appended to and read but
 never actually made - `PY_LISTAPPD` on a name nothing had created simply
 failed. It is shaped exactly like `PY_CREATEDICT`, including reusing its
 "already exists" code (`-12012`) rather than a list-specific one. *(SD Core
-for Linux built the same function independently and called it
-`PY_LISTCRTE` - if you are writing code meant to run on both ports, use the
-name your target actually ships.)*
+for Linux built the same function independently and called it `PY_LISTCRTE`.
+**Both names now work on both ports**: `PY_LISTCREATE` is the one documented
+here, and `PY_LISTCRTE` is its alias, with the same body.)*
 
 | | |
 |---|---|
@@ -205,8 +205,8 @@ narrower meaning; the other two are new.
 Above that, each port went its own way: Windows reuses `-12014`, `-12033`
 and `-12034` for `PY_LISTAPPD`/`PY_LISTCLR` failures rather than adding new
 codes; Linux's build of the equivalent functions defines its own
-`-12035`/`-12036`, and its `PY_LISTCRTE` (spelled differently there too —
-see below) adds `-12037`/`-12038`. Windows has no code in that range at
+`-12035`/`-12036`, and its `PY_LISTCRTE` (the alias, see above) adds
+`-12037`/`-12038`. Windows has no code in that range at
 all. A program meant to run on both should not assume a failure code above
 `-12034` means the same thing on the other port.
 

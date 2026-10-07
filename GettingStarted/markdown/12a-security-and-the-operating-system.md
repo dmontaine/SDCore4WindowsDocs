@@ -79,10 +79,18 @@ unprotected.
 
 `C:\ProgramData\SD\sdsys\audit` records **every login, every refused login,
 every `logto`, every refused `logto`, and every `grant` and `revoke`**, with
-date, time and the Windows user it belonged to.
+date, time and the Windows user it belonged to. **It also records what an
+administrator does to accounts and to remote access**: `create.account`,
+`delete.account` and `restore.account` (a completed one only), the
+`modify.account` changes that add or remove a group member, suspend, unsuspend,
+change an account's ssh and API routes or its `os.users` entry, and
+`remote.api` and `remote.ssh` when they change something. An account line
+names the account it concerns.
 
 ```
 2026-08-16 11:42:07 user=don uid=1 pid=8624 LOGTO account=SDSYS
+2026-10-06 21:03:55 user=sdsys uid=1 pid=4120 DELETE.ACCOUNT account=ANN
+2026-10-06 21:04:31 user=sdsys uid=1 pid=4120 REMOTE.API LOCAL
 ```
 
 **The refusals are the interesting half.** An entry saying somebody who is

@@ -157,7 +157,6 @@ config contrib             display the contributors
 ```
 :config
 Virtual Machine Version Number W1.1-3
-APILOGIN  1
 APIPORT   4247
 CMDSTACK  99
 DEADLOCK  0
@@ -222,11 +221,17 @@ Windows writes do not.
 delete.account account.name
 ```
 
-Removes the account directory, its Windows group, its entry in the accounts
-register, and — for a user account SD itself created — the Windows account and
-its profile. **One confirmation covers all of it**, and the wording is decided
-before the question is asked, so it never offers to remove a Windows account it
-is not going to.
+Removes the account directory, its Windows group, its SD password record, its
+entry in the accounts register, and — for a user account SD itself created — the
+Windows account and its profile. **One confirmation covers all of it**, and the
+wording is decided before the question is asked, so it never offers to remove a
+Windows account it is not going to. A completed deletion is written to the
+audit trail.
+
+**It accepts `remove.home` after the account name**, so the same command line
+works on SD Core for Linux, where the word removes the Windows-equivalent of a
+home folder that is otherwise kept. Here the profile is removed anyway, so the
+word changes nothing.
 
 **It will not delete a Windows account SD did not create.** The account is
 left in place and it says so.
