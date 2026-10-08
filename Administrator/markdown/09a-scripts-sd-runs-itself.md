@@ -13,7 +13,7 @@ They are listed so that a name in a log or an error message can be looked up.
 | | |
 |---|---|
 | `install-sdsys.ps1` | makes the one Windows account that may administer SD, `SDSYS`: a member of Administrators and `sdusers`, and of no remote-access group. It generates a password and writes it to `install-sdsys.log`; `finish-install.ps1` then asks for one of your own. Exit 0 made or repaired, 2 already right, 1 failed. Without it nobody can administer SD |
-| `attach-account.ps1` | gives the Windows user who ran the installer their ordinary SD account, through the one door `CREATE.ACCOUNT` keeps for the installer. Without it the person who installed SD has no SD account of their own. Exit 0 made, 2 already there, 3 SD would not start, 1 refused |
+| `attach-account.ps1` | gives the Windows user who ran the installer their ordinary SD account, through the one door `create.account` keeps for the installer. Without it the person who installed SD has no SD account of their own. Exit 0 made, 2 already there, 3 SD would not start, 1 refused |
 | `internal-marker.ps1` | a helper the installer's other scripts load, never run on its own. It writes the one-shot marker an `sd -internal` session needs, and removes it; it prints nothing |
 | `deny-logon.ps1` | denies a local group the console and Remote Desktop, which is what confines an account to ssh |
 | `finish-install.ps1` | the two steps that happen after the installer closes - SD opens so you can set your own password, then the post-install check runs |
@@ -23,7 +23,7 @@ They are listed so that a name in a log or an error message can be looked up.
 | `sync-route-groups.ps1` | creates the two groups that decide which remote route an account may use, and seeds `sdssh` so an existing install does not lose ssh |
 | `upgrade-dicts.ps1` | brings an upgraded install's dictionaries up to the release. Runs on an upgrade only |
 | `upgrade-voc.ps1` | brings every existing account's VOC up to the release, by running `update.accounts all`. Runs on an upgrade only |
-| `upgrade-nocase.ps1` | converts an upgraded install's files to case-insensitive record ids. Runs on an upgrade only. It reads each file first and converts only one that holds no two ids differing only by case; a file that does is left as it is and named in `C:\ProgramData\SD\nocase-upgrade.log`, and so is an indexed file, which needs `CONFIGURE.FILE` by hand. Exit 0 clean, 2 finished with files left (read the log), 1 failed, 3 SD would not start |
+| `upgrade-nocase.ps1` | converts an upgraded install's files to case-insensitive record ids. Runs on an upgrade only. It reads each file first and converts only one that holds no two ids differing only by case; a file that does is left as it is and named in `C:\ProgramData\SD\nocase-upgrade.log`, and so is an indexed file, which needs `configure.file` by hand. Exit 0 clean, 2 finished with files left (read the log), 1 failed, 3 SD would not start |
 | `secure-accounts.ps1` | the containers account directories are created in |
 | `secure-account-dirs.ps1` | the ACL on each account's own directory |
 | `secure-audit.ps1` | creates the audit trail and makes it append-only |
@@ -71,9 +71,9 @@ nothing else.
 
 | | Called by |
 |---|---|
-| `sd-account-archive.ps1` | `BACKUP.ACCOUNT` and `RESTORE.ACCOUNT` - writes the backup zip, unpacks one into a staging folder, counts what is there and puts a restored account in place. The zip is the shape SD Core for Linux writes, so a backup made on one can be read on the other, and a junction or symbolic link inside an account is refused rather than followed. Exit 0 done, 1 refused or failed, 2 could not run |
-| `sd-backupdir.ps1` | `SET.BACKUP.DIRECTORY` - saves the folder those two verbs use when none is typed, as the one line `BACKUPDIR=<path>` in `sd.conf`. It makes the folder if needed and proves it can write there first. The path must be a full Windows path in plain ASCII. Exit 0 done, 1 refused or failed |
-| `sd-settings-os.ps1` | `SETTINGS.REPORT` - the Windows sections of the report. It never prints a password or a private key; of the API's key-and-certificate file it decodes the certificate only. Exit 0 done, 1 failed |
+| `sd-account-archive.ps1` | `backup.account` and `restore.account` - writes the backup zip, unpacks one into a staging folder, counts what is there and puts a restored account in place. The zip is the shape SD Core for Linux writes, so a backup made on one can be read on the other, and a junction or symbolic link inside an account is refused rather than followed. Exit 0 done, 1 refused or failed, 2 could not run |
+| `sd-backupdir.ps1` | `set.backup.directory` - saves the folder those two verbs use when none is typed, as the one line `BACKUPDIR=<path>` in `sd.conf`. It makes the folder if needed and proves it can write there first. The path must be a full Windows path in plain ASCII. Exit 0 done, 1 refused or failed |
+| `sd-settings-os.ps1` | `settings.report` - the Windows sections of the report. It never prints a password or a private key; of the API's key-and-certificate file it decodes the certificate only. Exit 0 done, 1 failed |
 
 See [Backing Up and Restoring Accounts](01b-backup-and-restore.html) for the verbs.
 

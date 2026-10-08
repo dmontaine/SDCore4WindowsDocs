@@ -22,14 +22,14 @@ anything more is SDSYS — which nothing an administrator runs can create; it
 is a single Windows account the installer makes. See
 [Read this before anything else: being SDSYS is the whole of it](01-accounts-and-security.html#read-this-before-anything-else-being-sdsys-is-the-whole-of-it).
 
-**A tier keyword anywhere is now a syntax error**: `CREATE.ACCOUNT ...
-STANDARD`, `MODIFY.ACCOUNT ... PROGRAMMER`, or naming a tier to lift what
+**A tier keyword anywhere is now a syntax error**: `create.account ...
+STANDARD`, `modify.account ... PROGRAMMER`, or naming a tier to lift what
 used to be a downgrade. What used to be a tier change is a suspension now —
-`MODIFY.ACCOUNT <account> SUSPENDED` / `UNSUSPENDED` — which denies every
+`modify.account <account> suspended` / `unsuspended` — which denies every
 door and takes nothing away, so it is free to reverse. `LIST ACCOUNTS` no
 longer has a tier column; it shows the suspension state instead.
 
-**The route keyword on `CREATE.ACCOUNT` is optional, and defaults to
+**The route keyword on `create.account` is optional, and defaults to
 `BOTH`.** Leaving it out used to be a syntax error; now it means the account
 gets both ssh and the API, which is what every account is entitled to. See
 [Making an account: `create.account`](01-accounts-and-security.html#making-an-account-createaccount).
@@ -51,11 +51,11 @@ alone. Nothing to migrate: if your tree never carried a customised
 requires**: at least 8 characters, with a lower-case letter, an upper-case
 letter, a digit and a symbol (any printable character that is not a letter
 or digit; a space counts). It applies everywhere SD sets a password —
-`MODIFY.PASSWORD`, `CREATE.ACCOUNT`, an elevated session's first-run prompt,
+`modify.password`, `create.account`, an elevated session's first-run prompt,
 and the SDSYS password the installer asks for. See
 [Passwords: `modify.password`](01-accounts-and-security.html#passwords-modifypassword).
 
-**`MODIFY.PASSWORD` typed alone now changes the caller's own password, for
+**`modify.password` typed alone now changes the caller's own password, for
 every account** — before this it belonged to SDSYS alone, so an ordinary
 account had no self-service route at all. Naming another account's name
 still needs an SDSYS session and still skips the old-password prompt, since
@@ -124,7 +124,7 @@ whole-tree steps run.
 **Uninstalling asks about your database and your `sd.conf` separately.**
 They used to be one question, because both live in the same folder;
 removing the database took the settings file with it whether you wanted
-that or not. **Removing the Windows accounts `CREATE.ACCOUNT` made now
+that or not. **Removing the Windows accounts `create.account` made now
 actually removes them when the database is removed in the same pass** — the
 two steps used to run in an order that deleted `sdusers` (the list of which
 accounts to remove) before the removal ran, so it silently found nothing to
@@ -152,7 +152,7 @@ is not touched and no longer does anything for SD; change it yourself. See
 ## Backing up and restoring accounts
 
 **Four new verbs, all SDSYS's:** `set.backup.directory`, `backup.account`,
-`restore.account` (including `LATEST`) and `settings.report`. The backup folder
+`restore.account` (including `latest`) and `settings.report`. The backup folder
 is remembered in `sd.conf` as `BACKUPDIR=`. A backup is one zip file per run,
 holds no password, and is checked against its own counts before a restore
 changes anything. While a backup or a restore runs, nobody else may be signed
@@ -201,7 +201,7 @@ configured; nobody has asked for one.
   switch, which a stock Windows machine refuses outright — exactly when the
   advice mattered most, since most of these commands appear after something
   has already gone wrong.
-- **`DELETE.ACCOUNT` tells you when the account's directory did not actually
+- **`delete.account` tells you when the account's directory did not actually
   go** — a file still open in it, or a denying access rule, used to leave it
   on disk with nothing said.
 - **Seven confirmation prompts now show their default and take Enter as an
@@ -210,7 +210,7 @@ configured; nobody has asked for one.
   unchanged, because no is not a safe default for either.
 - **`NLS` is back** in new accounts' VOCs, so the currency symbol and the
   thousands and decimal separators can be viewed and set from the prompt.
-  `UPDATE.ACCOUNTS` adds it to accounts that already exist.
+  `update.accounts` adds it to accounts that already exist.
 - **`RUN` works from a deeply nested folder.** It could fail with *Invalid
   runfile pathname* from about 128 characters deep; the limit is now 255.
 - **Account commands work when SD is started from PowerShell 7.** Commands

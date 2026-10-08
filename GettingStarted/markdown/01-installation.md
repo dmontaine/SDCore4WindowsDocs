@@ -366,12 +366,12 @@ Every reason, warning and caveat that used to appear on them is here.
   replace it. It is needed only to reach SD Core from another computer, over
   ssh or the SD API. Without one, your account works at the keyboard but not
   from another computer, and SD Core asks for one at the next elevated
-  sign-in. Change it at any time with `MODIFY.PASSWORD` in SD Core.
+  sign-in. Change it at any time with `modify.password` in SD Core.
 - **If the installer installed Python, restart Windows** before using the
   `PY_` functions, so that SD Core's service and every session see Python on
   the PATH.
 - **Giving somebody else access.** At the machine itself, sign in to Windows
-  as SDSYS and type `sd`, elevated, then `CREATE.ACCOUNT USER <name> SSH`.
+  as SDSYS and type `sd`, elevated, then `create.account user <name> ssh`.
   Windows asks you to confirm at the UAC prompt: do it at the machine,
   because over a remote-control tool that cannot display it the screen
   freezes instead. The new account then signs in with `ssh <name>@localhost`.
@@ -411,7 +411,7 @@ PowerShell prompt. This is what each failure means until it is put right:
 | SD Core could NOT create its administrator account | There is no way into SD Core until it exists; the reason is in `install-sdsys.log` |
 | SD Core could NOT create an SD Core account for you | SD only admits accounts it creates and will not create one for a Windows account that already exists, so this is the one moment such an account can be made: running the installer again will not create it. The reason is in `attach-account.log` |
 | The OpenSSH server could NOT be installed | Usually a policy that blocks optional features, a metered connection, or no connection. Accounts cannot sign in over ssh until it is there (API-only accounts can use the API meanwhile) |
-| The dictionary, vocabulary or case-conversion step did not run | The upgrade kept what it had: SD Core works, a field added by the release may not be recognized, a command added by the release cannot be typed until `update.accounts` is run in SDSYS (answer Y), and records are still found typed in any case. If two record ids differ only by case the file is left unchanged: rename or delete one of each pair, then run `CONFIGURE.FILE NO.CASE` on it |
+| The dictionary, vocabulary or case-conversion step did not run | The upgrade kept what it had: SD Core works, a field added by the release may not be recognized, a command added by the release cannot be typed until `update.accounts` is run in SDSYS (answer Y), and records are still found typed in any case. If two record ids differ only by case the file is left unchanged: rename or delete one of each pair, then run `configure.file no.case` on it |
 
 ### Uninstalling
 

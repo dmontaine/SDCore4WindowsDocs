@@ -23,8 +23,8 @@ back to case-sensitive ids.
 **Upgrading converts your existing files for you**, and leaves untouched any
 file that already holds two ids differing only by case — both are named in
 `nocase-upgrade.log` in the SD data folder. Resolve the pair by hand (rename
-or delete one), then convert that file yourself with `CONFIGURE.FILE
-NO.CASE`. A file with alternate key indexes needs the same treatment. See
+or delete one), then convert that file yourself with `configure.file
+no.case`. A file with alternate key indexes needs the same treatment. See
 *Lower case*, in the GettingStarted set, for the full mechanism.
 
 ## SD's own names are lower case, but every lookup still finds what you type
@@ -63,7 +63,7 @@ catalogued program names stay upper case regardless.
 case**: `$ACC`, `$MAP`, `$RELEASE` and `SD.VOCLIB` are now `$acc`, `$map`,
 `$release` and `sd.voclib`; `$INCLUDE` finds `keys.h`, `err.h` and the rest
 however you type the name. Typing an old upper-case name still works
-everywhere; updating an account (`UPDATE.ACCOUNTS`, or answering Y to
+everywhere; updating an account (`update.accounts`, or answering Y to
 "Update VOC to new release?") renames an entry held under its old name
 rather than adding a duplicate.
 

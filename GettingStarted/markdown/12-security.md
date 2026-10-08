@@ -54,7 +54,7 @@ are.**
 | no SD account of that name | refused — *Account %1 not in register* (5018) |
 | not in `sdusers` | refused at the door — *not registered for SD use* (5009) |
 | `sd -A<name>` | **refused unless `<name>` is your own account** (10051) |
-| `logto sdsys` from any other account | **refused unconditionally**, whether or not the session is elevated — 10002, audited `logto refused account=SDSYS reason=SDSYS is not reachable by LOGTO` |
+| `logto sdsys` from any other account | **refused unconditionally**, whether or not the session is elevated — 10002, audited `logto refused account=SDSYS reason=SDSYS is not reachable by logto` |
 
 **SDSYS is reached one way only: sign in to Windows as the account literally
 named `sdsys`, and run `sd` elevated.** Being a Windows administrator —

@@ -22,12 +22,12 @@ something `create.account` can produce at all. See
 full — do not read an account-tier explanation anywhere else in this set or
 in an older document as still true.
 
-**What used to be a tier change is now a suspension.** `MODIFY.ACCOUNT
-<account> SUSPENDED` denies an account every door; `UNSUSPENDED` reverses
-it. Naming a tier keyword anywhere — `CREATE.ACCOUNT`, `MODIFY.ACCOUNT`, or
+**What used to be a tier change is now a suspension.** `modify.account
+<account> suspended` denies an account every door; `unsuspended` reverses
+it. Naming a tier keyword anywhere — `create.account`, `modify.account`, or
 to lift what used to be a downgrade — is now a syntax error.
 
-**The route keyword on `CREATE.ACCOUNT` is optional**, and defaults to
+**The route keyword on `create.account` is optional**, and defaults to
 `BOTH` (ssh and the API) rather than refusing until you name one. See
 [Creating an account](05-account-types.html#creating-an-account).
 
@@ -41,24 +41,24 @@ no longer gets you into SDSYS, or gives your own account anything SDSYS has
 follow from Windows elevation; none of it does now. See
 [SDSYS is the only administrator](05-account-types.html#sdsys-is-the-only-administrator).
 
-**`LOGTO SDSYS` is refused unconditionally**, from anywhere, elevated or
+**`logto SDSYS` is refused unconditionally**, from anywhere, elevated or
 not — the only way in is the elevated start itself. An elevated session that
-`LOGTO`s down to an ordinary account can `LOGTO SDSYS` back up again, which
+`logto`s down to an ordinary account can `logto SDSYS` back up again, which
 did not work before: leaving SDSYS used to end the elevated session.
 
 **`SH` and `!` are back on ordinary accounts** — gated the same way they
 always should have been, by an administrator's `OS.USERS` grant
-(`MODIFY.ACCOUNT <account> SH-ON`), not by whether the account could type
+(`modify.account <account> sh-on`), not by whether the account could type
 the command at all.
 
 ## Passwords are stronger, and yours to change
 
 **A password must now be at least 8 characters and contain a lower-case
 letter, an upper-case letter, a digit and a symbol**, everywhere SD Core
-sets one: `MODIFY.PASSWORD`, `CREATE.ACCOUNT`, an elevated session's
+sets one: `modify.password`, `create.account`, an elevated session's
 first-run prompt, and the SDSYS password the installer asks for.
 
-**`MODIFY.PASSWORD` typed on its own now changes your own password**, for
+**`modify.password` typed on its own now changes your own password**, for
 every account. Before this it belonged to SDSYS alone, so an ordinary
 account had no way to change what it had been given. Naming another
 account's name still needs an administrator session, and still sets the
@@ -138,11 +138,11 @@ no port needs no change.
 
 ## Backing up and restoring accounts
 
-**Four new commands, all SDSYS's.** `SET.BACKUP.DIRECTORY` makes a backup
-folder and remembers it (in `sd.conf`, as `BACKUPDIR=`). `BACKUP.ACCOUNT` writes
+**Four new commands, all SDSYS's.** `set.backup.directory` makes a backup
+folder and remembers it (in `sd.conf`, as `BACKUPDIR=`). `backup.account` writes
 the accounts you name, or every account but SDSYS, to one zip file there.
-`RESTORE.ACCOUNT` puts accounts back from a zip file, or from the newest backup
-made on this computer if you say `LATEST`. `SETTINGS.REPORT` writes a text
+`restore.account` puts accounts back from a zip file, or from the newest backup
+made on this computer if you say `latest`. `settings.report` writes a text
 report of the system's settings for you to keep.
 
 **A backup holds each account's files and what is needed to make the account
@@ -209,7 +209,7 @@ have — say so.
 **Uninstalling asks about your database and your settings file
 separately.** Before, removing the database took `sd.conf` with it, because
 both live in the same folder; you can now keep one and discard the other.
-**Removing the Windows accounts `CREATE.ACCOUNT` made now actually works**
+**Removing the Windows accounts `create.account` made now actually works**
 when the database is removed in the same pass — the two steps used to run in
 an order that deleted the list of which accounts to remove before removing
 them, which silently left every one of them in place, still able to sign
@@ -262,7 +262,7 @@ freely.
   -File`, which a stock Windows machine refuses outright — exactly when the
   advice was needed most, since these commands mostly appear after something
   has already gone wrong.
-- **`DELETE.ACCOUNT` tells you when the account's directory did not actually
+- **`delete.account` tells you when the account's directory did not actually
   go** — a file still open in it, or a denying access rule, used to leave it
   on disk with nothing said.
 - **A session that dies without signing off is cleared within five
@@ -279,7 +279,7 @@ freely.
   stopped by the new one.
 - **`NLS` is back**, so you can view and set the currency symbol and the
   thousands and decimal separators from the prompt. A new account has it;
-  `UPDATE.ACCOUNTS` adds it to accounts that already exist.
+  `update.accounts` adds it to accounts that already exist.
 - **`RUN` works from a deeply nested folder.** It could fail with *Invalid
   runfile pathname* when the program's folder was about 128 characters deep or
   more; the path can now be up to 255 characters.
@@ -290,10 +290,10 @@ freely.
 
 ## What might stop working
 
-- **A script that names a tier keyword** — `CREATE.ACCOUNT ... STANDARD`,
-  `MODIFY.ACCOUNT ... PROGRAMMER`, or a tier name used to lift a suspension —
-  is now a syntax error. Drop the keyword, or say `UNSUSPENDED`.
-- **A script or habit that used `LOGTO SDSYS` from an elevated ordinary
+- **A script that names a tier keyword** — `create.account ... STANDARD`,
+  `modify.account ... PROGRAMMER`, or a tier name used to lift a suspension —
+  is now a syntax error. Drop the keyword, or say `unsuspended`.
+- **A script or habit that used `logto SDSYS` from an elevated ordinary
   session.** Sign in to Windows as SDSYS and start `sd` elevated instead.
 - **An API program built against an older client library** cannot connect at
   all until it is relinked — the server waits for a TLS handshake that an
@@ -314,7 +314,7 @@ freely.
 - **`CREATE.FILE ... CASE`** is refused; every file is nocase now.
 - **A file with two ids differing only by case** is left untouched by the
   upgrade and named in `nocase-upgrade.log` — resolve those by hand, then
-  convert the file with `CONFIGURE.FILE NO.CASE`.
+  convert the file with `configure.file no.case`.
 
 ## Continued in
 

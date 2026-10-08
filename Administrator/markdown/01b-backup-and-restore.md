@@ -27,7 +27,7 @@ different every time it was used.
 
 **You do not have to run it first.** If no folder is remembered,
 `backup.account` and `restore.account` ask for one and remember the answer
-exactly as this verb would. `restore.account` with `NO.QUERY` has nobody to ask
+exactly as this verb would. `restore.account` with `no.query` has nobody to ask
 and refuses instead.
 
 **An SD older than this release will not start on an `sd.conf` that carries a
@@ -37,8 +37,8 @@ line before going back to an older release.
 ## Backing up: `backup.account`
 
 ```
-backup.account name {name ...} {TO folder}
-backup.account ALL {TO folder}
+backup.account name {name ...} {to folder}
+backup.account all {to folder}
 ```
 
 Writes the named accounts, or every account except SDSYS, to **one zip file**
@@ -63,17 +63,17 @@ refused until it finishes.
 ## Restoring: `restore.account`
 
 ```
-restore.account zipfile name {name ...} {NO.QUERY}
-restore.account zipfile ALL {NO.QUERY}
-restore.account LATEST name {name ...} {NO.QUERY}
-restore.account LATEST ALL {NO.QUERY}
+restore.account zipfile name {name ...} {no.query}
+restore.account zipfile all {no.query}
+restore.account latest name {name ...} {no.query}
+restore.account latest all {no.query}
 ```
 
 Puts accounts back from a backup.
 
 * **A bare file name** is looked for in the remembered folder. A name that
   includes a folder is used as given.
-* **`LATEST` takes the place of the file name** and chooses the newest backup in
+* **`latest` takes the place of the file name** and chooses the newest backup in
   the remembered folder that was made **on this computer** and **holds** every
   account you named. It finds the computer and the time from the file name, then
   opens each candidate and reads its record of the accounts it holds (nothing is
@@ -83,7 +83,7 @@ Puts accounts back from a backup.
   the account it says so and changes nothing. With `ALL` it takes the newest backup
   that was made with `ALL`, by file name. The zip is still checked against its own
   counts, below, before anything changes.
-* **Only the accounts you name are restored**, from a file name or from `LATEST`.
+* **Only the accounts you name are restored**, from a file name or from `latest`.
   Other accounts in the same zip are left as they are. A named account that is not
   in the zip stops the restore with nothing changed. Only `ALL` restores every
   account in the zip.
@@ -92,7 +92,7 @@ Puts accounts back from a backup.
   of accounts, and every account's files, bytes and directories must match what
   was unpacked. Any difference stops the restore with nothing changed.
 * **It says which accounts will be replaced and which will be made, and asks
-  once.** The default answer is no. `NO.QUERY` skips the question.
+  once.** The default answer is no. `no.query` skips the question.
 * **An account that exists is replaced**, and keeps its Windows user, password
   and groups.
 * **An account that does not exist is made first**, from the type, routes,
