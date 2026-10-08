@@ -88,10 +88,15 @@ change an account's ssh and API routes or its `os.users` entry, and
 names the account it concerns.
 
 ```
-2026-08-16 11:42:07 user=don uid=1 pid=8624 LOGTO account=SDSYS
-2026-10-06 21:03:55 user=sdsys uid=1 pid=4120 DELETE.ACCOUNT account=ANN
-2026-10-06 21:04:31 user=sdsys uid=1 pid=4120 REMOTE.API LOCAL
+2026-08-16 11:42:07 user=don uid=1 pid=8624 logto account=SDSYS
+2026-10-06 21:03:55 user=sdsys uid=1 pid=4120 delete.account account=ANN
+2026-10-06 21:04:31 user=sdsys uid=1 pid=4120 remote.api local
 ```
+
+Every word before the first `=` is lower case. What follows an `=` is as it
+was: an account name keeps its case, and so does the text of a reason. A
+file that was started before this was the rule holds both spellings, so search
+it without regard to case.
 
 **The refusals are the interesting half.** An entry saying somebody who is
 not an administrator asked for SDSYS by name, or asked for an account they have
