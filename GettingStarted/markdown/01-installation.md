@@ -52,7 +52,8 @@ boxes on one page.
 
 The boxes appear only on a **first** install. An upgrade shows no tasks page at
 all: the machine already carries the answers, and every one of these settings
-has a command that changes it afterwards.
+has a command that changes it afterwards. The one exception is Python (see
+*4. Python*), which an upgrade asks about on a page of its own.
 
 ### 1. System integration
 
@@ -123,6 +124,12 @@ carries python.org's own Python installer in its `python\` folder, so nothing
 is downloaded. The box appears only when that folder is beside the installer
 and the machine has no all-users Python 3.13 or later already. Ticked, it
 installs Python for every user of the computer and adds it to the system PATH.
+
+**An upgrade asks the same question** on a page of its own, because it shows no
+tasks page. That page appears only when the `python\` folder is beside the
+installer and no all-users Python 3.13 or later is registered; the box is
+**unticked**. An upgrade from a release that had no Python support is therefore
+asked once. A silent upgrade shows no page and asks nothing.
 
 Python is a separate product with its own entry in *Apps*; uninstalling SD Core
 leaves it in place.
