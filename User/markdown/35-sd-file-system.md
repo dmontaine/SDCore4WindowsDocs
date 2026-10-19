@@ -147,7 +147,7 @@ fstat customers on
 `fstat` collects nothing until it is turned on, so a report immediately after
 an `on` is empty rather than wrong.
 
-**`sdfix`**, the file check tool (`bin/sdfix`, run on a file that nobody has open), has a
+**`sdfix`**, the file check tool (`sdfix.exe` in SD's program folder, `C:\Program Files\SD\usr\bin`; run on a file that nobody has open), has a
 **`-Z`** option, added 16 Oct 2026: it walks the groups as `-C` does and clears the **dead space** at the
 end of each — the bytes after the used part of a block, where a deleted record's old text can still be.
 It says *Dead space cleared in n block(s)*, a second run says 0, and no record changes. Clearing makes the
