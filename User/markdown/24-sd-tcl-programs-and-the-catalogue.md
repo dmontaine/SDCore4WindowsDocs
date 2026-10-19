@@ -83,6 +83,11 @@ ZZPROG OK
 read `zzprog hello`, so arguments arrive as typed and the program parses them
 itself.
 
+**A program run by its catalogue name takes `lptr` and `no.page` as `run`
+does.** The words stay in the sentence for the program to see. A word in
+quotation marks is not a keyword. This applies to a catalogue name only, not to
+the name of a VOC verb.
+
 ### Three catalogues, and they are not the same
 
 | | |
@@ -99,6 +104,11 @@ rather than by the `global` keyword — so the prefix is not a way round it.
 
 Private and local cataloguing need none of this and work in a programmer's own
 account.
+
+**`catalog ... local` asks before it overwrites.** When the VOC already holds a
+local catalogue pointer under that name and it points at a different object
+file, you are asked first (Return is no). `no.query` goes ahead without asking,
+and cataloguing the same file again does not ask.
 
 ### Seeing and removing
 
