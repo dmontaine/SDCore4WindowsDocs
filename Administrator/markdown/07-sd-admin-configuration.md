@@ -158,7 +158,6 @@ reads.
 | `DUMPDIR` | `C:\ProgramData\SD\sdsys\dumps` | Where process dumps are written |
 | `TEMPDIR` | `/cygdrive/c/WINDOWS/TEMP` | Temporary files |
 | `SORTWORK` | `/cygdrive/c/WINDOWS/TEMP` | Work files for a sort that does not fit in memory |
-| `JNLDIR` | empty | Journal directory |
 | `TERMINFO` | empty | An additional terminfo directory. The shipped definitions are found without it |
 
 `DUMPDIR` is set rather than left empty on purpose. A blank value falls back to
@@ -222,7 +221,6 @@ about one account.
 | `ERRLOG` | 50 kb | Size of the error log. A non-zero value below 10 KB is raised to 10 KB, and the oldest entries are discarded when it fills |
 | `PDUMP` | 0 | Bit flags controlling when a process dump is written |
 | `DEBUG` | unset | Bit flags enabling debugging features |
-| `JNLMODE` | 0 | Journalling mode |
 | `OBJECTS` | 0 (no limit) | Compiled programs held in memory at once |
 | `OBJMEM` | 0 (no limit) | Memory those programs may occupy, in KB |
 
@@ -258,6 +256,8 @@ changes SD's behaviour, and none should be offered to a site as a control.
 |---|---|
 | `NETFILES` | SDNet was removed from this port. `netfiles.c` is deleted, a `server;file` VOC reference is refused, and the request that reports open SDNet connections returns an empty list. The value is still stored and still reported, and setting it opens nothing |
 | `CREATUSR` | SD has accounts rather than accounts and users, so `create.account` always creates the operating system account and there is nothing to opt in to. The value is discarded as it is read |
+| `JNLMODE` | Stored and readable with `config('JNLMODE')`. Nothing acts on it: no journalling is done (read from the source, 19 October 2026) |
+| `JNLDIR` | Stored and readable with `config('JNLDIR')`. Nothing acts on it, for the same reason |
 | `CODEPAGE` | Stored, readable and settable. Nothing acts on it |
 | `EXCLREM` | Stored, readable and settable. It described exclusive access to a remote file, and there are no remote files |
 | `RINGWAIT` | Stored, readable and settable. Nothing acts on it |
