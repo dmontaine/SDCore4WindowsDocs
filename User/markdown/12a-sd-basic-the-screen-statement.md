@@ -8,6 +8,12 @@ check boxes, lists and buttons, shows a menu bar, and takes clicks of the mouse.
 It needs no extra package and no change to the rest of the program: it is one
 statement word followed by a verb.
 
+> **Status on Windows.** The screen library came to SD Core for Windows on 18 October 2026, as it is in SD Core for Linux.
+> It has been built here and every program in it compiles; **it has not yet been run on a Windows console.** What is known
+> about the console: the default terminal type, `windows`, has the colour capabilities the themes need but no `smcup`, so no
+> alternate screen; an `xterm`-compatible terminal (SD can be reached through ssh from one) has that too. Try a small program with `screen open` before building on it, and report what a Windows
+> console does with the mouse, with colour and when the window is resized.
+
 SD folds case, so a program may be written in either case. Keywords are shown
 here in lower case. In the tables, *italics* mark something you supply and
 **bold** marks a word typed as it stands; braces mark an optional part.
@@ -474,8 +480,8 @@ styles, a name that is not a style, or a colour or flag it does not know. Choose
 change its styles.
 
 There are eight colours; `bold` makes the text bright. Colour comes from the terminal's
-`setf` and `setb` capabilities, which the shipped `xterm`, `linux` and `ansi` entries
-have. On a terminal that scrolls when its bottom right cell is written (`ansi`) the
+`setf` and `setb` capabilities, which the shipped `windows`, `xterm`, `linux` and `ansi`
+entries have. On a terminal that scrolls when its bottom right cell is written (`ansi`) the
 library leaves that one cell of the desktop alone.
 
 ## Borders
@@ -492,8 +498,8 @@ it is. `screen close` puts the plain borders back.
 
 `screen open` asks an xterm-compatible terminal to report the mouse: buttons,
 dragging and the wheel, in the form of xterm's modes 1000, 1002 and 1006. `screen close`
-turns the reporting off. A terminal that does not know the modes, such as the Linux
-console, ignores the request and sends nothing.
+turns the reporting off. A terminal that does not know the modes ignores the request and
+sends nothing.
 
 With reporting on, **forms and dialogues take clicks without any help from the
 program**:
@@ -532,6 +538,6 @@ reset command).
 - A table sorts what it *shows*, never the rows you gave it, and a tree is the list of
   nodes you gave it with the depths you gave it: neither is a database view.
 - It has no widget for editing a record with the editor's own commands: `screen memo` has
-  selection, undo and find, and SED and the debugger keep their own screens.
+  selection, undo and find.
 - It draws nothing in a phantom or over the API: every verb takes `else`.
 - Text written with `print` or `crt` is not in the shadow.
