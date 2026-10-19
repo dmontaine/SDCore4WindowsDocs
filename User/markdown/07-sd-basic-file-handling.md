@@ -128,6 +128,24 @@ There is no "insert only" form — read first if that distinction matters, and
 hold a lock between the read and the write or two sessions will both find it
 absent.
 
+### Forced writes: `sync`
+
+A file that must survive a power failure can be told to write to disk as it goes. Without it SD, like any
+program that writes files, leaves data in the operating system's cache for a short while.
+
+```
+open 'LEDGER' to f.ledger sync else stop 'cannot open'
+openpath 'C:/data/ledger' to f.ledger sync else stop
+x = fileinfo(f.ledger, FL$SYNC)          ;* 1 if this open has it on
+```
+
+With the state on, every write and delete flushes the primary and the overflow subfiles before the
+statement returns. The `S` flag in field 6 of the file's VOC entry (an `F` entry) gives the same state to every
+`open` of it, and bit 4 of the `FSYNC` parameter in `sd.conf` gives it to every hashed file. **It is much slower: a write costs a disk flush, so use it on the
+files that need it and not on all.** It protects the file you flagged and nothing else on the machine, and a file
+that is not hashed (a directory file) does not take it. openQM's `fcontrol(f, FC$SYNC, ...)`, which turns it on or
+off for a file already open, is not provided here.
+
 `delete file.variable, record.id` removes a record. After
 `delete f, 'R2'`, reading `R2` takes the `else` branch.
 
