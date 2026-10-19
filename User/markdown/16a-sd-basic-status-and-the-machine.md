@@ -144,23 +144,23 @@ names something else entirely.** This program, in an ordinary account:
 
 ```
       v1 = kernel(28, 0)
-      v2 = ospath('C:', 1)
       v5 = option('X')
       v6 = pterm(1, '')
 ```
 
-compiles to, at the **last line of the program**:
+compiles to, at the **last line of the program** (line 4 of this four-line
+file, counting its `end`):
 
 ```
-41: Matrix KERNEL is not referenced in a DIM statement
-41: Matrix OPTION is not referenced in a DIM statement
-41: Matrix OSPATH is not referenced in a DIM statement
-41: Matrix PTERM is not referenced in a DIM statement
+4: Matrix KERNEL is not referenced in a DIM statement
 WARNING: KERNEL is not assigned a value
+WARNING: OPTION is not assigned a value
+WARNING: PTERM is not assigned a value
+1 error(s)
 ```
 
 A name the compiler does not know as a function is read as a **matrix
-reference**, so the error is about a `dim` statement you never wrote, at a line
+reference**, so the complaint is about a `dim` statement you never wrote, at a line
 number nowhere near the call. **If a function you are sure exists produces
 that, it exists and this account may not call it.** A call with three arguments
 gives a different but equally misleading answer — `sdext(101, 'pw', 'salt')`
