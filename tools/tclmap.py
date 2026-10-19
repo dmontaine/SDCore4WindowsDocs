@@ -78,11 +78,6 @@ if len(roster) < 100:
 # Each entry is (set, markdown filename, verbs).  Keep it in page order.
 
 DOCS = [
- # nls is explained with getnls() and setnls, on the data-conversion page, where the
- # three keys it sets are the point (13 Oct 26: assigned, it was on the page already).
- ('User', '06-sd-basic-data-conversion.md', """
-   nls
- """),
  ('User', '19-sd-tcl-command-processor.md', """
    abort clear.data clear.input cleardata clr cs
    display go if message off pause quit redo report.src stop break
@@ -96,8 +91,8 @@ DOCS = [
  """),
  ('User', '20-sd-tcl-files-and-records.md', """
    analyse.file analyze.file clear.file cname compare.files configure.file copy
-   copyp create.file ct delete delete.file dump fixdir fstat hsm list.files
-   list.triggers rename set.file set.trigger
+   copyp create.file ct delete delete.file dump file.stat find.file fixdir fstat
+   fstat.user hsm list.files list.triggers profiler rename set.file set.trigger
  """),
  ('User', '21-sd-tcl-query-processor.md', """
    count list list.item list.label reformat scan search show sort sort.item
@@ -105,16 +100,16 @@ DOCS = [
  """),
  ('User', '22-sd-tcl-select-lists.md', """
    clear.select clearselect copy.list copy.listp delete.list form.list get.list
-   list.diff list.inter list.union merge.list nselect qselect save.list select
-   select.dir sort.list sselect
+   execute.list list.diff list.inter list.union merge.list move.list nselect
+   qselect save.list select select.dir show.list sort.list sselect
  """),
  ('User', '23-sd-tcl-alternate-key-indexes.md', """
-   build.index create.index delete.index list.index make.index
-   rebuild.all.indices selectindex
+   analyse.index build.index create.index delete.index disable.index list.index
+   make.index rebuild.all.indices selectindex
  """),
  ('User', '24-sd-tcl-programs-and-the-catalogue.md', """
    basic catalog catalogue cd compile.dict debug decatalog delete.catalog
-   delete.catalogue delete.common format generate list.common map run
+   delete.catalogue delete.common find.program format generate list.common map run
  """),
  ('User', '25-sd-tcl-ed.md', """
    ed
@@ -126,14 +121,15 @@ DOCS = [
    micro
  """),
  ('User', '28-sd-tcl-printing-and-spooling.md', """
-   printer setptr sp.close sp.open sp.view spool como report.style
+   block.print block.term printer set.queue setptr sp.assign sp.close sp.open
+   sp.view spool como report.style
  """),
  ('User', '29-sd-tcl-the-terminal-and-the-session.md', """
-   autologout bell clear.prompts clearinput clearprompts date date.format echo
-   hush list.term.types logmsg nls pterm sleep term time
+   autologout bell clear.prompts clearinput clearprompts command.logging date
+   date.format echo hush list.term.types logmsg nls pterm sleep term time
  """),
  ('User', '30-sd-tcl-processes-and-phantoms.md', """
-   pdebug pdump phantom pstat status
+   list.phantoms pdebug pdump phantom pstat status
  """),
  ('User', '31-sd-tcl-locks.md', """
    release
@@ -149,14 +145,13 @@ DOCS = [
  # arriving from the other direction: the name is on the page and the
  # explanation is not.  Each verb is assigned where it is actually explained.
  ('Administrator', '01a-account-maintenance.md', """
-   backup.account clean.account config delete.account restore.account set.backup.directory
-   set.date settings.report update.accounts
+   clean.account config delete.account set.date update.accounts
  """),
  ('Administrator', '01b-backup-and-restore.md', """
    backup.account restore.account set.backup.directory settings.report
  """),
  ('Administrator', '02-sessions-and-locks.md', """
-   clear.locks list.locks list.readu listu lock logout unlock
+   clear.locks inhibit.login list.locks list.readu listu lock logout unlock
  """),
  ('Administrator', '03-operating-system-access.md', """
    sh !

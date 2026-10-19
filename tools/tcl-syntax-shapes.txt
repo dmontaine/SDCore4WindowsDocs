@@ -178,7 +178,6 @@ who = **`who`**
 who.am.i = **`who.am.i`**
 # 13 Oct 26: the verbs that had no line (1.2-0 and the backup and restore verbs), so that the card can be written
 # again.  Their pages are named in tclmap.py.
-backup.account = **`backup.account`** *name* … {**`to`** *directory*}  ·  **`backup.account all`** {**`to`** *directory*}
 compare.files = **`compare.files`** {**`dict`**} *file1* {**`dict`**} *file2* {**`detail`**}
 copy.listp = **`copy.listp`** {{**`dict`**} *file*} {*name* … | **`*`**} {**`(`***options*}
 decatalog = **`decatalog`** {*file*} *name* …
@@ -187,13 +186,10 @@ list.term.types = **`list.term.types`** {**`lptr`** {*n*}}
 list.triggers = **`list.triggers`** {*file* …} {**`lptr`** {*n*}}
 rebuild.all.indices = **`rebuild.all.indices`** {**`no.query`**}
 redo = **`redo`** {**`times`** *n*} {**`every`** *s*} *command*
-restore.account = **`restore.account`** *archive* *name* … {**`no.query`**}  ·  **`restore.account`** *archive* **`all`** {**`no.query`**}  ·  **`restore.account latest`** *name* … | **`all`** {**`no.query`**}
-scan = **`scan`** {**`dict`**} *file* {*selection*} {*id* …} {**`all`**} {**`no.case`**} {**`all.match`** | **`no.match`**} {**`strings`** *file* *record*} **`for`** *"text"* …
+scan =**`scan`** {**`dict`**} *file* {*selection*} {*id* …} {**`all`**} {**`no.case`**} {**`all.match`** | **`no.match`**} {**`strings`** *file* *record*} **`for`** *"text"* …
 select.dir = **`select.dir`** *pathname* {**`to`** *n*}
 selectindex = **`selectindex`** {**`dict`**} *file* *index* {*value*} {**`to`** *n*}
-set.backup.directory = **`set.backup.directory`** {*directory*}
-settings.report = **`settings.report`** {*directory*}
-sort.list = **`sort.list`** *name* {**`from`** *file*}
+sort.list =**`sort.list`** *name* {**`from`** *file*}
 analyse.index = **`analyse.index`** *file* {*index* {**`statistics`**} {**`detail`**}} {**`lptr`** {*n*}} {**`no.page`**}
 block.print = **`block.print`** *text*
 block.term = **`block.term`** *text*

@@ -44,23 +44,6 @@ end
 ends, so `close` matters mainly in a long-running program that opens files in a
 loop.
 
-### A temporary file
-
-```
-opentemp {pathname} {ecs} {non.transactional} to file.variable
-   then statements
-else statements
-```
-
-`opentemp` makes a new dynamic file and opens it; **the file is deleted when the
-file variable is closed** (or goes out of scope). With no pathname, or a null
-string, SD makes the file in its temporary directory (the `TEMPDIR` setting;
-`system(38)` names it) under a name built from the process number and a counter.
-A name that already exists is refused — `else` is taken — never taken over. The
-`ecs` word is accepted and ignored. A temporary file's updates are never part of
-a transaction, so that closing it really deletes it, and a session that is killed
-leaves its file behind.
-
 ### Flushing the file cache
 
 ```
