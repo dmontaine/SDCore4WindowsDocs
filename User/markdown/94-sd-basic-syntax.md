@@ -149,7 +149,6 @@ exist.**
 |---|---|
 | **`ebcdic`** | `ebcdic(`*a*`)` |
 | **`echo`** | `echo on`   ·   `echo off`   ·   `echo` *expr* |
-| **`ecs`** | clause of `opentemp` — accepted and ignored ***(clause word)*** |
 | **`edit`** | clause of `keyedit`, and the `edit` verb at the command prompt ***(clause word)*** |
 | **`else`** | clause of `if`, and of every statement that has a `then` |
 | **`end`** | `end` — closes a program, a `then`, an `else`, a `case`, a transaction |
@@ -333,7 +332,6 @@ exist.**
 | **`open.socket`** | `open.socket(`*addr*, *port*, *flags* {, *context*}`)` |
 | **`openpath`** | `openpath` *path* `to` *file.var* {`readonly`} {`on error` …} `then` … `else` … |
 | **`openseq`** | `openseq` *path* `to` *file.var* {`append`} {`overwrite`} {`readonly`} `then` … `else` … — ***`then` = it existed, `else` = it was created*** |
-| **`opentemp`** | `opentemp` {*path*} {`ecs`} {`non.transactional`} `to` *file.var* {`on error` …} `then` … `else` … |
 | **`ors`** | `ors(`*a*, *b*`)` |
 | **`os.error`** | `os.error()` |
 | **`os.execute`** | `os.execute` *command* {`capturing` *var*} |
