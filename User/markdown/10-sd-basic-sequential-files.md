@@ -117,6 +117,17 @@ so a file written on Linux still reads correctly here.
 than the same file with LF endings, so an offset computed by adding up line
 lengths must allow two bytes per line, not one.
 
+**You can choose the line end, for one file** (18 Oct 2026). A letter in field 6 of the VOC entry of the directory file sets
+one of four modes for every `openseq` of its records: `L` (mode 0) ends a line at LF only, keeps every CR, and `writeseq`
+adds LF; `C` (mode 1) ends it at CR LF only, so a line may hold an LF or a CR of its own, and `writeseq` adds CR LF; `B`
+(mode 2) ends it at CR LF or LF with a lone CR kept, and `writeseq` adds LF; `X` (mode 3) ends a line at LF and throws every
+CR away, and `writeseq` adds LF. **A file with no letter** behaves as it always has here: `readseq` ends a line at LF and
+drops a CR in front of it, and `writeseq` adds CR LF. The table of all four modes, and what a directory file `read` and
+`write` do in each, is under *Line terminators* in [SD Basic - File Handling](07-sd-basic-file-handling.html). A last line
+with no line end at the end of the file is a line in every mode, and a CR left at the very end of a file counts as a line
+only where it is data. openQM's `fcontrol(s, FC$CRLF, mode)`, which sets the mode of one open file variable, is not provided
+here.
+
 ## A whole file by pathname: `osread`, `oswrite`, `osdelete`
 
 ```

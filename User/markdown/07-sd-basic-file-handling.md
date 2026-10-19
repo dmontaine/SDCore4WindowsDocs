@@ -146,6 +146,30 @@ files that need it and not on all.** It protects the file you flagged and nothin
 that is not hashed (a directory file) does not take it. openQM's `fcontrol(f, FC$SYNC, ...)`, which turns it on or
 off for a file already open, is not provided here.
 
+### Line terminators: the letters `L C B X`
+
+A directory file record is a file of text, and a field mark in a record is a line end on the disk. What counts as a line end
+when the record is read back, and what is written for a field mark, is the *line terminator mode* of the open file. There are
+four, with the openQM numbers:
+
+| mode | letter | a line ends at | a lone CR | a lone LF | `write` puts for a field mark |
+|---|---|---|---|---|---|
+| 0 LF | `L` | LF | data | (that is the end) | LF |
+| 1 CRLF | `C` | CR LF | data | data | CR LF |
+| 2 BOTH | `B` | CR LF or LF | data | (end) | LF |
+| 3 NOCR | `X` | LF, with the CRs thrown away | dropped | (end) | LF |
+
+The last line end of a record is not turned into a field mark in any mode, so a record `a`, LF, `b`, LF reads as `a<FM>b`. An
+open file starts in the mode its VOC entry names with one of the letters in field 6 (a capital or a small letter; a hashed file
+ignores them). **A file with no letter behaves as it always has here:** a `read` ends a line at CR LF or LF and keeps a lone
+CR, a `write` ends it with CR LF, a `readseq` ends a line at LF and drops a CR in front of it, a `writeseq` adds CR LF. So a
+program that never asks changes nothing. The modes are for a directory that another system's tools write: a CRLF file read in
+mode 2 or 3 has no stray CR on each line (it has one on every line in mode 0), and a file read in mode 1 can hold an LF inside
+a line. `readseq` and `writeseq` follow the same four modes (see [SD Basic - Sequential Files](10-sd-basic-sequential-files.html));
+`mark.mapping off` (image mode) turns the conversion off altogether, whatever the mode, and `readblk`, `writeblk`, `osread` and
+`oswrite` never use it. openQM's `fcontrol(f, FC$CRLF, mode)`, which changes the mode of one open file variable, is not provided
+here; the letter in the VOC entry is the way to choose.
+
 `delete file.variable, record.id` removes a record. After
 `delete f, 'R2'`, reading `R2` takes the `else` branch.
 
