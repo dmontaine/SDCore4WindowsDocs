@@ -188,17 +188,18 @@ the byte protocol.
 **Existing accounts keep their old setting** until their VOC is updated. An
 upgrade now does that for every account, and **`update.accounts`** does it on
 demand.
-Until then, `term windows` sets it for the session. **63 definitions ship,
-compiling to 100 terminal names** — the extra names are variants such as
-`vt100-w` and `vt220-at` — so `term wyse60` still works.
+Until then, `term windows` sets it for the session. **51 definitions ship,
+compiling to 83 terminal names** — the extra names are variants such as
+`vt100-w` — so `term wyse60` still works. (The `-at` types of AccuTerm and
+SDTerm's `sdterm` were removed: SD does not support those terminal programs.)
 
 **A name that is not installed is refused and your current type is kept** —
 *"Unrecognised terminal name"* — so a typo costs you nothing. **`term` with no
 argument reports the type actually in force**, which is how to check.
 
-Watch for near-misses all the same. There is no plain `vt320` — the shipped
-name is `vt320-at`. `terminfo.src` ships with SD, so `sdtic` can add a
-definition that is not there.
+Watch for near-misses all the same. There is no `vt320` definition; `vt220`
+or `xterm` does the same job. `terminfo.src` ships with SD, so `sdtic` can add
+a definition that is not there.
 
 **Backspace works**, at the prompt and when you are asked for a password.
 
