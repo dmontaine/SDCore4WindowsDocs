@@ -140,6 +140,17 @@ The limit is the `NUMFILES` configuration parameter. **The peak is what matters
 when you are sizing it** — the current figure moves constantly and tells you
 almost nothing.
 
+```
+find.file {dict} file
+```
+
+A summary of one file, opened the way any program would open it: its type
+(*Dynamic hashed file, group size 1, modulus 3*, or *Directory file*), its
+pathname, and a line for each of these that is true of it — *File uses case
+insensitive record ids*, *File has indices*, *File has trigger* name, *File is
+read only*. A name that is not in the VOC, or a file that will not open, is said
+so. Unlike `analyse.file` it does not walk the file.
+
 ## Reaching a file in another account
 
 ```
@@ -239,9 +250,10 @@ removes it; no argument at all displays it.
 
 **Every account has all of them now** — there is no longer a withheld set.
 `ct`, `list.files`, `set.file`, `analyse.file`, `analyze.file`, `clear.file`,
-`cname`, `configure.file`, `copy`, `copyp`, `create.file`, `delete`,
-`delete.file`, `dump`, `fstat`, `hsm`, `rename`, `set.trigger` are all in
-every account's VOC.
+`cname`, `configure.file`, `compare.files`, `copy`, `copyp`, `create.file`,
+`delete`, `delete.file`, `dump`, `fixdir`, `find.file`, `fstat`, `hsm`,
+`list.triggers`, `rename`, `set.trigger` are all in every account's VOC.
+(`oscopy` and `set.mode`, which Linux has, are not provided here.)
 
 ## What is not here
 
