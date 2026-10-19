@@ -79,6 +79,7 @@ closeseq f
 writeseq variable to file.variable then ... else ...
 writeseqf variable to file.variable then ... else ...
 writeblk variable to file.variable
+send expression {:} to file.variable then ... else ...
 weofseq file.variable
 ```
 
@@ -87,6 +88,7 @@ weofseq file.variable
 | `writeseq` | write a line and a terminator |
 | `writeseqf` | the same, then **flush** to disk |
 | `writeblk` | write bytes with no terminator added |
+| `send` | `writeseq` of an expression; with a **colon** after it, `writeblk` of it: `send 'a' to f` writes `a` and the terminator, `send 'a' : to f` writes `a` alone. `then` or `else` is needed, as for `writeseq` |
 | `weofseq` | truncate the file at the current position |
 
 **`writeseq` does not flush.** A program that writes a log and then aborts
@@ -114,6 +116,31 @@ so a file written on Linux still reads correctly here.
 **It matters when you count bytes.** A file of *n* lines is *n* bytes longer
 than the same file with LF endings, so an offset computed by adding up line
 lengths must allow two bytes per line, not one.
+
+## A whole file by pathname: `osread`, `oswrite`, `osdelete`
+
+```
+osread variable from pathname then ... else ...
+oswrite expression to pathname
+osdelete pathname
+```
+
+`osread` reads the **whole** of the file into the variable, byte for byte: a
+newline stays a newline and is not turned into a field mark, and a mark
+character stays what it is. `then` is taken when the file was read; `else` when
+it could not be opened or read (a missing file, or no Windows permission on it),
+and the variable is then the null string. A file over
+a gigabyte takes `else`. `oswrite` makes the file, or replaces it and **cuts it
+to the length of the data**, with no change to a byte; `status()` is 0 if it was
+written. `osdelete` deletes a file and says nothing if it cannot: `status()`
+tells. **It deletes a file only**, where the openQM statement deletes a
+directory too, so that a mistake cannot take a directory and what is in it.
+
+They are built on `openseq` and `deleteseq`, so **they reach what those reach**:
+whatever the Windows user the session runs as can read, write or delete (a
+failure leaves `status()` at the system error, 3035 for a refused write).
+openQM's `on error` clause is not supported; a fault is the `status()`. They
+take no locks.
 
 ## Position
 
