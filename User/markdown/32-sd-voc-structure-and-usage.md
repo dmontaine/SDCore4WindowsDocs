@@ -272,7 +272,7 @@ if it had been typed instead:
 002  1
 003  V
 004  CS
-005  /home/app/bp.out/report
+005  /cygdrive/c/ProgramData/SD/user_accounts/app/bp.out/report
 ```
 
 This works for a locally catalogued subroutine too. The object is found by the
