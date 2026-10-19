@@ -153,6 +153,7 @@ exist.**
 | **`end`** | `end` — closes a program, a `then`, an `else`, a `case`, a transaction |
 | **`enter`** | `enter` *name*   ·   `enter @`*var* |
 | **`env`** | `env(`*a*`)` |
+| **`epoch`** | `epoch()` |
 | **`eqs`** | `eqs(`*a*, *b*`)` |
 | **`equ`** | `equ` *name* `to` *value* — synonym of `equate` |
 | **`equate`** | `equate` *name* `to` *value* {, *name* `to` *value*} … |
@@ -288,6 +289,11 @@ exist.**
 | **`minimum`** | `minimum(`*a*`)` |
 | **`mod`** | `mod(`*a*, *b*`)` |
 | **`mods`** | `mods(`*a*, *b*`)` |
+| **`muls`** | `muls(`*a*, *b*`)` |
+| **`mvdate`** | `mvdate(`*epoch*`)` |
+| **`mvdate.time`** | `mvdate.time(`*epoch*`)` |
+| **`mvepoch`** | `mvepoch(`*date_time*`)` · `mvepoch(`*date*`,` *time*`)` |
+| **`mvtime`** | `mvtime(`*epoch*`)` |
 
 ## N
 
