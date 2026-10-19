@@ -141,6 +141,49 @@ never started.
 **A phantom is not a scheduled job.** It runs once, now. Recurring work is a
 Windows scheduled task that starts SD, and that is a different subject.
 
+### A phantom that ends with its parent: `phantom group`
+
+```
+phantom group command
+```
+
+A phantom started with the word `group` is **grouped with the process that started it**:
+when that process ends — it logs out, or is logged out — SD logs the grouped phantoms
+out too, where an ordinary phantom would go on until its command finished. It is for a helper that has no purpose without you. `listu` shows a
+grouped phantom with a **`G`** after its parent's number, and `system(1073)` in the
+parent gives the user numbers of the phantoms grouped with it, field mark delimited
+(`system(1058)` gives all its child phantoms, grouped or not, and `system(1052)` counts
+them). A phantom that has not yet finished starting when its parent ends is still
+logged out.
+
+### A phantom with a user number of its own: `phantom user`
+
+```
+phantom user n command
+```
+
+The phantom is **user number n**. The numbers are the ones the administrator keeps for this
+with the `PHANTOMS` parameter of `sd.conf` (`PHANTOMS=900,4` keeps 900 to 903); no session and no
+phantom started without `user` is ever given one of them. It is for a service that other
+programs find by its user number. `user` may stand beside `no.msg`, `data`, `group` and `log`, in
+any order, and `phantom` returns the number as it always does.
+
+| refusal | when |
+|---|---|
+| *phantom user needs a user number* | `user` with nothing after it, or something that is not a whole number above 0 |
+| *user number n is not one of the numbers the phantoms parameter keeps* | `n` is outside `PHANTOMS`, or the administrator has set none |
+| *user number n is already in use* | a phantom (or anybody) has it now; no phantom is made |
+
+With `USPLIT=1` the numbers are not kept from other processes, but `user n` still takes a free one.
+
+### `@pstat`: what `pstat` shows about the program
+
+`@pstat` is an `@` variable a program **may assign to**. Whatever text it holds when
+another session runs `pstat` (or `pstat user n`) is printed as an extra line under the
+process's last command and location, so a long-running program or a phantom can say what
+it is doing — `@pstat = 'Posting batch ' : n` — without a terminal to say it on. It is the
+program's own text and is not cleared for it.
+
 ### What a phantom does not inherit
 
 **A phantom is a new SD process, not a branch of yours.** It is started with
