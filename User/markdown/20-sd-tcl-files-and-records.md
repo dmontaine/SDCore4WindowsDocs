@@ -396,14 +396,46 @@ trigger takes effect when the file is next opened**, not for a program that has 
 file to itself, as it does for a hashed file). If the header names a function that is not catalogued, the first operation that
 needs it stops with *Trigger function 'name' not loaded for the file*.
 
+## Sizes and who is busy: `file.stat` and `fstat.user`
+
+```
+file.stat {dict} {file ...} {lptr {n}} {no.page}
+fstat.user {top} {user n} {lptr {unit}} {no.page}
+```
+
+**`file.stat`** prints one line for each file of **the current account**: the type
+(`DYN`, `DIR` or `COL`), the current and minimum modulus, the group size, the number
+of records, the bytes in the primary and overflow subfiles and their total, and `Y` or
+`N` for indexes (`AK`), trigger (`TR`), statistics (`ST`), case-insensitive ids (`NC`),
+`NO.RESIZE` (`NR`), encryption (`EN`), replication (`RP`) and journalling (`JN`).
+A directory file shows its type and record count only. With no names it takes the files
+on an active select list (list 0) or, if there is none, every file the VOC points at with
+an `F` entry; `dict` reports the dictionaries instead. The report needs **122 columns**.
+`EN`, `RP` and `JN` are always `N`: SD has no file encryption, replication or journalling.
+**openQM can also report on other accounts (`file.stat account.list`, `file.stat all`);
+SD does not**: the report reads each file, and another account's files are the business
+of that account's users and of the administrator, who has `list.files` and the
+account's own session.
+
+**`fstat.user`** reports file activity by session: how many records each has read,
+written and deleted since it started — the counts the system keeps in `fstat global`,
+kept for each session as well. Sessions come in user number order, or with **`top`** in
+descending order of reads + writes + deletes, which shows where a slow system is busy.
+**`user n`** shows all the counts of one session: opens, reads, writes, deletes, clears,
+selects, index reads, writes and deletes, splits and merges. **An administrator sees
+every session; anyone else sees the sessions of their own login name**, because the file
+activity of other people is theirs to see only through an administrator. openQM's verb
+repeats the report every two seconds and takes `t`, `i`, `d` and `u` at the keyboard; this
+one shows it once — run it again for another look.
+
 ## Who has these verbs
 
 **Every account has all of them now** — there is no longer a withheld set.
 `ct`, `list.files`, `set.file`, `analyse.file`, `analyze.file`, `clear.file`,
 `cname`, `configure.file`, `compare.files`, `copy`, `copyp`, `create.file`,
-`delete`, `delete.file`, `dump`, `fixdir`, `find.file`, `fstat`, `hsm`,
-`list.triggers`, `rename`, `set.trigger` are all in every account's VOC.
-(`oscopy` and `set.mode` are not provided.)
+`delete`, `delete.file`, `dump`, `file.stat`, `fixdir`, `find.file`, `fstat`,
+`fstat.user`, `hsm`, `list.triggers`, `rename`, `set.trigger` are all in every
+account's VOC. (`oscopy` and `set.mode` are not provided.)
 
 ## What is not here
 
