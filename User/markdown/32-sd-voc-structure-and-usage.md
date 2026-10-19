@@ -297,9 +297,16 @@ This is `$licence`. An X-record is **not a command** — it is miscellaneous
 data the VOC holds so that a program or a user can read it by name.
 `$contrib` and `$RELEASE` are also X-records. Nobody dispatches them; they
 are read with `read` from BASIC or with `ct` from the command line.
+Two X-records that an account may add are read by SD itself and change what
+a command line does: `$private.voc` and `$voc.parser`, described on the next
+pages.
 
 ## Continued in
 
 [SD VOC - Using and Managing the VOC](32a-sd-voc-in-use.html) — how the
 command processor uses the VOC, the verbs that manage it, and account
 creation.
+
+[SD VOC - A Private Vocabulary and Your Own Record
+Types](32b-sd-voc-private-vocabulary-and-parser.html) — the two optional
+`X` records `$private.voc` and `$voc.parser`.
