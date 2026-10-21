@@ -329,3 +329,6 @@ INPUTTRAP = `inputtrap` *chars* `goto` *label* {, *label* …}   ·   `inputtrap
 NO.ECHO = clause of `input` and `input @` — show nothing of what is typed
 RAW = clause of `input` — read exactly *length* characters as they arrive
 STACKLIST = clause of `execute` — keep the active select list and put it back afterwards
+SDSALT = `sdsalt()` — a fresh random salt for `sdkey()`; see [SD Basic - Encrypting Data](06a-sd-basic-encryption.html)
+SDKEY = `sdkey(`*passphrase*, *salt*`)` — a 44 character base64 key (argon2id); `status()` 10206 bad salt, 10207 bad passphrase
+SDRANDKEY = `sdrandkey()` — a random 256 bit key, 44 characters

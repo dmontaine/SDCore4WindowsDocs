@@ -205,3 +205,5 @@ list.phantoms = **`list.phantoms`** {**`user`** *name*}
 move.list = **`move.list`** *n* **`to`** *m* {**`keep`**}
 set.queue = **`set.queue`** *queue* {, *width*, *depth*, *top*, *bottom*, *mode* {, *options*}}  ·  **`set.queue display`** {**`lptr`** {*unit*}}  ·  **`set.queue deleting`** *queue*
 sp.assign = **`sp.assign`** {*options*} {, *setptr options*}
+# 20 Oct 26: encryption layer 3, from Linux.  encrypt.key is in every account's VOC (newvoc); the passphrase is read at a hidden prompt, never given as an argument.  Its page is User/06a.
+encrypt.key = **`encrypt.key set`** *name* *salt* {**`confirm`**}  ·  **`encrypt.key clear`** {*name*}  ·  **`encrypt.key list`**
