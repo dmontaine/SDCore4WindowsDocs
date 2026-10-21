@@ -56,12 +56,13 @@ sddecrypt(data, key, encoding)
 
 Three arguments. The encoding is `201` for hex or `202` for base64.
 
-**A passphrase is not a key, and an ordinary program cannot make one.**
+**A passphrase is not a key.**
 `sdencrypt('The quick brown fox', 'secretkey', 202)` returns **nothing** and
 sets `status()` to **10204**, a key length error. The key has to
-be an encoded 256-bit key, and the function that derives one from a password is
-`sdext()`, which is internal-only. **From an ordinary account these two
-functions have no usable key**, and there is no way in.
+be an encoded 256-bit key, and an ordinary program makes one with
+`sdkey(passphrase, salt)` or `sdrandkey()`. See
+[SD Basic - Encrypting Data](06a-sd-basic-encryption.html), which also covers the
+`XE` conversion and the key ring.
 
 ## UMASK()
 
