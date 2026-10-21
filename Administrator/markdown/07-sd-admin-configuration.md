@@ -254,7 +254,6 @@ changes SD's behaviour, and none should be offered to a site as a control.
 
 | Parameter | Why it is inert |
 |---|---|
-| `NETFILES` | SDNet was removed from this port. `netfiles.c` is deleted, a `server;file` VOC reference is refused, and the request that reports open SDNet connections returns an empty list. The value is still stored and still reported, and setting it opens nothing |
 | `CREATUSR` | SD has accounts rather than accounts and users, so `create.account` always creates the operating system account and there is nothing to opt in to. The value is discarded as it is read |
 | `JNLMODE` | Stored and readable with `config('JNLMODE')`. Nothing acts on it: no journalling is done (read from the source, 19 October 2026) |
 | `JNLDIR` | Stored and readable with `config('JNLDIR')`. Nothing acts on it, for the same reason |
@@ -266,6 +265,20 @@ changes SD's behaviour, and none should be offered to a site as a control.
 `FILERULE` is **not** in this list, and is easy to mistake for it. Its remote
 bits died with SDNet, but bit 4 is live and decides whether a `PATH:` VOC
 reference may name a pathname directly.
+
+**`NETFILES` is not in this list either.** SDNet was removed from this port:
+`netfiles.c` is deleted, a `server;file` VOC reference is refused, and the
+request that reports open SDNet connections returns an empty list. The value is
+parsed, stored, shown by `config` and readable with `config('NETFILES')`.
+**One thing in the source still reads it:** the API server's request 29, "open
+an SDNet file", which opens the file that a VOC entry of the named account
+names. It is refused unless bit 2 of `NETFILES` is set. The delivered value is
+0, so as delivered the request is refused; leave it at 0 unless an API client
+needs it. With bit 2 set the request opens the file as any other file an API
+session opens, so the connection's containment applies: only the account the
+session stands in, the shared `SDSYS` entries (read only) and the directories
+named in `NETDIRS`. It asks nothing further about the account. This is read
+from the source (20 October 2026) and has not been run on an install.
 
 There is no licence parameter and no licence verb. SD Core for Windows is
 GPL v3 and is not licensed per site or per user; `config gpl` displays the

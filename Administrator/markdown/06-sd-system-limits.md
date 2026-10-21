@@ -133,10 +133,11 @@ matching what `count voc` reports in a freshly created account.
 | Parameters the `config` verb displays | **43** |
 | Parameters readable with `config()` | **49** |
 | Parameters settable for the current session | **28** |
-| Parameters accepted that do nothing | **8** |
+| Parameters accepted that do nothing | **7** |
 
-The eight inert parameters, and why each is inert, are listed under
-*Configuration* in this set. `NETFILES` and `CREATUSR` are the two a site is
-most likely to have in an existing `sd.conf`. The count was 6 until
-19 October 2026, when `JNLMODE` and `JNLDIR`, which the Configuration page had
-listed as live, were found to be inert.
+The seven inert parameters, and why each is inert, are listed under
+*Configuration* in this set. `CREATUSR` is the one a site is most likely to have
+in an existing `sd.conf`. `NETFILES` used to be counted here; it is not inert,
+because bit 2 gates API request 29, and *Configuration* says so. The count was 6
+until 19 October 2026, when `JNLMODE` and `JNLDIR`, which the Configuration page
+had listed as live, were found to be inert.

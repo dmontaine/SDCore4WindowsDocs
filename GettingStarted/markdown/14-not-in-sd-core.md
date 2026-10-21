@@ -73,8 +73,11 @@ the `NETFILES` setting was read at start-up and then never consulted.
 **The API is not affected.** `SDClient` and the remote API are a separate
 mechanism and are unchanged. See [API access](09-api-access.html).
 
-**`NETFILES` is still accepted in `sd.conf`** and does nothing, so an existing
-configuration file will not stop SD starting.
+**`NETFILES` is still accepted in `sd.conf`**, so an existing configuration file
+will not stop SD starting. Nothing in SDNet uses it. The one thing that reads it
+is the API server's request to open an SDNet file, which is refused unless
+bit 2 of `NETFILES` is set; the value is 0 unless `sd.conf` sets it. The
+*Administrator* set's *Configuration* page has the detail.
 
 ## Virtual file systems
 
