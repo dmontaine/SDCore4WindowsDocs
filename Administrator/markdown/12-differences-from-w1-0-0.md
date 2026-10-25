@@ -247,5 +247,6 @@ configured; nobody has asked for one.
 
 [Accounts and Security](01-accounts-and-security.html) — the current
 account model in full. [Operating System Access](03-operating-system-access.html)
-— `os.users`, unaffected by any of the above. [Installation and the
+— the `sh` and `os` switches (a later change: since 25 October 2026 they are
+fields of the account, not entries in `os.users`). [Installation and the
 service](08-sd-installation.html) — what an upgrade replaces today.

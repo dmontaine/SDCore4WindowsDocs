@@ -121,8 +121,10 @@ account needs, but cannot open, rename, delete or list anything else.
 
 **An API session runs as the Windows user who logged in**, not as the SD
 service, so it reaches files with that user's access and the records it
-creates are owned by that user. `SH` and `OS.EXECUTE` do not work from an API
-session in this release.
+creates are owned by that user. `SH` and `OS.EXECUTE` work from an API session
+only if the account it entered has the `sh-on` and `os-on` switches (off for a new
+account); an administrator should weigh that before giving either to an account
+that also has the API route.
 
 **Threads** (from the 1.2 release; before that the library kept its state in plain globals and a program with more than one thread could not use it safely). The client library may be used from several threads of one process, as OpenQM's QMClient may, on these rules:
 

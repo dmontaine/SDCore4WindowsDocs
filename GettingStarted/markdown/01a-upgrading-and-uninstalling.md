@@ -47,6 +47,21 @@ Two limits are worth knowing before you rely on it.
 > exception: a locked verb is updated anyway, and you are told which. The
 > administrator documentation covers it under *Accounts and security*.
 
+### An upgrade keeps what accounts could do with the shell and the operating system
+
+**A new account now starts with `sh` and `OS.EXECUTE` off** (the `sh-on` and
+`os-on` switches), and so does the right to save a change to a VOC, a program file
+or a dictionary (`voc-on`, `bp-on`, `dict-on`). But accounts made before those
+switches existed have always had all of it, so when you kept your accounts the
+installer copies the old `os.users` list into the switches, **once**, and switches
+the three edit switches on for every user account; ssh and the API are left as
+they were. Turn any of them off for an account whenever you like with
+`modify.account` *name* `sh-off` / `os-off` / `voc-off` / `bp-off` / `dict-off` —
+**a later install does not turn them back on.** Accounts you make after the
+upgrade start with everything off. The Administrator set's *Installation* page
+has the details, including what to do if the installer says it could not carry
+them forward.
+
 ### Upgrading from W1.1-0 to W1.1-1
 
 W1.1-1 removes the language commands. **SD Core is English only:**

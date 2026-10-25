@@ -59,8 +59,8 @@ helper process, `sdpy.exe`, rather than restored as a library inside
 `sd.exe` - the two cannot safely share a process (`long` is a different
 width on each side of the MSYS2 boundary). `SDPYFUNC.H` and its twenty-one
 `PY_*` functions are documented in full in the User set's *SD BASIC -
-Python Integration* chapter, including the `os.users` field 2 gate that
-governs it, the same one that governs `SH` and `OS.EXECUTE`.
+Python Integration* chapter, including the `os-on` gate that governs it, the
+same switch that governs `OS.EXECUTE`.
 
 ## The functions an application uses
 

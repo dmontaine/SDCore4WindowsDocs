@@ -33,19 +33,19 @@ returns `-12040` and nothing else about SD is affected -
 ## Access control
 
 **`PY_` access is gated exactly like `SH` and `OS.EXECUTE`** - the same
-`os.users` field 2 permission, checked once, the first time a session calls
+`os-on` permission of the account, checked once, the first time a session calls
 any `PY_` function, and the decision stands for the rest of the session:
 
 | Result | Meaning |
 |---|---|
 | allowed | the helper starts (or a prior failure to start is retried) |
 | `-12041` | this session may not use the operating system, so it may not have Python either |
-| `-12042` | SD could not determine the permission at all (a damaged or unreadable `os.users` record) - one line is written to the error log saying which |
+| `-12042` | SD could not determine the permission at all - one line is written to the error log saying which. (Since 25 October 2026 the permission is a field of the account's record, read at account entry, so this answer is no longer given for a damaged `os.users` file) |
 | `-12040` | the session **is** permitted, but the helper itself could not be started or has died - typically no usable Python on the machine |
 
 SDSYS always has the permission, the same as it always has `SH` and
 `OS.EXECUTE`. An ordinary account needs the grant an administrator gives
-with `os.users` field 2, the same one that governs the shell - see the
+with `os-on`, the same switch that governs `OS.EXECUTE` - see the
 Administrator set's *Operating System Access* chapter for how that grant is
 made and read.
 

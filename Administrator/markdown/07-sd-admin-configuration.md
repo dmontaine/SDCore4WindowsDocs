@@ -74,9 +74,12 @@ SD accepts **52** parameters and the verb prints **43** of them. Nine are
 accepted in the file and never displayed: `CODEPAGE`, `CREATUSR`, `DEBUG`,
 `FDS`, `FIXUSERS`, `NETDIRS`, `PORTMAP`, `SDSYS` and `TXCHAR`.
 
-`NETDIRS` is the one to know about. It decides what an API session may reach
-outside its own account, and the verb will not tell you what it is set to. Read
-it from the file.
+`NETDIRS` is the one to know about. It names the directories outside any
+account that an account **without** `os-on` may still open by their path (see
+[Accounts and Security](01-accounts-and-security.html#the-operating-system-switches-sh-on-and-os-on)).
+Since 25 October 2026 that holds for every session, a person at the console
+included; before, it held for an API session only. The verb will not tell you
+what it is set to. Read it from the file.
 
 The `config()` function reads one parameter from a program:
 
@@ -179,7 +182,7 @@ server's runtime addresses them. `C:\WINDOWS\TEMP` and
 | `APIPORT` | 4247 | Switches the API on. Any number above zero means on, and SD listens on port 4247 whatever the number is; the port cannot be changed. If the line is absent no socket is created at all, which is how the API is turned off. A file that says `APIPORT=4243` still means on |
 | `BACKUPDIR` | unset | The folder `backup.account` and `restore.account` use. Set by `set.backup.directory`, not by hand - see [Backing Up and Restoring Accounts](01b-backup-and-restore.html) |
 | `APILOGIN` | none | **Retired.** The API always requires the account's password. An `sd.conf` that still has the line works and the line is ignored; the installer no longer writes it and `CONFIG` no longer prints it |
-| `NETDIRS` | unset | Directories outside its own account an API session may open, separated by semicolons because a Windows path contains a colon |
+| `NETDIRS` | unset | Directories outside any account that an account without `os-on` may still open by path (every session, since 25 October 2026), separated by semicolons because a Windows path contains a colon |
 | `SDCLIENT` | 0 | Restricts what an API session may do. Non-zero disables file access outright (no file can be opened, so no dictionary can be evaluated either), refuses `SDIConv`, `SDOConv`, `SDIConvs` and `SDOConvs` a conversion code that reads a file (`T` with a file) or calls a program (`U`), and refuses `SDOpenSeq`, `SDExecute`, `SDTrans` and `SDRTrans`; `2` additionally refuses any subroutine not compiled as callable from a client |
 
 Unset is the strict value for `NETDIRS`. With nothing there, an API session can

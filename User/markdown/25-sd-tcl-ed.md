@@ -435,7 +435,7 @@ is reported as line 2.
 ## Who has it
 
 **Every account has `ed`, `edit` and `micro` now.** `edit` and `micro` still
-need `os.users` field 2 to actually run — see [The edit Screen
+need the account's `os-on` switch to actually run — see [The edit Screen
 Editor](26-sd-tcl-edit.html) — but `ed` needs nothing beyond having the
 verb, which every account does.
 

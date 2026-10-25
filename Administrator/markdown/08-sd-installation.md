@@ -160,6 +160,29 @@ installer says so at the end rather than finishing quietly, and
 Neither step can take anything away. `update.accounts` only ever adds records,
 so an account created before a verb was withdrawn keeps it.
 
+### An upgrade keeps what accounts could do: `sh`, `OS.EXECUTE` and the edit switches
+
+**An account made before the per-account switches existed has always been able
+to use what they now guard, so the installer carries it forward once.** In the
+same step it runs `upgrade-gates.ps1` (log: `upgrade-gates.log` in the data
+folder), which runs two programs as the administrator:
+
+* **`upgrade_gates`** copies, once, what the old `os.users` file said about each
+  user account's Windows user into the account's `sh` and `os` switches (`yes` for
+  `yes`, `no` for anything else, including a user with no record), filling only a
+  field that is blank. The file stays where it is, unread.
+* **`upgrade_editgates`** switches `voc-on`, `bp-on` and `dict-on` on for every
+  user account whose field is blank, so no account loses what it had.
+
+Ssh and the API are left exactly as they were. Group and `other` accounts are
+not touched. SDSYS can then take either away one account at a time with
+`modify.account`, and **a later install does not turn anything back on**: each
+program leaves a marker (`$gates.done` and `$editgates.done`) in the system
+directory and does nothing while it is there. Accounts created after the
+upgrade start with every switch off. The installer says so at the end if either
+program could not run, and `upgrade-gates.ps1` can be run again by hand from the
+program folder, as an administrator, while SD Core is running.
+
 ## Uninstalling
 
 Settings ▸ Apps, or `unins000.exe`.

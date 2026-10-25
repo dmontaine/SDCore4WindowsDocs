@@ -91,9 +91,9 @@ system that is already up.
 If you leave SD with **`sh`** and then type `sd` in that shell, it says so and
 returns you to the session you already have.
 
-Worth knowing alongside it: **`sh` itself needs either an elevated session or a
-`yes` in `os.users`**, so an ordinary account cannot leave SD this way at all,
-and one reached over ssh never can. See
+Worth knowing alongside it: **`sh` itself needs the account's `sh-on` switch
+(or SDSYS)**, which is off for a new account, so an ordinary account cannot
+leave SD this way until an administrator turns it on for it. See
 [Administrator commands](06-administrator-commands.html#the-shell-escapes-sh-and).
 
 ## The command line

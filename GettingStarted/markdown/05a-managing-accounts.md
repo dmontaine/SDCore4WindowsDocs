@@ -83,15 +83,20 @@ left him with.
 
 ### Reaching the operating system
 
-`sh-on`, `sh-off`, `os-on` and `os-off` set the two fields of the account's
-`os.users` record without your having to edit it by hand — field 1 is the
-**`sh`** verb (and **`!`**), field 2 is `OS.EXECUTE` and the two full-screen
-editors, **`edit`** and **`micro`**. Both default to off for every account
-`create.account` makes. See the *Administrator* set's *Restricted operating
-system access* chapter.
+`sh-on`, `sh-off`, `os-on` and `os-off` set the two switches of **the
+account's own record** (the person's `os.users` record, which these used to
+set, is retired): the first is the **`sh`** verb (and **`!`**), the second is
+`OS.EXECUTE`, the two full-screen editors **`edit`** and **`micro`**, Python,
+and opening a file outside the account's own directory. Both default to off for
+every account `create.account` makes. After either the verb says where the
+account now stands: `Account fred has SH yes, OS.EXECUTE no`. A change reaches
+the account the next time it is entered. See the *Administrator* set's
+*Operating system access* chapter.
 
 **These four are switches, not names for one state** — `sh-off` leaves
-`OS.EXECUTE` alone, and the other way round.
+`OS.EXECUTE` alone, and the other way round. Any number of words may be given
+in one command (`modify.account fred sh-on os-on voc-on`); SD reads them all
+first and does all of them or none.
 
 **`modify.password` is now the whole of what `set.password` used to be.**
 Same verb, same behaviour under either name; every account has a password

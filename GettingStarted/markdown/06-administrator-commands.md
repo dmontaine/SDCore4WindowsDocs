@@ -13,7 +13,7 @@ not that you lack permission for it.
 ## Accounts
 
 ```
-create.account  user <name> {ssh|api|both|none}
+create.account  user <name> {ssh|api|both|none} {sh-on} {os-on} ...
 create.account  group <name>
 delete.account  <name>
 modify.account  <name> add|delete <user>
@@ -28,10 +28,14 @@ Covered in full in [Accounts](05-account-types.html) and
 [Managing accounts](05a-managing-accounts.html). The points worth repeating
 here:
 
-- **Say nothing and `create.account user` gets `both`** (ssh and the API).
-  Name `ssh`, `api` or `none` to be narrower.
+- **A new user account starts with every door shut.** Say nothing and
+  `create.account user` gives it no ssh, no API, no `sh`, no `OS.EXECUTE`; you
+  name each thing it is to have (`ssh`, `api` or `both`, `sh-on`, `os-on`, ...).
 - **`modify.account` says what the access *is*, not what to add.**
   `modify.account fred api` takes ssh away.
+- **`modify.account` takes several actions in one command**
+  (`modify.account fred sh-on os-on`); it reads them all first and does all of
+  them or none.
 - **`suspended`/`unsuspended`** is a state, not a tier — nothing about the
   VOC moves either way, because every account's VOC is the whole of `newvoc`
   regardless.
@@ -117,37 +121,46 @@ one account's — see [ssh access](08-ssh-access.html) and
 
 ## The shell escapes — `sh` and `!`
 
-**Who may use `sh` is a list you keep, not a matter of elevation** — and
-that has been true since before the tiers went, so nothing here changed
-with them. `sh` and `!` are in every ordinary account's VOC; whether they
-*do* anything is a separate permission, kept in `os.users`.
-
-### The list
-
-One record per person in `os.users`, **keyed by the name they sign in with,
-not by the account name**. The login name follows the person, so it does
-not change when they **`logto`** somewhere else.
+**Who may use `sh` is a switch on each account, not a matter of elevation.**
+`sh` and `!` are in every ordinary account's VOC; whether they *do* anything is
+a separate permission, **kept in the account's own record and off for a new
+account.** (Until 25 October 2026 it was a record per person in a file,
+`os.users`; that file is no longer read.)
 
 ### How you grant it
 
-**Four keywords on `modify.account` do it without your editing anything:**
+**Four keywords on `modify.account` do it:**
 
 ```
 modify.account fred sh-on      the sh verb and ! at the prompt
 modify.account fred sh-off
-modify.account fred os-on      OS.EXECUTE, and the edit and micro editors
+modify.account fred os-on      OS.EXECUTE, the edit and micro editors, Python,
+                               and files outside the account's own directory
 modify.account fred os-off
 ```
 
 **They are four switches over two fields**, not four names for one state,
 so `sh-off` leaves `OS.EXECUTE` alone — and the verb prints the resulting
-record, both fields, every time. **Both default to off**, for every account
-`create.account` makes.
+state, both fields, every time (`Account fred has SH yes, OS.EXECUTE no`).
+**Both default to off**, for every account `create.account` makes, and
+`create.account user fred sh-on os-on` gives them at creation.
+
+**The switch follows the account, not the person.** It is read when a session
+signs in or `logto`s into the account, so a change reaches the account the next
+time it is entered; to take a grant from somebody who is signed in now, change
+it and end their session.
+
+| What you want an account to have | `sh-on` | `os-on` |
+|---|---|---|
+| nothing outside SD | off | off |
+| the editors and `OS.EXECUTE`, but no shell at the prompt | off | on |
+| a shell, but programs may not shell out | on | off |
+| both | on | on |
 
 ### SDSYS always has both, from any session
 
-**SDSYS reaches `sh`, `!`, `OS.EXECUTE`, `edit` and `micro` regardless of
-`os.users`** — the same identity check that gates administration (see
+**SDSYS reaches `sh`, `!`, `OS.EXECUTE`, `edit` and `micro` whatever the
+register says** — the same identity check that gates administration (see
 [Accounts](05-account-types.html#sdsys-is-the-only-administrator)) grants
 this too. **`modify.account sdsys` is refused outright, for every action,
 not only these four** — *"Remote access is never available to SDSYS"* is
@@ -155,97 +168,50 @@ the message whatever you asked for, because the refusal comes before the
 action is even parsed: SDSYS is outside this verb's reach entirely, not
 only for the routes the wording names.
 
-### Or edit the record by hand
-
-The record is ordinary data. From SDSYS, because the file is writable only
-by SDSYS:
-
-```
-ed os.users don
-```
-
-The record is two lines and nothing else. To give `don` the shell and the
-editors:
-
-```
-yes
-yes
-```
-
-In **`ed`**: `i` to insert, type the two lines, a full stop on its own line
-to stop inserting, then `fi` to file and exit. **Field 1 is `SH`, field 2 is
-`OS.EX`** — the order matters and there is nothing else in the record.
-
-| What you want `don` to have | Field 1 | Field 2 |
-|---|---|---|
-| nothing outside SD | *no record at all* | |
-| the editors, but no shell at the prompt | anything but `yes` | `yes` |
-| a shell, but programs may not shell out | `yes` | anything but `yes` |
-| both | `yes` | `yes` |
-
-**`don` is the Windows login name, not the SD account name.** They are
-usually the same; where they are not, this file wants the one the person
-signs in with.
-
-**The change takes effect on their next command**, not at their next login
-— the list is read when the shell or the editor is asked for.
-
-**To take it away, set the field to anything else or delete the record.**
-Deleting the record removes both.
-
-| Field | Controls | Value |
-|---|---|---|
-| 1 | `SH` — a shell at the command prompt | `yes`, or anything else for no |
-| 2 | `OS.EX` — `OS.EXECUTE` from inside a program, **and the `edit` and `micro` editors** | `yes`, or anything else for no |
-
-**Field 2 is what lets an account use the full-screen editors.** They run
-an editor outside SD, so they are reaching the operating system whatever
-the VOC says. An account with the verb and no `yes` in field 2 is told the
-command is not available and what to ask for.
-
-**A missing record, or a missing file, means no.** An account
-`create.account` makes has no record at all until SDSYS grants one — see
-[How you grant it](#how-you-grant-it) above.
-
-### Both fields are enforced
+### Both switches are enforced
 
 `OS.EXECUTE` used to be unchecked entirely, so **any account that could
 write a program had the operating system** and the **`sh`** restriction
-could be walked around by anyone able to type BASIC. Field 2 is what
-decides whether `OS.EXECUTE` may run. The refusal reads *`<name>` is not
-permitted to use OS.EXECUTE*.
-
-The two fields are independent, and the useful combination is the third
-row:
+could be walked around by anyone able to type BASIC. `os-on` is what decides
+whether `OS.EXECUTE` may run. The refusal reads *`<name>` is not permitted to
+use OS.EXECUTE*; the one for `sh` reads *`<name>` is not permitted to use the
+operating system shell*.
 
 ```
-unlisted            sh refused    OS.EXECUTE refused
-SH=yes OS.EX=no     sh RUNS       OS.EXECUTE refused
-SH=no  OS.EX=yes    sh refused    OS.EXECUTE RUNS      <- programs may shell
+no switch         sh refused    OS.EXECUTE refused
+sh-on only        sh RUNS       OS.EXECUTE refused
+os-on only        sh refused    OS.EXECUTE RUNS      <- programs may shell
                                                           out; the person at
                                                           the prompt may not
-SDSYS                sh runs       OS.EXECUTE RUNS
+SDSYS             sh runs       OS.EXECUTE RUNS
 ```
 
 SD's own system programs are exempt, so **`create.account`** and the
 **`sh`** verb work as before.
 
-### Three rules that go with it
+### Two rules that go with it
 
-**Only SDSYS can edit the list.** `os.users` is read-only to everybody
-else on disk, and **that ACL is the whole of what stops a user granting
-themselves a shell. Do not loosen those permissions.**
+**No account gets a pipe, a redirect or a chain at the prompt.** `sh` and `!`
+refuse a command that holds `;`, `|`, `&`, `$`, a backquote, `<`, `>` or a
+newline — for every account, SDSYS included, switch or no switch. A bare `sh`
+is refused too. Write the work into a script and run the script:
+`sh powershell -File .\nightly.ps1`. (Until 25 October 2026 a person on the
+`os.users` list could type `sh dir | more`; nobody can now.)
 
-**A listed person gets a real shell** — pipes, redirection and chaining all
-work: `sh dir | more`. **SDSYS gets the restricted form**, which rejects
-those characters — the same shape of restriction an elevated ordinary
-session used to get before this model existed, now applied to the one
-account it actually matters for.
+**`os-on` is also what lets an account name a file outside its own
+directory.** Without it, opening a file by its path, `dir()`, `select.dir`,
+`deleteseq` of a path and a print file made at a path are refused anywhere but
+the account's own directory (and the shipped SDSYS entries, read only, and the
+directories listed in `NETDIRS`). That holds at the console as well as over the
+network. `sd-on` is the narrower switch that reaches the directories of other
+SD accounts the person could `logto`.
 
-### Neither is available over the API
+### Over the API
 
-**`sh`** and `OS.EXECUTE` are refused to a session that arrived over the
-API. An API session is not treated as SDSYS for any purpose, and SDSYS has
+**An API session is held to the same switches**: the API server reads the
+account's `sh-on` and `os-on` when it enters the account. An account with
+`sh-on` and the API route therefore has a shell behind its credential, from
+wherever the API port is reachable — which is why both default to off. SDSYS has
 no API route to arrive over in the first place — see
 [API access](09-api-access.html).
 
@@ -260,5 +226,5 @@ no API route to arrive over in the first place — see
 
 **`sh`, `!` and `modify.password` are not on this list** — every account
 has them; what SDSYS has that an ordinary account does not is the
-`os.users` permission behind the first two (see above) and the right to
-name a different account with the third.
+right to run `sh` whatever the register says and the right to name a different
+account with the third.

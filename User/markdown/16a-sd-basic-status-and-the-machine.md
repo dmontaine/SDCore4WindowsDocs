@@ -123,9 +123,11 @@ The program stops there. There is no `else`, no `on error` and no status to
 test, so **a program that may run in an account without the right must not
 reach the statement at all**.
 
-Permission is field 2 of the account's record in the system `os.users` file —
-not a VOC entry and not a Windows privilege. An administrator's session passes
-regardless. Ask your administrator to grant it; there is nothing a program can
+Permission is the account's own `os-on` switch, kept in the account's record in
+the register — not a VOC entry and not a Windows privilege. (It used to be field
+2 of a record in the system `os.users` file, keyed to the person; that file is no
+longer read.) An administrator's session passes regardless. Ask your
+administrator to turn `os-on` on for the account; there is nothing a program can
 do about it.
 
 ## LOGMSG

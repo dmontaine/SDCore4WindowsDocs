@@ -137,7 +137,7 @@ Two things about that line, and each has caught people out:
 
 | | |
 |---|---|
-| `both` | say nothing and this is the default. Name `ssh`, `api` or `none` to be narrower. See [Accounts](05-account-types.html) |
+| `both` | the routes Jane may use: ssh and the API. Say nothing and she gets neither (`none`); name `ssh` or `api` to give her one. She also has no shell and no `OS.EXECUTE` until you add `sh-on` / `os-on`. See [Accounts](05-account-types.html) |
 | it needs SDSYS | creating a Windows account cannot be done from any other identity |
 
 You will be prompted for Jane's password, masked. **Refusing the prompt

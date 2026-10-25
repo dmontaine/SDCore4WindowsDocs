@@ -54,8 +54,8 @@ and that is already elevated. **If you have anything that writes into
 
 A scheduled task can run an SD command without administrator rights, and only
 the commands an administrator has named for it. The permit list is the SDSYS
-file `batch.jobs`, locked read-only to SD users by the same control as the
-[`os.users` list](06-administrator-commands.html#the-list).
+file `batch.jobs`, locked read-only to SD users by the same control that locks
+the other permit files.
 
 It has its own page: **[Scheduled jobs](04-scheduled-jobs.html)**.
 

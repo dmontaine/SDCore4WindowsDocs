@@ -20,7 +20,7 @@ everything else about running SD Core on Windows.
 | Windows group | standard user |
 | Administers SD | no — only SDSYS does, and SDSYS is not created this way |
 | Local console / Remote Desktop | **denied** |
-| ssh | if granted (the default is both routes — see [Per-account control](#per-account-control)) |
+| ssh | if granted (a new account has no route until you name one — see [Per-account control](#per-account-control)) |
 | API | if granted |
 
 **Every account `create.account` makes is denied the console — there is no
@@ -175,14 +175,14 @@ installation is served entirely by `ssh localhost`.**
 ## Per-account control
 
 An account is told at creation which routes it may use. **Say nothing and it
-gets `both`**; name one to be narrower:
+gets `none`** (until 25 October 2026 it got `both`); name the ones it is to have:
 
 | | reaches SD by |
 |---|---|
 | `create.account user fred ssh` | a terminal session over ssh |
 | `create.account user fred api` | **an API client only** — no terminal, and nothing on this page applies to them |
-| `create.account user fred both` | either — the default |
-| `create.account user fred none` | neither — reachable only with **`logto`** from another session |
+| `create.account user fred both` | either |
+| `create.account user fred none` | neither — the default; reachable only with **`logto`** from another session |
 
 **An `api` account never touches any of this.** No ssh session, no
 `ForceCommand`, no port 22. For people running a GUI client against SD, that is
@@ -212,7 +212,7 @@ need the connection itself refused, take the account out of `sdssh` too with
 **The deny rights control *where* an account may log in, not *what it may
 run*.** Confining a user to SD rather than to a shell is the separate
 `ForceCommand` control above, and reaching the operating system from inside SD
-is the separate `os.users` permit list — see
+is the separate `sh-on` and `os-on` switches of each account — see
 [Administrator commands](06-administrator-commands.html#the-shell-escapes-sh-and).
 
 **And ssh-only does not give users isolation from each other's data.** Every SD

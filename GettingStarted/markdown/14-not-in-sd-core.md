@@ -33,9 +33,10 @@ gone as *programs*; the capability is not.
 > was removed on 17 Aug 2026 because it launched an external editor, which is a
 > way out of SD onto the machine underneath it. That was reversed on
 > 26 Aug 2026, and there are now **two** full-screen editors, **`edit`** and
-> **`micro`**: the same idea, done deliberately, gated by `os.users` field 2 —
-> every account has the verb, not every account has the permission — and
-> refused over the API regardless.
+> **`micro`**: the same idea, done deliberately, gated by the account's `os-on`
+> switch — every account has the verb, not every account has the permission —
+> and refused over the API regardless (a session with no terminal has nowhere to
+> draw a full screen).
 
 **`modify.account` and `modify.password` are not affected.** They are
 different verbs with different programs behind them. `modify.account` is
@@ -143,7 +144,7 @@ same process at all.
 **21 `gpl.bp/PY_*` programs** are BASIC-callable (`CALL !PY_CREATEDICT`,
 and so on) — there is no TCL verb, so this is a programming capability, not
 a command you type at the prompt. Access is gated per session, at the
-moment Python starts, by the same `os.users` field 2 permission that gates
+moment Python starts, by the same `os-on` switch that gates
 `OS.EXECUTE` — a session without it cannot start the helper at all. All
 twenty-one functions, their arguments and their error codes are in the User
 set's *SD BASIC - Python Integration* chapter.

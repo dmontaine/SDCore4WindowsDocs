@@ -30,8 +30,7 @@ use, and the job grants nobody anything — no other account is in its group.
 per account, named after the account**, holding one command name per line.
 
 **Only an administrator can change it.** It is read-only to SD users, by the
-same control and the same script as the
-[`os.users` permit list](06-administrator-commands.html#the-list) — a user who
+same control and the same script that locks the other permit files — a user who
 could add a line to their own record would be granting themselves the command
 line.
 

@@ -64,9 +64,45 @@ create.account other <name> <pathname> {no.query}
 | **`group`** | a shared workspace with no Windows account, reached only with `logto` |
 | **`other`** | an SD account over a directory you name |
 
-**Say nothing and a user account gets `both`** (ssh and the API). Name
-`ssh`, `api` or `none` to be narrower — an account meant to be reached only
-with `logto` says `none` and means it.
+**A new user account starts with every door shut** (but one: it can read the
+files of the `shared` account, [The Shared Account](13-the-shared-account.html),
+and not write them). Say nothing and it has no ssh, no API, no `sh` and no
+`OS.EXECUTE`, it cannot save a change to a VOC, a program file or a
+dictionary, it has no right to use a server defined for SDNet, and no
+files-only login; you open each one by naming it. `ssh`, `api` or `both` give
+the remote routes (`none` is the default and is accepted so that a script can
+say so); `files-on` gives the narrower files-only API route (below, *The
+files-only route*); `sh-on` and `os-on` give the two operating-system switches,
+and they are independent, so `sh-on os-on` gives both and neither cancels the
+other; `voc-on`, `bp-on` and `dict-on` give the three edit switches (below),
+each on its own; `net-on` gives the SDNet switch (below). Two words go the
+other way, because the `shared` account is open to every account unless you say
+otherwise: `shared-read-off` takes away the right to read its files and
+`shared-write-on` gives the right to write them. (The two words that restate the
+defaults, `shared-read-on` and `shared-write-off`, are for `modify.account`
+only.) **This is the setting SD is delivered with, on purpose: it is the
+tighter one, and you loosen it for the accounts that need it, one at a time** —
+the same words change an account later in `modify.account`, below. (Before 25
+October 2026 a new account was given both remote routes and the person's shell
+came from a file, `os.users`; neither is so now.) When it has made the account
+SD says where it stands:
+
+```
+fred has no remote access: not ssh, not the API
+Account fred has SH no, OS.EXECUTE no
+Account fred has VOC.EDIT no, BP.EDIT no, DICT.EDIT no
+Account fred has NET no
+Account fred has files no
+Account fred has shared.read yes, shared.write no
+```
+
+(Two more lines, for `files-write` and `files-admin`, follow the `files` line;
+the remote-route line is the one for the words you gave.)
+
+**A group account and an `other` account have no Windows user of their own,
+so `sh-on` and `os-on` are refused for them** — "is a group account and has
+no Windows user, so it has no shell to permit". A shell is a fact about a
+person, and a group account is not one.
 
 > **It prompts for a password and `no.query` does not suppress that.**
 > `no.query` covers the confirmation, not the credential — a password is
@@ -75,19 +111,251 @@ with `logto` says `none` and means it.
 > password, can.
 
 **Every account gets the same VOC**, the whole of `newvoc` — there is no
-tier to choose at creation. What it does *not* get automatically is
-`sh`/`OS.EXECUTE` access: both default to off, and `modify.account`'s
-`sh-on`/`os-on` grant them afterward (see below).
+tier to choose at creation. What differs from one account to the next is what
+it is *allowed to do* with the verbs it has: its remote routes and its
+switches are per-account settings, all off until you turn them on (the exception
+is reading the shared account). **SDSYS is the exception and it is not a
+setting** — it is never refused by these switches.
+
+**The audit trail records what was granted.** The line `create.account` writes
+ends with `gates=`, the words of the sentence that grant or withdraw an access,
+in the program's fixed order, or `gates=none`:
+
+```
+create.account account=FRED type=user gates=ssh,api,sh-on
+```
+
+(The words up to `type=` are as they always were; the account name is in upper
+case here.)
 
 ### Two settings that are easy to conflate
 
 | | |
 |---|---|
-| `api` | says who may **connect** |
-| `os-on` | says who may reach the **operating system** |
+| `ssh`, `api`, `files-on` | say who may **connect**, and by which route |
+| `sh-on`, `os-on` | say who may reach the **operating system** |
 
 Holding the first has never implied the second. They are independent
-settings and are checked in different places.
+settings and are checked in different places. **ssh alone does not give a
+shell**: every ssh session is forced into `sd`, so what the person can do is
+what SD lets them do — and an account without `sh-on` gets no shell from SD.
+
+### The operating-system switches: `sh-on` and `os-on`
+
+Two independent switches, kept per account in the register (fields 7 and 8).
+**Both are off for a new account** and SDSYS turns each on with `modify.account`
+(below). An account with neither is still a full SD user: it runs programs,
+opens every file its VOC names, builds indexes, runs queries — everything that
+stays inside SD.
+
+| | |
+|---|---|
+| **`sh-on`** · `sh-off` | the `sh` verb and `!` (see [Operating System Access](03-operating-system-access.html)) |
+| **`os-on`** · `os-off` | `OS.EXECUTE` in a BASIC program, the screen editors `edit` and `micro`, the embedded Python, **and reaching an operating-system file or directory by its path outside the account's own directory** |
+
+**This changed on 25 October 2026.** The grant used to be a record in the file
+`os.users`, keyed by the Windows login name, so it followed a person into every
+account they entered; it is now two fields of the account's own record, so it
+follows the account, and `os.users` is no longer read. And the limit on paths
+used to bind only a session that arrived over the network: **a person at the
+console is held to it now too.**
+
+That last clause of the table is the one that is easy to miss. Without
+`os-on` an account can still open every file it reaches **through its VOC** —
+dictionaries and other SD files included — and anything inside its own
+directory, **provided the VOC pointer leads somewhere it may go** (see *VOC
+pointers*, below). What it cannot do is name another account's directory, the
+system directories, or a path that climbs out of its own with `..`, in any of
+these:
+
+| | without `os-on` |
+|---|---|
+| `OPENSEQ` and `OPENPATH` with a path | status 3035, so `OPEN ... ELSE` works as before |
+| `DIR()` and the `select.dir` verb | refused (the verb says why) |
+| `DELETESEQ` of a bare path | refused; the file is left alone |
+| printing into a file by path (`setptr ... as pathname`, `SETPU`, or a `$hold` print name that climbs out with `..`) | refused |
+
+`..` is resolved before the test, so it does not get round it, and a path inside
+the account's own directory always works. Three more places are open to an
+account without the switch: the shipped SDSYS entries that every VOC names
+(**read only**) and the directories the administrator listed in `NETDIRS`
+(read and write; see [SD Admin Configuration](07-sd-admin-configuration.html)).
+
+**SD says no in words.** `sh` gives "*name* is not permitted to use the
+operating system shell", `OS.EXECUTE` gives "*name* is not permitted to use
+OS.EXECUTE", and the path routes give "*name* has no OS access, so a file or
+directory outside its own account cannot be reached by pathname (SDSYS can give
+it: `modify.account` *name* `os-on`)" (message 12185). **SDSYS is never
+refused.**
+
+**The upgrade keeps what the old file said.** The installer's `upgrade_gates`
+step copied, once, what `os.users` said about each user account's Windows user
+into that account's two fields (`yes` for `yes`, `no` for anything else and for a
+user with no record; group and other accounts are left blank, which reads as
+no), and fills only a field that is blank, so an administrator's later `sh-off`
+is not turned back on by the next install. The file stays on disk, unread.
+
+### The third switch: `sd-on`, other SD accounts' directories
+
+`os-on` is wide: it reaches any path. `sd-on` is the narrow version, for an
+account that has to read or write the **data** of a neighbouring SD account
+(a shared reports folder, a hand-over directory) without being given the
+whole machine. It is **off for a new account**, and `modify.account` *name*
+`sd-on` / `sd-off` turns it on and off. It may be set on a group account
+(`sh-on` may not).
+
+With `sd-on`, the path routes in the table above also accept a path under the
+directory of any SD account **the user could `logto`**: the account's Windows
+group (`sdu_`*name* or `sdg_`*name*) is one the user belongs to, and the
+account is not suspended. Reading and writing are one switch. Two things stay
+shut:
+
+- **The other account's VOC** (`voc`, `voc.dic` at the top of its directory)
+  is never reachable this way; the account's own VOC is, as always.
+- Any directory that is not an SD account's still needs `os-on`.
+
+**SDSYS is not affected** — it is never refused. `os-on` implies `sd-on`.
+The setting lives in field 9 of the register record and is not carried by an
+account archive, so a restored account starts with it off.
+
+### The edit switches: `voc-on`, `bp-on` and `dict-on`
+
+Three more per-account switches, in fields 10 to 12 of the register record,
+say whether the person who signed on to the account may **save a change** to
+a VOC, to a program file, and to a dictionary. Reading is never stopped. **All
+three are off for a new account**, and `modify.account` *name* `voc-on` /
+`voc-off`, `bp-on` / `bp-off` and `dict-on` / `dict-off` turn each one on and
+off. `create.account user` takes `voc-on`, `bp-on` and `dict-on`. After a
+change SD says where the account now stands (if the switch already had the
+value asked for, SD says only that the account already had that access and
+that nothing changed):
+
+```
+:modify.account fred bp-on
+Account fred has VOC.EDIT no, BP.EDIT yes, DICT.EDIT no
+```
+
+**Which files.** A file is known by the name of the file that is **open**, not
+by the name that was typed, so a Q-pointer to somebody's VOC is caught:
+
+| | |
+|---|---|
+| **a VOC** | a file called `voc` |
+| **a dictionary** | any file whose name ends in `.dic`. `voc.dic` is the dictionary of the VOC, so it is a dictionary, not the VOC |
+| **a program file** | `bp`, `bp.out` (the object code), or any name ending in `.bp` or `.bp.out`; the private catalogue directory (`cat`, or whatever `$private.catalogue` names) counts as one |
+
+Capitals do not matter.
+
+**What stops.** A program's `WRITE`, `WRITEV`, `DELETE` and `CLEARFILE` of
+such a file is refused with a message that names the missing switch (messages
+12410 to 12412), or sets the `ON ERROR` status. The verbs and statements that
+change a file the person names ask the same question first, before they lock or
+change anything, and give the reason: `sed`, `ide` and `ced` show it in their
+message line, and every other verb prints it and stops. They are `ed`, `edit`,
+`copy` and `copyp` into the file or moving records out of it, `delete`,
+`clear.file`, `cname` of a record, `delete.file` of a program file or of a
+dictionary on its own, `fixdir`, `format`, `map file`, `sp.view` (the X key that
+deletes an item), `set.trigger` when it installs or removes a trigger,
+`copy.list` into the file or with `deleting` from it, `delete.list ... in`,
+`get.list ... deleting in`, `save.list ... in`, `sort.list ... from`,
+`reformat ... to`, `list ... pageseq`, a delimited report written `to` a
+pathname, `cd data`, `generate`, `como on ... in`, and the `.s` and `.d`
+stack commands on an existing VOC record. `create.file` naming a file that
+already exists (adding a part to a multifile, or converting a single file to a
+multifile) is asked too; making a new file is not. `cname` will not take a
+program file out of its name, or put a file under one, for a person without the
+switch, so a rename is not a way round. `OPENSEQ` in such a place opens the file
+for reading only and cannot create one; `DELETESEQ` and a print file made there
+are refused. For these operating-system routes the name of the record or file
+being made counts only when it is itself a directory or anything but a plain
+file, so a plain file called `sample.bp` in an ordinary directory is not held
+back, while a file inside the directory `bp` is. Over the API a client's
+writes, deletes and file clears are held to the same rule.
+
+**Compiling is held by `bp-on` too.** Without it `basic`, `catalog`,
+`delete.catalog` and `decatalog` are refused (message 12413), because
+compiling is how a source becomes code that runs: otherwise source could be
+copied into any file and compiled there.
+
+**`logto` does not change them.** The switches are those of the account the
+person **signed on** to (over the API, the account first entered). A person
+with a switch on keeps it in another account; a person without it does not
+gain it there. A change takes effect the next time the person signs on. Unlike
+`sh-on`, `os-on` and `sd-on`, the three edit switches are read at sign-on
+only, not again at `logto`.
+
+**What is not stopped.** What SD writes as a side effect of an ordinary
+command — a new pointer made by `create.file`, a new saved sentence, a
+compiled I-type, the command stack — and anything done from the shell by an
+account that holds `sh-on` or `os-on`. The operating-system routes above
+(`OPENSEQ`, `DELETESEQ`, print files) are not looked at for an account that
+holds `os-on`, when the path is outside the account's own directory: `os-on`
+already trusts it with the whole machine. The switches are about changing
+these files by hand or by program, not a replacement for the operating-system
+switches above.
+
+**`$private.voc` and `$voc.parser` are not guarded by `voc-on`** when they
+point at a file that is not called `voc`: the switches look at the name of the
+file being written, so a private vocabulary called `zzpv` is an ordinary data
+file, and an account with all three edit switches off could add and replace
+commands in it once you had pointed `$private.voc` at it. Keep such a file where
+only the people you mean can write it. The two records themselves are VOC
+records, so writing one needs `voc-on`. (Linux ran this on 18 October 2026; it
+has not been run on Windows. See the User set's page on the private vocabulary
+and parser.)
+
+**Internal programs run only from the global catalogue.** The gates on files
+and on operating-system paths do not apply to a program compiled in *internal
+mode*, which SD's own commands are. That mark is a bit in the program's own
+object file, and SD used to believe it wherever the object came from, so a
+user who could put an object file where SD would run it could set the bit and
+skip every gate. SD now honours the bit only for an object from the global
+catalogue, which only SDSYS can write, or for the administrator; for any other
+object the bit is cleared when the object is loaded. SD's own commands are all
+in the global catalogue and are unaffected; a program that SDSYS compiled in
+internal mode into a user's account runs there as an ordinary program.
+
+**SDSYS is never refused.** `modify.account` refuses SDSYS as a target, so
+there is nothing to set for it.
+
+**Group and other accounts.** The three words are accepted for a group or
+other account. Because `logto` does not reload them, they decide only for a
+session that signs on to that account itself. The upgrade leaves group and
+other accounts off on purpose; where members need to save to a VOC, a program
+file or a dictionary there, SDSYS gives it with `modify.account` *name*
+`voc-on` / `bp-on` / `dict-on`.
+
+**On an existing machine.** The installer's `upgrade_editgates` step switches
+all three on, **once**, for every *user* account in the register whose field is
+blank, so that no such account loses what it had; group and other accounts,
+and accounts made afterwards, start with all three off. The installing user's
+own account is made with all three off like any other. The switches are kept
+in the account archive (`edit.voc`, `edit.bp`, `edit.dict`), but
+`restore.account` gives them back only to an account it has to create; an
+archive from before the switches existed carries none and gives none.
+
+### VOC pointers: where a file pointer may lead, and which Q-pointers are followed
+
+**A VOC pointer is a way to name a file, so it is held to the same rule.** An
+account can write a pointer into its own VOC with `ed`, or make one with
+`create.file ... pathname`, and a Q-pointer is what `set.file` makes into
+another account. For everybody but SDSYS:
+
+| | |
+|---|---|
+| **a file pointer (F-type)** | must lead **inside the account's own directory**, or be **the pointer SD itself put in the VOC** (the stock entries of `newvoc`). An account that holds `os-on` may go anywhere its Windows user can. Anything else is refused with status 3035 |
+| **a Q-pointer** into a **registered account** | is followed only if the user **could `logto` that account**: a member of its Windows group, and the account not suspended — `logto`'s own test — **whether or not the account holds `os-on`** |
+| **a Q-pointer** that **names a path** | is an operating-system path, and the `os-on` question |
+
+So `set.file` into somebody else's account works only for a user who may enter
+that account, and a hand-made pointer at a system directory or another
+account's directory is refused unless the account holds `os-on`. A refused
+open takes the `ELSE` branch with status 3035, like any other refusal here.
+**SDSYS is never refused.** The accounts that existed at an upgrade hold what
+`os.users` gave them (above), so an account that had `os-on` keeps its own
+pointers; the Q-pointer rule applies to every account. The API's request 29,
+"open an SDNet file", asks the same question of the account named in the
+request ([SDNet](12a-sdnet.html)).
 
 ### What `os-on` actually costs
 
@@ -123,20 +391,51 @@ modify.account account voc-on | voc-off | bp-on | bp-off | dict-on | dict-off
 modify.account account shared-read-on | shared-read-off | shared-write-on | shared-write-off
 modify.account account net-on | net-off
 modify.account account files-on | files-off | files-write-on | files-write-off | files-admin-on | files-admin-off
+modify.account account start-menu | start-terminal | start-default
+modify.account account pins-on | pins-off
 modify.account account suspended | unsuspended
 ```
 
-**Every action except `add` and `delete` may be given together in one
-command**, for example `modify.account fred sh-on os-on voc-on bp-on`. Every
-word is read first and **if any is refused nothing is changed**: a word that is
-not an action, two words that set one access to different states (`sh-on` with
-`sh-off`, or `ssh` with `api`), or `add`/`delete` among other words — those take
-a user name and stand alone. The words are then all carried out in a fixed order
-whatever order you typed them (the remote routes, then the switches, then
-`suspended`/`unsuspended`), each reported and audited as it would be on its own,
-and a command of more than one ends with a line saying that every action was
-carried out or which were not (the others are still done). With no action at all
-the command prints its usage.
+**More than one action in a command** (from 25 October 2026). Any number of the
+words above except `add` and `delete` may follow the account, in one command:
+`modify.account fred sh-on os-on voc-on bp-on`. SD reads every word first and
+then carries out all of them, or none of them:
+
+* **An unknown word, two words that set one access to different states, or
+  `add` / `delete` among other words refuses the whole command before anything
+  is changed**, and the refusal names the word: `sh-on` with `sh-off`, `ssh`
+  with `api` (say `both`), `files-off` with `files-write-on`, and
+  `files-admin-on` with `files-off` or `files-write-off` are the conflicts.
+* **The words are carried out in one fixed order whatever order they were
+  typed:** the route words, then `sh`, `os`, `sd`, the three edit switches and
+  `net`, then the files words (`files-on` before `files-write-on`, which needs
+  it, and that before `files-admin-on`), then the shared-account words, the
+  start and pins words, and the suspension last. Each is reported and audited
+  exactly as if it had been given alone.
+* **A command of more than one action ends with a line** saying which were
+  carried out, and if one could not be (a refusal such as `sh-on` on a group
+  account, or a Windows group change that failed) the others are still carried
+  out and the line names the one that was not (messages 12798 and 12799).
+
+```
+:modify.account fred os-on sh-on
+Account fred has SH yes, OS.EXECUTE no
+Account fred has SH yes, OS.EXECUTE yes
+Account fred: 2 actions carried out: sh-on, os-on
+:modify.account fred sh-on sh-off
+sh-on and sh-off set the same access to different states, and nothing was changed: give one of them
+:modify.account fred voc-on bogus
+bogus is not a modify.account action, and nothing was changed: give modify.account with an account and no action to see them
+```
+
+(These lines are the messages' texts and the order of the work; they were
+produced on Linux and have not been run on Windows.) `add` and `delete` take one
+user name and stand alone: among other words, or with a word after the user
+name, they are refused with the message *add and delete take a user name and
+stand alone, and nothing was changed: ...*. The same word twice is one action.
+Before this release a word after the first was read by nobody: `voc-off bp-off`
+did the first and said nothing of the second. With no action at all the
+command prints its usage.
 
 ### `suspended`/`unsuspended` is a state, not a tier
 
@@ -151,11 +450,13 @@ signing in, `logto`, and the API.
 |---|---|
 | **`ssh`** \| **`api`** \| **`both`** \| **`none`** | what the account's remote access **is**. Absolute: `api` takes ssh away |
 | **`sh-on`** \| **`sh-off`** | the `sh` verb and `!` |
-| **`os-on`** \| **`os-off`** | `OS.EXECUTE` and the screen editors |
+| **`os-on`** \| **`os-off`** | `OS.EXECUTE`, the screen editors, the embedded Python, and operating-system paths outside the account's own directory (see above) |
 | **`sd-on`** \| **`sd-off`** | may reach files under the directory of an account the person could `logto` (also allowed on a group account) |
-| **`voc-on`** \| **`voc-off`** | may save a change to a VOC |
+| **`voc-on`** \| **`voc-off`** | may save a change to a VOC (see *The edit switches*) |
 | **`bp-on`** \| **`bp-off`** | may save a change to a program file (source or object code), and compile and catalogue |
 | **`dict-on`** \| **`dict-off`** | may save a change to a dictionary |
+| **`start-menu`** \| **`start-terminal`** \| **`start-default`** | where a session on a terminal starts: the home screen, the command prompt, or the system default (see *Where a session starts*) |
+| **`pins-on`** \| **`pins-off`** | may add its own programs to the home screen (see *What the home screen shows*) |
 | **`shared-read-on`** \| **`shared-read-off`**, **`shared-write-on`** \| **`shared-write-off`** | open, and write, the files of the shared account by name (blank read means on, blank write means off; see [The Shared Account](13-the-shared-account.html)) |
 | **`net-on`** \| **`net-off`** | may use SDNet: open a file on another SD server (see [The NET switch](#the-net-switch-net-on-and-net-off)) |
 | **`files-on`** \| **`files-off`**, **`files-write-on`** \| **`files-write-off`**, **`files-admin-on`** \| **`files-admin-off`** | may log in over the API for files only, and, with the second pair, change files there, and, with the third, administer them there (see [The files-only route](#the-files-only-route-files-on-and-files-off)) |
@@ -173,7 +474,212 @@ never available to SDSYS"* is the message whatever you asked for. SDSYS's
 own routes are not a setting; see [Read this before anything
 else](#read-this-before-anything-else-being-sdsys-is-the-whole-of-it). A
 group account is refused too, for the `sh-on`/`sh-off`/`os-on`/`os-off`
-forms: it has no Windows user to hold the record.
+forms: it has no Windows user, and a shell is a fact about a person.
+
+After `sh` or `os` SD says where the account **now** stands, both fields at
+once, so that a command that did only what it named is plain to see:
+
+```
+:modify.account fred sh-on
+Account fred has SH yes, OS.EXECUTE no
+:modify.account fred os-on
+Account fred has SH yes, OS.EXECUTE yes
+:modify.account fred sh-off
+Account fred has SH no, OS.EXECUTE yes
+```
+
+Asking for what is already so changes nothing and says so ("fred already had
+that access; nothing changed"). A route word reports the route in the same way
+("fred has no remote access: not ssh, not the API").
+
+**A change takes effect the next time the account is entered.** The setting is
+read when a session signs in, and for `sh`, `os`, `sd`, `net` and the two
+`shared` switches again when it `logto`s into the account (the three edit
+switches are read at sign-on only), so a session already open keeps what it
+started with. To take a grant away from somebody who is signed in now, change
+the setting and then end their session.
+
+**Every one of these words is written to the audit trail** (`modify.account
+sh-on account=fred` and its siblings), in lower case.
+
+**Upgrading keeps what accounts have.** The installer's `upgrade_gates` step
+copies `sh` and `OS.EXECUTE` into the register once, from what `os.users` said
+(see *The operating-system switches*); `upgrade_editgates` switches `voc-on`,
+`bp-on` and `dict-on` on, once, for every user account whose field is blank.
+Ssh and the API are left exactly as they were. Group and other accounts are
+left off on purpose. **`net-on` is not part of it**: nothing used SDNet before,
+so every existing account has it off. **The `shared` switches are not part of it
+either**: a blank field already reads as `shared.read` on and `shared.write`
+off, which is how they are delivered. **Neither is `files-on`**: the `sdfiles`
+group is made empty, and nobody is in it until you say so. You can then turn
+them off one account at a time, and a later install does not turn them back
+on. Only accounts made after the upgrade start with everything off.
+
+### Every account against every gate: `tool.gates`
+
+```
+tool.gates
+```
+
+**The gate matrix** is a full-screen page for the administrator (SDSYS's VOC only;
+it is refused, before anything is read, to anyone else: in every other account the
+same verb is the account holder's read-only "what my account may do" page,
+described in the User set under *What this account may do*). One row for each
+registered account but SDSYS, one column for each gate the system has, in the
+order `modify.account` carries them out: `ssh api sh os sd voc bp dict net sh-rd
+sh-wr files f-wr f-adm sock`. A cell says **ON**, **off**, a **dash** (the gate
+does not apply to this kind of account: ssh, api and files are routes for a
+person, and a group or other account has no Windows user of its own) or **plan**
+(not built yet; sockets). A star after a cell is a change you have queued; the
+cell shows the state it would have. Under the matrix a box says, for the cell
+under the cursor, what the gate is: its two words, what ON allows, what OFF still
+allows, when a change reaches the person, whether it reaches beyond SD and what it
+is as delivered. A second box lists the accounts that have a gate on which reaches
+beyond SD, and a third the live sessions of the account under the cursor.
+
+| Key | What it does |
+|---|---|
+| arrows, a click | move over the cells |
+| Enter or the space bar | queue the opposite state for the cell; again takes it back |
+| R | run the queued changes of the account on the cursor's row |
+| U | drop them |
+| T | queue OFF for every gate of that account that is off as delivered and on now |
+| F | change which accounts are shown: all, accounts of persons, accounts with a gate on that reaches beyond SD |
+| F5 | read the machine again (a queued change is kept) |
+| F1, `?`, a click on the `[?]` | explain the matrix |
+| Ctrl-Q | leave |
+
+**The page writes nothing itself.** The queued changes of one account become ONE
+command, `modify.account name word word ...`, shown with its effect in a box that
+is answered Run or Cancel (Enter alone is Cancel). The verb reads every word
+before it changes anything, so a conflict is refused whole. After the command the
+page reads the machine again and shows the verb's own words, so a cell changes
+because the system changed, never because the page said so. Every change is
+audited by the verb as if you had typed it.
+
+* **There is no key that queues everything ON.** **T** is the only "all": it
+  queues OFF for what is on and off as delivered (`shared-read`, which is on as
+  delivered, is left alone).
+* **Turning ON a gate that is off as delivered says so**, and says that leaving
+  it off is the tighter choice. **Turning ON a gate that reaches beyond SD**
+  (ssh, api, sh, os, sd, net, files, files-write, files-admin) **asks for the
+  account's name to be typed**; turning anything OFF does not.
+* **ssh and api are one setting** in the verb: the words `ssh`, `api`, `both` and
+  `none` SET the pair. The page therefore sends the one word that gives the pair
+  of states you queued, and its box says which.
+* **files-write needs files, and files-admin needs files-write.** A queue that
+  breaks that is refused by the page before the box opens, and the verb refuses
+  it again.
+* **A group or other account cannot have `sh` or `os`:** the verb refuses them in
+  both directions. The page says so instead of queueing them.
+* **A change does not reach a session that is already running.** The box says when
+  it reaches the person: the next sign-on (voc, bp, dict), the next account entry
+  (sh, os, sd, net, shared), the next login (ssh, api, files).
+* **Home-screen settings are not gates and are not on this page:** `pins-on` /
+  `pins-off` and the three start words are managed on the menu management page
+  (`tool.menus`, below).
+
+*Not run on a Windows console yet.* The page is Linux's, carried here and
+compiled; it needs a window of at least 140 columns by 43 lines.
+
+### Where a session starts: `start-menu`, `start-terminal`, `start-default` and `set.start.default`
+
+A session on a terminal starts either in the **home screen** (a screen of tiles:
+the account's tools, a terminal, switch account and sign out; the User set has the
+page *The Home Screen*) or at the **command prompt**. **You decide, account by
+account**, and you decide what an account with no setting of its own does:
+
+```
+modify.account fred start-terminal       fred starts at the prompt, whatever the default is
+modify.account fred start-menu           fred starts in the home screen, whatever the default is
+modify.account fred start-default        fred follows the default (the register field is made empty)
+set.start.default terminal               accounts that follow the default start at the prompt
+set.start.default menu                   ... or in the home screen
+set.start.default                        says which it is now
+```
+
+* **The default is `menu` as delivered.** `set.start.default` writes the word to the
+  file `start.default` in the `sdsys` directory; the file is absent until you use the
+  verb, and absent means menu.
+* **EVERY EXISTING ACCOUNT HAS NO SETTING OF ITS OWN**, so after an upgrade each
+  follows the default and starts in the home screen. To keep the old start for
+  everyone, run `set.start.default terminal` (as SDSYS); to keep it for some,
+  `modify.account name start-terminal`.
+* The setting is **field 16** of the account's register record. `modify.account`
+  writes it; it applies at the person's next sign-on, and when they type `logto` at
+  the prompt to enter the account. It may be set on any kind of account.
+* **It is not a wall.** Starting in the home screen confines nobody: its *Terminal*
+  tile gives the ordinary command prompt (and `exit` comes back).
+* The screen is never given to a session that cannot use it: a window under 140 by
+  43, a session with no terminal (a pipe, a phantom), an API server, or a `logto`
+  that a program ran with `execute`. Scripts and scheduled jobs are unchanged.
+* `modify.account` says `Account fred starts at: menu` (or `terminal`, or `system
+  default`) and `fred already starts that way; nothing changed` when the word is the
+  one already set. It is audited as `modify.account start-menu account=fred`, and
+  `set.start.default menu` as `set.start.default menu`.
+* `create.account` does not take the words: make the account, then use
+  `modify.account`.
+
+### What the home screen shows: `set.tile`, `pins-on` and the menu management page
+
+```
+tool.menus
+```
+
+**Menu management** is a full-screen page for the administrator (SDSYS's VOC only;
+it is also a tile on the administrator's own home screen). It lists every account
+but SDSYS with where it starts, whether it may add its own programs, and the tiles
+turned off for it; for the account you select it shows the standard tiles with `[x]`
+on and `[ ]` off, and a box that says in plain words what the settings mean. **It
+writes nothing itself:** every change is the command it will run, shown with its
+effect in a box you answer *Run* or *Cancel* (Cancel is the button Enter chooses),
+run by the same verbs you can type, and the line under the page is the verb's own
+answer. **Every setting has a `[?]` at the end of its row** (and one on the accounts
+list and on the system default): F1 or `?` on the selected row, or a click on the
+`[?]`, opens a box that says what the setting means. The text is the record of that
+setting in the file `context.help` of the shared account. **`load.help`, run by
+SDSYS, fills that file from the `helptext` directory of the SD system directory**
+(it replaces the shipped records and keeps any you added under another id); the
+Windows installer does not run it yet, so run it once after an install or an
+upgrade, or a `[?]` finds no text.
+
+```
+set.tile                          says which tiles are off, one line for each account that has any
+set.tile account tile off         turn a tile off for that account
+set.tile account tile on          turn it on again
+modify.account account pins-on    the person may add their own programs to their home screen
+modify.account account pins-off   they may not (the delivered state)
+```
+
+* **Tiles are on as delivered and are turned off one account at a time**; there is
+  no setting for every account. The standard tile ids are `editor`, `ide`, `ced`,
+  `terminal`, `keys`, `switch` and `signout`. **Sign out cannot be turned off**: a
+  person must always be able to leave. Any other id is accepted and said not to be
+  standard.
+* The setting is **field 17** of the account's register record (tile ids separated by
+  spaces). A tile that is off is not on the page, its menu entry cannot be chosen, and
+  a group with no tile left has no heading. It takes effect when the home screen is
+  next built (sign-on, F5, Switch account).
+* **The Terminal tile off is a wall for an account that starts in the home screen**:
+  the screen never leaves the person at the command prompt, whatever ends it, and signs
+  them out instead (a window too small to take the screen ends the session after the
+  message). An account that starts at the prompt (`start-terminal`) keeps it. **It is a
+  wall only for the prompt the screen gives**: the programs behind the other tiles are
+  the account's own, so an account that is to be kept to the screen should have the
+  editor, IDE and record editor tiles off as well, and a command that gives a shell
+  needs `sh-on`, which is off as delivered.
+* **`pins-on` is off as delivered.** An account that has it gets a group *My programs*
+  on its home screen and the verb `my.menu`, with which the person adds **their own**
+  programs (a label and a command they could type at their prompt): they manage only
+  their own list, never the standard tiles, and a program of theirs adds no access. It
+  is **field 18** of the register record, and the administrator always may. `pins-off`
+  hides the group and `my.menu` refuses; the list stays in the person's file.
+* `set.tile` says `Tile ide is now off for fred` (and `... was already off ...; nothing
+  changed`) and is audited as `set.tile off tile=ide account=fred`; `modify.account`
+  says `Account fred may add its own programs to the home screen: yes`.
+
+*Not run on a Windows console yet.* The home screen and its pages are Linux's, carried
+here and compiled.
 
 ### The NET switch: `net-on` and `net-off`
 

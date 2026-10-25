@@ -40,7 +40,7 @@ purpose — see [Reaching the operating system](06-administrator-commands.html).
 ## Creating an account
 
 ```
-create.account user <name> {ssh | api | both | none} {no.query}
+create.account user <name> {ssh | api | both | none} {sh-on} {os-on} {no.query}
 
 create.account group <name> {no.query}
 
@@ -54,9 +54,15 @@ makes an elevated session mean anything to SD — see
 
 ### The route keyword is optional now
 
-**Say nothing and the account gets `both`** (ssh and the API). Name one to be
-narrower: `ssh` for ssh only, `api` for the API only, `none` for neither —
-an account reached only with `logto`, from inside another session.
+**Say nothing and the account gets `none`: no ssh and no API.** (Until 25 October
+2026 it got `both`.) SD is delivered with every door shut, and you open each one
+for the accounts that need it: `ssh` for ssh only, `api` for the API only, `both`
+for both. An account with `none` is reached only with `logto`, from inside
+another session. **`sh-on` and `os-on` are separate words of the same
+command** (`create.account user fred ssh sh-on`), off unless named, and so are the
+three switches that let an account save a change to a VOC, a program file or a
+dictionary (`voc-on`, `bp-on`, `dict-on`); the Administrator set's *Accounts and
+Security* chapter has them all.
 
 **`create.account user … ssh` and `… both` are refused when the machine has no
 ssh server**, with a warning saying why: the account would have no way to
@@ -88,18 +94,21 @@ only be reached with `logto`.
 
 ### What every account can do
 
-**Every verb, from the moment it is created.** Compile, catalogue, edit,
-define files and indexes, run the bulk record editors, inspect processes —
-none of that is withheld any more. What an account cannot do is administer:
-create, delete, grant, or suspend another account; change system-wide
-configuration; or reach the operating system through `sh` or `OS.EXECUTE`
-unless SDSYS has switched that on for it — see
+**Every verb, from the moment it is created.** The VOC withholds nothing. But
+having a verb is not being allowed to use it, and a new account is allowed
+only what stays inside SD: it runs programs, opens the files its VOC names,
+builds indexes and runs queries. What it cannot do is administer (create,
+delete, grant, or suspend another account, or change system-wide
+configuration); reach the operating system through `sh` or `OS.EXECUTE`, or
+name a file outside its own directory; or save a change to a VOC, a program
+file or a dictionary — unless SDSYS has switched that on for it, account by
+account. See
 [Reaching the operating system](05a-managing-accounts.html#reaching-the-operating-system).
 
 > **None of this is a wall inside SD.** The VOC is the same for every
 > ordinary account; what actually stops one account reaching another's data
 > is the operating system's file permissions, the ssh confinement, and the
-> `os.users` permit list for `sh`/`OS.EXECUTE` — not the contents of a VOC.
+> account's own `sh` and `OS.EXECUTE` switches — not the contents of a VOC.
 > See the *Administrator* set's *Accounts and security* chapter.
 
 ## Suspended — a state, not a tier

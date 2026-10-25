@@ -48,8 +48,11 @@ for example `SD-ace-sduser-20261001-144419.zip`.
 * **Without `TO`** the remembered folder is used. **With `TO`** the folder is used
   for that one backup only; nothing is remembered.
 * The zip holds each account's files and what is needed to make the account
-  again: its type, routes, description, groups and `os.users` settings, and its
-  globally catalogued programs.
+  again: its type, routes, description, groups, its `sh`, `os`, edit-switch,
+  `net`, shared-account and files-route settings, and its globally catalogued
+  programs. (`restore.account` gives the switches back only to an account it has
+  to create; an account that already exists keeps its own. `sd-on` is not
+  carried.)
 * **No password is in it.** SDSYS, the configuration and the credentials are not
   backed up; use `settings.report` for the system's settings.
 * **Each account is counted before it is packed** and the counts are written in

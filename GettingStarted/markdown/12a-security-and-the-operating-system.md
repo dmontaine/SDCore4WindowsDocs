@@ -5,55 +5,61 @@ This page continues [Security](12-security.html).
 
 ## Reaching the operating system from inside SD
 
-**There are three ways out of SD onto the machine, and all three are on one
-list.**
+**There are three ways out of SD onto the machine, and each is a switch of the
+account.** (Until 25 October 2026 they were a list of people in a file,
+`os.users`; the switches are now fields of the account's own record, and the
+file is no longer read.)
 
 | | What it is | Governed by |
 |---|---|---|
-| **`sh`** and `!` | a shell at the `:` prompt | `os.users` field 1 |
-| `OS.EXECUTE` | the operating system from inside a BASIC program | `os.users` field 2 |
-| **`edit`** and **`micro`** | a text editor, running outside SD | `os.users` field 2 |
+| **`sh`** and `!` | a shell at the `:` prompt | the account's `sh-on` switch |
+| `OS.EXECUTE` | the operating system from inside a BASIC program | the account's `os-on` switch |
+| **`edit`** and **`micro`** | a text editor, running outside SD | the account's `os-on` switch |
 
-**`os.users` is in SDSYS and is read-only to everybody else on disk.** That ACL
-is the whole of the protection: without it a user grants themselves any of the
-three in one line, and every check above it is decoration.
+`os-on` also decides whether the account may name a file outside its own
+directory (by its path, through a pointer, with `dir()`, as a print file); the
+narrower `sd-on` allows the directories of other SD accounts the person could
+`logto`. **The switches are in the register, which is in SDSYS and is
+read-only to everybody else on disk.** That ACL is the whole of the protection:
+without it a user grants themselves any of them in one line.
 
-**Three rules hold for all three:**
+**Four rules hold for all of them:**
 
-**1. A missing record, or a missing file, means no.** An installation that has
-never set `os.users` up denies all three to ordinary accounts.
+**1. A blank switch means no.** A new account has all of them off, and an
+installation with accounts from before has the old list copied into the
+switches once, at the upgrade.
 
-**2. SDSYS passes on its own**, regardless of the list, so an empty list
-cannot lock the machine's own administrator out. This is *narrower* than
-the identity check might suggest — it is not "elevated," it is "signed in
+**2. SDSYS passes on its own**, regardless of the register, so an empty
+register cannot lock the machine's own administrator out. This is *narrower*
+than the identity check might suggest — it is not "elevated," it is "signed in
 to Windows as the `sdsys` account and running `sd` elevated," and nothing
 less passes. An elevated session in any other account gets no exemption at
-all; it is checked against `os.users` exactly like an unelevated one. See
-[Accounts](05-account-types.html#sdsys-is-the-only-administrator).
+all; it is checked against the account's switches exactly like an unelevated
+one. See [Accounts](05-account-types.html#sdsys-is-the-only-administrator).
 
-**3. An API session is checked the same way as any other, by user name —
-and SDSYS has no API session to be checked.** The list is consulted whether
-or not a session arrived over the API: an ordinary account whose `os.users`
-record says `yes` gets `sh` and `OS.EXECUTE` over the API exactly as it
-would anywhere else, which is the real risk `os-on` plus API access
-creates — the *Administrator* set's *Accounts and Security* chapter has
-the detail. **SDSYS itself never reaches this path**: it carries
-no SD credential to authenticate an API connection with by design, and the
-API is refused to it outright regardless — see
-[API access](09-api-access.html).
+**3. An API session is checked the same way as any other, by the account it
+entered — and SDSYS has no API session to be checked.** An ordinary account
+with `sh-on` gets `sh` over the API exactly as it would anywhere else, which
+is the real risk `sh-on` or `os-on` plus API access creates — the
+*Administrator* set's *Accounts and Security* chapter has the detail.
+**SDSYS itself never reaches this path**: it carries no SD credential to
+authenticate an API connection with by design, and the API is refused to it
+outright regardless — see [API access](09-api-access.html).
 
-**4. Nothing in SD limits what you then do.** Once field 1 or field 2 says
-`yes`, SD is not standing between that person and the machine — **the boundary
-from that point on is their own Windows account's permissions**, and nothing
-else. A listed person gets a real shell, with pipes and redirection; an editor
-can open any file they are allowed to open, in the data tree or outside it.
+**4. Nothing in SD limits what you then do.** Once a switch is on, SD is not
+standing between that person and the machine — **the boundary from that point
+on is their own Windows account's permissions**, and nothing else. An editor
+can open any file they are allowed to open, in the data tree or outside it. A
+shell is held to one rule only: at the prompt `sh` and `!` refuse a pipe, a
+redirect, a chain and a variable, for every account; the way round is a script
+file.
 
-> **So field 1 and field 2 are statements of trust in a person.** They are
+> **So `sh-on` and `os-on` are statements of trust in an account.** They are
 > not a convenience to be handed out because somebody asked for a full-screen
 > editor. Grant them on the same basis you would grant a shell account on the
 > machine, because that is close to what you are granting.
 
-**The record format, and how to grant and remove it**, are on
+**How to grant and remove them** is on
 [Administrator commands](06-administrator-commands.html#how-you-grant-it).
 
 ## Privileged work is done through a script, not a command line
@@ -83,7 +89,7 @@ date, time and the Windows user it belonged to. **It also records what an
 administrator does to accounts and to remote access**: `create.account`,
 `delete.account` and `restore.account` (a completed one only), the
 `modify.account` changes that add or remove a group member, suspend, unsuspend,
-change an account's ssh and API routes or its `os.users` entry, and
+change an account's ssh and API routes or its `sh` and `os` switches, and
 `remote.api` and `remote.ssh` when they change something. An account line
 names the account it concerns.
 

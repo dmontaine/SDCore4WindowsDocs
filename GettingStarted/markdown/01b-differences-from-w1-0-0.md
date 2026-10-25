@@ -47,8 +47,9 @@ not — the only way in is the elevated start itself. An elevated session that
 did not work before: leaving SDSYS used to end the elevated session.
 
 **`SH` and `!` are back on ordinary accounts** — gated the same way they
-always should have been, by an administrator's `OS.USERS` grant
-(`modify.account <account> sh-on`), not by whether the account could type
+always should have been, by an administrator's grant
+(`modify.account <account> sh-on`; since 25 October 2026 a switch of the
+account, before that an `OS.USERS` record), not by whether the account could type
 the command at all.
 
 ## Passwords are stronger, and yours to change
@@ -245,7 +246,8 @@ else is affected. The installer can install Python for you from the release
 zip: see *Installation*.
 
 **Access follows the same rule as the shell.** Whatever governs `SH` and
-`OS.EXECUTE` for an account — the `OS.USERS` grant, or being SDSYS — governs
+`OS.EXECUTE` for an account — its `os-on` switch (an `OS.USERS` grant until
+25 October 2026), or being SDSYS — governs
 Python too, since it can read and write files and start programs just as
 freely.
 

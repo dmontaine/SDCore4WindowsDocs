@@ -96,7 +96,8 @@ and nothing else about SD is affected. The installer offers to install one
 from the release zip.
 
 **Access follows whoever may reach the operating system.** The same test
-that gates `SH` and `OS.EXECUTE` — an `OS.USERS` grant, or being SDSYS —
+that gates `SH` and `OS.EXECUTE` — the account's `os-on` switch (an
+`OS.USERS` grant until 25 October 2026), or being SDSYS —
 gates Python, because it can read and write files and start programs just
 as freely. `PY_INITIALIZE` and every other `PY_` call return `-12041` in a
 session that may not use `OS.EXECUTE`, or `-12042` if SD could not even tell

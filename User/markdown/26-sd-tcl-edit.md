@@ -134,17 +134,19 @@ ordinary source reads normally.
 
 **Every account has `edit` and `micro`** — there is no tier left to decide
 that. What decides whether either one *runs* is a single permission:
-`os.users` field 2, the `OS.EXECUTE` field.
+the account's `os-on` switch, the `OS.EXECUTE` switch.
 
 An editor runs outside SD, so it needs operating-system permission that `ed`
-does not. It comes from a record in the system file `os.users` whose field 2
-reads `yes`, **and only SDSYS can put one there.**
+does not. It comes from the `os-on` switch in the account's own record, **and
+only SDSYS can turn it on.** (Until 25 October 2026 it was field 2 of a record
+in the system file `os.users`, keyed to the person; that file is no longer
+read, and the permission now follows the account.)
 
-**SDSYS reaches the operating system regardless of `os.users`** — the same
+**SDSYS reaches the operating system regardless of the register** — the same
 identity check that grants administration grants this too, so signing in as
-SDSYS and running `sd` elevated gets both verbs working immediately, with
-no record needed. Every other account starts with no record at all and is
-refused until SDSYS grants one:
+SDSYS and running `sd` elevated gets both verbs working immediately. Every
+other account starts with the switch off and is refused until SDSYS grants
+it:
 
 | | |
 |---|---|
@@ -164,9 +166,6 @@ not a setting to change:
 :modify.account sdsys os-off
 Remote access is never available to SDSYS
 ```
-
-The record is ordinary data, so SDSYS can also edit it by hand with
-`ed os.users` *name*.
 
 **And a session with no terminal is refused before anything is written** — an
 API session, or a script driving SD down a pipe:
@@ -189,7 +188,7 @@ No record name specified.  Usage: edit {dict} <file> <record>
 ## Who has these verbs
 
 **Every account has `edit`, `micro` and `ed`.** Whether `edit` and `micro`
-actually run is the separate `os.users` question above; `ed` needs nothing
+actually run is the separate `os-on` question above; `ed` needs nothing
 more than the verb.
 
 ## See also

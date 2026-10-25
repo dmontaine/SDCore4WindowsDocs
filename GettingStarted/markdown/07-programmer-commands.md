@@ -158,10 +158,9 @@ is**, and it is the reason these two verbs are behind `OS.EXECUTE`
 permission and not merely behind having the verb — see
 [What actually gates these](#what-actually-gates-these).
 
-**So `os.users` field 2 is a statement of trust in a person, not a
-convenience.** Before granting it, ask the same question you would ask
-before giving somebody the shell — because in terms of what they can reach
-on disk, you are.
+**So `os-on` is a statement of trust in an account, not a convenience.**
+Before granting it, ask the same question you would ask before giving somebody
+the shell — because in terms of what they can reach on disk, you are.
 
 Neither editor can run a command, so neither is a shell. **What they are is
 read and write access to the filesystem, with the account's own Windows
@@ -219,33 +218,32 @@ knowing before you rely on anything in this page as a boundary.
 |---|---|
 | File permissions | Windows ACLs on the data tree — see [Security](12-security.html) |
 | Where an account may sign in | the `sdsshonly` deny rights — see [ssh access](08-ssh-access.html) |
-| Reaching the operating system | the `os.users` permit list, both **`sh`** and `OS.EXECUTE` |
+| Reaching the operating system | the account's own `sh-on` and `os-on` switches, for **`sh`** and for `OS.EXECUTE` |
 | What an API session may open | the containment gate, rooted at the account the session stands in |
 
 ### The editors need `OS.EXECUTE` permission as well as the verb
 
 **An editor runs outside SD, so reaching one is reaching the operating
-system** — and who may do that is **field 2 of your record in
-`os.users`**, the same field that governs `OS.EXECUTE` from inside a
-program. Two gates, and both have to pass:
+system** — and who may do that is **the `os-on` switch of your account**, the
+same switch that governs `OS.EXECUTE` from inside a program. Two gates, and
+both have to pass:
 
 | | |
 |---|---|
 | the VOC | everyone has **`edit`** and **`micro`** |
-| `os.users` field 2 | decides **whether either one runs** |
+| the account's `os-on` switch | decides **whether either one runs** |
 
-**SDSYS passes this on its own**, exactly as `sh` does, so an empty list
-cannot lock the machine's own administrator out. **A missing record, or a
-missing file, means no**, for every ordinary account — the same direction
-`sh` fails in.
+**SDSYS passes this on its own**, exactly as `sh` does, so an empty register
+cannot lock the machine's own administrator out. **A blank switch means no**,
+for every ordinary account — the same direction `sh` fails in.
 
 If you have the verb and not the permission you get told so by name, and
 told what to ask for:
 
 ```
 edit is not available to fred.
-It runs an editor outside SD, so it needs OS.EXECUTE permission: field 2
-of your record in the SD system file os.users, which only SDSYS can change.
+It runs an editor outside SD, so it needs OS.EXECUTE permission, which an administrator grants with
+   modify.account <account> os-on
 ed, the line editor, needs none of this.
 ```
 
@@ -253,7 +251,7 @@ SDSYS grants it — see [Administrator commands](06-administrator-commands.html#
 
 **A session with no terminal is refused first and separately**: an API
 session or a piped script has nowhere to draw a full screen, and is told
-that rather than being told about `os.users`.
+that rather than being told about `os-on`.
 
 > **WHAT AN EDITOR CAN REACH, and it is worth knowing before you grant it.**
 > An editor can open any file the person running it is allowed to open, so

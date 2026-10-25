@@ -58,7 +58,7 @@ so on. Nothing was renumbered when they were split.
 | **11** | [Lower case](11-lower-case.html) | Case in commands, file names, record ids and account names |
 | **12** | [Security](12-security.html) | The identity model, and what protects the database |
 | **12a** | [Security and the operating system](12a-security-and-the-operating-system.html) | Reaching the machine from inside SD, how privileged work is done, and the audit trail |
-| **13** | [Other hardening](13-hardening.html) | Auditing, the shell permit list, and the rest |
+| **13** | [Other hardening](13-hardening.html) | Auditing, the shell switches, and the rest |
 | **14** | [Not in SD Core](14-not-in-sd-core.html) | What has been removed, and what to use instead |
 
 ## The five things most likely to surprise you
@@ -73,7 +73,8 @@ or not, and not on a secret SD holds. See [Security](12-security.html).
 **2. Accounts SD creates cannot log in to Windows at this machine.** They are
 denied the physical console and Remote Desktop, deliberately. They reach SD
 **over ssh, or through an API client, or both** — chosen when the account is
-created, defaulting to both if you say nothing. **Multi-user access over
+created, defaulting to neither if you say nothing (a new account starts with
+every door shut). **Multi-user access over
 Remote Desktop is not supported** and is not a gap to be filled later. See
 [ssh access](08-ssh-access.html) and [API access](09-api-access.html).
 
