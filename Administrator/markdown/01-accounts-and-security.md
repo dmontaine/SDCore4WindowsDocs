@@ -117,8 +117,23 @@ modify.account account add | delete  user.name
 modify.account account ssh | api | both | none
 modify.account account sh-on | sh-off
 modify.account account os-on | os-off
+modify.account account sd-on | sd-off
+modify.account account voc-on | voc-off | bp-on | bp-off | dict-on | dict-off
+modify.account account shared-read-on | shared-read-off | shared-write-on | shared-write-off
 modify.account account suspended | unsuspended
 ```
+
+**Every action except `add` and `delete` may be given together in one
+command**, for example `modify.account fred sh-on os-on voc-on bp-on`. Every
+word is read first and **if any is refused nothing is changed**: a word that is
+not an action, two words that set one access to different states (`sh-on` with
+`sh-off`, or `ssh` with `api`), or `add`/`delete` among other words — those take
+a user name and stand alone. The words are then all carried out in a fixed order
+whatever order you typed them (the remote routes, then the switches, then
+`suspended`/`unsuspended`), each reported and audited as it would be on its own,
+and a command of more than one ends with a line saying that every action was
+carried out or which were not (the others are still done). With no action at all
+the command prints its usage.
 
 ### `suspended`/`unsuspended` is a state, not a tier
 
@@ -134,6 +149,11 @@ signing in, `logto`, and the API.
 | **`ssh`** \| **`api`** \| **`both`** \| **`none`** | what the account's remote access **is**. Absolute: `api` takes ssh away |
 | **`sh-on`** \| **`sh-off`** | the `sh` verb and `!` |
 | **`os-on`** \| **`os-off`** | `OS.EXECUTE` and the screen editors |
+| **`sd-on`** \| **`sd-off`** | may reach files under the directory of an account the person could `logto` (also allowed on a group account) |
+| **`voc-on`** \| **`voc-off`** | may save a change to a VOC |
+| **`bp-on`** \| **`bp-off`** | may save a change to a program file (source or object code), and compile and catalogue |
+| **`dict-on`** \| **`dict-off`** | may save a change to a dictionary |
+| **`shared-read-on`** \| **`shared-read-off`**, **`shared-write-on`** \| **`shared-write-off`** | open, and write, the files of the shared account by name (blank read means on, blank write means off; see [The Shared Account](13-the-shared-account.html)) |
 | **`add`** \| **`delete`** *user* | put a Windows user in, or out of, the account's group |
 
 **The first group is absolute and the second is not.** `ssh`/`api`/`both`/
