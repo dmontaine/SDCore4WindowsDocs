@@ -207,3 +207,7 @@ set.queue = **`set.queue`** *queue* {, *width*, *depth*, *top*, *bottom*, *mode*
 sp.assign = **`sp.assign`** {*options*} {, *setptr options*}
 # 20 Oct 26: encryption layer 3, from Linux.  encrypt.key is in every account's VOC (newvoc); the passphrase is read at a hidden prompt, never given as an argument.  Its page is User/06a.
 encrypt.key = **`encrypt.key set`** *name* *salt* {**`confirm`**}  ·  **`encrypt.key clear`** {*name*}  ·  **`encrypt.key list`**
+import.csv = **`import.csv`** *pathname* *file* {**`header`**} {**`delimiter`** *x*} {**`quote`** *x*} {**`escape`** *x*} {**`id`** *column* | **`generate`**} {**`dict`**} {**`overwriting`**}
+import.json = **`import.json`** *pathname* *collection.file* {**`id`** *name* | **`generate`**} {**`overwriting`**}
+import.xml = **`import.xml`** *pathname* *file* {**`id`** *name* | **`generate`**} {**`overwriting`**}
+convert.data = **`convert.data`** *from.pathname* *to.pathname* {**`from`** *format*} {**`as`** *format*} {**`header`**} {**`no.query`**}
