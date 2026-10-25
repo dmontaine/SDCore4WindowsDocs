@@ -180,7 +180,7 @@ server's runtime addresses them. `C:\WINDOWS\TEMP` and
 | `BACKUPDIR` | unset | The folder `backup.account` and `restore.account` use. Set by `set.backup.directory`, not by hand - see [Backing Up and Restoring Accounts](01b-backup-and-restore.html) |
 | `APILOGIN` | none | **Retired.** The API always requires the account's password. An `sd.conf` that still has the line works and the line is ignored; the installer no longer writes it and `CONFIG` no longer prints it |
 | `NETDIRS` | unset | Directories outside its own account an API session may open, separated by semicolons because a Windows path contains a colon |
-| `SDCLIENT` | 0 | Restricts what an API session may do. Non-zero disables file access outright; `2` additionally refuses any subroutine not compiled as callable from a client |
+| `SDCLIENT` | 0 | Restricts what an API session may do. Non-zero disables file access outright (no file can be opened, so no dictionary can be evaluated either), refuses `SDIConv`, `SDOConv`, `SDIConvs` and `SDOConvs` a conversion code that reads a file (`T` with a file) or calls a program (`U`), and refuses `SDOpenSeq`, `SDExecute`, `SDTrans` and `SDRTrans`; `2` additionally refuses any subroutine not compiled as callable from a client |
 
 Unset is the strict value for `NETDIRS`. With nothing there, an API session can
 open files in the account it is standing in and nothing else. It never grants
