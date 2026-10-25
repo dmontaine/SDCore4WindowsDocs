@@ -51,7 +51,7 @@ your own session.
 
 ```
 create.account user <name> {ssh | api | both | none} {sh-on} {os-on} {voc-on} {bp-on} {dict-on}
-                           {net-on} {files-on} {files-write-on} {shared-read-off} {shared-write-on} {no.query}
+                           {net-on} {files-on} {files-write-on} {files-admin-on} {shared-read-off} {shared-write-on} {no.query}
 
 create.account group <name> {no.query}
 
@@ -122,7 +122,7 @@ modify.account account sd-on | sd-off
 modify.account account voc-on | voc-off | bp-on | bp-off | dict-on | dict-off
 modify.account account shared-read-on | shared-read-off | shared-write-on | shared-write-off
 modify.account account net-on | net-off
-modify.account account files-on | files-off | files-write-on | files-write-off
+modify.account account files-on | files-off | files-write-on | files-write-off | files-admin-on | files-admin-off
 modify.account account suspended | unsuspended
 ```
 
@@ -158,7 +158,7 @@ signing in, `logto`, and the API.
 | **`dict-on`** \| **`dict-off`** | may save a change to a dictionary |
 | **`shared-read-on`** \| **`shared-read-off`**, **`shared-write-on`** \| **`shared-write-off`** | open, and write, the files of the shared account by name (blank read means on, blank write means off; see [The Shared Account](13-the-shared-account.html)) |
 | **`net-on`** \| **`net-off`** | may use SDNet: open a file on another SD server (see [The NET switch](#the-net-switch-net-on-and-net-off)) |
-| **`files-on`** \| **`files-off`**, **`files-write-on`** \| **`files-write-off`** | may log in over the API for files only, and, with the second pair, change files there (see [The files-only route](#the-files-only-route-files-on-and-files-off)) |
+| **`files-on`** \| **`files-off`**, **`files-write-on`** \| **`files-write-off`**, **`files-admin-on`** \| **`files-admin-off`** | may log in over the API for files only, and, with the second pair, change files there, and, with the third, administer them there (see [The files-only route](#the-files-only-route-files-on-and-files-off)) |
 | **`add`** \| **`delete`** *user* | put a Windows user in, or out of, the account's group |
 
 **The first group is absolute and the second is not.** `ssh`/`api`/`both`/
@@ -215,11 +215,14 @@ that a login kept for SDNet (see [SDNet](12a-sdnet.html)) never needs `sdapi`: t
 other server's administrator gives that login `sdfiles`, and whoever steals the
 stored login can open and read files on that server and cannot run a command
 there. **Changing files there is a further permission, `files-write-on` (the
-Windows group `sdfileswrite`)**, given separately and off for a new account.
+Windows group `sdfileswrite`)**, given separately and off for a new account, and
+**administering them there - configure, index, create and delete a file, the file's
+counter - is a third, `files-admin-on` (the Windows group `sdfilesadmin`)**, off for every
+account (below, *Administering files: `files-admin-on`*).
 
 **Off for a new account, like every other door.** `create.account user` takes
-`files-on` and `files-write-on`; `modify.account` *name* `files-on` / `files-off`
-and `files-write-on` / `files-write-off` turn them on and off. Membership of the
+`files-on`, `files-write-on` and `files-admin-on`; `modify.account` *name* `files-on` / `files-off`,
+`files-write-on` / `files-write-off` and `files-admin-on` / `files-admin-off` turn them on and off. Membership of the
 group *is* the route, as membership of `sdapi` is for `api`, so there is no field
 for it in the register. After a change SD says where the account stands, **read
 back from the group** rather than taken from the request:
@@ -233,11 +236,14 @@ Account fred has files-write yes
 
 `files-write-on` for a person who is not in `sdfiles` is refused ("Account fred
 does not have FILES access, so it cannot be given FILES-WRITE: use files-on
-first"), because the group on its own gives nothing. `files-off` takes the write
-group away first, then `sdfiles`, and reads each back; if a removal fails SD says
-so and stops, leaving the person with read access and never write access without
-it. The change is written to the audit trail (`modify.account files-on
-account=fred`). The two groups are made, empty, by the installer.
+first"), because the group on its own gives nothing. `files-off` takes the groups
+above away first (administration, write), then `sdfiles`, and reads each back; if a
+removal fails SD says so and stops, leaving the person with the lower access and
+never a higher one without it. `files-on` takes a leftover `sdfileswrite` or
+`sdfilesadmin` membership away before it adds `sdfiles`, and stops with the same
+message if it cannot. The change is written to the audit trail (`modify.account
+files-on account=fred`). The three groups are made, empty, by the installer (its
+`sync-route-groups.ps1`), and removed by an interactive uninstall.
 
 **The rules, in the order the login applies them.** The API server decides at the
 end of the login, after the password has been proved:
@@ -275,6 +281,9 @@ number this release has never heard of.
 | 42 to 45 | set the left or right end of an index range (`setleft`, `setright`), and select within it (`selectleft`, `selectright`) |
 | 46 | the mark mapping |
 | 49 | the server's revision |
+| 68, 69 | `write` and `writeu ... creating.seqkey` (the file's own counter gives the id): **only with `files-write-on` and `files-admin-on`** |
+| 70 | a verb run on this server for the login (`analyse.file`, `configure.file`, `create.index`, `build.index`, `delete.index`, `disable.index`, `create.file`, `delete.file`): **only with `files-write-on` and `files-admin-on`** |
+| 71 | `fcontrol`: **only with `files-write-on` and `files-admin-on`** |
 
 | refused | request |
 |---|---|
@@ -289,14 +298,43 @@ number this release has never heard of.
 | 54 | transactions |
 | 55 to 60 | evaluate and the conversions |
 | 61 to 67 | sequential files |
-| 0, 68 and above, anything else | no such request here |
+| 0, 72 and above, anything else | no such request here |
 
 A refused request is answered with "This login is for files only: request *n* is not
 allowed" (a change or lock without the write group: "This login cannot change or
 lock files here: ask the administrator for files-write-on (request *n*)"), **the
 request is not carried out**, and a line goes to the audit trail
-(`api refused request=16 route=sdfiles write=off user=fred`; a login by this route
-is `api login route=sdfiles write=on user=fred`). The connection stays open.
+(`api refused request=16 route=sdfiles write=off admin=off user=fred`; a login by this route
+is `api login route=sdfiles write=on admin=off user=fred`, with `admin=on` for a person in
+`sdfilesadmin`; the `admin=` word is new in this release, and before it the lines ended
+`write=on user=fred`). The connection stays open.
+
+### Administering files: `files-admin-on` and `files-admin-off`
+
+A files-only login may configure a file, build and delete its indices, create and delete a file,
+and set or take the file's counter (`WRITE ... CREATING.SEQKEY`, `FCONTROL`) **only if the person
+is in both `sdfileswrite` and the Windows group `sdfilesadmin`**: `modify.account` *name*
+`files-admin-on` (needs `files-on` and `files-write-on` first, else "Account fred does not have
+files-write, so it cannot be given files-admin: use files-write-on first", message 12531),
+`files-admin-off`, and `files-admin-on` after `files-on` and `files-write-on` in `create.account
+user` (without them it is refused the same way, before anything is made). **It is off for every new
+account, and nothing in the installer turns it on.** The line
+printed is `Account fred has files-admin yes`, read back from the group. A group account or an
+`other` account is refused as it is for `files-on`.
+
+The three groups are a chain, `sdfiles` < `sdfileswrite` < `sdfilesadmin`: `files-write-off` and
+`files-off` take the higher groups away first (administration, write, files), each removal read
+back, and a failure half way reports the removals that did happen (`Account fred has files-admin
+no`, and the audit line `modify.account files-admin-off account=fred`) before it reports the
+failure. `files-on` and `files-write-on` take a stray higher membership away before they add. Two
+words that ask for opposite things in one command are refused with message 12796 and nothing is
+changed (`files-admin-on` with `files-off` or with `files-write-off`, and `files-write-on` with
+`files-off`). What the permission allows, what the server checks and how it is audited is in
+[SDNet](12a-sdnet.html), *The administration group*. A refused request is answered "This login
+cannot administer files here: ask the administrator for files-admin-on (request *n*)" (message
+12529) and nothing is carried out. The account's backup manifest records the membership as
+`route.files.admin`, and `restore.account` gives it back only to an account that is in `sdfiles`
+and `sdfileswrite`.
 
 **What is not changed.** Everything else about the session applies as it does to any
 other: the account must be entered, the account's own switches (the OS-access

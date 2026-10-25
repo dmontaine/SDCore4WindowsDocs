@@ -111,6 +111,67 @@ There is no "insert only" form — read first if that distinction matters, and
 hold a lock between the read and the write or two sessions will both find it
 absent.
 
+### Letting the file number its records: `creating.seqkey`
+
+```
+write variable to file.variable creating.seqkey id.variable {on error ...}
+writeu variable to file.variable creating.seqkey id.variable {on error ...}
+```
+
+A **hashed** file keeps a counter in its header. With `creating.seqkey` the record is written
+under the counter's next value, **1** in a file that has never used it, and `id.variable`
+is given that id (as text). An update lock on the new id is taken for the write and
+released before the next statement, or with `writeu` **kept**. In a transaction the id is
+taken at the `write`, not at the `commit`, so a transaction that does not commit leaves a gap.
+**A directory file is refused** (*WRITE ... CREATING.SEQKEY needs a hashed file*, message 12353;
+status 3005 under `on error`) and `id.variable` is left as it was. `fileinfo(file, 1031)` is
+the id of the last record written this way (0 if none), and `configure.file` *file* `next` *n*
+sets the next id (`next query` shows it).
+
+**An id that already names a record is skipped.** Before it uses an id, `write ... creating.seqkey`
+looks in the file: if a record is already there (written by a copy, by a load, or by a program that
+chose its own numbers) it takes the next id instead, so that record is never overwritten. **This is
+SD's behaviour, not openQM's** - openQM does not look, and its manual tells the programmer to write
+every record of the file this way. The skipped numbers leave gaps. In a transaction only the records
+already committed to the file are looked at; an id this process took earlier is never given out twice.
+**`clear.file` keeps the counter**, so the ids go on from where they were; `configure.file`
+*file* `next 1` starts them again. A file made by `copy` starts its own counter at 1, even when
+records with numeric ids were copied in; the skipping is what protects them. The counter is changed in
+the file header at once, so a power failure can leave it one behind the records; setting it with
+`configure.file ... next` puts that right. The client library
+has it as `SDWriteSeqKey` and `SDWriteuSeqKey` ([SD Client API](37-sd-client-api.html)). On a file
+reached through an `N` pointer to another SD server it works only with the administration
+group on that server ([Programming with a Remote File](42-sd-programming-with-a-remote-file.html)).
+
+### `fcontrol`: the counter, a test for an id, the minimum modulus
+
+```
+result = fcontrol(file.variable, action {, qualifier})
+```
+
+`fcontrol` has openQM 4's action numbers, and the tokens `FC$...` are in `keys.h`. An ordinary
+program may use it; it changes only the file it is given.
+
+| action | token | what it does |
+|---|---|---|
+| 2 | `FC$SET.SEQ.KEY` | the qualifier *n* (1 or more) becomes the next id `write ... creating.seqkey` gives out; returns 1 |
+| 3 | `FC$GET.SEQ.KEY` | takes the next id and moves the counter on, so a program can reserve an id without writing a record; the null string if the file is not hashed |
+| 5 | | does the user have access to the field position in the qualifier? Always 1: SD has no field level encryption |
+| 6 | `FC$VALID.ID` | 1 if the qualifier could be the id of a record of this file (not null, not longer than the limit, no mark characters; a directory file also applies its name mapping), else 0 |
+| 7 | `FC$MINMOD` | sets the minimum modulus of a hashed file to the qualifier (1 or more); returns 1 |
+
+Actions 2, 3 and 7 are refused on a file opened `readonly`: `status()` is 3018 and the result is 0
+(null for 3), and the counter is not touched. On a file that is not hashed `status()` is 3005; a
+qualifier under 1 sets `status()` to 1. **In this release `fcontrol` does not do `FC$SYNC` (1) or
+`FC$CRLF` (4):** a program that asks for either is stopped with *FCONTROL cannot do this action in SD*
+(message 12359) rather than being told it worked, and any other action number stops it with *the
+action is not one SD knows* (message 12360). Forced writes are asked for when the file is opened
+(*Forced writes* below), not with `fcontrol`; SD for Linux has since made both work, and this release
+does not have that yet. A program written for openQM that uses those two will need changing. The
+qualifier may be left out where the action does not use it. The internal programs' own function is called `fcontrol.int` and is not available to
+ordinary programs. On a file reached through an `N` pointer to another SD server the call goes to
+that server, and needs the administration group there (page 42).
+
 ### Forced writes: `sync`
 
 A file that must survive a power failure can be told to write to disk as it goes. Without it SD, like any

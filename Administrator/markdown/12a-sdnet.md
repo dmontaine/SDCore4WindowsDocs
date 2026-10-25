@@ -84,11 +84,13 @@ gates they ask are described below. Commands are shown here in lower case.
 - **Remote files.** A VOC pointer of type `N` opens a file on another server for
   reading, selecting and querying (see "Remote files, read only" below), and, only
   for a server defined with `write`, for writing and locking (see "Writing and
-  locking"). Not there: anything that changes the structure of a remote file or its
-  indices, `WRITE ... CREATING.SEQKEY`, `FCONTROL`, `CONFIGURE.FILE`, `ANALYSE.FILE`,
-  making or deleting a remote file, and the index statements (`SELECTINDEX`, `SETLEFT`,
-  `SETRIGHT`, `SELECTLEFT`, `SELECTRIGHT`, and the `AK` statements). They stop with
-  message 12516 and nothing is sent. `INDICES()` of a remote file is the null string.
+  locking"). The index queries (`INDICES`, `SELECTINDEX`, `SETLEFT`, `SETRIGHT`,
+  `SELECTLEFT`, `SELECTRIGHT`) work on any remote file, read definition or write. Changes
+  to an index, `WRITE ... CREATING.SEQKEY`, `FCONTROL`, `CONFIGURE.FILE`, `ANALYSE.FILE`
+  and making or deleting a remote file need the administration group (see "The
+  administration group"). Not there at all: the statements that read or change the tree
+  of an index (`AKREAD`, `AKWRITE`, `AKDELETE`, `CLEAR.AK`, `AKENABLE`, `AKMAP`), which stop
+  with message 12516 and nothing is sent.
 - **`NETFILES`** in `sd.conf` is not what this uses. Opening a remote file through an
   `N` pointer does not read it. The one thing that does is the API server's old request
   29, "open an SDNet file": it needs bit 2 of `NETFILES` and the same account rules as
@@ -666,9 +668,10 @@ what the target is willing to let that login do.
 - **`sdapi` is not touched.** A remote user in `sdapi` has the whole API as before, with
   or without the write group, and SDSYS is never made files-only.
 - **The refusal is in the audit trail of the target**, in lower case:
-  `api refused request=16 route=sdfiles write=off user=name`, and a login by this route is
-  written `api login route=sdfiles write=on user=name` (`write=off` for a login without the
-  group). **The person at the client is told why**: a program that does not trap the error
+  `api refused request=16 route=sdfiles write=off admin=off user=name`, and a login by this route is
+  written `api login route=sdfiles write=on admin=off user=name` (`write=off` for a login without the
+  group; the `admin=` word is the administration group, next section, and is new in this
+  release - before it the lines ended `write=on user=name`). **The person at the client is told why**: a program that does not trap the error
   with `ON ERROR` stops with message 12505, "Server *name* answered *write* with an error:
   This login cannot change or lock files here: ask the administrator for files-write-on
   (request 16)". A program that traps the error with `ON ERROR` sees `STATUS()` 7000. The
@@ -683,12 +686,88 @@ what the target is willing to let that login do.
   again; until then `files-on` and `files-write-on` say that the group does not exist
   and change nothing.
 
+### The administration group: `sdfilesadmin`
+
+**Remote administration of files, behind a third permission that is off for everyone.** A
+files-only login that is in **both** `sdfileswrite` and the Windows group **`sdfilesadmin`** may, on
+that server and for the account it enters there, do the things below. They are requests 68 to 71
+of the API, and they are the only door a files-only login has to them.
+
+| | |
+|---|---|
+| 68, 69 | `WRITE` and `WRITEU ... CREATING.SEQKEY`: the file's own counter on this server gives the id |
+| 70 | a verb run **on this server for the login**: `analyse.file`, `configure.file`, `create.index`, `build.index`, `delete.index`, `disable.index`, `create.file`, `delete.file` |
+| 71 | `FCONTROL(file, key {, value})` |
+
+- **Who gives it, and how.** SDSYS, one person at a time, on the server being reached:
+  `modify.account` *name* `files-admin-on`, taken away with `files-admin-off`, and
+  `files-admin-on` after `files-on` and `files-write-on` in `create.account user`. **It is off
+  for a new account, and nothing in the installer turns it on** (you do that by hand). The installer makes the group, empty,
+  beside the other three (its `sync-route-groups.ps1`), and an interactive uninstall removes it.
+- **The chain is `sdfiles` < `sdfileswrite` < `sdfilesadmin`: each needs the ones below it, and
+  none is ever added over one above it.** `files-admin-on` needs `files-on` and `files-write-on`
+  first ("Account *name* does not have files-write, so it cannot be given files-admin: use
+  files-write-on first", message 12531, nothing changed). The group alone gives nothing: a login
+  in `sdfilesadmin` and not in `sdfileswrite` is refused 68 to 71 as a login without the write group
+  is (message 12526). `files-admin-off` takes away only the administration group.
+  `files-write-off` and `files-off` take away **the group above first** - administration, then
+  write, then files - each removal read back before the next, so a failure half way leaves the
+  person with the lower access and never the higher without it. If a step fails after an earlier
+  one went, the command says what did happen (`Account fred has files-admin no`, and the audit
+  line `modify.account files-admin-off account=fred`) before it reports the failure.
+  `files-on` and `files-write-on` take a stray `sdfilesadmin` membership away before they add
+  anything, so a leftover can never turn into administration nobody gave. A person who is in
+  `sdfilesadmin` alone is taken out of it by `files-off`, where it would have been told "already had
+  that access".
+- **What it allows is a real capability, and it is the server's own verbs.** A login with both groups
+  can create and **delete files**, build indices and reconfigure files in the account it enters on this
+  server, as that Windows user, without anyone at this server present. The request is audited on both
+  machines. The server runs the verb itself *for the login*, in the account the login entered, so that
+  account's switches apply as they would to the same person at a terminal: the edit switches
+  (`voc.edit`, `bp.edit`, `dict.edit`) are asked by the file's name for everything but the report
+  (`analyse.file`).
+- **What the server checks before it runs anything.** The verb is chosen by the number of the
+  operation and never read from the text. The file is **named by the open file** (the name it was
+  opened under on this connection), so a login cannot name one it did not open. The words are
+  letters, digits and `. _ -` with single blanks, at most 200 characters; `PATHNAME`, `LPTR`,
+  `FORCE` and `NO.QUERY` are refused, `DIRECTORY` is accepted only as the last word (it makes a
+  directory file), and a slash or a quote is refused (message 12535). `create.file` and
+  `delete.file` are run with `NO.QUERY` because the question was asked at the client. The file is
+  closed on this side before the verb runs and opened again after it (the verbs need the file
+  to themselves), so an index verb refuses, with the words "Cannot gain exclusive access", if another
+  process has the file open; nothing is changed then. Where the server's command execution is
+  switched off (`SDCLIENT`) the request is refused with message 5265.
+- **A refusal** says "This login cannot administer files here: ask the administrator for
+  files-admin-on (request *n*)" (message 12529), or the write-group text (12526) when the write
+  group is what is missing, and **nothing is carried out**. It is written
+  `api refused request=70 route=sdfiles write=on admin=off user=name`; an act is written, **before** the
+  verb runs, `api admin request=70 op=create.index file=customers user=name` (for `create.file` the
+  file named is the new one), so a killed command is still on the trail. A login is written
+  `api login route=sdfiles write=on admin=on user=name`.
+- **The group is read at login**, like the other two, from the Windows groups, so a change takes
+  effect at the person's next login on that server. A group that cannot be read counts as **not** a
+  member: a doubt never grants administration.
+- **On the client** the same four things are the statements and verbs of *Programming with a Remote
+  File* (User set): `WRITE ... CREATING.SEQKEY`, `FCONTROL`, the six verbs on an `N` pointer,
+  `CREATE.FILE name SERVER srv {AS remote}` and `DELETE.FILE` of a pointer. The server definition
+  must say `write` (the administrator of the client chose that), and the pointer is written only after
+  the server confirmed the file and removed in the same act that the server deleted it.
+- **Still refused on a remote file:** the statements that read or change the tree of an index
+  (`AKREAD`, `AKWRITE`, `AKDELETE`, `CLEAR.AK`, `AKENABLE`, `AKMAP`), `OPENSEQ` and the other
+  sequential-file statements. The statements that *query* an index (`INDICES`, `SELECTINDEX`,
+  `SETLEFT`, `SETRIGHT`, `SELECTLEFT`, `SELECTRIGHT`) are not in this list and have no gate of
+  their own: a login that is in `sdfiles` may use them on any file it can open, because they change
+  nothing.
+- **Not run on Windows yet.** The group, the requests and the verbs are carried from SD Core for
+  Linux and compile; no administration request has been made against a real Windows installation.
+
 **The remote user must be a real account on that server.** It is still a Windows user,
 a member of `sdusers`, with an SD account of its own, and every gate that account has
 there applies to it. What `files-on` replaces is the need for `sdapi`, not for the
 account. An administrator who wants an SDNet login for a person on another SD server
 creates it there with `create.account user` *name* `files-on` (no `api`; add
-`files-write-on` only if the person is to change files there), then gives
+`files-write-on` only if the person is to change files there, and `files-admin-on` only if the
+person is to administer them), then gives
 the name and the password to the person, who runs `set.netlogin` here.
 
 **The client.** The SDNet client logs in with the stored login (made by
@@ -698,7 +777,7 @@ through an `N` pointer is the client. `set.netlogin` itself makes the login exch
 always did, which does not depend on the route: the server decides the route at the end of
 the exchange.
 
-**On the machine being reached:** the groups `sdfiles` and `sdfileswrite` are made, empty,
+**On the machine being reached:** the groups `sdfiles`, `sdfileswrite` and `sdfilesadmin` are made, empty,
 by the installer beside `sdssh` and `sdapi`, and removed by an interactive uninstall (a
 silent uninstall leaves all of the groups). The API listener has to be on
 (`remote.api`, see [Remote Access and the Machine](05-remote-access-and-the-machine.html)),
@@ -740,8 +819,11 @@ the remote file in one reply and turns it into an ordinary select list; each rec
 needs is then one request to the server, so a query that reads every record of a big file costs
 one round trip per record, and a `WITH` clause reads each record. An id list given on the
 command line (`LIST customers 'c2'`) selects nothing and reads only those records.
-**A remote file has no index here:** `INDICES(f)` is the null string and a query reads the
-records, so an index the other server holds is never used. A remote file
+`INDICES(f)` and the index query statements (`SELECTINDEX`, `SETLEFT`, `SETRIGHT`,
+`SELECTLEFT`, `SELECTRIGHT`) go to the server, so a `WITH` clause on a field the server has
+an index for asks the server's index (one request for the ids of a value, or a scan from one
+key to the next) and reads only the records it names; a file with no index is read as
+before. A remote file
 answers `FILEINFO(f, FL$TYPE)` with 7 (`FL$TYPE.NET`).
 
 Who may open one, checked in this order before anything is dialled: the account holds the
@@ -866,9 +948,13 @@ read the record to find out.
 **What is refused even with `write`.** A change or lock inside `BEGIN TRANSACTION` (message
 12515: a remote write can't be rolled back, so it never joins a local transaction; this holds for
 `FILELOCK` and `FILEUNLOCK` too, where openQM's QMNet lets them through without a rollback, which
-is a silent loss of the guarantee the program asked for); the statements that only read an index,
-`OPENSEQ` and the other sequential-file statements; and everything under "What does not exist
-yet" (message 12516). `MUSTLOCK` and `$MODE AUTOLOCK` are honoured as for a local file: a write
+is a silent loss of the guarantee the program asked for); the statements that read or change the
+tree of an index (`AKREAD`, `AKWRITE`, `AKDELETE`, `CLEAR.AK`, `AKENABLE`, `AKMAP`), `OPENSEQ` and
+the other sequential-file statements (message 12516). `CONFIGURE.FILE`, `ANALYSE.FILE`, `FCONTROL`,
+`CREATE.INDEX` and the other index verbs, creating or deleting a remote file and
+`WRITE ... CREATING.SEQKEY` work for a login that also has the administration group ("The
+administration group", above), and are refused with nothing sent for a `read` definition.
+`MUSTLOCK` and `$MODE AUTOLOCK` are honoured as for a local file: a write
 without the lock held is refused with `STATUS()` 3023 (for a login without the write group see
 `RECORDLOCKED()` above).
 
@@ -973,24 +1059,31 @@ server refuses is on the trail too; waiting for a busy file is many requests and
 `refused ... reason=mode` once per handle when the definition says `read` by then, and `lost` when a
 change got no answer. A lost connection during a `FILELOCK`, `FILEUNLOCK` or `RECORDLOCKED()` is
 not a `lost` line: they change no data, so it is message 12502 and nothing else. The refusals the kernel makes itself (a read-mode handle, a transaction,
-an edit gate) write nothing.
+an edit gate) write nothing. The administration group adds
+`netfile admin server=hq file=customers op=create.index` (written before the request is sent) and
+`netfile fcontrol server=hq file=customers key=n`.
 
 On the server that is reached, the files-only route writes, in lower case:
 
 ```
-api login route=sdfiles write=off user=reports
-api refused request=20 route=sdfiles write=off user=reports
+api login route=sdfiles write=off admin=off user=reports
+api refused request=20 route=sdfiles write=off admin=off user=reports
 modify.account files-on account=reports
 modify.account files-write-on account=reports
-api login route=sdfiles write=on user=reports
+modify.account files-admin-on account=reports
+api login route=sdfiles write=on admin=on user=reports
+api admin request=70 op=create.index file=customers user=reports
 api refused user=reports reason=not a member of sdapi or sdfiles
 ```
 
 The first is a successful files-only login (`write=on` when the person is also in
-`sdfileswrite`, as in the fifth line), the second a request the route does not allow or, for a login
-without the write group, a change or a lock (the number is the request; `write` is the state of the
-login), the third and fourth the administrator giving the route and the write group, and the last a
-login of a person who is in neither `sdapi` nor `sdfiles`. All of them are written on the server being reached.
+`sdfileswrite`, `admin=on` when also in `sdfilesadmin`, as in the sixth line), the second a request
+the route does not allow or, for a login without the write or administration group, a change, a
+lock or an administration request (the number is the request; `write` and `admin` are the state of
+the login), the third to fifth the administrator giving the route and the two groups, the seventh
+an administration act (written before the verb runs, so a killed command is on the trail), and the
+last a login of a person who is in neither `sdapi` nor `sdfiles`. All of them are written on the
+server being reached. The `admin=` word is new in this release.
 
 ## What has and has not been run
 
@@ -1003,7 +1096,7 @@ junction, the wrong kind of object, a path that is not there and a foreign owner
 server, no remote file opened, no write group changed on a real machine, no connection between
 two machines. The figure `settings.report` prints as `public key sha256:` has not been compared
 with the one `set.server ... connect` shows for the same server. The installer step that makes
-`sd-net` and the two groups has been compiled, not run. Until these are run, treat every
+`sd-net` and the groups (now three, with `sdfilesadmin`) has been compiled, not run. Until these are run, treat every
 statement on this page about what the code does as read from the source and not seen.
 
 ## See also

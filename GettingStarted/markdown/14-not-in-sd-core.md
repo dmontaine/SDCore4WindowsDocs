@@ -69,7 +69,9 @@ and `delete.netlogin` let a person store their own login (never the password) fo
 a server. Nothing is open by default: an account needs the `net-on` switch, has to
 be named in the server's list, and a server is read only unless SDSYS defines it
 as `write` **and** the administrator of the other server has also let that remote
-login change files there (`files-write-on` on that server). It uses the other
+login change files there (`files-write-on` on that server); configuring, indexing,
+creating and deleting a remote file, and the file's counter, need a third permission
+there (`files-admin-on`). It uses the other
 server's API port over TLS and does not put a password in any file. The
 *Administrator* set's *SDNet* page describes it. **It has been compiled on
 Windows and has not yet been run against another server.** Nothing from the old
