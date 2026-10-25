@@ -160,6 +160,10 @@ DOCS = [
  ('Administrator', '05-remote-access-and-the-machine.md', """
    append.sd.path remote.api remote.ssh ssh.server
  """),
+ # 25 Oct 26 SDNet carry (RELEASE_1.1 171): the SDNet client's five verbs are explained on the Administrator page for SDNet.
+ ('Administrator', '12a-sdnet.md', """
+   set.server delete.server list.servers set.netlogin delete.netlogin
+ """),
 ]
 
 # Verbs deliberately not given a page of their own, with the reason.  These

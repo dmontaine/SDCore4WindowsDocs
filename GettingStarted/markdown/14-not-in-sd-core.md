@@ -62,10 +62,20 @@ SD could open a file held on another SD server by putting `server;file` in a
 VOC entry. **That is gone. A VOC entry containing a semicolon is now simply a
 file name that does not resolve.**
 
-`SET.SERVER`, `DELETE.SERVER` and `LIST.SERVERS` have gone with it. **Two of
-those three had never worked in any case** — their VOC entries were malformed.
+**A different SDNet has replaced it.** A VOC entry of type `N` names a server
+that SDSYS has defined with `set.server` and a file on it; the verbs
+`set.server`, `delete.server` and `list.servers` are SDSYS's, and `set.netlogin`
+and `delete.netlogin` let a person store their own login (never the password) for
+a server. Nothing is open by default: an account needs the `net-on` switch, has to
+be named in the server's list, and a server is read only unless SDSYS defines it
+as `write` **and** the administrator of the other server has also let that remote
+login change files there (`files-write-on` on that server). It uses the other
+server's API port over TLS and does not put a password in any file. The
+*Administrator* set's *SDNet* page describes it. **It has been compiled on
+Windows and has not yet been run against another server.** Nothing from the old
+version is back: no `;` in a path, no port 4245, no password in any file.
 
-**Why it went:** each server's user name and password were kept in `sd.conf`,
+**Why the old one went:** each server's user name and password were kept in `sd.conf`,
 obscured with a simple letter substitution that is not encryption, and the
 session ran over port 4245. There was also no way to switch the feature off —
 the `NETFILES` setting was read at start-up and then never consulted.
@@ -74,10 +84,11 @@ the `NETFILES` setting was read at start-up and then never consulted.
 mechanism and are unchanged. See [API access](09-api-access.html).
 
 **`NETFILES` is still accepted in `sd.conf`**, so an existing configuration file
-will not stop SD starting. Nothing in SDNet uses it. The one thing that reads it
-is the API server's request to open an SDNet file, which is refused unless
-bit 2 of `NETFILES` is set; the value is 0 unless `sd.conf` sets it. The
-*Administrator* set's *Configuration* page has the detail.
+will not stop SD starting. The new SDNet client does not use it. The one thing that
+reads it is the API server's request to open an SDNet file, which is refused unless
+bit 2 of `NETFILES` is set (the value is 0 unless `sd.conf` sets it) **and** the
+account's NET switch is on. The *Administrator* set's *Configuration* page has the
+detail.
 
 ## Virtual file systems
 

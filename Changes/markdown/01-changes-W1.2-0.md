@@ -45,8 +45,8 @@ which has the full story of each change: what it does, why, and what it does not
 
 **[New Features Unique to SD Core](#new-features-unique-to-sd-core)**, not part of openQM and not on the spreadsheet:
 [Administration](#administration) · [API and client library](#api-and-client-library) · [Encryption](#encryption) ·
-[Files](#files-1) · [Installer](#installer) · [Screen library and terminals](#screen-library-and-terminals) · [Security](#security) ·
-[System](#system-1).
+[Files](#files-1) · [Installer](#installer) · [Screen library and terminals](#screen-library-and-terminals) · [SDNet](#sdnet) ·
+[Security](#security) · [System](#system-1).
 
 **[NO CHANGE](#no-change)**: openQM items that needed nothing.
 
@@ -413,6 +413,7 @@ Three simple layers, with no vault and nothing on by default.
 | Name | Change | What |
 |---|---|---|
 | group account folders | Changed | `group_accounts` is locked like `user_accounts`, and every group account's folder is set again on every install and upgrade; a folder that is really a link is skipped |
+| SDNet groups and folder | Added | the groups `sdfiles` and `sdfileswrite`, with no members, and the folder `sd-net` (stored server logins), whose access list lets `sdusers` list it and add a sub-folder and nobody else in |
 | shared account | Added | made by the installer: group `sdg_shared` with no members, and a directory open to `sdusers` with Modify; an existing account named `shared` that SD did not make stops the install before anything is changed; `make-shared.log` in the data folder says what was done |
 | uninstall | Changed | removing SD with its data also removes the group `sdg_shared` |
 | `upgrade_editgates` | Added | switches the three edit gates on once for every existing user account whose setting is blank, so no account loses what it had |
@@ -435,12 +436,40 @@ The screen statement and its library, and what changed in the terminal handling 
 | themes | Added | `mono` (the default), `classic` and `blue`; `screentheme=` in `sd.conf` chooses the default; a colour theme is refused where the terminal cannot show colour |
 | window size | Changed | SD reads the terminal's window size at the start and when it is resized; `kernel(k$winsize)` answers it; `term w,h` holds until the next resize |
 
+### SDNet
+
+Files on another SD server. All of it is off as delivered. The client is Linux's, carried here; it is compiled and its
+free checks pass, and it has not been run against another server.
+
+| Name | Change | What |
+|---|---|---|
+| `files-on`, `files-off` | Added | per-account: the Windows group `sdfiles`, the files-only API login (files and nothing else); off for a new account; `sdapi` wins |
+| `files-write-on`, `files-write-off` | Added | per-account: the Windows group `sdfileswrite`; without it a files-only login cannot write, delete, lock or clear; needs `files-on` first |
+| `list.servers`, `delete.server` | Added | the administrator's list of defined servers, and removal of one <!--s g52 g26--> |
+| `net-on`, `net-off` | Added | per-account NET switch: one of the four things that must all be true before a remote file opens (the switch, a defined server, your login on it, a VOC pointer) |
+| `netwait`, `netreply` | Added | `sd.conf` settings, 1 to 3600 seconds, for a connection and a reply; a silent server is given up on <!--s 235 g291--> |
+| `open.socket` | Changed | the fourth argument is the number of seconds to wait for the connection, zero for no limit of SD's own; it was the unused security context <!--s 174--> |
+| remote files, a pointer | Added | a VOC entry whose first field is `n` points to a file on another server |
+| remote files, cache | Added | a short record cache; `logto` closes the connections |
+| remote files, query | Added | `list`, `count`, `sort`, `select`, `list.item`, `list dict` on a remote file; `fileinfo` type 7 |
+| remote files, refusal | Changed | the server's own words are shown, not `status 0`; a lost connection is an error <!--s 256--> |
+| remote files, reply checked | Changed | a reply that cannot be true is a lost connection at once |
+| remote files, write | Added | for a server defined `write` and a login in the other server's write group: `write`, `delete`, `clearfile`, the locking reads and release |
+| remote lock functions | Added | `recordlocked()`, `getlocks()`, `filelock`, `fileunlock`: work on a remote file |
+| remote `select` | Changed | fixed: a server error stopped the program with an abort |
+| SDNet logins | Added | `set.netlogin`, `delete.netlogin`: a person's login on a server, kept as derived values and never the password, in a folder only that person and the administrators can open |
+| `set.server` | Added | defines a server; `connect` shows its key hash for you to confirm <!--s g84 147--> |
+| `settings.report` | Changed | the `[api]` section shows the hash of the API's public key, the figure another administrator pins |
+| tls reads | Changed | fixed: a half record or a late ticket made a read wait without limit |
+| uninstall | Changed | removing SD with its data also removes the groups `sdfiles` and `sdfileswrite`; removing a person removes their stored server logins |
+
 ### Security
 
 Fixes that close a way round a gate, and what the gates now ask.
 
 | Name | Change | What |
 |---|---|---|
+| api request 29 | Changed | fixed: it opened a file for any login once `netfiles` bit 2 was set; it now needs the account's NET switch (`net-on`), and a VOC pointer that leads out of the account needs the `os` switch |
 | group account folders | Changed | `C:\ProgramData\SD\group_accounts` is locked like `user_accounts`; before, a group account whose own folder failed to lock kept the access every SD user has to the data tree |
 | internal programs | Changed | the internal-mode bit in an object file is honoured only for an object from the global catalogue, which only SDSYS can write, or for the administrator; for any other object it is ignored |
 | operating system paths | Changed | `dir()`, `select.dir`, `deleteseq` of a path, `setptr ... as pathname`, a print file made at a path and a VOC pointer out of the account each ask the account's `os` switch, and `sd-on` for another SD account; every session is held to it, the console included |

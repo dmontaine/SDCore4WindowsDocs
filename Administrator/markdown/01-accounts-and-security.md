@@ -50,7 +50,8 @@ your own session.
 ## Making an account: `create.account`
 
 ```
-create.account user <name> {ssh | api | both | none} {no.query}
+create.account user <name> {ssh | api | both | none} {sh-on} {os-on} {voc-on} {bp-on} {dict-on}
+                           {net-on} {files-on} {files-write-on} {shared-read-off} {shared-write-on} {no.query}
 
 create.account group <name> {no.query}
 
@@ -120,6 +121,8 @@ modify.account account os-on | os-off
 modify.account account sd-on | sd-off
 modify.account account voc-on | voc-off | bp-on | bp-off | dict-on | dict-off
 modify.account account shared-read-on | shared-read-off | shared-write-on | shared-write-off
+modify.account account net-on | net-off
+modify.account account files-on | files-off | files-write-on | files-write-off
 modify.account account suspended | unsuspended
 ```
 
@@ -154,6 +157,8 @@ signing in, `logto`, and the API.
 | **`bp-on`** \| **`bp-off`** | may save a change to a program file (source or object code), and compile and catalogue |
 | **`dict-on`** \| **`dict-off`** | may save a change to a dictionary |
 | **`shared-read-on`** \| **`shared-read-off`**, **`shared-write-on`** \| **`shared-write-off`** | open, and write, the files of the shared account by name (blank read means on, blank write means off; see [The Shared Account](13-the-shared-account.html)) |
+| **`net-on`** \| **`net-off`** | may use SDNet: open a file on another SD server (see [The NET switch](#the-net-switch-net-on-and-net-off)) |
+| **`files-on`** \| **`files-off`**, **`files-write-on`** \| **`files-write-off`** | may log in over the API for files only, and, with the second pair, change files there (see [The files-only route](#the-files-only-route-files-on-and-files-off)) |
 | **`add`** \| **`delete`** *user* | put a Windows user in, or out of, the account's group |
 
 **The first group is absolute and the second is not.** `ssh`/`api`/`both`/
@@ -169,6 +174,141 @@ own routes are not a setting; see [Read this before anything
 else](#read-this-before-anything-else-being-sdsys-is-the-whole-of-it). A
 group account is refused too, for the `sh-on`/`sh-off`/`os-on`/`os-off`
 forms: it has no Windows user to hold the record.
+
+### The NET switch: `net-on` and `net-off`
+
+One more per-account switch, in field 15 of the register record, for **SDNet**:
+files held on another SD server, which an account opens from its own VOC through
+an `N` pointer (see [SDNet](12a-sdnet.html)). It is the permission an account needs before it
+may use a server, and **it is off for a new account**. `modify.account` *name*
+`net-on` / `net-off` turns it on and off, and `create.account user` takes
+`net-on`. After a change SD says where the account stands:
+
+```
+:modify.account fred net-on
+Account fred has NET yes
+```
+
+**The switch is what lets an account open a remote file.** An account without it
+is refused before anything is dialled. It is checked at every sign-on. A blank
+field, and every account that existed before the switch did, count as off:
+**there is no upgrade step**, and those accounts cannot use SDNet until SDSYS
+turns the switch on, which is the delivered state. The change is written to the
+audit trail (`modify.account net-on account=fred`). The administrator (SDSYS) is
+exempt from the switch.
+
+**Having the switch is not enough.** An account must also be named in the
+*allowed accounts* of the server it wants, and SDSYS puts it there with
+`set.server ... accounts` ([SDNet](12a-sdnet.html)). Two lists, both empty
+until SDSYS writes to them: the switch says the account may use SDNet at all,
+the list says which servers it may use. The same switch guards the API's request
+29, "open an SDNet file" (see [SD Admin Configuration](07-sd-admin-configuration.html)).
+
+### The files-only route: `files-on` and `files-off`
+
+There are **two API routes, and the second is narrower.** `api` (the Windows
+group `sdapi`) lets a person do everything the API offers: execute commands, call
+catalogued subroutines, enter other accounts with `logto`, read and write
+sequential files, and work with files. **`files-on` (the Windows group `sdfiles`)
+lets a person log in over the API and do files and nothing else.** It exists so
+that a login kept for SDNet (see [SDNet](12a-sdnet.html)) never needs `sdapi`: the
+other server's administrator gives that login `sdfiles`, and whoever steals the
+stored login can open and read files on that server and cannot run a command
+there. **Changing files there is a further permission, `files-write-on` (the
+Windows group `sdfileswrite`)**, given separately and off for a new account.
+
+**Off for a new account, like every other door.** `create.account user` takes
+`files-on` and `files-write-on`; `modify.account` *name* `files-on` / `files-off`
+and `files-write-on` / `files-write-off` turn them on and off. Membership of the
+group *is* the route, as membership of `sdapi` is for `api`, so there is no field
+for it in the register. After a change SD says where the account stands, **read
+back from the group** rather than taken from the request:
+
+```
+:modify.account fred files-on
+Account fred has files yes
+:modify.account fred files-write-on
+Account fred has files-write yes
+```
+
+`files-write-on` for a person who is not in `sdfiles` is refused ("Account fred
+does not have FILES access, so it cannot be given FILES-WRITE: use files-on
+first"), because the group on its own gives nothing. `files-off` takes the write
+group away first, then `sdfiles`, and reads each back; if a removal fails SD says
+so and stops, leaving the person with read access and never write access without
+it. The change is written to the audit trail (`modify.account files-on
+account=fred`). The two groups are made, empty, by the installer.
+
+**The rules, in the order the login applies them.** The API server decides at the
+end of the login, after the password has been proved:
+
+1. The person must be in `sdusers`, as for every route.
+2. A member of **`sdapi` has the whole API, whether or not they are also in
+   `sdfiles`: `sdapi` wins.**
+3. Otherwise a member of **`sdfiles`** is let in **files only**. On Windows the
+   session that serves the connection works this out for itself from the groups
+   when it starts, and the mark is never cleared for the life of the connection.
+4. A person in **neither** group is refused exactly as before, with the reason
+   `not a member of sdapi or sdfiles` in the audit trail. If the groups cannot be
+   read the login is refused, not guessed.
+5. SDSYS is exempt from both groups by name and keeps the doors it has always
+   had; it is never made files-only.
+
+**What a files-only session may ask for.** One function, `!apifilesok`, decides, and
+it is an *allow list*: a request number that is not in it is refused, including a
+number this release has never heard of.
+
+| allowed | request |
+|---|---|
+| 1, 2 | quit; get the text of the last error |
+| **3, once** | set the account. The first one, which is the entry to an account after login, is allowed; a later one would be a `logto` and is refused |
+| 4, 5 | open a file; close it |
+| 6 | read |
+| 7 to 10 | the locking reads (`readl`, `readlw`, `readu`, `readuw`): **only with `files-write-on`** |
+| 11 to 15 | select; read the next id; clear a select list; read a saved list; release a lock |
+| 16 to 19 | write; write and keep the lock; delete; delete and keep the lock: **only with `files-write-on`** |
+| 26 | select on an index. Allowed because it is a select, with 37 to 39 |
+| 30 to 34 | lock a record; clear a file; lock and unlock a file; ask whether a record is locked (the answer names the holder by user number): **only with `files-write-on`** |
+| 35, 36 | list the indices |
+| 37 to 39 | select a list; select by an index value; select by an index key |
+| 40, 41 | file information; read one field (a `readv` that takes a lock is a change and needs `files-write-on`) |
+| 42 to 45 | set the left or right end of an index range (`setleft`, `setright`), and select within it (`selectleft`, `selectright`) |
+| 46 | the mark mapping |
+| 49 | the server's revision |
+
+| refused | request |
+|---|---|
+| 20 | call a catalogued subroutine |
+| 21, 22, 23 | execute a command; respond to its prompt; end it |
+| 24, 25 | the other logins |
+| 27, 28 | enter and exit a licensed package (not supported by any route) |
+| 29 | open a file on another SDNet server |
+| 47, 48 | the SCRAM login itself, which is only possible before the session is logged in |
+| 50, 51 | read a variable; `system()` |
+| 52, 53 | `trans()` |
+| 54 | transactions |
+| 55 to 60 | evaluate and the conversions |
+| 61 to 67 | sequential files |
+| 0, 68 and above, anything else | no such request here |
+
+A refused request is answered with "This login is for files only: request *n* is not
+allowed" (a change or lock without the write group: "This login cannot change or
+lock files here: ask the administrator for files-write-on (request *n*)"), **the
+request is not carried out**, and a line goes to the audit trail
+(`api refused request=16 route=sdfiles write=off user=fred`; a login by this route
+is `api login route=sdfiles write=on user=fred`). The connection stays open.
+
+**What is not changed.** Everything else about the session applies as it does to any
+other: the account must be entered, the account's own switches (the OS-access
+gate, the three edit switches, the NET switch) are loaded and enforced, `SDCLIENT` in
+`sd.conf` still decides whether a client may open the files it names, and the
+API listener must be on (`remote.api`). **`sdfiles` alone is a read-only route.**
+`modify.account fred none` takes away `ssh` and the API and not the files-only
+login; withdraw it with `files-off`. `sdapi` is never touched by `files-on` or
+`files-off`.
+
+**Not run on Windows yet.** The route is carried from SD Core for Linux and compiled;
+no files-only login has been made against a real Windows installation.
 
 ## Passwords: `modify.password`
 

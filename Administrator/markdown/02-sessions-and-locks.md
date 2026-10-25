@@ -79,9 +79,10 @@ marks as chargeable.
 an address or a device name, and a console or piped session has neither. It
 reads `Phantom` for a phantom and an IP address for a network client.
 
-`SDNet` is also among the values it can print, and you will not see it: SDNet
-was removed from this port, so nothing can open the kind of session that would
-report it.
+`SDNet` is also among the values it can print, and you will not see it: it
+names the old SDNet session, which was removed. The new SDNet client
+([SDNet](12a-sdnet.html)) reaches the other server by an ordinary API login, which
+that server lists as an API session.
 
 **`(logout pending)`** after the name means somebody has asked that session to
 end and it has not gone. See below.

@@ -19,7 +19,7 @@ here in lower case. In the tables, *italics* mark something you supply and
 |---|---|
 | `create.server.socket(`*addr*`, `*port*`, `*flags*`)` | bind and listen. Returns a **socket**, or 0 |
 | `accept.socket.connection(`*server*`, `*timeout*`)` | take the next waiting connection |
-| `open.socket(`*addr*`, `*port*`, `*flags*` {, `*context*`})` | dial out |
+| `open.socket(`*addr*`, `*port*`, `*flags*` {, `*timeout*`})` | dial out; *timeout* is seconds to wait for the connection |
 | `write.socket(`*socket*`, `*data*`, `*flags*`, `*timeout*`)` | returns the byte count |
 | `read.socket(`*socket*`, `*maxlen*`, `*flags*`, `*timeout*`)` | returns the bytes read |
 | `set.socket.mode(`*socket*`, `*key*`, `*value*`)` | returns 1 or 0 |
@@ -40,6 +40,15 @@ inc = accept.socket.connection(srv, 2000)
 ```
 
 Flags `0` is TCP, stream. `0x00010000` selects UDP and `0x00020000` ICMP.
+
+The optional fourth argument of `open.socket` is a **connect timeout in
+seconds**. When it runs out the call returns 0 with `status()` **7005**, as any
+failed connect does; zero, a negative number or no argument means no limit of
+SD's own (the system's connect timeout applies). On a socket opened with the TLS
+flag it also bounds the TLS handshake. Before this release the fourth argument was
+an unused place for a security context and had to be zero. It is not used with the
+non-blocking flag. Carried from SD Core for Linux and compiled; not yet run on
+Windows.
 
 **Both fail by returning zero, not by taking an `else` branch** — they are
 functions, and there is no `then`/`else` on them. Test with
@@ -76,6 +85,16 @@ you are polling for a service to come up.
 | `5` | Nagle disabled? | `0` |
 | `6` | keep-alive? | `0` |
 | `7` | family: **1** IPv4, **2** IPv6 | `1` |
+| `8` | `SKT$INFO.TLS.CBIND`: the SCRAM channel binding of a TLS socket | text; null without TLS |
+| `11` | `SKT$INFO.TLS.SPKI`: the SHA-256 hash of the public key the server presented | 64 lower case hex digits; **null** for a socket opened without `SKT$TLS` |
+
+Keys 8 and 11 are SD's own and are for a socket opened with the flag `SKT$TLS`
+(in `keys.h`) added to the flags of `open.socket`, which makes SD speak TLS 1.3 as
+the client. Key 11 hashes the certificate's **public key**, not the certificate,
+so a renewed certificate over the same key gives the same value. **The client does
+not check the certificate against anything**: the hash is for the program to compare
+with a value it already trusts, as `set.server ... connect` does for the SDNet
+server definitions (the SDNet page of the Administrator guide).
 
 **Key 2 means two different things and the difference is easy to miss.** On
 the socket you dialled out with it is **the port you dialled**; on a socket you

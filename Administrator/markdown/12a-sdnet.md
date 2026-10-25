@@ -563,10 +563,10 @@ people who do not want that run `delete.netlogin` first.
 
 ### Where it works
 
-`set.netlogin` and `delete.netlogin` need a **local session of an ordinary Windows
-user**: the file is that user's and the ownership check is made against the user
-the session runs as. In an API session the process runs as a different identity
-with the person's name set on it, and the check fails closed (the stored login is
+`set.netlogin` and `delete.netlogin` are meant for a **local session of an ordinary
+Windows user**: the file is that user's and the ownership check is made against the
+user the session runs as. Whether they work in an API session has not been tried,
+and a check that cannot tell whose the file is fails closed (the stored login is
 "not trusted"). SDSYS has no login of its own to keep.
 
 ## The files-only route on a server
@@ -875,8 +875,7 @@ without the lock held is refused with `STATUS()` 3023 (for a login without the w
 **The local edit gates apply by the remote file's name.** A write, delete or clear of a remote
 file that is a VOC, a program file or a dictionary (`OPEN 'DICT', ...`) needs the account to
 hold `voc.edit`, `bp.edit` or `dict.edit` as it would for a local file (messages 12410 to
-12412). SDSYS and an `$internal` program are exempt. The programs the system supplies that
-edit a file the user names (`ED`, `COPY` and the like) ask the same question.
+12412).
 
 **The cache is off for a write-mode handle**, so a record is never read from memory a second
 before it is changed; a `LIST` or `SORT` over such a file makes about twice the read requests.
