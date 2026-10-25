@@ -419,6 +419,7 @@ Three simple layers, with no vault and nothing on by default.
 | Name | Change | What |
 |---|---|---|
 | group account folders | Changed | `group_accounts` is locked like `user_accounts`, and every group account's folder is set again on every install and upgrade; a folder that is really a link is skipped |
+| gates task | Added | the tasks page of a first install has a box, unticked, to open every access gate for the installing user's own account (`/TASKS=opengates` on a silent install); the result is read back from the register and the groups; not run on a real install yet |
 | SDNet groups and folder | Added | the groups `sdfiles`, `sdfileswrite` and `sdfilesadmin`, with no members, and the folder `sd-net` (stored server logins), whose access list lets `sdusers` list it and add a sub-folder and nobody else in |
 | shared account | Added | made by the installer: group `sdg_shared` with no members, and a directory open to `sdusers` with Modify; an existing account named `shared` that SD did not make stops the install before anything is changed; `make-shared.log` in the data folder says what was done |
 | uninstall | Changed | removing SD with its data also removes the group `sdg_shared` |

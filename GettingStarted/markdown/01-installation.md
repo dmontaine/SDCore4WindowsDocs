@@ -134,6 +134,41 @@ asked once. A silent upgrade shows no page and asks nothing.
 Python is a separate product with its own entry in *Apps*; uninstalling SD Core
 leaves it in place.
 
+### 5. Your own account's access gates
+
+| | Default |
+|---|---|
+| Open every access gate for your SD Core account | **unticked** |
+
+A first install makes an SD account for the Windows user who runs it. **Like every
+SD account it starts with every access gate closed:** no ssh, no API, no shell
+(`sh`), no `os.execute`, no `sd.accounts`, no right to save a change to a VOC, a
+program file or a dictionary, no SDNet, no writing the shared account's files, no
+files-only login. **Leaving the box unticked is the delivered state**, and
+`modify.account` opens any gate later, one word at a time.
+
+On a machine you are testing on, **ticking it opens all of them for that one
+account, and for nobody else's:** `both` (ssh and the API), `sh-on`, `os-on`,
+`sd-on`, `voc-on`, `bp-on`, `dict-on`, `net-on`, `shared-write-on`, `files-on`
+and `files-write-on`, given with `modify.account` once the account is made. The
+installer then reads the register and the groups `sdssh`, `sdapi`, `sdfiles` and
+`sdfileswrite` back. The last screen says *Every access gate is open for* the
+account, or says that some are not and points to `attach-account.log` in
+`C:\ProgramData\SD`, which names each gate that did not open and the word to give
+for it. A word that is refused does not stop the install.
+
+**Not in it:** `files-admin-on` (the administration group stays off whatever you
+answer), `shared-read-on` (a new account already reads the shared account) and
+the home-screen words. It does not decide who can reach the computer from the
+network: that is still boxes 2 and 3. An upgrade does not show the box, because
+the account already exists and keeps what it has.
+
+An unattended install answers it with `/TASKS=opengates`; without that task
+nothing is opened. SDSYS closes any gate again with `modify.account` *account*
+*word*`-off` (`none` closes ssh and the API).
+
+This has not been run on a real install yet.
+
 ### An installation with neither is a supported choice
 
 Leaving every remote box unticked gives a working SD that nothing outside the
