@@ -38,6 +38,9 @@ page.
 | **`ed`** | the line editor. Needs nothing installed |
 | **`edit`** | a **full-screen** editor — opens the record in Microsoft Edit |
 | **`micro`** | a **full-screen** editor — opens the record in micro |
+| **`sed`** | a **full-screen** editor that runs **inside** SD: drop-down menus that show the keys, colour for the language, split windows and macros. Needs a window of 140 columns by 42 lines, and no operating-system permission |
+| **`ced`** | a full-screen editor for a record that is a **data collection** (JSON), one level at a time with the type of every element shown |
+| **`ide`** | a full-screen workbench: the files and records, the program and its compile messages on one screen |
 | **`debug`** | the BASIC debugger |
 | **`pstat`** · **`pdebug`** · **`pdump`** · **`dump`** | process introspection |
 
@@ -175,8 +178,14 @@ terminal rather than reading it through a pipe.
 **If an editor misbehaves over ssh and not at the console, that is worth
 reporting** with the terminal you connected from.
 
-The removed full-screen editors are a different matter: `sed`,
-`update.record` and `modify` are gone and are not coming back. See
+**`sed`, `ced` and `ide` run inside SD** and draw the screen themselves, so they need
+no operating-system permission and no editor installed; they need a terminal window of
+at least 140 columns by 42 lines (the debugger and the home screen use the same
+frame). Nothing was run on a Windows console when they were carried, and the
+User set's *The SED Screen Editor* page says so.
+
+The removed full-screen editors are a different matter: `update.record` and
+`modify` are gone and are not coming back. See
 [Not in SD Core](14-not-in-sd-core.html).
 
 ## Files

@@ -43,20 +43,25 @@ Page depth: 9999
 
 The depth stayed at 9999 because only the width was given.
 
-### The page is the terminal's own size, and SD's default is 120 × 36
+### The page is the terminal's own size, and SD's default is 140 × 42
 
 **SD asks the terminal how big it is.** When a session starts on a terminal, and
 again each time the window is resized, SD reads the size of the window and makes
 it the page: `@crtwide` and `@crthigh` follow it, and so does `term`. A program
-that draws a screen — the SCREEN statement, the debugger — sees an 80 × 24
-window as 80 × 24.
+that draws a screen — the SCREEN statement — sees an 80 × 24 window as 80 × 24.
+(**SD's own full-screen programs are the exception: SED, the IDE and CED are
+laid out for 140 × 42 or more**, SD's default size, and refuse a window smaller
+than that; the debugger's full-screen display says so and is line by line
+instead. If the window is made smaller while one of them runs, it shows the
+upper left corner and stops taking keys while the cursor is off the screen — see
+the SED page. A `screen open` program of your own asks for the size it needs
+with `minsize`, and SD asks nothing more of it.)
 
-**SD's default is 120 columns by 36 lines, not 80 × 24**, and it is not a
-cosmetic choice: the shipped `@` dictionary records and the default `list`
-report layouts are formatted for that width. It is what a session gets when
-there is no terminal to ask — a phantom, a piped script, a service — and a
-report that looks wrapped or truncated on a narrow window is usually the
-window, not the report.
+**SD's default is 140 columns by 42 lines, not 80 × 24** (it was 120 by 36
+until 25 October 2026 in this release, 18 October in SD Core for Linux). It is
+what a session gets when there is no terminal to ask — a phantom, a piped
+script, a service — and a report that looks wrapped or truncated on a narrow
+window is usually the window, not the report.
 
 **Where the number comes from**, in order, when a session starts:
 
@@ -65,26 +70,28 @@ window, not the report.
 | 1 | **the terminal's own window size**, as the terminal reports it |
 | 2 | when there is no terminal to ask: the `LINES` and `COLUMNS` environment variables, if they are numeric |
 | 3 | otherwise the terminfo entry's `lines` and `cols` |
-| 4 | **otherwise 36 and 120** |
+| 4 | **otherwise 42 and 140** |
 
 and whatever comes out is then raised to the minimum of 10 lines by 20 columns
 if it is smaller. **`term` with a size typed by hand sets the page from then on,
-until the next time the window is resized.**
+until the next time the window is resized**, and it is taken as typed: any width
+from 20 to 32767 and any depth from 10 to 32767, larger or smaller than the
+default, with no other ceiling.
 
-> **`term default` puts the 120 × 36 pair back, and it prints nothing when it
-> does.** The verb sets the same 120 × 36 that is the fallback, then returns
-> without a message — so the way to see that it worked is a bare `term` after
-> it, not the command itself:
+> **`term default` puts the 140 × 42 pair back, and it prints nothing when it
+> does.** The verb sets the same 140 × 42 that is the fallback, whatever size
+> the window is, then returns without a message — so the way to see that it
+> worked is a bare `term` after it, not the command itself:
 >
 > ```
 > :term default
 > :term
-> Page width: 120
-> Page depth: 36
+> Page width: 140
+> Page depth: 42
 > ```
 >
 > `term 120,36` does the same thing by hand and is worth knowing for the cases
-> where you want some other size back.
+> where you want some other size back, the old default included.
 
 **`Device`** is the terminfo entry in use, `windows` on this port. If a terminal
 type has no terminfo entry SD falls back to `windows` rather than failing, so
@@ -115,6 +122,84 @@ wy50            wy60            wyse50          wyse60          xterm
 (The list is cut short here: it is 82 names in rows of six, and the count depends
 on the release.) **A type that is not on it has no definition of its own**, and SD
 substitutes one for it.
+
+### What a key does: `tool.keys`
+
+```
+tool.keys
+```
+
+A full-screen diagnostic for the terminal and the keyboard, for anyone: it changes
+nothing and reads nothing private (it shows the terminal type, the window and the
+locale, which the session already knows). It needs a window of at least **140
+columns by 43 lines** and says so, with the size it found, if the window is
+smaller. Use it when a function key does nothing, an arrow prints `^[[A`, colour
+looks wrong or the mouse does not answer.
+
+| box | what it shows |
+|---|---|
+| **Terminal** | the terminal type SD is using (`TERM (SD)`, what `term` sets) and the one in the environment (`TERM (env)`), the window and the layout, the locale and whether the borders are line characters (UTF-8) or `+ - \|`, whether the terminal can show colour, the theme, how many mouse events have arrived, how keys are being read, and how many of the keys in the grid have been seen |
+| **Last keys** | the 25 newest keys, newest first. **Names** (the start): the name the screen library reports for the key — `up`, `f5`, `ctrl-g`, `alt-s`, `mouse`, or the character itself with its code. **Raw** (Ctrl-R): the bytes the terminal sent, in hex, with the characters beside them |
+| **Keys seen** | the arrows, the twelve function keys, the control keys, an Alt-letter, a printable character and the mouse; a key is ticked once it has been pressed |
+| **Mouse** | the last mouse event (press, release, drag, wheel), where it was, and the counts |
+| **Box drawing** and **Styles** | the borders the library draws with, and the library's sixteen styles each drawn in itself, so the theme in force can be seen on this terminal |
+
+Every key is shown **before** the program acts on it. The program uses four:
+**Ctrl-L** clears what has been seen, **Ctrl-R** switches between names and raw
+bytes, **Ctrl-T** changes the theme (mono, classic, blue; a terminal that cannot
+show colour keeps mono and says so) and **Ctrl-Q** leaves, so a key that ends the
+program can only be tested by leaving.
+
+**A key that makes the terminal beep and shows nothing in names mode is one the
+terminal type does not name.** SD decodes keys with the terminfo entry for the
+type in force, so an F-key or an End key the entry does not list is dropped, and
+the rest of its bytes may show up as stray characters. Press **Ctrl-R**, then press
+the key again: the bytes it sent are shown, which is what a terminfo entry needs.
+An Alt-letter shows as `alt-x` on a terminal that sends Alt+x as Esc and x.
+
+Make the window smaller while it runs and the cursor lock takes the keyboard
+with the message that the window is too small; make it larger again and the
+screen comes back. Ctrl-Q, then `y`, leaves from the lock. If the input ends (a
+piped session) the program ends.
+
+*Not run on a Windows console yet.* The page is SD Core for Linux's, carried here
+and compiled; which keys the Windows terminal type gives names to is exactly what
+it is for.
+
+### What this account may do: `tool.gates`
+
+```
+tool.gates
+```
+
+A full-screen page, for anyone, that answers "why can I not do that?" — it shows every
+**gate** the system has, the switches the administrator turns on or off for an account
+(`sh`, `os`, `sd`, `voc`, `bp`, `dict`, `net`, the shared account's read and write, and the
+routes `ssh`, `api`, `files`, `files-write` and `files-admin`), each **ON** or **off for
+this session**. It needs a window of at least **140 columns by 43 lines**. (For the
+administrator the same verb is the gate matrix of every account; this is the page every
+other account gets.)
+
+The row under the cursor is explained in plain words: what ON lets you do, what you can
+still do with it off, whether it reaches beyond SD, as it is delivered, when a change
+reaches you, and the `modify.account` word the administrator would use to give it or
+withdraw it (for a gate that reaches beyond SD the administrator is asked to type your
+account's name first). Up and Down, PgUp, PgDn, Home and End move; **F5** asks the system
+again; **F1**, `?` or a click on the `[?]` explains the page; **Ctrl-Q** leaves.
+
+* **The page changes nothing, and has nothing that could.** It asks the system what the
+  session may do; it writes no file, runs no command and leaves no audit line. Only the
+  administrator changes a gate, with `modify.account`.
+* **It reports what the session holds, not what the register says now.** `sh`, `os`, `sd`,
+  `net` and the shared account were loaded when you entered this account, and `voc`, `bp`
+  and `dict` when you signed on (`logto` does not reload them): after the administrator
+  changes one, sign off and on again to see it. The route gates are membership of a Windows
+  group by your **login name**, read from the system each time (F5 shows a change).
+* **Every account starts with every gate off, except the right to read the shared
+  account.** A gate that is `plan` (raw sockets) is not built yet.
+
+*Not run on a Windows console yet.* The page is SD Core for Linux's, carried here and
+compiled.
 
 ## The wire: `pterm`
 

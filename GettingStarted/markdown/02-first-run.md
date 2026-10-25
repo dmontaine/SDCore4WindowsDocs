@@ -56,13 +56,14 @@ term
 [Other hardening](13-hardening.html#the-terminal). An account created before
 the `WINDOWS` definition shipped keeps its old setting until **`update.accounts`**.
 
-**`term` also reports the page size, and SD's default is 120 × 36 — not
-80 × 24.** The shipped dictionaries and the default `list` layouts are
-formatted for 120 columns, so **a console window narrower than that makes
-ordinary reports look wrapped or truncated** and the report is not at fault.
-Widen the window, or set it for the session with `term default` — which puts
-the 120 × 36 back and prints nothing while doing it, so check with a bare
-`term` afterwards. `term 120,36` is the same thing typed out. See
+**`term` also reports the page size, and SD's default is 140 × 42 — not
+80 × 24** (it was 120 × 36 until 25 October 2026). **A console window narrower
+than that makes ordinary reports look wrapped or truncated** and the report is
+not at fault. SD's own full-screen programs (`sed`, `ced`, `ide`, the home
+screen) want a window of at least 140 columns by 42 lines. Widen the window, or
+set it for the session with `term default` — which puts the 140 × 42 back and
+prints nothing while doing it, so check with a bare `term` afterwards.
+`term 140,42` is the same thing typed out. See
 [Other hardening](13-hardening.html#the-terminal).
 
 ## 4. Make a file and put something in it
@@ -76,8 +77,9 @@ ed customers 1001
 rather have a full screen, **`edit`** opens the same record in Microsoft Edit
 and **`micro`** opens it in micro — see
 [Programmer commands](07-programmer-commands.html#editors). The old
-full-screen editors `sed`, `update.record` and `modify` are all gone; see
-[Not in SD Core](14-not-in-sd-core.html).
+full-screen editors `update.record` and `modify` are gone; `sed` is back, and
+runs inside SD with no operating-system permission — see *The SED Screen
+Editor* in the User set, and [Not in SD Core](14-not-in-sd-core.html).
 
 In **`ed`**: `i` to insert, type your lines, a full stop on its own line to stop
 inserting, then `fi` to file and exit.

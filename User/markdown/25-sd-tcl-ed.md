@@ -1,15 +1,18 @@
 Title: SD TCL - The ed Line Editor
 Subtitle: The editor that runs inside SD, needs no terminal, and can be driven from a script.
 
-SD has three editors and they are all installed with it. **`ed` is the one that
-runs *inside* SD**: it is written in SD BASIC, draws nothing, and needs neither
-a terminal nor operating-system permission. That is what makes it the editor for
-a phantom, an API session, a session driven down a pipe, and anything you want
-to automate.
+SD has four editors for a record and they are all installed with it. **`ed` is
+the one that needs no terminal**: it is written in SD BASIC and runs *inside*
+SD, draws nothing, and needs neither a terminal nor operating-system permission.
+That is what makes it the editor for a phantom, an API session, a session driven
+down a pipe, and anything you want to automate.
 
-The other two are [edit](26-sd-tcl-edit.html) and [micro](27-sd-tcl-micro.html),
-which hand the record to a full-screen Windows program. Use one of those when
-you are sitting at a terminal and want to see the whole record at once.
+The other three are full-screen. [sed](27a-sd-tcl-sed.html) is also written in SD
+BASIC and runs inside SD, so it needs no operating-system permission either;
+[edit](26-sd-tcl-edit.html) and [micro](27-sd-tcl-micro.html) hand the record to a
+full-screen Windows program. Use one of those when you are sitting at a terminal
+and want to see the whole record at once. A record that is a data collection has
+an editor of its own, [ced](27b-sd-tcl-ced.html).
 
 SD folds case, so a command may be typed in either case. Commands are shown here
 in lower case. In the tables, *italics* mark something you supply and **bold**
@@ -301,6 +304,22 @@ says nothing at all and returns to TCL.
 > **`SAVE` and `FI` with a different file or record name ask before they
 > overwrite**, and so do `FD` and `DELETE`. Written back to their own record
 > they ask nothing at all, which is what lets `ed` be driven from a script.
+
+**If `ed`'s input ends** (a pipe that has been used up, as in a script or a test; a
+terminal does not end like this), `ed` leaves the record the way `Q` does when it
+is answered `Y`, and asks nothing, because nobody is there to answer: **a change
+that was not filed is not saved**, the record is not written, and its lock is given
+back. It does not go on to the next record of a list of names, of a select list or
+of the `Record name?` prompt. A question that is being asked at that moment (an
+overwrite, `FD`, a block action, `Record changed - OK to quit?`) is answered *no*,
+as Enter answers it, so the end of the input never deletes or overwrites a record.
+The start-line and end-line questions of `LOAD` and `UNLOAD` are different: Enter
+takes their default (the whole record), and the end of the input is not an Enter,
+so the command is cancelled and `UNLOAD` writes nothing. A script that wants its
+work kept ends with `FI` (or `SAVE`). An empty Enter at the `----:` prompt on a
+terminal is still an empty command and shows the next line. Before 19 October 2026
+such a session went on for as long as it was left, printing the prompt without end
+and using all of a CPU.
 
 ### `XEQ` runs a TCL command without leaving the editor
 

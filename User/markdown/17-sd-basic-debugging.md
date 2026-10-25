@@ -159,6 +159,33 @@ carries on with the new value.
 `dump var path` writes a variable to an operating system file, which is the way
 to look at something too long for the screen.
 
+**A data collection** is shown with its kind, the number of elements and its
+JSON text, the names in order; a long one is cut off with dots:
+
+```
+>/C
+Collection (3 elements): {"a":[1,2,{"k":"v"}],"name":"Acme","on":true}
+
+>/C{name}
+String (4 bytes): "Acme"
+
+>/C{a/3/k}
+String (1 bytes): "v"
+
+>/C{on}
+Boolean: true
+```
+
+(That is a collection of three elements, one of which is an array whose third
+element is itself a collection.) Name an element with its path in braces, the
+names separated by slashes (a number picks an element of an array, counting
+from 1). Names are case sensitive. The answer is the element's own type — `String`,
+`Integer`, `Array`, `Collection`, `Boolean` or `Null` — and a path that leads
+nowhere says *Element not found in the collection*. **`dump c{sub} path`
+writes the JSON of one element, and `dump c path` the whole collection**, as
+`dump` does for any variable. A collection that contains itself is shown as
+*(cannot be shown)* and does not stop the debugger.
+
 ## Stepping and running
 
 | | |
@@ -359,6 +386,25 @@ definition has `smcup` and `rmcup`. Then:
   line** at the bottom, where you type the commands on this page;
 - **F1** shows the help in a box, **F4** shows the program's own screen until
   you press a key, and Page Up and Page Down move the source.
+
+**The full-screen display is laid out for 140 columns by 42 lines or more**
+(since 18 October 2026; a bigger window is used whole). **On a window smaller
+than that the debugger does not refuse: it says why, once, and is line by line
+for the session** — *The debugger needs a window of at least 140 columns by 42
+lines for its full-screen display; this one is 100 by 30, so it is using line
+mode* — because a small window is no reason to take away the way to debug a
+program. The window measured is the one on the screen, or the display `term w,h`
+gave if that is smaller. The choice is made at the first stop of a session.
+
+If the window is made smaller **while the full-screen display is up**, the debugger
+lays itself out again within a second and shows the **upper left corner** of its
+140 by 42 layout and nothing past the edge, and draws everything again when the
+window is made bigger. The command line is on the last row, so a window under 42
+lines does not show where you type: the debugger then does not take keys. A
+warning in reverse video fills the upper left, every key is thrown away, it goes
+by itself when the window is big enough, and **Ctrl-Q, then y** leaves the
+debugger the way F3 (Stop) does. A window narrower than 140 but 42 lines or more
+high shows the left part of the lines and works as usual.
 
 The program's own screen is kept by the terminal (that is what the alternate
 screen is): when you let the program run, the debugger gives the terminal back

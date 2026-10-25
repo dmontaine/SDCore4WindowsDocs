@@ -180,7 +180,7 @@ routine that reports or sets the file-creation mask, and **no VOC record points
 at it either**. It cannot be typed. `umask()` from SD BASIC still works — see
 [SD Basic - System and Environment](16-sd-basic-system-and-environment.html).
 
-**PROC is removed.** So are `sed` and `update.record`. A `PQ`-type VOC record
+**PROC is removed.** So is `update.record`. A `PQ`-type VOC record
 is **refused by name** rather than being reported as a bad dispatch code,
 because the record itself is valid PROC and it is the interpreter that is gone.
 Nothing that ships is type `PQ`, so this can only be met in a VOC record

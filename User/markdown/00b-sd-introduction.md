@@ -152,7 +152,7 @@ are not in SD Core for Windows:
 | Embedded Python (a Python interpreter loaded into `sd.exe` itself) | Gone permanently - `sd.exe`'s MSYS2 runtime cannot safely share a process with Python. Calling Python **from** a BASIC program is not gone: it runs as a separate helper process instead - see *SD BASIC - Python Integration* |
 | `sdlnxd` daemon | Linux-only; the Windows service replaces it |
 | `ENCRYPT.FIELD` verb | Removed; `sdencrypt()` and `sddecrypt()` in SDBasic are the supported route |
-| `sed`, `update.record`, `modify` editors | Gone; use `edit`, `micro` or `ed` |
+| `update.record`, `modify` editors | Gone; use `sed`, `edit`, `micro` or `ed`. (`sed` was gone too, and is back since 25 October 2026) |
 | PROC language | Removed; use paragraphs instead |
 | `SET.LANGUAGE`, `LOAD.LANGUAGE` | Removed; SD Core is English only |
 | Silent install | Refused deliberately; the installer asks questions that cannot be defaulted |

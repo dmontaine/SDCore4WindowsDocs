@@ -203,33 +203,34 @@ a definition that is not there.
 
 **Backspace works**, at the prompt and when you are asked for a password.
 
-### The page is 120 × 36, not 80 × 24
+### The page is 140 × 42, not 80 × 24
 
-**SD's default terminal size is 120 columns by 36 lines.** It is not a
-cosmetic default: the shipped `@` dictionary records and the default `list`
-report layouts are formatted for 120 columns. **A console window narrower than
-that makes ordinary reports look wrapped or truncated**, which reads as a
-formatting bug and is not one.
+**SD's default terminal size is 140 columns by 42 lines** (it was 120 by 36 until
+25 October 2026). **A console window narrower than that makes ordinary reports
+look wrapped or truncated**, which reads as a formatting bug and is not one. SD's
+own full-screen programs (`sed`, `ced`, `ide`, the home screen) want at least
+140 columns by 42 lines and refuse a smaller window.
 
 `term` reports the size in force, above the `Device` line:
 
 ```
 :term
-Page width: 120
-Page depth: 36
+Page width: 140
+Page depth: 42
 Device    : windows
 ```
 
 **The size is worked out at login**, in this order: the `LINES` and `COLUMNS`
 environment variables if they are numeric, otherwise the terminfo entry's
-`lines` and `cols`, **otherwise 36 and 120** — then raised to a minimum of
+`lines` and `cols`, **otherwise 42 and 140** — then raised to a minimum of
 10 × 20 if smaller. So a console or ssh session normally gets its real window
-size and 120 × 36 is the fallback when nothing answers, which is the case for a
+size and 140 × 42 is the fallback when nothing answers, which is the case for a
 phantom or a piped script.
 
 > **`term default` restores it, and it prints nothing when it does.** It sets
-> the same 120 × 36 the login path falls back to and returns silently, so run a
-> bare `term` after it to see the result. `term 120,36` does the same by hand.
+> the same 140 × 42 the login path falls back to and returns silently, so run a
+> bare `term` after it to see the result. `term 120,36` sets the old default by
+> hand.
 >
 > **If you have notes from an earlier build, this is one of the things that
 > changed**: `term default` used to set 20 × 24 — the *minimum* width and a

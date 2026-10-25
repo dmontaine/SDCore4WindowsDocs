@@ -77,6 +77,16 @@ must survive a dialogue with `screen text`, or `screen refresh` will not bring i
 back. Before `screen open` a dialogue still works, but it leaves blanks where it
 was.
 
+**A form on a screen opened with `clear` writes only what has changed** (since
+19 October 2026). The terminal is then known to show the shadow, so when a form is
+drawn again, or one of its widgets is, the text that is already there in the same style
+is left out; choosing a record in the IDE wrote 6,635 characters to the terminal
+before and about 780 now. Two things follow. A form does not repair what the program
+printed over it with `print` or `crt`, only `screen refresh` does; and a screen opened
+*without* `clear` is written in full, as before, because the terminal may show what the
+program printed there. `screen text`, `screen box` and the dialogues always write what
+they are told.
+
 | | |
 |---|---|
 | `screen open {clear} {nocursor} {minsize w,h} {nomouse} {lines}` | Takes the screen. `clear` clears it (to the theme's desktop colour); `nocursor` hides the cursor; `minsize` gives `else` on a smaller terminal; `nomouse` leaves mouse reporting off (see below); `lines` draws every border in the line-drawing characters of Unicode (see *Borders*). `else` also when there is no terminal. |
@@ -88,7 +98,7 @@ was.
 | `screen cursor {at x,y} {on} {off}` | Moves the cursor, shows it or hides it. The library puts it back there after each command that draws. |
 | `screen refresh` | Clears the terminal and draws the shadow again. `returning` holds `resized` if the terminal's size has changed since `open`; the program then draws everything again. |
 | `screen size returning v` | The width, a field mark and the height, as the terminal is now. |
-| `screen key {timeout s} returning k` | Waits for one key. `k` is `up down left right home end pgup pgdn ins del bs tab btab enter esc f1` to `f12`, `ctrl-a` to `ctrl-z`, `mouse`, or the character itself. `else` on timeout or end of input. |
+| `screen key {timeout s} returning k` | Waits for one key. `k` is `up down left right home end pgup pgdn ins del bs tab btab enter esc f1` to `f12`, `ctrl-a` to `ctrl-z`, `alt-a` to `alt-z` and `alt-0` to `alt-9` (an Alt-letter, always in lower case), `mouse`, or the character itself. `else` on timeout or end of input. |
 | `screen mouse returning m` | What the last mouse event was (below). |
 
 Styles are named, not coloured: see *Styles and themes*.
@@ -145,7 +155,7 @@ items = 'Open':@vm:'Save':@sm:'':@sm:'save':@sm:'D':@vm:'Autosave':@sm:'':@sm:'a
 ### menu bar
 
 ```
-screen menubar menus {row r} {draw} {returning code}
+screen menubar menus {row r} {draw} {click x} {returning code}
 ```
 
 *menus* has one **field** for each menu: its title, then its entries as values,
@@ -155,6 +165,15 @@ and down between entries, Return chooses, Esc leaves, a letter chooses the entry
 that has it. Clicking a title opens that menu; clicking an entry chooses it;
 clicking anywhere else closes the menus. Entries take the same `D` and `C` flags as
 those of `screen menu`.
+
+**`click x`** is for a program that has been told of a click on a bar that is not open
+(`screen key` gave `mouse` and `screen mouse` says where; a form gives it the same way
+for a click on no widget when the program has asked for those): *x* is the column of the
+click, and the menu whose title is over it opens instead of the first. A column with no
+title over it (the space to the right of the titles) opens nothing, and the statement
+takes `else`. A title is its label with a blank on each side, from column 0.
+A program compiled before 19 October 2026 that uses `screen menubar` must be compiled
+again.
 
 **Submenus.** A menu whose title begins with `>` is not on the bar: it is a submenu. An
 entry whose *code* is that title opens it beside the entry, with a `>` at its right edge;
@@ -208,22 +227,30 @@ place of the widget from the form's top left corner (0,0 is the corner of the
 border; the default is 1,1). The id is the widget's name: not null, not used
 before, and with no `/` or `*` in it. `else` is taken if a widget cannot be added.
 
+Most controls take `color fg,bg` as their last clause (a label, entry, check box, slider, radio group, list, combo box, button and progress bar; not a memo, table, tree or the tab strip, which have their own styling). The colours are black, blue, green, cyan, red, magenta, brown and white, for example `color 'black','green'`; either may be left out for the terminal's own. A pair of colours is one of sixteen spare styles the program shares, however many controls use it, and a seventeenth different pair, or a word that is no colour, makes the statement take its `else`. The colours survive `screen theme`. A coloured **entry or combo box keeps its colours while it has the focus** (the cursor and an underline show where it is); every other control draws its colours until it has the focus and then the focus style. On a terminal that cannot show colour the clause is ignored.
+
+**Accelerator keys.** An entry, combo box, check box, slider, selector, radio group, list, button, tab strip, memo, tree and table take `accel key` as their last clause: `accel 'alt-s'`, `'ctrl-g'`, `'f5'`. The key is f1 to f12, ctrl-a to ctrl-z (not ctrl-h, ctrl-i, ctrl-j or ctrl-m, which a terminal sends as Backspace, Tab and Return) or alt-a to alt-z and alt-0 to alt-9, in either case with a `-` or a `+` (`Alt+S`, `alt-s` and `ALT-S` are one key); any other word makes the statement take its `else`. The key reaches the control **wherever the focus is, even inside a text field**, before the focused control sees it. What it does: a button is pressed; a check box is ticked or unticked, a slider slid and a selector moved to its next word, each with a `change` event (not only a `focus` one); every other control takes the focus (a `focus` event). A control that is disabled or on another tab's page does not answer. Two controls given the same key: the first one added answers. The same applies to a letter marked with `&` in the text of a **button, check box, slider, selector or label** (`'&Shell'`, Alt+S): that letter is also the control's Alt-letter, and it is drawn underlined (in the `hotkey` style of the theme: underline in the mono theme, a colour in the colour themes) while the control does not have the focus and is not disabled. A label has no focus of its own, so its Alt-letter takes the focus to the next control that can have it: put `&Name` before the entry it names. A label reads the `&` only when it is created, so `screen set ... text` leaves an ampersand where it is. A button still also answers its plain letter when no field takes it, as before. Alt-letters reach the program only if the terminal sends Alt+x as Esc and x (most do: gnome-terminal, konsole, kitty, xterm with `metaSendsEscape`, PuTTY; macOS Terminal needs "Use Option as Meta key"), and some terminals or window managers keep a few for themselves (a menu on Alt+F, tabs on Alt+1 to 9), so pick an `f` key or a ctrl-letter where that matters. Ctrl-c, ctrl-q, ctrl-s and ctrl-z may be taken by the terminal itself. An Esc followed by a letter within a fifth of a second is read as an Alt-letter; an Esc on its own is still Esc (a cancel).
+
 | verb | what it adds |
 |---|---|
-| `screen label f, id, text {at x,y} {attr style} {width n}` | Text. A label that will be changed with `screen set` needs `width` for its longest text: a status line is a label with a width. |
+| `screen label f, id, text {at x,y} {attr style} {width n} {color fg,bg}` | Text. A label that will be changed with `screen set` needs `width` for its longest text: a status line is a label with a width. `color` wins over `attr`. |
 | `screen frame f, id {at x,y} {size w,h} {title t}` | A border (it draws only the border; widgets added after it sit over it). |
-| `screen entry f, id {at x,y} {width n} {value v} {mask} {maxlen n}` | One line of text; a longer text scrolls. |
-| `screen check f, id, text {at x,y} {value 0 or 1}` | `[x] text`. |
-| `screen radio f, id, items {at x,y} {value n} {across}` | One choice of several, one to a row (or side by side with `across`). |
-| `screen list f, id, items {at x,y} {size w,h} {value n} {multi}` | A list of values to choose from; `multi` lets several be picked. |
-| `screen combo f, id, items {at x,y} {width n} {value v}` | An entry field with a `[v]` that opens a list of choices. |
-| `screen button f, id, text {at x,y} {default} {cancel}` | `[ text ]`. `default`: Return in any other widget presses it. `cancel`: pressing it, like Esc, ends the form with `else`. An `&` marks its key. |
-| `screen progress f, id {at x,y} {width n} {value v}` | `[#####     ] 60%`, 0 to 100. It cannot take the focus. |
-| `screen tabs f, id, labels {at x,y} {value n}` | A strip of tabs; the chosen one is the form's page (below). |
-| `screen memo f, id, text {at x,y} {size w,h} {readonly} {wrap} {syntax name} {lnum}` | A text area of several lines, one line to a field. `readonly` makes it a viewer; `wrap` wraps long lines at a blank instead of panning sideways; `syntax` *name* draws the text in the syntax colours of a language; `lnum` puts line numbers down the left. |
-| `screen table f, id, columns, rows {at x,y} {size w,h} {value n} {multi}` | A heading and rows of cells (below). `multi` lets rows be marked. |
-| `screen tree f, id, nodes {at x,y} {size w,h} {value n} {expanded}` | A tree of nodes, some open to show what is under them (below). |
+| `screen entry f, id {at x,y} {width n} {value v} {mask} {maxlen n} {color fg,bg} {accel key}` | One line of text; a longer text scrolls. `color 'black','green'` draws the field in those colours, also while it has the focus. |
+| `screen check f, id, text {at x,y} {value 0 or 1} {place where} {color fg,bg} {accel key}` | `text [x]`: the label, then the box. `place` says where the label is in relation to the box: `left` (the default), `right` (`[x] text`), `above` or `below` (the control is two rows high). A click on the box or on the label checks or unchecks it. |
+| `screen slider f, id, text {at x,y} {value 0 or 1} {attr style} {words w1,w2} {place where} {color fg,bg} {accel key}` | An on / off switch with its label (`place` as for a check box; left by default): `text [off | ON]` when it is on and `text [OFF | on]` when it is off. `words 'left','right'` chooses the two words (the first is the off state, the second the on state): `[left | RIGHT]` and `[LEFT | right]`. The word in force is in capitals and in the style `attr` (any style of the theme: `bold`, `highlight`, `header`, `error`, `underline` ...; bold when you give none, which is a colour in a colour theme; `window` leaves it as the form's own, so that only the capitals show the state). Space slides it the other way, Left sets it off, Right sets it on; a click on a word sets that state and a click on the label slides it the other way. `screen get` answers 1 or 0 and `screen set f, id value v` sets it (any value but 0 is on). |
+| `screen selector f, id, text, words {at x,y} {value n} {attr style} {place where} {color fg,bg} {accel key}` | One word of several in a row: `text [blue | green | RED | black]`, with `words` a dynamic array (`'blue':@vm:'green':@vm:'red':@vm:'black'`) of any length (an empty one makes the statement take its `else`). The word in force is in capitals and in the style `attr` (as for a slider: bold by default, `window` for the capitals alone), the others in lower case; `place` and `color` are as for a check box. Left and Right choose the previous and the next word and stop at the ends, Home and End the first and the last, Space the next word (the first after the last); a click on a word, the space after it or either bracket chooses it, a click on the label the next word. `screen get` answers the number of the word in force counted from one (3 for RED), `screen set f, id value n` chooses one (a number outside the words is brought into range) and `screen set f, id items words` gives it other words (the first is chosen). A change is a `change` event with the number. |
+| `screen radio f, id, items {at x,y} {value n} {across} {color fg,bg} {accel key}` | One choice of several, one to a row (or side by side with `across`). |
+| `screen list f, id, items {at x,y} {size w,h} {value n} {multi} {color fg,bg} {accel key}` | A list of values to choose from; `multi` lets several be picked. |
+| `screen combo f, id, items {at x,y} {width n} {value v} {color fg,bg} {accel key}` | An entry field with a `[v]` that opens a list of choices. |
+| `screen button f, id, text {at x,y} {default} {cancel} {color fg,bg} {accel key}` | `[ text ]`. `default`: Return in any other widget presses it. `cancel`: pressing it, like Esc, ends the form with `else`. An `&` marks its key. |
+| `screen progress f, id {at x,y} {width n} {value v} {color fg,bg}` | `[#####     ] 60%`, 0 to 100; `color` draws the filled part. It cannot take the focus. |
+| `screen tabs f, id, labels {at x,y} {value n} {accel key}` | A strip of tabs; the chosen one is the form's page (below). |
+| `screen memo f, id, text {at x,y} {size w,h} {readonly} {wrap} {syntax name} {lnum} {accel key}` | A text area of several lines, one line to a field. `readonly` makes it a viewer; `wrap` wraps long lines at a blank instead of panning sideways; `syntax` *name* draws the text in the syntax colours of a language; `lnum` puts line numbers down the left. |
+| `screen table f, id, columns, rows {at x,y} {size w,h} {value n} {multi} {accel key}` | A heading and rows of cells (below). `multi` lets rows be marked. |
+| `screen tree f, id, nodes {at x,y} {size w,h} {value n} {expanded} {accel key}` | A tree of nodes, some open to show what is under them (below). |
 | `screen scrollbar f, id, total {at x,y} {size w,h} {visible n} {value n}` | A scroll bar of its own, for content the program draws itself (below). |
+| `screen container f, id {at x,y} {size w,h} {title t} {noborder}` | A rectangle that owns the widgets added after `screen in` (below). |
+| `screen viewport f, id {at x,y} {size w,h} {content cw,ch} {title t} {noborder}` | A container whose inside is a window on a larger sheet of widgets, with scroll bars (below). |
 
 #### The keys of the widgets
 
@@ -246,6 +273,7 @@ another page, is passed over.
 | table | up, down, home, end, page up, page down; left and right the current column; F3 sorts by it; `<` and `>` its width; a letter jumps to the next row whose first cell starts with it; with `multi` the space bar marks the row |
 | tree | up, down, home, end, page up, page down; right opens a node (or goes to the first one under it); left closes it (or goes to the node it is under); the space bar opens or closes; a letter jumps |
 | scrollbar | up and down (left and right when it is horizontal), page up, page down, home, end |
+| viewport | up, down, left, right (one row or column), page up, page down, home (the top), end (the bottom); at the edge the key goes on to the widget before or after |
 
 ### Tabs and pages
 
@@ -394,6 +422,82 @@ click on the track either side of the thumb a page, and the wheel three. **Each 
 its content from it. `screen set f, id value n` moves the bar and `screen get` answers
 where it is.
 
+### Containers and viewports
+
+```
+screen form title 'Orders' at 0,0 size 140,42 returning f
+screen viewport f, 'sheet' at 1,1 size 138,38 content 200,60 title 'Sheet'
+screen in f, 'sheet'
+for r = 0 to 29
+   screen label f, 'l':r, 'Row ':r at 0, r*2
+   screen entry f, 'e':r at 12, r*2 width 20
+next r
+screen in f, ''
+screen button f, 'ok', '&OK' at 2,40 default
+```
+
+A **container** owns widgets. `screen in f, id` says that the widgets added **from now on**
+are inside that container, as `screen page` does for a tab (`screen in f, ''` ends it).
+A widget inside a container has its `at x,y` counted from **the first cell inside the
+container's border** (0,0 is the cell right of and under the corner), not from the form's
+corner. The widgets move with their container (`screen move`), are hidden, disabled or
+put on a tab page with it (`screen set f, id visible 0`, `enabled 0`), and are taken out
+with it (`screen delete`). What a widget draws, and where a click reaches it, is cut at
+the edge of the container's inside: a long label stops at the border, an entry that
+starts left of the inside shows only its right part. A container named while another is
+current is inside that one, so containers nest to any depth; `screen in f, 'outer'` goes
+back to an outer one. `noborder` leaves out the border: the inside is the whole rectangle,
+and a widget at x,y is where it would be in the form at the container's corner plus x,y.
+
+A **viewport** is a container whose inside is a window on a **sheet** `content cw,ch` cells
+big (the default is no larger than the window, and then nothing scrolls). The widgets are
+placed on the sheet, `at 0,0` being its top left cell, and only the part in the window is
+drawn. When the sheet is higher than the window a scroll bar appears in the right column
+of the inside, when it is wider one appears in the bottom row (so the window is one
+column or row smaller than the inside). The viewport can take the focus (it is in the
+Tab ring, ahead of its widgets), and then the arrow keys, page up and down, home and end
+scroll it. The wheel scrolls it three rows, Shift and the wheel three columns, wherever the
+pointer is over it, even over a widget in it that has no use for the wheel (a list, memo,
+table, tree and scroll bar keep it for themselves) - and the wheel never moves the focus.
+A click on a bar's arrow moves one, on the track a page, and the thumb can be dragged: the
+sheet follows the pointer, which may leave the bar sideways and go past its ends. **A
+widget that takes the focus (Tab, a click, or `screen focus` before the form is shown) is
+scrolled into view**, as little as it takes; a widget bigger than the window gets its top
+left corner shown.
+
+```
+screen scroll f, id {to x,y} {by dx,dy} returning v
+screen move f, id {at x,y} {size w,h} {content cw,ch}
+screen delete f, id returning n
+```
+
+`screen scroll` scrolls a viewport from the program (`to` first, then `by`): *x* is the
+first column of the sheet to show and *y* the first row, from 0. It never goes past the
+sheet's edge, and `returning` says where it ended up: the column, a value mark, the row.
+`screen get f, id` of a viewport answers the same. `screen move` gives a widget a new
+place, counted as it was given, and a container, viewport or frame a new size (`size`),
+and a viewport a new sheet (`content`); everything in a container goes with it.
+`screen delete` takes a widget out of the form (and a container everything in it, at any
+depth) and says how many went; the id may be used again. `else` is taken when the form or
+the widget is not there, or a size is asked of a widget that has none.
+
+A scroll is a **`change` event** of the viewport's id whose data is the column, a value
+mark and the row; if the same key also moved the focus the `focus` event is returned
+instead. A scroll made by `screen scroll` is not an event.
+
+Things to know:
+
+- **The cursor.** While the focused widget is not wholly in view (scrolled out, cut by the
+  edge, or taller than the window) the cursor is hidden; it comes back when the widget
+  does. A viewport has no cursor of its own. So give a memo or a table a size that fits
+  the window.
+- **Pop-ups are not cut.** The list of a combo box is drawn over the whole screen, not
+  inside the viewport.
+- A viewport is not a window of its own: it is drawn into the form, and a later widget
+  placed over it is drawn over it (a scroll draws it again too).
+- Scrolling 200 by 60 of sheet (630 widgets) in a window of 138 by 40 takes about a tenth
+  of a second a step, measured. The cost is the widgets in the window.
+
 ### Running a form
 
 ```
@@ -437,13 +541,13 @@ field 3 its data.
 | type | when | id | data |
 |---|---|---|---|
 | `button` | a button was pressed | its id | |
-| `change` | a check box, radio group, list, combo, tab strip, table, tree or scroll bar changed its value | its id | the new value |
+| `change` | a check box, slider, selector, radio group, list, combo, tab strip, table, tree or scroll bar changed its value, or a viewport was scrolled by the user | its id | the new value (a viewport: its first column, a value mark and its first row) |
 | `focus` | the focus moved | the widget it went to | the one it left |
 | `key` | a key the form had no use for (a function key, a Ctrl key) | | its name |
 | `resize` | the terminal's window changed size; the form has been drawn again at the new size | | the width, a value mark and the height |
 | `cancel` | Esc, or the form's cancel button | the button, if any | |
 | `timeout` | no key came in time | | |
-| `end` | the input ended | | |
+| `end` | the input ended, whether or not the statement has a `timeout` (before 19 October 2026 a wait with a timeout answered `timeout` instead, again and again) | | |
 
 `then` is taken for `button`, `change`, `focus`, `key` and `resize`; `else` for `cancel`,
 `timeout` and `end`. Esc does **not** close the form here: the program decides. An
@@ -454,7 +558,7 @@ on a `focus` or `button` event. `screen hide f` puts the screen back.
 
 | | |
 |---|---|
-| `screen get f, id returning v` | An entry or combo: the text. A check: 1 or 0. A radio: the number of the choice. A list: the number of the current item (with `multi`, the numbers picked, as values). Tabs: the tab. A table: the number of the current row in the rows given (with `multi`, the numbers of the rows marked). A tree: the code of the current node. A scroll bar: the number of the first line shown. A memo: the text, one line to a field. A label: its text. |
+| `screen get f, id returning v` | An entry or combo: the text. A check: 1 or 0. A radio: the number of the choice. A list: the number of the current item (with `multi`, the numbers picked, as values). Tabs: the tab. A table: the number of the current row in the rows given (with `multi`, the numbers of the rows marked). A tree: the code of the current node. A scroll bar: the number of the first line shown. A viewport: its first column and first row, from 0, with a value mark between. A memo: the text, one line to a field. A label: its text. |
 | `screen set f, id {value v} {text t} {items i} {enabled e} {wrap b} {readonly b} {visible b}` | `value` sets what `get` answers (a memo: replaces the text; tabs: chooses a tab; a scroll bar: moves it). `text` is a caption. `items` replaces the choices of a radio or list, or the rows of a table (the order of rows comes back). `enabled 0` takes a widget out of the focus ring. `wrap` and `readonly` (1 or 0) change a memo. `visible 0` hides any widget - it is not drawn and takes no focus - and `visible 1` shows it again. A form that is on the screen is redrawn at once. |
 | `screen focus f, id` | The next `run` starts with the focus there. |
 | `screen values f returning c` | A collection with the value of every entry, check, radio, list, combo, progress, tabs and table, named by id: `c{'name'}`. A memo is left out (ask for it with `get`). |
@@ -533,13 +637,15 @@ sends nothing.
 With reporting on, **forms and dialogues take clicks without any help from the
 program**:
 
-- a click on a button presses it; on a check box ticks or unticks it; on a radio
+- a click on a button presses it; on a check box ticks or unticks it; on a slider or selector sets the word clicked (a slider slides the other way, a selector goes to the next word, if the text is clicked); on a radio
   button chooses it; on a row of a list or table makes it the current one (and a second
   click on that row is Return); on a tab chooses it; in an entry field or a memo puts
   the cursor under the pointer; on a combo's `[v]` opens its list;
 - on a tree's node makes it current (a click on its `+` or `-` opens or closes it); on a
   table's heading sorts by that column; on a scroll bar's arrow or track moves it;
-- the wheel scrolls a list, table, tree, memo or scroll bar three lines;
+- the wheel scrolls a list, table, tree, memo or scroll bar three lines; over a viewport
+  it scrolls the viewport three rows (Shift: three columns), and a press on the thumb of
+  its bar followed by moves of the pointer with the button held drags the sheet along;
 - in a message box a click on a button presses it; in a menu a click on an entry
   chooses it and a click elsewhere cancels it; in a pick list a click on an entry
   chooses it and a click outside the box cancels;
@@ -564,6 +670,12 @@ reset command).
   again, and a form being waited on gives a `resize` event. Text written with `print` or
   `crt` is lost, as for `screen refresh`, and a program that placed things by the old
   size must lay them out again (`screen refresh returning` says `resized`).
+- **It imposes no window size and no lock on your program.** Ask for the size you need with
+  `minsize`; a window that becomes smaller later cuts what falls outside it (cells outside the
+  window are dropped, not wrapped) and your program keeps its keys. SD's own full-screen
+  programs (SED, the IDE, CED) are laid out for 140 by 42 and, when their cursor is off the
+  screen, take the keyboard behind a warning until the window is made bigger or you press
+  Ctrl-Q, y; the library routines that do it are SD's own and are not a statement.
 - A table sorts what it *shows*, never the rows you gave it, and a tree is the list of
   nodes you gave it with the depths you gave it: neither is a database view.
 - It has no widget for editing a record with the editor's own commands: `screen memo` has
