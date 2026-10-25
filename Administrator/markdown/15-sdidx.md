@@ -119,8 +119,7 @@ if the target is there (*run*); creates the target folder, **and any missing
 parents** (*run*: `a\b\orders.idx` was made from nothing); **copies** each index
 file to the new place; writes the new path into the data header; **then deletes
 the old index files.** If it stops before the header is written, the copy at the
-target is left behind and the file is as before. If it cannot create the folder
-it says nothing and exits 1.
+target is left behind and the file is as before.
 
 * **With no `akpath`, it moves the indexes back** into the data file's own
   folder and clears the path in the header. *Run.*
@@ -135,6 +134,15 @@ it says nothing and exits 1.
   deleted`, and exits 1. The move itself is complete: the header names the new
   place.
 * It needs room for a second copy of the indexes while it moves them.
+* **If the target folder cannot be made, it says so and changes nothing.** It
+  prints `Cannot create directory` *akpath*`:` and the reason on standard
+  output, and ends with status 1. The reason is the operating system's, or *a file
+  of that name exists* when a component of the path is a file. *akpath* in the
+  message is the whole path as you typed it, not the component that failed, and
+  the indexes and the header are where they were. Before 23 October 2026 the tool
+  ended with status 1 and printed nothing at all in these two cases. (Carried
+  from SD Core for Linux, which printed the same two lines; the Windows form has
+  not been run.)
 
 ### `-p`, point *(run)*
 
