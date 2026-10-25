@@ -185,6 +185,7 @@ your edits survive both upgrade and removal.
 | `sdusers` | grants access to the files under `C:\ProgramData\SD`. Everyone who uses SD needs it |
 | `sdsshonly` | carries the two deny rights that confine an account to ssh. Every account **`create.account`** makes joins it, unconditionally |
 | `sdu_<name>` | one per account, created by **`create.account`** |
+| `sdg_shared` | the group of the **shared account**, which the installer makes: files that every account can open by name (the Administrator guide's "The Shared Account"). It has no members |
 | the service | **String Database (SD)** |
 | ACLs | inheritance is broken on `C:\ProgramData\SD` and access granted narrowly. This is what makes the database private from the rest of the machine |
 
@@ -311,6 +312,12 @@ Every reason, warning and caveat that used to appear on them is here.
   cannot open its files, or `Error 5 getting semaphores`. Only signing out
   cures those two. Switching to another user and back does not, and
   `whoami /groups` does not list `sdusers` until you have signed out.
+- **An existing account called `shared` stops the install.** The name `shared`
+  belongs to SD's shared account, whose files every account can open by name.
+  If an account of that name that SD did not make is already registered, the
+  installer stops before it changes anything and names its register record
+  (`sdsys\accounts\shared` in the data folder). Move that account aside by hand
+  (the record and its directory) and run the installer again.
 - **A silent install is refused.** The install ends by asking for a password
   and a silent install has nobody to ask, so it would finish with no password
   set. Run the installer normally, at the keyboard or through Remote Desktop.
