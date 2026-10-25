@@ -66,6 +66,11 @@ The server side of the API, the client library and the language headers.
 
 | Name | Change | What |
 |---|---|---|
+| client library headers | Added | C# (`sdclient.cs`) and PHP (`sdclient.php`) beside the six already there; neither has been run against a runtime <!--s g200--> |
+| client library: dictionary | Added | `sdevaluate`, `sdevalconv`, `sdiconv`, `sdoconv`, `sdiconvs`, `sdoconvs` <!--s 247 409--> |
+| client library: files | Added | `sdopenseq`, `sdreadseq`, `sdreadblk`, `sdwriteseq`, `sdwriteblk`, `sdseek`, `sdweofseq` <!--s 441--> |
+| client library: more functions | Added | `sdrevision`, `sdgetvar`, `sdsystem`, `sdindices`, `sdtrans`, `sdrtrans`, `sdtxn` <!--s 89 195 410 499 442--> |
+| client library: threads | Added | each thread has its own session, transfer buffer and arguments; several threads may use the library <!--s 456--> |
 | `master.login` | Changed | the paragraph runs for API connections as for interactive and phantom sessions <!--s 170--> |
 
 ## BASIC
@@ -389,6 +394,7 @@ the fixes to SD's own code. The sections above are the openQM items that were bu
 |---|---|---|
 | api server loop | Changed | fixed: a client that hung up at the wrong moment, or sent a false packet length, left its server process tied up |
 | client library: `sdchecksum` | Added | a checksum computed on the client |
+| `creating.seqkey` over the API | Added | the server's record-id counter gives the id, over the API |
 
 ### Encryption
 
@@ -413,7 +419,7 @@ Three simple layers, with no vault and nothing on by default.
 | Name | Change | What |
 |---|---|---|
 | group account folders | Changed | `group_accounts` is locked like `user_accounts`, and every group account's folder is set again on every install and upgrade; a folder that is really a link is skipped |
-| SDNet groups and folder | Added | the groups `sdfiles` and `sdfileswrite`, with no members, and the folder `sd-net` (stored server logins), whose access list lets `sdusers` list it and add a sub-folder and nobody else in |
+| SDNet groups and folder | Added | the groups `sdfiles`, `sdfileswrite` and `sdfilesadmin`, with no members, and the folder `sd-net` (stored server logins), whose access list lets `sdusers` list it and add a sub-folder and nobody else in |
 | shared account | Added | made by the installer: group `sdg_shared` with no members, and a directory open to `sdusers` with Modify; an existing account named `shared` that SD did not make stops the install before anything is changed; `make-shared.log` in the data folder says what was done |
 | uninstall | Changed | removing SD with its data also removes the group `sdg_shared` |
 | `upgrade_editgates` | Added | switches the three edit gates on once for every existing user account whose setting is blank, so no account loses what it had |
@@ -443,6 +449,7 @@ free checks pass, and it has not been run against another server.
 
 | Name | Change | What |
 |---|---|---|
+| `files-admin-on`, `files-admin-off` | Added | per-account: the Windows group `sdfilesadmin`; the files-only login may also configure, index, create and delete files on this server; needs `files-on` and `files-write-on` first; off for a new account, and the installer does not turn it on |
 | `files-on`, `files-off` | Added | per-account: the Windows group `sdfiles`, the files-only API login (files and nothing else); off for a new account; `sdapi` wins |
 | `files-write-on`, `files-write-off` | Added | per-account: the Windows group `sdfileswrite`; without it a files-only login cannot write, delete, lock or clear; needs `files-on` first |
 | `list.servers`, `delete.server` | Added | the administrator's list of defined servers, and removal of one <!--s g52 g26--> |
@@ -450,7 +457,9 @@ free checks pass, and it has not been run against another server.
 | `netwait`, `netreply` | Added | `sd.conf` settings, 1 to 3600 seconds, for a connection and a reply; a silent server is given up on <!--s 235 g291--> |
 | `open.socket` | Changed | the fourth argument is the number of seconds to wait for the connection, zero for no limit of SD's own; it was the unused security context <!--s 174--> |
 | remote files, a pointer | Added | a VOC entry whose first field is `n` points to a file on another server |
+| remote file administration | Added | for a login in `sdfilesadmin`: `analyse.file`, `configure.file`, `create.index` and the other index verbs, `create.file ... server` and `delete.file` of a pointer, `fcontrol()` and `write ... creating.seqkey` on a remote file |
 | remote files, cache | Added | a short record cache; `logto` closes the connections |
+| remote files, index | Added | `indices`, `selectindex`, `setleft`, `setright`, `selectleft` and `selectright`; a query uses the other machine's index |
 | remote files, query | Added | `list`, `count`, `sort`, `select`, `list.item`, `list dict` on a remote file; `fileinfo` type 7 |
 | remote files, refusal | Changed | the server's own words are shown, not `status 0`; a lost connection is an error <!--s 256--> |
 | remote files, reply checked | Changed | a reply that cannot be true is a lost connection at once |
@@ -461,7 +470,7 @@ free checks pass, and it has not been run against another server.
 | `set.server` | Added | defines a server; `connect` shows its key hash for you to confirm <!--s g84 147--> |
 | `settings.report` | Changed | the `[api]` section shows the hash of the API's public key, the figure another administrator pins |
 | tls reads | Changed | fixed: a half record or a late ticket made a read wait without limit |
-| uninstall | Changed | removing SD with its data also removes the groups `sdfiles` and `sdfileswrite`; removing a person removes their stored server logins |
+| uninstall | Changed | removing SD with its data also removes the groups `sdfiles`, `sdfileswrite` and `sdfilesadmin`; removing a person removes their stored server logins |
 
 ### Security
 

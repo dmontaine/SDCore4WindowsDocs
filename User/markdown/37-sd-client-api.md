@@ -124,6 +124,19 @@ service, so it reaches files with that user's access and the records it
 creates are owned by that user. `SH` and `OS.EXECUTE` do not work from an API
 session in this release.
 
+**Threads** (from the 1.2 release; before that the library kept its state in plain globals and a program with more than one thread could not use it safely). The client library may be used from several threads of one process, as OpenQM's QMClient may, on these rules:
+
+- **The current session belongs to the thread.** `SDSetSession` and `SDGetSession` act on the calling thread's own selection, so two threads can work on two sessions at the same time. A thread that has not selected a session starts on session 0, which is the one the first connection of the process received; a thread given a session by another thread must `SDSetSession` it before use.
+- **A session must not be used by two threads at the same time.** The library does not serialise requests on one session. If more than one thread can reach it, take your own lock round each action, and treat an `SDExecute` and the `SDRespond` calls that answer it as one action.
+- **The table of sessions is shared**, so `SDConnect`, `SDConnectLocal`, `SDDisconnect` and `SDDisconnectAll` may be called from any thread; each connect is given a slot of its own however many start at the same moment.
+- **The transfer buffer and the `SDCallx` / `SDGetArg` arguments are per thread**, so one thread's call does not overwrite another's results. They are released when the thread ends, or when no session is left.
+- **A connection that fails keeps its slot for the thread that made it**, so that `SDError()` still says why after another thread has connected and disconnected; the slot is given back by that thread's next `SDConnect`, `SDSetSession` or `SDDisconnect`, by its end, or by `SDDisconnectAll`.
+- The same applies to a session that dies under its thread (`SDConnected()` is false for it and `SDError()` says why).
+
+*Not changed:* a local session is still a server process of its own (`sd.exe`), so a program that starts many threads each with a local session starts that many `sd.exe` processes.
+
+*Measured:* a test program with no server running (`gplsrc\sdclilib\tests\thread_smoke.c`) shows two threads each keeping their own connect error, 32 threads connecting, failing and disconnecting together without meeting a session or error that is not theirs, and the slots of ended threads free again. A run of several threads against a real server has not been made.
+
 ## Server status codes
 
 | Constant | Value | Meaning |
@@ -284,7 +297,7 @@ Their numbers begin at 10001 and are not those of `SDOpen`, so a number of one k
 
 ## Language bindings
 
-The API headers define bindings for four languages. The function
+The API headers define bindings for six languages. The function
 signatures are identical in meaning; the syntax differs.
 
 ### Gambas3
@@ -340,6 +353,44 @@ SDRead.restype = ctypes.c_char_p
 
 Per-arity `CFUNCTYPE` definitions are provided for `SDCall` and
 `SDCallx` wrappers.
+
+### C# and .NET (P/Invoke)
+
+`syscom\sdclient.cs` (from the 1.2 release):
+
+```csharp
+using static SDClient;
+
+if (SDConnect(Z("server"), 4247, Z("user"), Z("password"), Z("account")) != 0)
+{
+    int fno = SDOpen(Z("CUSTOMERS"));
+    string rec = Str(SDRead(fno, Z("1001"), out int err));
+    SDDisconnect();
+}
+```
+
+**Strings are bytes.** SD strings carry the marks `0xFB` to `0xFF`, and a UTF-8 conversion by .NET would damage them, so every string parameter is a `byte[]` and every string result an `IntPtr`; `Z(s)` makes the NUL-terminated bytes of a string (one byte for each character; characters above 255 are not allowed) and `Str(p)` / `StrN(p, n)` read a result the same way and give the library's memory back with `SDFree`. `FM`, `VM` and `SVM` are the marks as characters. An `int *` parameter is an `out int`. Variadic C functions cannot be declared in C#, so `SDCall` and `SDCallx` are `SDCall0` to `SDCall20` and `SDCallx0` to `SDCallx20`, all the same entry point; **`SDCall` writes the subroutine's results back into the buffers you give it with no check of their size, so use `SDCallx` and read the arguments with `SDGetArg`.**
+
+The library is loaded by the name `sdclilib`, so .NET looks for `sdclilib.dll` where it looks for any native library: the program's directory or `PATH`, or where a resolver you set with `NativeLibrary.SetDllImportResolver` points. It is the C client library, `sdclilib.dll`, not the Visual Basic DLL `sdclient.dll` (whose calls are `stdcall`); the calling convention is `cdecl`. A 64-bit program needs the 64-bit library and a 32-bit program the 32-bit one.
+
+### PHP (FFI)
+
+`syscom\sdclient.php`, for PHP 7.4 and later with the FFI extension enabled:
+
+```php
+require 'sdclient.php';
+$sd = SDClient::load('C:\\Program Files\\SD\\usr\\bin\\sdclilib.dll');
+if ($sd->SDConnect('server', 4247, 'user', 'password', 'account')) {
+    $fno = $sd->SDOpen('CUSTOMERS');
+    $err = SDClient::intRef();
+    $rec = SDClient::str($sd->SDRead($fno, '1001', FFI::addr($err)));
+    $sd->SDDisconnect();
+}
+```
+
+A PHP string is already a string of bytes, so the marks pass through unchanged. `SDClient::str($p)` copies a result into a PHP string and frees the library's copy; `strn($p, $n)` does the same for `$n` bytes that may hold zeros (`SDReadBlk`). Use `SDCallx` and `SDGetArg` rather than `SDCall`, which writes into the buffers it is given and must not be given a PHP string.
+
+**Neither of these two files has been run.** No .NET or PHP runtime was available when they were written (on Linux); they are held to the library's header by a check (`gplbld\test-clientheaders-units.py`: every function, every parameter and result type, the calling convention, the status constants, and the PHP declarations read by a C compiler beside the header itself), which is not the same as a program having called the library. If one does not load for you, the report is welcome.
 
 ## What the API cannot do
 
