@@ -140,7 +140,8 @@ DOCS = [
    release
  """),
  ('Administrator', '01-accounts-and-security.md', """
-   create.account grant list.grants modify.account modify.password revoke
+   create.account grant list.grants load.help modify.account modify.password revoke
+   tool.gates tool.menus
  """),
  # THE MAINTENANCE VERBS MOVED TO 01a AND ONLY ONE OF THEM SAID SO.  tclmap
  # reported set.date and passed the other four, because 01 still MENTIONS
@@ -156,7 +157,7 @@ DOCS = [
    backup.account restore.account set.backup.directory settings.report
  """),
  ('Administrator', '02-sessions-and-locks.md', """
-   clear.locks inhibit.login list.locks list.readu listu lock logout unlock
+   clear.locks inhibit.login list.locks list.readu listu lock logout tool.sessions unlock
  """),
  ('Administrator', '03-operating-system-access.md', """
    sh !
@@ -167,6 +168,13 @@ DOCS = [
  # 25 Oct 26 SDNet carry (RELEASE_1.1 171): the SDNet client's five verbs are explained on the Administrator page for SDNet.
  ('Administrator', '12a-sdnet.md', """
    set.server delete.server list.servers set.netlogin delete.netlogin
+ """),
+ # 26 Oct 26: both pages already explain these; the map had no entry for them.
+ ('Administrator', '13-the-shared-account.md', """
+   list.shared
+ """),
+ ('Administrator', '04-sd-encryption.md', """
+   encrypt.key
  """),
 ]
 
