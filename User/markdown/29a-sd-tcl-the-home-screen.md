@@ -129,6 +129,11 @@ session as `quit` does.
 
 ## Where a session starts
 
+```
+set.start.default
+set.start.default menu | terminal
+```
+
 The administrator sets this for each account (`modify.account name start-menu`,
 `start-terminal` or `start-default`, in the Administrator's guide), and sets what
 accounts with no setting of their own do with `set.start.default menu` or

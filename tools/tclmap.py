@@ -129,6 +129,10 @@ DOCS = [
    autologout bell clear.prompts clearinput clearprompts command.logging date
    date.format echo hush list.term.types logmsg nls pterm sleep term time
  """),
+ # 26 Oct 26 the home screen page (Linux 4a50799 docs; RELEASE_1.1 172)
+ ('User', '29a-sd-tcl-the-home-screen.md', """
+   exit home menu my.menu set.start.default set.tile tool.keys
+ """),
  ('User', '30-sd-tcl-processes-and-phantoms.md', """
    list.phantoms pdebug pdump phantom pstat status
  """),
