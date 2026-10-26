@@ -237,6 +237,8 @@ File handling: opening, indexes, triggers, print files, sorting, sequential file
 | `set.file` | Changed | the target may be a `q`-pointer; a `q`-pointer with no file name points at the VOC <!--s 32 435--> |
 | `set.trigger` | Changed | fixed: refused every function name; takes `all`; no longer needs exclusive access <!--s 388 157--> |
 | sort of long records | Changed | the disk sort handles records and keys over 32 KB <!--s 455--> |
+| sort with many work files | Changed | fixed: a sort that needs more work files than `sortmrg` put records with equal keys out in an order that depended on `sortmem` and `sortmrg`, and a `unique` sort could keep a later record; now they come out in the order they arrived |
+| deleting from a large index | Changed | fixed: removing the last entry under a branch of an index of three levels cut the rest of that branch out of every lookup by key; rebuild an index that has had deletions with `build.index` |
 | trigger on a read | Changed | fixed: a locally catalogued read trigger could end the process <!--s 317--> |
 | `vocname` letters | Added | `r` opens a file read-only, `n` non-transactionally, `s` with forced writes, from field 6 of its VOC entry <!--s 197 380 102--> |
 
