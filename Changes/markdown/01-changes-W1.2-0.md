@@ -421,6 +421,7 @@ Three simple layers, with no vault and nothing on by default.
 | Name | Change | What |
 |---|---|---|
 | group account folders | Changed | `group_accounts` is locked like `user_accounts`, and every group account's folder is set again on every install and upgrade; a folder that is really a link is skipped |
+| elevated helper | Changed | the elevated helper that SD starts when SDSYS signs in at the console runs only a file named `$PS.TMP.<number>` in the system directory's `pstmp` folder, which is where SD writes the scripts it hands over, and refuses any other path, name, folder or link; a process of the same user can still put such a file there |
 | SDNet groups and folder | Added | the groups `sdfiles`, `sdfileswrite` and `sdfilesadmin`, with no members, and the folder `sd-net` (stored server logins), whose access list lets `sdusers` list it and add a sub-folder and nobody else in |
 | shared account | Added | made by the installer: group `sdg_shared` with no members, and a directory open to `sdusers` with Modify; an existing account named `shared` that SD did not make stops the install before anything is changed; `make-shared.log` in the data folder says what was done |
 | uninstall | Changed | removing SD with its data also removes the group `sdg_shared` |
