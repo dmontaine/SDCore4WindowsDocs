@@ -134,31 +134,20 @@ asked once. A silent upgrade shows no page and asks nothing.
 Python is a separate product with its own entry in *Apps*; uninstalling SD Core
 leaves it in place.
 
-### 5. Your own account's access gates (unattended installs only)
+### 5. Your own account's access gates
 
-The wizard does not offer this. A first install makes an SD account for the Windows user who runs it. **Like every
+The installer does not ask about them. A first install makes an SD account for the Windows user who runs it. **Like every
 SD account it starts with every access gate closed:** no ssh, no API, no shell
 (`sh`), no `os.execute`, no `sd.accounts`, no right to save a change to a VOC, a
 program file or a dictionary, no SDNet, no writing the shared account's files, no
-files-only login. SDSYS opens any gate later with `modify.account`, one word at a time.
+files-only login. An upgrade leaves the account as it is.
 
-An unattended install can open them all for that one account, and for nobody
-else's, with `/TASKS=opengates`: `both` (ssh and the API), `sh-on`, `os-on`,
-`sd-on`, `voc-on`, `bp-on`, `dict-on`, `net-on`, `shared-write-on`, `files-on`
-and `files-write-on`, given with `modify.account` once the account is made. The
-installer then reads the register and the groups `sdssh`, `sdapi`, `sdfiles` and
-`sdfileswrite` back. The last screen says *Every access gate is open for* the
-account, or says that some are not and points to `attach-account.log` in
-`C:\ProgramData\SD`, which names each gate that did not open and the word to give
-for it. A word that is refused does not stop the install.
-
-**Not in it:** `files-admin-on` (the administration group stays off whatever you
-answer), `shared-read-on` (a new account already reads the shared account) and
-the home-screen words. It does not decide who can reach the computer from the
-network: that is still boxes 2 and 3. An upgrade does not apply it, because
-the account already exists and keeps what it has. Without that task nothing is
-opened. SDSYS closes any gate again with `modify.account` *account*
-*word*`-off` (`none` closes ssh and the API).
+SDSYS opens a gate afterwards with `modify.account` *account* *word*, one word at a
+time or several together: `both` (ssh and the API), `sh-on`, `os-on`, `sd-on`,
+`voc-on`, `bp-on`, `dict-on`, `net-on`, `shared-write-on`, `files-on` and
+`files-write-on`; `files-admin-on` is the administration group and stays a separate
+decision. The same word with `-off` closes it again (`none` closes ssh and the API).
+Which computers can reach SD from the network is still decided by boxes 2 and 3.
 
 ### An installation with neither is a supported choice
 
