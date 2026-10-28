@@ -51,12 +51,18 @@ your own session.
 
 ```
 create.account user <name> {ssh | api | both | none} {sh-on} {os-on} {voc-on} {bp-on} {dict-on}
-                           {net-on} {files-on} {files-write-on} {files-admin-on} {shared-read-off} {shared-write-on} {no.query}
+                           {net-on} {files-on} {files-write-on} {files-admin-on} {shared-read-off} {shared-write-on}
+                           {start-menu | start-terminal} {pins-on} {no.query}
 
-create.account group <name> {no.query}
+create.account group <name> {start-menu | start-terminal} {pins-on} {no.query}
 
-create.account other <name> <pathname> {no.query}
+create.account other <name> <pathname> {start-menu | start-terminal} {pins-on} {no.query}
 ```
+
+`start-menu` and `start-terminal` say where the account starts (below, *Where a session
+starts*) and `pins-on` lets the person add programs of their own to their home screen
+(below, *What the home screen shows*); any kind of account may have them, and both are
+off or default as delivered.
 
 | | |
 |---|---|
@@ -617,8 +623,15 @@ set.start.default                        says which it is now
   default`) and `fred already starts that way; nothing changed` when the word is the
   one already set. It is audited as `modify.account start-menu account=fred`, and
   `set.start.default menu` as `set.start.default menu`.
-* `create.account` does not take the words: make the account, then use
-  `modify.account`.
+* **`create.account` takes `start-menu` or `start-terminal`** (from 28 October 2026),
+  for any kind of account; without one the new account follows the default. Two
+  different start words in one command are refused (*start-menu and start-terminal set
+  the same access to different states*), and a start word that is neither is refused
+  as an unexpected token, **before anything is made**, so a refused word makes no
+  Windows user, no folder and no account. `start-default` is not a word of
+  `create.account` (it only restates what the account has when the words are left out).
+  The command says `Account fred starts at: menu` back, and the audit line ends
+  `start=menu` or `start=terminal` when a start word was typed.
 
 ### What the home screen shows: `set.tile`, `pins-on` and the menu management page
 
@@ -653,9 +666,14 @@ modify.account account pins-off   they may not (the delivered state)
 
 * **Tiles are on as delivered and are turned off one account at a time**; there is
   no setting for every account. The standard tile ids are `editor`, `ide`, `ced`,
-  `terminal`, `keys`, `switch` and `signout`. **Sign out cannot be turned off**: a
-  person must always be able to leave. Any other id is accepted and said not to be
-  standard.
+  `terminal`, `keys`, `switch` and `signout`, and `recent` (from 28 October 2026),
+  which is not a tile but the **Recent group** of the home screen: the tiles the person
+  started last, newest first, which they turn on themselves in the View menu (it is
+  off as delivered). `set.tile account recent off` forbids it for the account: the
+  group is not on the page, nothing is read or written for it, and the person cannot
+  turn it on. **Sign out cannot be turned off**, and neither can the **Back** tile of
+  a sub-menu page: a person must always be able to leave. Any other id is accepted
+  and said not to be standard.
 * The setting is **field 17** of the account's register record (tile ids separated by
   spaces). A tile that is off is not on the page, its menu entry cannot be chosen, and
   a group with no tile left has no heading. It takes effect when the home screen is

@@ -182,8 +182,37 @@ so it adds no access: the gates apply as at the prompt. The list is the record
 permission away (`pins-off`) the group disappears from your screen and `my.menu`
 says it is not allowed; the list stays in your file.
 
+## The Recent group
+
+**View > Recent group** turns on, for you, a group at the top of your home screen with
+the tiles you started last, **newest first, six at most**; the same entry turns it
+off. **It is off as delivered.** The list is the record `recent` of the file
+`&menus&` in your own account (the file is made as `my.menu` makes it). It holds
+tile ids and never a command: each recent tile is built from the page as it is now,
+so a tile the administrator has turned off is not offered, and a record edited by
+hand cannot start anything the page does not offer. Your own programs (`my.menu`)
+are not kept in it. Turning the group off forgets the list, and while it is off
+nothing is written.
+
+The administrator can forbid it for your account: `set.tile account recent off`.
+The group is then not on your page, nothing is read or written for it, and the
+View entry cannot be chosen.
+
+## Sub-menus
+
+A tile whose action is `menu:name` opens a page of its own: the groups of the page
+table that belong to that menu. The new page has a **Back** tile at the left of the
+header (your name moves right to make room), and the status line shows the way in,
+for example `Home > Develop`. **Esc, Backspace, the Back tile and Go > Back** each go
+back one page, with the tile that was selected. Eight pages are the most; a page that
+is already open above cannot be opened again; a menu none of whose tiles is on the
+page has no tile to open it; and **Switch account** starts the other account at its
+top page. The Back tile cannot be turned off with `set.tile`. **The delivered page
+has no sub-menu yet**: this is the mechanism, in the page table of the `tool_home`
+program, for a page that wants one.
+
 ## Not yet
 
-Programs the administrator assigns to an account, sub-menus that open and return, a
-group of the last commands you ran, and a live line on a tile are planned and not
-built; today the page is the table above plus your own programs.
+Programs the administrator assigns to an account and a live line on a tile are
+planned and not built; today the page is the table above plus your own programs, and
+the Recent group if you turn it on.

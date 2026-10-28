@@ -181,7 +181,10 @@ saved lists, not a phantom. The commands that *do* write them are already
 administrator commands and are unaffected.
 
 **`sdsys\$ipc` is deliberately unchanged.** Every session writes to it, and
-it is how a **`phantom`** is given its command.
+it is how a **`phantom`** is given its command. **What a phantom takes from it is
+sealed:** `phantom` gives the new process a secret in its environment and seals the
+records with it, and the new process runs nothing from them unless the seal checks
+(*Processes and phantoms* in the User's guide).
 
 The global catalogue and the pcode library are locked the same way.
 

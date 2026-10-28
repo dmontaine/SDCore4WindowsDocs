@@ -376,8 +376,10 @@ the fixes to SD's own code. The sections above are the openQM items that were bu
 | Name | Change | What |
 |---|---|---|
 | `bp-on` and `bp-off` | Added | per-account switch for saving a change to a program file (source or object code), and for compiling and cataloguing |
-| `create.account` audit line | Changed | the audit line ends `gates=` with every access the command granted, or `gates=none` |
+| `create.account` audit line | Changed | the audit line ends `gates=` with every access the command granted, or `gates=none`, and `start=menu` or `start=terminal` when a start word was typed |
+| `create.account` start words | Added | `start-menu` or `start-terminal` says where the new account starts and `pins-on` lets the person add programs to their home screen; two different start words, or a word that is neither, are refused before anything is made |
 | `dict-on` and `dict-off` | Added | per-account switch for saving a change to a dictionary |
+| home screen | Added | a tile whose action is `menu:name` opens a page of its own with a Back tile (Esc, Backspace go back); **View > Recent group** keeps the tiles a person started last, off as delivered; `set.tile account recent off` forbids it |
 | `list.shared` | Added | SDSYS's list of the files of the shared account that an account with `shared.read` can open by name |
 | `modify.account` | Changed | takes more than one action in a command (`modify.account fred sh-on os-on voc-on`), all carried out or none; no action at all prints the usage |
 | new account defaults | Changed | a new account has no shell, no `os.execute`, no ssh, no API and no edit rights; SDSYS opens each, account by account |
@@ -443,6 +445,7 @@ The screen statement and its library, and what changed in the terminal handling 
 | `sdterm` terminal type | Removed | with SDTerm and SDConsole, and the `term display` line about them |
 | `term 120,36` at login | Removed | new accounts no longer carry it in their `login` paragraph |
 | themes | Added | `mono` (the default), `classic` and `blue`; `screentheme=` in `sd.conf` chooses the default; a colour theme is refused where the terminal cannot show colour |
+| toolkit window size | Changed | a page of the full-screen toolkit refuses a window of more than 500 columns by 300 lines before it takes the screen (opening one cost time as the square of the height); "Press Enter to return" no longer names the home screen |
 | window size | Changed | SD reads the terminal's window size at the start and when it is resized; `kernel(k$winsize)` answers it; `term w,h` holds until the next resize |
 
 ### SDNet
@@ -485,6 +488,7 @@ Fixes that close a way round a gate, and what the gates now ask.
 | group account folders | Changed | `C:\ProgramData\SD\group_accounts` is locked like `user_accounts`; before, a group account whose own folder failed to lock kept the access every SD user has to the data tree |
 | internal programs | Changed | the internal-mode bit in an object file is honoured only for an object from the global catalogue, which only SDSYS can write, or for the administrator; for any other object it is ignored |
 | operating system paths | Changed | `dir()`, `select.dir`, `deleteseq` of a path, `setptr ... as pathname`, a print file made at a path and a VOC pointer out of the account each ask the account's `os` switch, and `sd-on` for another SD account; every session is held to it, the console included |
+| `phantom` start-up records | Changed | `$ipc` is a file every SD user can write, so the records a new phantom runs, stacks and sets (command, `DATA` lines, log file, options) are sealed with a secret given only to the new process in its environment; a phantom whose records do not check runs nothing, says so and writes `phantom refused` to the audit trail |
 | print file refusal | Changed | outside the account: the message names the account instead of printing `%1` |
 | `sh` command | Changed | no account may use pipes, redirection or chaining in an `sh` command |
 | VOC pointers | Changed | an `f` pointer must lead into the account (or be what the stock VOC says), and a `q` pointer is followed only into an account the person could `logto` |

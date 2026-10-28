@@ -216,6 +216,21 @@ files, no active select list. **The command string is the only thing passed**,
 through a record in SD's `$IPC` file, and the session's option settings go with
 it only when the `INHERIT` option is set.
 
+**The records are sealed.** `$IPC` is a file every SD user's process can write, so a
+phantom does not believe what it finds there. `phantom` makes a secret for each
+phantom (24 random bytes) before it creates anything, gives it to the new process in
+its **environment** (`SD_PHANTOM_NONCE`, which only the same Windows user can read; the
+process copies it as it starts and overwrites the string where it stood, so nothing the
+phantom runs inherits it), and puts an HMAC-SHA256 seal over the option flags, the
+command, the `DATA` queue and the log file name in the record. The new process makes
+the seal again from what it read and **runs, stacks and sets nothing unless the two
+are the same**. A phantom whose records do not check ends at once, says so in its
+`como` log and to its parent (*Phantom n : start-up records missing or not from the
+process that started it, nothing was run*), and writes `phantom refused phantom=n` to
+the audit trail. If the secret cannot be made, no process is started. The
+conversation of the phantom debugger is not sealed; it is trusted as SD's shared
+memory is.
+
 ## What phantoms have I started: `status`
 
 ```
