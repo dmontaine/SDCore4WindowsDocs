@@ -31,7 +31,7 @@ They are listed so that a name in a log or an error message can be looked up.
 | `secure-dumps.ps1` | makes the process-dump directory write-only to SD users, so a dump can be added and nobody else's can be read |
 | `secure-gcat.ps1` | locks the global catalogue, and separately the compiled objects it is loaded from |
 | `secure-log.ps1` | creates a log only administrators can see or write |
-| `secure-osusers.ps1` | locks a permission list so only an administrator can change who is on it. The installer calls it four times - twice for `os.users` and twice for `batch.jobs` |
+| `secure-osusers.ps1` | locks a permission list so only an administrator can change who is on it. The installer calls it twice, for `batch.jobs` and its dictionary (it called it for `os.users` as well until that file was retired) |
 | `secure-pcode.ps1` | locks the pcode library, which is the interpreter every session runs |
 | `secure-psdir.ps1` | the directory privileged scripts are written into |
 | `secure-reclaim.ps1` | creates the profile-reclaim store and locks it to SYSTEM |

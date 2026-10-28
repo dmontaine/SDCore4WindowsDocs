@@ -19,8 +19,9 @@ record. The record id is the file name.
 | Record ids | matched case insensitively |
 | `create.file` option | `no.case` for explicit case-insensitive ids |
 
-The `bp` file is a directory file. VOC, `batch.jobs`, `os.users`, and
-the dictionaries are all directory files.
+The `bp` file is a directory file. VOC, `batch.jobs`, and the dictionaries
+are all directory files. (`os.users` was one until it was retired; an upgraded
+machine keeps the old file, unread.)
 
 **`dir_dict`**, in the SDSYS directory, is a ready-made dictionary for a directory file whose records are
 plain text. Make the file without a dictionary (or `delete.file` its dictionary), then set field 3 of its VOC
