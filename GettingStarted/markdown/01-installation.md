@@ -136,17 +136,24 @@ leaves it in place.
 
 ### 5. Your own account's access gates
 
-The installer does not ask about them. A first install makes an SD account for the Windows user who runs it. **Like every
+One box, unticked. A first install makes an SD account for the Windows user who runs it. **Like every
 SD account it starts with every access gate closed:** no ssh, no API, no shell
 (`sh`), no `os.execute`, no `sd.accounts`, no right to save a change to a VOC, a
 program file or a dictionary, no SDNet, no writing the shared account's files, no
-files-only login. An upgrade leaves the account as it is.
+files-only login, no administering files over that login, no pins on the home
+screen. Tick the box and the installer opens every one of those on your account,
+reads the result back, and the last screen says whether they all opened; if any
+did not, `C:\ProgramData\SD\attach-account.log` names each one and the word to
+give for it. It opens only your account. `files-admin-on` administers files on
+this server over the files-only login, so tick the box only on a machine where
+you want that. A silent install ticks it with `/TASKS=opengates`. An upgrade does
+not show the box and leaves the account as it is.
 
 SDSYS opens a gate afterwards with `modify.account` *account* *word*, one word at a
 time or several together: `both` (ssh and the API), `sh-on`, `os-on`, `sd-on`,
-`voc-on`, `bp-on`, `dict-on`, `net-on`, `shared-write-on`, `files-on` and
-`files-write-on`; `files-admin-on` is the administration group and stays a separate
-decision. The same word with `-off` closes it again (`none` closes ssh and the API).
+`voc-on`, `bp-on`, `dict-on`, `net-on`, `shared-write-on`, `files-on`,
+`files-write-on`, `files-admin-on` (it needs the two before it) and `pins-on`.
+The same word with `-off` closes it again (`none` closes ssh and the API).
 Which computers can reach SD from the network is still decided by boxes 2 and 3.
 
 ### An installation with neither is a supported choice
