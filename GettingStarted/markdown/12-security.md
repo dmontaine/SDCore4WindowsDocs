@@ -15,7 +15,7 @@ apply — it is what `create.account` and the installer already do:
 |---|---|
 | Every SD account | a standard Windows account with no privileged token — see [Being a Windows administrator gets you nothing](#being-a-windows-administrator-gets-you-nothing) |
 | ssh | `ForceCommand`s straight into `sd`, no shell, no `sh`, no `OS.EXECUTE` — see [ssh access](08-ssh-access.html) |
-| the account's `sh-on` and `os-on` switches | off for every account `create.account` makes — `sh`, `!`, `OS.EXECUTE`, the two full-screen editors and any file outside the account's own directory are all refused until SDSYS grants them, account by account — see [Administrator commands](06-administrator-commands.html#how-you-grant-it) |
+| the account's `sh-on` and `os-on` switches | off for every account `create.account` makes — `sh`, `OS.EXECUTE`, the two full-screen editors and any file outside the account's own directory are all refused until SDSYS grants them, account by account — see [Administrator commands](06-administrator-commands.html#how-you-grant-it) |
 | The API | off (`APIPORT` unset in `sd.conf`) until an administrator turns it on — see [API access](09-api-access.html) |
 | The console and Remote Desktop | denied to every ordinary account (`sdsshonly`) — see [Accounts](05-account-types.html) |
 

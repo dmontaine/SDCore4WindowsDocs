@@ -36,9 +36,11 @@ updates it and offers the rest.
 
 Two limits are worth knowing before you rely on it.
 
-> **SD only ever adds records to a VOC, never removes them.** An account created
-> before a verb was withdrawn keeps it. `update.accounts` cannot be relied on to
-> take something away.
+> **The VOC update removes only what is on SD's deletion list.** A record
+> that a release withdraws is taken out of an account only if it is on the
+> list and is still the record SD shipped, and a copy is saved first
+> (`restore.voc` puts it back). Anything else the update leaves alone, and a
+> record you marked `[locked]` is kept — a locked verb excepted.
 
 > **A record you have customised can be held back on purpose.** Put `[locked]`
 > in field 1 after the type code and the upgrade leaves that record alone,

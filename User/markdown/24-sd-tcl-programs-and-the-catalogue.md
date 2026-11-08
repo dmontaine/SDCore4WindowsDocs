@@ -99,11 +99,10 @@ the name of a VOC verb.
 **Global cataloguing requires administrator privilege, and on this port that
 means an elevated session.** Without it you get *"Command requires
 administrator privileges"*. **The same gate applies to an implicit global
-catalogue** — one chosen by a `*`, `!`, `_`, `$` or `-` prefix on the call name
+catalogue** — one chosen by a `!`, `_` or `$` prefix on the call name
 rather than by the `global` keyword — so the prefix is not a way round it.
-The hyphen was added on 16 Oct 2026: `catalog bp -name` catalogues the program
-`name` globally as `-name`, a program calls it with `call @nm(args)` where `nm`
-holds `-name`, and `delete.catalog -name` removes it.
+The prefix characters `*` and `-` were removed in 1.2-0: `catalog bp *name` and
+`catalog bp -name` are refused.
 
 Private and local cataloguing need none of this and work in a programmer's own
 account.
@@ -218,19 +217,18 @@ With no record name it uses the active select list.
 ## Compiling dictionaries
 
 ```
-cd {dict | data} file {i-type}... {no.query} {no.page}
-cd local
-cd all
+compile.dict {dict | data} file {i-type}... {no.query} {no.page}
+compile.dict local
+compile.dict all
 ```
 
-`compile.dict` is the same verb under its longer name. It compiles the A, C, I
-and S-type entries in a dictionary; with no names it does all of them, or uses
+It compiles the I-type entries in a dictionary; with no names it does all of them, or uses
 the active select list if there is one.
 
 | | |
 |---|---|
-| **`cd local`** | every dictionary in the account |
-| **`cd all`** | every dictionary visible from the account |
+| **`compile.dict local`** | every dictionary in the account |
+| **`compile.dict all`** | every dictionary visible from the account |
 
 Compiling a dictionary is a performance step, not a correctness one: it is what
 a query using those entries runs against.
@@ -361,8 +359,8 @@ program in a phantom process"*. The debugger itself is covered in
 ## Who has these verbs
 
 **Every account has all of them now**: `format`, `list.common`, `basic`,
-`catalog`, `catalogue`, `cd`, `compile.dict`, `debug`, `delete.catalog`,
-`delete.catalogue`, `delete.common`, `find.program`, `generate`, `map`, `run`.
+`catalog`, `compile.dict`, `debug`, `delete.catalog`,
+`delete.common`, `find.program`, `generate`, `map`, `run`.
 
 **Running a catalogued program never needed any of these anyway** — a
 catalogued name runs by being typed, with no VOC record of its own — so an

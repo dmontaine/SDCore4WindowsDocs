@@ -20,8 +20,8 @@ QM, and ScarletDME — and SD is one of its direct descendants.
 The three delimiters that make it work are **field marks**, **value
 marks** and **subvalue marks** — control characters that separate the
 levels inside a single string. A dynamic array in SDBasic is a string
-that carries these marks, and `extract`, `insert`, `delete` and
-`replace` work on them directly.
+that carries these marks, and the angle-bracket forms (`a<f,v>`), `ins` and
+`del` work on them directly.
 
 ## What SD is
 
@@ -115,7 +115,7 @@ etc.) — the folder is on disk at:
 C:\ProgramData\SD\user_accounts\<account>\bp
 ```
 
-Compile and catalogue it from inside SD:
+Compile and catalog it from inside SD:
 
 ```
 basic bp myprog

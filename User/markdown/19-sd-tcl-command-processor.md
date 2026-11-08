@@ -40,7 +40,6 @@ with a type character:
 | `K` | a query-processor keyword, which may also be a verb (see below) |
 | `S` | a sentence: one stored command line |
 | `PA` | a paragraph: several stored command lines, with flow control |
-| `M` | a menu |
 | `Q` | an indirect pointer to a file in another account |
 | `F` | a file |
 | `R` | a pointer to a record in another file, re-read and re-parsed |
@@ -120,7 +119,7 @@ Field 2 of a verb record says how to run it, and field 3 says what to run:
 |---|---|---|
 | `CA` | *name* | a catalogued program — 97 of the shipped verbs |
 | `IN` | *n* | internal verb *n*, handled by the command processor itself — 45 |
-| `OS` | *text* | an operating-system command — `sh` and `!` |
+| `OS` | *text* | an operating-system command — `sh` |
 | `CS` | *path* | a locally catalogued function |
 
 Field 4 carries dispatch options and **field 5 names a security subroutine**. If
@@ -133,9 +132,10 @@ for a site that wants a verb guarded rather than absent.
 
 There are **41 internal verbs**, numbered, and the numbers are positional in the
 command processor's dispatch list. Several names share one: `off` and `quit` are
-both internal verb 1, `clr` and `cs` are both 2, and each of `clear.data`,
-`clear.input`, `clear.prompts` and `clear.select` has a run-together spelling
-(`cleardata` and the rest) pointing at the same number.
+both internal verb 1, and `clr` is internal verb 2. (`cs` for `clr`, and the
+run-together `cleardata`, `clearinput`, `clearprompts` and `clearselect` for
+`clear.data` and the rest, were second names for the same numbers and were
+removed in 1.2-0.)
 
 ## Sentences and paragraphs
 

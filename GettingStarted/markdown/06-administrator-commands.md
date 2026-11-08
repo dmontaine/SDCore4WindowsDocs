@@ -39,10 +39,14 @@ here:
 - **`suspended`/`unsuspended`** is a state, not a tier — nothing about the
   VOC moves either way, because every account's VOC is the whole of `newvoc`
   regardless.
-- **`update.accounts`** only ever adds VOC records it finds missing, from a
-  release that shipped verbs the account was created before. Since every
+- **`update.accounts`** adds the VOC records it finds missing, from a
+  release that shipped verbs the account was created before, and removes the
+  records on SD's deletion list (the ones a release has stopped shipping),
+  saving a copy of each first. Since every
   account already has the whole VOC, this now matters only after an
   *upgrade* — a fresh account never needs it.
+  **`list.voc.removed`** shows the list and **`restore.voc`** puts a removed
+  record back.
 
 **`clean.account`** tidies an account's workspace. **`update.accounts`** is
 the one you run in each account after upgrading SD.
@@ -119,10 +123,10 @@ These four set up the machine's own remote-access surface rather than any
 one account's — see [ssh access](08-ssh-access.html) and
 [API access](09-api-access.html) for what each one does.
 
-## The shell escapes — `sh` and `!`
+## The shell escape — `sh`
 
 **Who may use `sh` is a switch on each account, not a matter of elevation.**
-`sh` and `!` are in every ordinary account's VOC; whether they *do* anything is
+`sh` is in every ordinary account's VOC; whether it *does* anything is
 a separate permission, **kept in the account's own record and off for a new
 account.** (Until 25 October 2026 it was a record per person in a file,
 `os.users`; that file is no longer read.)
@@ -132,7 +136,7 @@ account.** (Until 25 October 2026 it was a record per person in a file,
 **Four keywords on `modify.account` do it:**
 
 ```
-modify.account fred sh-on      the sh verb and ! at the prompt
+modify.account fred sh-on      the sh verb at the prompt
 modify.account fred sh-off
 modify.account fred os-on      OS.EXECUTE, the edit and micro editors, Python,
                                and files outside the account's own directory
@@ -159,7 +163,7 @@ it and end their session.
 
 ### SDSYS always has both, from any session
 
-**SDSYS reaches `sh`, `!`, `OS.EXECUTE`, `edit` and `micro` whatever the
+**SDSYS reaches `sh`, `OS.EXECUTE`, `edit` and `micro` whatever the
 register says** — the same identity check that gates administration (see
 [Accounts](05-account-types.html#sdsys-is-the-only-administrator)) grants
 this too. **`modify.account sdsys` is refused outright, for every action,
@@ -191,8 +195,8 @@ SD's own system programs are exempt, so **`create.account`** and the
 
 ### Two rules that go with it
 
-**No account gets a pipe, a redirect or a chain at the prompt.** `sh` and `!`
-refuse a command that holds `;`, `|`, `&`, `$`, a backquote, `<`, `>` or a
+**No account gets a pipe, a redirect or a chain at the prompt.** `sh`
+refuses a command that holds `;`, `|`, `&`, `$`, a backquote, `<`, `>` or a
 newline — for every account, SDSYS included, switch or no switch. A bare `sh`
 is refused too. Write the work into a script and run the script:
 `sh powershell -File .\nightly.ps1`. (Until 25 October 2026 a person on the
@@ -224,7 +228,7 @@ no API route to arrive over in the first place — see
 **`logout`** · **`set.date`** · **`remote.api`** · **`remote.ssh`** ·
 **`ssh.server`** · **`append.sd.path`**
 
-**`sh`, `!` and `modify.password` are not on this list** — every account
+**`sh` and `modify.password` are not on this list** — every account
 has them; what SDSYS has that an ordinary account does not is the
 right to run `sh` whatever the register says and the right to name a different
-account with the third.
+account with `modify.password`.

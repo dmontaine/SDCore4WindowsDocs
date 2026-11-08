@@ -79,17 +79,16 @@ An `open` of a name looks, in this order, at:
    its own entry.
 2. **Whether the lookup applies at all.** Only an `open` follows `shared` — a file `open`
    (data, or `open dict`). `openseq`, `deleteseq` and `call "file prog"` never do. The
-   session must not be the local administrator, must have `shared.read` on, and must not have asked
-   for a `name,component` form.
+   session must not be the local administrator and must have `shared.read` on.
 3. **The shape of the name.** 1 to 63 characters; the first a letter or a digit, the rest letters,
    digits or one of `. _ - $`. **A name that begins with `$ & ! * _` or `%` is never looked
    up**, which keeps `$savedlists`, `$hold` and every `&...&` file each account's own.
-4. **The standard VOC.** A name that is in the standard VOC (`md`, `sd.accounts` and the like) is
+4. **The standard VOC.** A name that is in the standard VOC (`syscom`, `sd.accounts` and the like) is
    never looked up.
 5. **The register record of `shared`.** It must exist, must not be suspended, and must hold an
    absolute path. A suspended or missing `shared` shares nothing.
-6. **`shared`'s own VOC.** It must hold the name as an **F** entry (a file pointer), and not a
-   multifile. Q, N, V, K, X and every other kind of entry are never followed.
+6. **`shared`'s own VOC.** It must hold the name as an **F** entry (a file pointer); a value in
+   its field 4 is ignored. Q, N, V, K, X and every other kind of entry are never followed.
 7. **The pathname field** of that entry (the dictionary's field for `open dict`): no `@` token,
    and a relative name is taken from `shared`'s directory.
 8. **The kernel's test of the path.** The file must exist and lie strictly *inside* `shared`'s
@@ -123,7 +122,7 @@ with `logto shared`.
 | a member of `sdg_shared`, in `logto shared` | — | only if the account `shared` has `shared-write-on` | likewise | no |
 
 * **A record write** — `write`, `writev`, `matwrite`, `delete`, `clearfile`, and the verbs that save
-  into a file the user names (`copy ... to`, `ed`, `copyp`, `save.list` and the rest) — needs
+  into a file the user names (`copy ... to`, `ed`, `save.list` and the rest) — needs
   `shared.write`. Without it SD says "A file in the shared account can only be changed by an account
   that has shared.write (SDSYS can give it: modify.account *account* shared-write-on)".
 * **A shared dictionary** needs `shared.write` **and** the sign-on account's `dict-on`. A write

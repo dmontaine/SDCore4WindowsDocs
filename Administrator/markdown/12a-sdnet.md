@@ -86,7 +86,7 @@ gates they ask are described below. Commands are shown here in lower case.
   for a server defined with `write`, for writing and locking (see "Writing and
   locking"). The index queries (`INDICES`, `SELECTINDEX`, `SETLEFT`, `SETRIGHT`,
   `SELECTLEFT`, `SELECTRIGHT`) work on any remote file, read definition or write. Changes
-  to an index, `WRITE ... CREATING.SEQKEY`, `FCONTROL`, `CONFIGURE.FILE`, `ANALYSE.FILE`
+  to an index, `WRITE ... CREATING.SEQKEY`, `FCONTROL`, `CONFIGURE.FILE`, `ANALYZE.FILE`
   and making or deleting a remote file need the administration group (see "The
   administration group"). Not there at all: the statements that read or change the tree
   of an index (`AKREAD`, `AKWRITE`, `AKDELETE`, `CLEAR.AK`, `AKENABLE`, `AKMAP`), which stop
@@ -696,7 +696,7 @@ of the API, and they are the only door a files-only login has to them.
 | | |
 |---|---|
 | 68, 69 | `WRITE` and `WRITEU ... CREATING.SEQKEY`: the file's own counter on this server gives the id |
-| 70 | a verb run **on this server for the login**: `analyse.file`, `configure.file`, `create.index`, `build.index`, `delete.index`, `disable.index`, `create.file`, `delete.file` |
+| 70 | a verb run **on this server for the login**: `analyze.file`, `configure.file`, `create.index`, `build.index`, `delete.index`, `disable.index`, `create.file`, `delete.file` |
 | 71 | `FCONTROL(file, key {, value})` |
 
 - **Who gives it, and how.** SDSYS, one person at a time, on the server being reached:
@@ -725,7 +725,7 @@ of the API, and they are the only door a files-only login has to them.
   machines. The server runs the verb itself *for the login*, in the account the login entered, so that
   account's switches apply as they would to the same person at a terminal: the edit switches
   (`voc.edit`, `bp.edit`, `dict.edit`) are asked by the file's name for everything but the report
-  (`analyse.file`).
+  (`analyze.file`).
 - **What the server checks before it runs anything.** The verb is chosen by the number of the
   operation and never read from the text. The file is **named by the open file** (the name it was
   opened under on this connection), so a login cannot name one it did not open. The words are
@@ -950,11 +950,11 @@ read the record to find out.
 `FILELOCK` and `FILEUNLOCK` too, where openQM's QMNet lets them through without a rollback, which
 is a silent loss of the guarantee the program asked for); the statements that read or change the
 tree of an index (`AKREAD`, `AKWRITE`, `AKDELETE`, `CLEAR.AK`, `AKENABLE`, `AKMAP`), `OPENSEQ` and
-the other sequential-file statements (message 12516). `CONFIGURE.FILE`, `ANALYSE.FILE`, `FCONTROL`,
+the other sequential-file statements (message 12516). `CONFIGURE.FILE`, `ANALYZE.FILE`, `FCONTROL`,
 `CREATE.INDEX` and the other index verbs, creating or deleting a remote file and
 `WRITE ... CREATING.SEQKEY` work for a login that also has the administration group ("The
 administration group", above), and are refused with nothing sent for a `read` definition.
-`MUSTLOCK` and `$MODE AUTOLOCK` are honoured as for a local file: a write
+`MUSTLOCK` is honoured as for a local file: a write
 without the lock held is refused with `STATUS()` 3023 (for a login without the write group see
 `RECORDLOCKED()` above).
 

@@ -129,15 +129,16 @@ matching what `count voc` reports in a freshly created account.
 
 | | |
 |---|---|
-| Parameters accepted in `sd.conf` | **52** |
-| Parameters the `config` verb displays | **43** |
-| Parameters readable with `config()` | **49** |
-| Parameters settable for the current session | **28** |
-| Parameters accepted that do nothing | **7** |
+| Parameters accepted in `sd.conf` | **51** |
+| Parameters the `config` verb displays | **49** |
+| Parameters readable with `config()` | **48** |
+| Parameters settable for the current session | **23** |
 
-The seven inert parameters, and why each is inert, are listed under
-*Configuration* in this set. `CREATUSR` is the one a site is most likely to have
-in an existing `sd.conf`. `NETFILES` used to be counted here; it is not inert,
-because bit 2 gates API request 29, and *Configuration* says so. The count was 6
-until 19 October 2026, when `JNLMODE` and `JNLDIR`, which the Configuration page
-had listed as live, were found to be inert.
+The verb displays `DEBUG` and `FDS` only when they are set, and `TIMEZONE`,
+which is not a file parameter. No parameter is accepted and ignored any more:
+on 27 October 2026 the eleven that were (`APILOGIN`, `CODEPAGE`, `CREATUSR`,
+`EXCLREM`, `FIXUSERS`, `GDI`, `JNLDIR`, `JNLMODE`, `PORTMAP`, `RINGWAIT` and
+`TXCHAR`) were removed, and a line naming one now stops SD from starting;
+*Configuration* in this set says how the installer takes them out of a kept
+`sd.conf`. `NETFILES` is not inert, because bit 2 gates API request 29, and
+*Configuration* says so.

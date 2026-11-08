@@ -173,7 +173,7 @@ is the TCL verb that encrypted a field in place, and **nothing replaces that**.
 | Gone | Notes |
 |---|---|
 | `RDPACCOUNT`, `NO.RDPACCOUNT` | typing it now stops **`create.account`** with *Unexpected token (RDPACCOUNT)* and makes no account |
-| `CREATUSR` | **`config`** no longer lists it; `config('CREATUSR')` returns nothing. A `CREATUSR` line in `sd.conf` is still accepted and ignored |
+| `CREATUSR` | **`config`** no longer lists it; `config('CREATUSR')` returns nothing. The parameter itself was removed on 27 October 2026, and a `CREATUSR` line in `sd.conf` now stops SD from starting (the installer takes it out of a kept file) |
 | `umask` | removed entirely. It controls POSIX file-mode bits, which Windows does not use for security — see [Security](12-security.html#what-ships-secured-before-you-change-anything) for what does the equivalent job here |
 | Field 4 of an `ACCOUNTS` record | the list of accounts allowed in. **`list.grants`** answers that question now |
 

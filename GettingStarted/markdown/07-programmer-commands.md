@@ -18,8 +18,8 @@ page.
 | | |
 |---|---|
 | **`basic`** | compile SD BASIC source |
-| **`catalog`** · **`catalogue`** | add to the catalogue |
-| **`delete.catalog`** · **`delete.catalogue`** | remove from it |
+| **`catalog`** | add to the catalogue |
+| **`delete.catalog`** | remove from it |
 | **`compile.dict`** | compile dictionary items |
 | **`run`** | run a compiled program |
 | **`map`** | show a program's map |
@@ -149,7 +149,7 @@ none of this.
 rather than being left to surprise you.
 
 **A compiled dictionary record is truncated to its first 15 fields** while
-you edit it, and recompiled with `cd` when you save.
+you edit it, and recompiled with `compile.dict` when you save.
 
 ### Give these verbs only to people you trust
 
@@ -194,26 +194,25 @@ The removed full-screen editors are a different matter: `update.record` and
 |---|---|
 | **`create.file`** · **`delete.file`** · **`clear.file`** | the life of a file |
 | **`configure.file`** | change a file's configuration |
-| **`analyse.file`** · **`analyze.file`** | report on a file's internals |
+| **`analyze.file`** | report on a file's internals |
 | **`fstat`** | file statistics |
 | **`hsm`** | hashed-file statistics monitoring |
 | **`set.trigger`** | attach a trigger |
-| **`cd`** | change directory |
+| **`compile.dict`** | compile the I-types of a dictionary |
 
 ## Indexes
 
-**`create.index`** · **`delete.index`** · **`build.index`** · **`make.index`** · **`list.index`**
+**`create.index`** · **`delete.index`** · **`build.index`** · **`list.index`**
 
 ## Bulk record editing
 
 | | |
 |---|---|
-| **`copy`** · **`copyp`** | copy records |
+| **`copy`** | copy records |
 | **`delete`** | delete records |
-| **`rename`** | rename records |
 | **`reformat`** · **`sreformat`** | reformat |
 | **`sort.item`** | sort |
-| **`cname`** | change a record's name |
+| **`cname`** | rename a file or change a record's name |
 | **`delete.common`** | clear a common block |
 
 ## What actually gates these

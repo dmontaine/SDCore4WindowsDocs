@@ -55,7 +55,6 @@ Dynamic files take parameters, all optional:
 | `group.size` *n* | group size in 1 KB units |
 | `large.record` *n* | the size above which a record is stored separately |
 | `split.load` *n* · `merge.load` *n* | the load factors that trigger growth and shrink |
-| `version` *n* | file format version |
 | `directory` *path* | put the file at *path* instead of in the account |
 | `no.case` | record ids are case-insensitive |
 | `no.resize` | disable automatic resizing |
@@ -81,9 +80,8 @@ The parameters are the `create.file` ones, plus `immediate` to do the work now
 rather than lazily, and `dynamic` or `directory` to change the file's kind.
 `default` puts the settings back.
 
-**Two of them restructure the whole file.** Changing `group.size` or `version`
-requires a full restructure; the rest take effect without one. Plan for the time
-and the disk on a large file.
+**Changing `group.size` restructures the whole file**; the other parameters take effect without
+a restructure. Plan for the time and the disk on a large file.
 
 **`reporting`** shows how far the work has got: a line *1000 records converted* at every thousand
 and the total at the end, when `dynamic` or `directory` converts the file, and *n groups moved* in the same way
@@ -95,14 +93,14 @@ on and off. For a directory file, `binary` turns on mark mapping.
 **`next` *n*** sets the next record id that `write ... creating.seqkey` will give out in a
 **hashed** file (see [SD Basic - File Handling](07-sd-basic-file-handling.html)); **`next query`** says
 what it is (*The next sequential record id is 103*, message 12356). A new file's counter is 1, `clear.file`
-keeps it (SD's behaviour), and rebuilding a file with a different group size or version carries the
+keeps it (SD's behaviour), and rebuilding a file with a different group size carries the
 counter over. A file made by `copy` starts its own counter at 1; `write ... creating.seqkey` skips an id that
 already names a record. A directory file is refused: *NEXT applies to a hashed file only* (message 12355).
 
 ## Looking at a file
 
 ```
-analyse.file {dict} file {statistics} {lptr}
+analyze.file {dict} file {statistics} {lptr}
 ```
 
 Without `statistics` it reports the shape: the account, the file name, the path,
@@ -193,7 +191,7 @@ A summary of one file, opened the way any program would open it: its type
 pathname, and a line for each of these that is true of it — *File uses case
 insensitive record ids*, *File has indices*, *File has trigger* name, *File is
 read only*. A name that is not in the VOC, or a file that will not open, is said
-so. Unlike `analyse.file` it does not walk the file.
+so. Unlike `analyze.file` it does not walk the file.
 
 ## Reaching a file in another account
 
@@ -244,14 +242,6 @@ to give the copy; a bare *s* keeps the id. Options:
 negative on error.
 
 ```
-copyp {dict} filename id... {(options}
-```
-
-The Pick-style copy. Its options are single letters in a trailing bracket:
-`d` delete source, `i` suppress the id, `n` no pagination, `o` overwrite,
-`p` to the printer, `s` suppress field numbers, `t` to the terminal.
-
-```
 delete {dict} file.name {record.name} {no.query}
 delete {dict} file.name all
 ```
@@ -263,8 +253,8 @@ cname old.file.name to new.file.name
 cname {dict} file.name old.record.name to new.record.name
 ```
 
-A comma may be used instead of `to`. `rename` is the same verb under the other
-name. `@system.return.code` is `0` on success and `-1` if the arguments were
+A comma may be used instead of `to`. (`rename`, a second name for this verb, was
+removed in 1.2-0.) `@system.return.code` is `0` on success and `-1` if the arguments were
 wrong.
 
 **`cname` on a file renames the VOC record too**, which is the point — the
@@ -395,7 +385,7 @@ trigger=zztrig
 modes=127
 ```
 
-`select`, `count` and `analyse.file` do not count it as a record, `clear.file` leaves it (and so the trigger), and no record id
+`select`, `count` and `analyze.file` do not count it as a record, `clear.file` leaves it (and so the trigger), and no record id
 can reach it: `%` is one of the characters SD rewrites in a directory file's record ids, so a program that writes the id
 `%header%` makes an ordinary record under another name. The file is not locked away, though: anyone who can write to the
 directory can change it with an editor, just as anyone who can write to it can add or remove records, so the trigger is only
@@ -504,11 +494,11 @@ dictionary changes only when the account has `bp.edit`, `voc.edit` or `dict.edit
 ## Who has these verbs
 
 **Every account has all of them now** — there is no longer a withheld set.
-`ct`, `list.files`, `set.file`, `analyse.file`, `analyze.file`, `clear.file`,
-`cname`, `configure.file`, `compare.files`, `copy`, `copyp`, `create.file`,
+`ct`, `list.files`, `set.file`, `analyze.file`, `clear.file`,
+`cname`, `configure.file`, `compare.files`, `copy`, `create.file`,
 `delete`, `delete.file`, `dump`, `file.stat`, `fixdir`, `find.file`, `fstat`,
 `fstat.user`, `hsm`, `import.csv`, `import.json`, `import.xml`, `convert.data`,
-`list.triggers`, `rename`, `set.trigger` are all in every
+`list.triggers`, `set.trigger` are all in every
 account's VOC. (`oscopy` and `set.mode` are not provided.)
 
 ## What is not here
@@ -524,7 +514,7 @@ that is how they are usually driven over more than a handful of ids.
 **`reformat` and `sreformat`** rewrite records through a dictionary and are run
 by the query processor, so they are documented with it.
 
-**There is no verb that repairs a damaged file.** `analyse.file statistics` will
+**There is no verb that repairs a damaged file.** `analyze.file statistics` will
 tell you a file is badly overflowed; `configure.file` is what acts on that.
 
 ## See also

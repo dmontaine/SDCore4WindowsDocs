@@ -94,7 +94,7 @@ returns you to the session you already have.
 Worth knowing alongside it: **`sh` itself needs the account's `sh-on` switch
 (or SDSYS)**, which is off for a new account, so an ordinary account cannot
 leave SD this way until an administrator turns it on for it. See
-[Administrator commands](06-administrator-commands.html#the-shell-escapes-sh-and).
+[Administrator commands](06-administrator-commands.html#the-shell-escape-sh).
 
 ## The command line
 

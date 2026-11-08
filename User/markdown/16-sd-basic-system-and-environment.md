@@ -33,7 +33,6 @@ system(key)
 | `25` | is this a phantom? | `0` |
 | `26` | prompt character | `?` |
 | `1000` | `capturing` in effect? | `0` |
-| `1001` | case inversion on? | `0` |
 | `1029` | internal subroutine depth | `0` at the top, `1` inside a `gosub` |
 | `1030` | login time, internal | `1851017987` |
 | `1031` | operating system process id | `605` (example) |
@@ -137,7 +136,6 @@ another account lives, or which accounts there are, by asking.
 | `1048` | a sequence number | unique across all sessions until SD restarts, then 1 again |
 | `1049` | is `hush` in effect? | `0` or `1` |
 | `1062` | has `signal()` been raised for this process? | `1` and **cleared by reading it**: `until system(1062)` is the loop of a phantom that waits to be told |
-| `1066` | the form queue `sp.assign` last gave to any print unit | `-1` until one has been given (see [SD TCL - Printing and Spooling](28-sd-tcl-printing-and-spooling.html)); `getpu(pu$form.queue, unit)` is the queue of one unit |
 | `1067` | the default group size of a dynamic file | in bytes |
 | `1071` | the `status` array of the last `osread` | null before any `osread`, and after one that failed; the information the system gave about the file that was read. Held per process |
 | `1073` | the phantoms grouped with this process | their user numbers, field mark delimited (`phantom group`; `system(1058)` lists every child) |
@@ -206,7 +204,6 @@ On a stock installation:
 
 | | |
 |---|---|
-| `config('FILERULE')` | `0` |
 | `config('GRPSIZE')` | `2` |
 | `config('MAXIDLEN')` | `63` |
 | `config('NUMFILES')` | `80` |

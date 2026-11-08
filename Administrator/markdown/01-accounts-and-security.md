@@ -156,7 +156,7 @@ stays inside SD.
 
 | | |
 |---|---|
-| **`sh-on`** · `sh-off` | the `sh` verb and `!` (see [Operating System Access](03-operating-system-access.html)) |
+| **`sh-on`** · `sh-off` | the `sh` verb (see [Operating System Access](03-operating-system-access.html)) |
 | **`os-on`** · `os-off` | `OS.EXECUTE` in a BASIC program, the screen editors `edit` and `micro`, the embedded Python, **and reaching an operating-system file or directory by its path outside the account's own directory** |
 
 **This changed on 25 October 2026.** The grant used to be a record in the file
@@ -248,7 +248,7 @@ by the name that was typed, so a Q-pointer to somebody's VOC is caught:
 |---|---|
 | **a VOC** | a file called `voc` |
 | **a dictionary** | any file whose name ends in `.dic`. `voc.dic` is the dictionary of the VOC, so it is a dictionary, not the VOC |
-| **a program file** | `bp`, `bp.out` (the object code), or any name ending in `.bp` or `.bp.out`; the private catalogue directory (`cat`, or whatever `$private.catalogue` names) counts as one |
+| **a program file** | `bp`, `bp.out` (the object code), or any name ending in `.bp` or `.bp.out`; the private catalogue directory (`cat`, or whatever `$private.catalog` names) counts as one |
 
 Capitals do not matter.
 
@@ -257,18 +257,16 @@ such a file is refused with a message that names the missing switch (messages
 12410 to 12412), or sets the `ON ERROR` status. The verbs and statements that
 change a file the person names ask the same question first, before they lock or
 change anything, and give the reason: `sed`, `ide` and `ced` show it in their
-message line, and every other verb prints it and stops. They are `ed`, `edit`,
-`copy` and `copyp` into the file or moving records out of it, `delete`,
+message line, and every other verb prints it and stops. They are `ed`, `edit` and
+`copy` into the file or moving records out of it, `delete`,
 `clear.file`, `cname` of a record, `delete.file` of a program file or of a
 dictionary on its own, `fixdir`, `format`, `map file`, `sp.view` (the X key that
 deletes an item), `set.trigger` when it installs or removes a trigger,
 `copy.list` into the file or with `deleting` from it, `delete.list ... in`,
 `get.list ... deleting in`, `save.list ... in`, `sort.list ... from`,
 `reformat ... to`, `list ... pageseq`, a delimited report written `to` a
-pathname, `cd data`, `generate`, `como on ... in`, and the `.s` and `.d`
-stack commands on an existing VOC record. `create.file` naming a file that
-already exists (adding a part to a multifile, or converting a single file to a
-multifile) is asked too; making a new file is not. `cname` will not take a
+pathname, `compile.dict data`, `generate`, `como on ... in`, and the `.s` and `.d`
+stack commands on an existing VOC record. Making a new file is not asked. `cname` will not take a
 program file out of its name, or put a file under one, for a person without the
 switch, so a rename is not a way round. `OPENSEQ` in such a place opens the file
 for reading only and cannot create one; `DELETESEQ` and a print file made there
@@ -363,6 +361,16 @@ pointers; the Q-pointer rule applies to every account. The API's request 29,
 "open an SDNet file", asks the same question of the account named in the
 request ([SDNet](12a-sdnet.html)).
 
+The `account:file` form of a file name is always available, with no `sd.conf`
+setting: a name in no VOC record with one colon is read as a Q-pointer to that
+account and file, and the **Q-pointer rule above applies to it unchanged**, so it
+opens only what a Q-pointer the account wrote could open. A drive-letter pathname
+such as `C:\data\x` has one colon too; it is read as account `C`, which is not
+registered, so it is not found. The `path:name` form went with the `FILERULE`
+setting on 28 October 2026. Any other file outside the account is reached only
+through a VOC pointer, which is held to the `os-on` rule and the Q-pointer rule
+above.
+
 ### What `os-on` actually costs
 
 Granting `os-on` to any account is a larger decision than it looks.
@@ -455,7 +463,7 @@ signing in, `logto`, and the API.
 | | |
 |---|---|
 | **`ssh`** \| **`api`** \| **`both`** \| **`none`** | what the account's remote access **is**. Absolute: `api` takes ssh away |
-| **`sh-on`** \| **`sh-off`** | the `sh` verb and `!` |
+| **`sh-on`** \| **`sh-off`** | the `sh` verb |
 | **`os-on`** \| **`os-off`** | `OS.EXECUTE`, the screen editors, the embedded Python, and operating-system paths outside the account's own directory (see above) |
 | **`sd-on`** \| **`sd-off`** | may reach files under the directory of an account the person could `logto` (also allowed on a group account) |
 | **`voc-on`** \| **`voc-off`** | may save a change to a VOC (see *The edit switches*) |
@@ -806,7 +814,7 @@ number this release has never heard of.
 | 46 | the mark mapping |
 | 49 | the server's revision |
 | 68, 69 | `write` and `writeu ... creating.seqkey` (the file's own counter gives the id): **only with `files-write-on` and `files-admin-on`** |
-| 70 | a verb run on this server for the login (`analyse.file`, `configure.file`, `create.index`, `build.index`, `delete.index`, `disable.index`, `create.file`, `delete.file`): **only with `files-write-on` and `files-admin-on`** |
+| 70 | a verb run on this server for the login (`analyze.file`, `configure.file`, `create.index`, `build.index`, `delete.index`, `disable.index`, `create.file`, `delete.file`): **only with `files-write-on` and `files-admin-on`** |
 | 71 | `fcontrol`: **only with `files-write-on` and `files-admin-on`** |
 
 | refused | request |

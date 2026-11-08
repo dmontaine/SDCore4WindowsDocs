@@ -38,7 +38,7 @@ marks a word typed as it stands; braces mark an optional part.
 | `sed bp creating.seqkey` | edit a new record under the file's next sequential id (the counter `write … creating.seqkey` uses); also with `dict`, and typed at the *Record name* prompt. The id is taken when the edit begins, so a record never filed leaves a gap. A directory file or a file opened read only is refused; in quotes it is an ordinary id |
 | `sed` *file* | with a select list active, SED offers to edit its records one after another; with none, it asks for the record names until you give a null one |
 | `sed` | asks for the file name, then the record name |
-| a file name written `path:C:/Users/pat/notes.txt` | an operating-system file by its path. An account needs `os-on` for a path outside its own directory; without it SED says the account has no OS access |
+| a file name written `path:C:/Users/pat/notes.txt` | **no longer opens anything**. The `path:` form of a file name went with `FILERULE` when the second ways of naming a file were removed in 1.2-0; SED still asks the account's OS gate first (an account without `os-on` is told it has no OS access) and then cannot open the file. [micro](27-sd-tcl-micro.html) edits operating-system files |
 
 With a select list, SED shows the first id and asks whether to use the list
 (`Y` or `N`). Leaving one record goes on to the next.
@@ -271,7 +271,6 @@ blanks:
 | **`word`** · **`bword`** | search for whole words, or whole SD BASIC words |
 | **`syntax`** · **`no.syntax`** · **`syntax.light`** | colour on or off at the start; light palette |
 | **`mouse`** · **`no.mouse`** | the mouse on (the default) or off at the start |
-| **`no.invert`** | leave the case of typed letters alone |
 
 **`&sed.bindings&`** is a file of key sets. SED loads the first that exists of:
 the record named in field 3 of `&sed.options&`; one named *login*-*terminal

@@ -26,9 +26,9 @@ When fields are associated, a value mark in one corresponds to a value
 mark in all of them at the same position.
 
 **Attribute** — a field in a dictionary record that defines one column
-of a query report. Dictionary field 1 is the name, field 2 is the
-type, field 3 is the conversion, field 4 is the correlative, field 5
-is the format, field 6 is the header, field 7 is the association.
+of a query report. In a `D` item field 1 is the type, field 2 is the
+location, field 3 is the conversion, field 4 is the heading, field 5
+is the format, field 6 is single or multivalued, field 7 is the association.
 
 ## B
 
@@ -59,10 +59,6 @@ without arguments.
 **Conversion code** — a dictionary field 3 entry that transforms data
 on input (`iconv`) or output (`oconv`). Examples: `D` for dates, `MR`
 for masked decimal, `MC` for case conversion.
-
-**Correlative** — a dictionary field 4 entry that defines
-pre-processing of a field value before the conversion is applied.
-Examples: `A` (arithmetic), `F` (function), `I` (index).
 
 ## D
 
@@ -134,7 +130,7 @@ the separators used by sequential file I/O. Controlled per file with
 statements in SDBasic.
 
 **Matrix** — a two-dimensional array in SDBasic. Declared with
-`dimension` or `dim`. Indexed from 1.
+`dim`. Indexed from 1.
 
 **Multivalue** — a value within a field, separated by a value mark
 (char 253). A field can hold any number of multivalues; each multivalue
@@ -145,7 +141,7 @@ can hold any number of subvalues.
 **Overflow** — in a dynamic file, the condition where a group has more
 data than fits in its primary bucket and additional buckets are
 chained to it. Excessive overflow degrades performance and is reported
-by `analyse.file`.
+by `analyze.file`.
 
 ## P
 

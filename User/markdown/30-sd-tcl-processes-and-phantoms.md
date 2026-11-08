@@ -213,15 +213,16 @@ program's own text and is not cleared for it.
 `fork` and `exec` and goes through login of its own, so **nothing your session
 holds in memory reaches it** — no `@`-variables, no unnamed common, no open
 files, no active select list. **The command string is the only thing passed**,
-through a record in SD's `$IPC` file, and the session's option settings go with
-it only when the `INHERIT` option is set.
+through a record in SD's `$IPC` file. The session's option settings do not go
+with it: a phantom starts with every option off. (Until 27 October 2026
+`option inherit` passed them on; the option is gone.)
 
 **The records are sealed.** `$IPC` is a file every SD user's process can write, so a
 phantom does not believe what it finds there. `phantom` makes a secret for each
 phantom (24 random bytes) before it creates anything, gives it to the new process in
 its **environment** (`SD_PHANTOM_NONCE`, which only the same Windows user can read; the
 process copies it as it starts and overwrites the string where it stood, so nothing the
-phantom runs inherits it), and puts an HMAC-SHA256 seal over the option flags, the
+phantom runs inherits it), and puts an HMAC-SHA256 seal over the
 command, the `DATA` queue and the log file name in the record. The new process makes
 the seal again from what it read and **runs, stacks and sets nothing unless the two
 are the same**. A phantom whose records do not check ends at once, says so in its

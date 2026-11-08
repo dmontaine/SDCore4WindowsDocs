@@ -30,7 +30,7 @@ catalog bp myprog local    this account's VOC
 
 Both still work, in any account you are allowed to **`logto`** into. The only thing
 an ordinary user can no longer do is catalogue a program whose name starts with
-`*`, `!`, `_` or `$` — those characters mean *system-wide*. Name it without
+`!`, `_` or `$` — those characters mean *system-wide*. Name it without
 one.
 
 **To catalogue system-wide you need to be SDSYS** — sign in to Windows as

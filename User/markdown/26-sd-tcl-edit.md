@@ -3,7 +3,6 @@ Subtitle: Microsoft Edit, a menu bar and a dozen keys — the one to reach for w
 
 ```
 edit {dict} file record
-nano {dict} file record
 ```
 
 `edit` opens a record in **Microsoft Edit**, a small full-screen editor that
@@ -11,9 +10,7 @@ ships with Windows. It has a menu bar, the shortcuts everyone already knows,
 and nothing else to learn. **That is the point of it**: if you want to fix a
 line in a record and get on with your day, this is the one.
 
-**`nano` is a second name for exactly this**, added for anyone arriving with
-Linux or `nano` habits — same catalogued program, same editor, same keys.
-There is no separate `nano` to learn.
+(`nano`, a second name for `edit`, was removed in 1.2-0.)
 
 It has no syntax highlighting and no command language. For SD BASIC source —
 or for anything where you want highlighting, split windows, or a command bar —
@@ -81,13 +78,13 @@ this section is equally true of [micro](27-sd-tcl-micro.html).
 | | |
 |---|---|
 | **the working copy** | the record is copied into `$hold` as *record*`.editing`, and the editor is run on that. It is removed on every exit, including the ones that fail |
-| **saving** | *"Save? &lt;Y&gt;es, &lt;N&gt;o"*, then for a `bp` record *"Compile?"* and *"Catalogue?"* |
-| **a `dict` record** | is always saved and re-compiled with `cd` |
+| **saving** | *"Save? &lt;Y&gt;es, &lt;N&gt;o"*, then for a `bp` record *"Compile?"* and *"Catalog?"* |
+| **a `dict` record** | is always saved and re-compiled with `compile.dict` |
 | **finishing** | *"&lt;E&gt;xit or &lt;R&gt;e-edit"*, so a compile error can be fixed without starting again |
 
 **A compiled dictionary record is truncated to its first 15 fields while you
 edit it**, which is what you want: the fields after them are the compiled form,
-and `cd` rebuilds them when you save.
+and `compile.dict` rebuilds them when you save.
 
 ## Marks, and how to type one
 

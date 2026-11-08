@@ -12,7 +12,7 @@ file is no longer read.)
 
 | | What it is | Governed by |
 |---|---|---|
-| **`sh`** and `!` | a shell at the `:` prompt | the account's `sh-on` switch |
+| **`sh`** | a shell at the `:` prompt | the account's `sh-on` switch |
 | `OS.EXECUTE` | the operating system from inside a BASIC program | the account's `os-on` switch |
 | **`edit`** and **`micro`** | a text editor, running outside SD | the account's `os-on` switch |
 
@@ -50,7 +50,7 @@ outright regardless — see [API access](09-api-access.html).
 standing between that person and the machine — **the boundary from that point
 on is their own Windows account's permissions**, and nothing else. An editor
 can open any file they are allowed to open, in the data tree or outside it. A
-shell is held to one rule only: at the prompt `sh` and `!` refuse a pipe, a
+shell is held to one rule only: at the prompt `sh` refuses a pipe, a
 redirect, a chain and a variable, for every account; the way round is a script
 file.
 

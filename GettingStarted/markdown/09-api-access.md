@@ -124,12 +124,6 @@ no socket at all — "no API" is a real state, not just a firewall rule.
 > there is no firewall rule to open. The API box is unticked by default.
 > `remote.api on` puts a listener back.
 
-> **`APILOGIN` is retired.** The API always demands the account's password,
-> whatever `sd.conf` says, and `APILOGIN=0` never weakened that. An old
-> `sd.conf` that still has the line keeps working and the line is ignored; the
-> installer no longer writes it and `CONFIG` no longer prints it. To turn the
-> API off, take away its listener, `APIPORT`.
-
 ## Reaching the port is not getting in
 
 A caller must clear two gates, in this order:
@@ -170,7 +164,7 @@ every account as having been reachable.**
 
 | | |
 |---|---|
-| **Still allowed** | everything inside its own account, and the shipped SDSYS files every account needs — messages, `syscom`, the dictionaries, `sd.voclib`. Ordinary programs are unaffected |
+| **Still allowed** | everything inside its own account, and the shipped SDSYS files every account needs — messages, `syscom`, the dictionaries. Ordinary programs are unaffected |
 | **No longer allowed** | opening, renaming, deleting or listing anything else |
 
 **A refused `OPEN` takes the `ELSE` branch and `STATUS()` is 3035**, which

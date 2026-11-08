@@ -1,10 +1,11 @@
 Title: Operating System Access
-Subtitle: The `sh` and `!` verbs, and the per-account switch that decides who may use them.
+Subtitle: The `sh` verb, and the per-account switch that decides who may use it.
 
-`sh` runs a Windows command from the SD prompt. `!` is the same verb under a
-shorter name. **Each account has its own switch for them, `sh-on`, and a new
-account does not have it** — SDSYS turns it on, account by account, with
-`modify.account`. Without it both verbs refuse. (Before 25 October 2026 the
+`sh` runs a Windows command from the SD prompt. (The `!` form, a shorter name for
+the same verb, was removed on 28 October 2026: write `sh command`.) **Each
+account has its own switch for it, `sh-on`, and a new account does not have
+it** — SDSYS turns it on, account by account, with `modify.account`. Without it
+the verb refuses. (Before 25 October 2026 the
 permission was a record in a file, `os.users`, keyed to the person; it is now a
 field of the account, and `os.users` is no longer read.)
 
@@ -21,11 +22,10 @@ in lower case.
 > source when the per-account switch was carried from SD Core for Linux, and has
 > not been run on a Windows installation since.**
 
-## The two verbs
+## The verb
 
 ```
 sh command
-! command
 ```
 
 Everything after the verb is the command:
@@ -33,8 +33,6 @@ Everything after the verb is the command:
 ```
 :sh echo hello-from-the-shell
 hello-from-the-shell
-:! echo via-the-bang-form
-via-the-bang-form
 ```
 
 **There is no interactive shell at the prompt.** A bare `sh`, with nothing
@@ -63,9 +61,9 @@ section.) **`&&` and `||` do not exist in that PowerShell.** Nor do the ternary,
 null-coalescing or null-conditional operators. Chain with `;` in a script, and
 test with `if ($?) { … }`.
 
-## One rule about the shape of the command, for both verbs and for everybody
+## One rule about the shape of the command, for everybody
 
-**Both verbs refuse a command that contains `;`, `|`, `&`, `$`, a backquote,
+**The verb refuses a command that contains `;`, `|`, `&`, `$`, a backquote,
 `<`, `>` or a newline**, before anything runs:
 
 ```
@@ -131,7 +129,7 @@ is signed in now, change the switch and then end their session. **It follows
 the account, not the person:** a person who is allowed the shell in one account
 is not allowed it in another that does not have the switch, and the reverse.
 
-| | `sh` and `!` |
+| | `sh` |
 |---|---|
 | the account has `sh-on` | runs the command, subject to the rule above |
 | SDSYS | runs it, whatever the register says |
@@ -181,7 +179,7 @@ route at all. See also
 
 ## Who has these verbs
 
-`sh` and `!` are in every account's VOC — there is no tier to withhold them.
+`sh` is in every account's VOC — there is no tier to withhold it.
 **Having the verb is not having the permission**: an account without `sh-on`
 has the verb and is refused by it.
 

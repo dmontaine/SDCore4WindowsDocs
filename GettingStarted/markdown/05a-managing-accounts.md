@@ -85,7 +85,7 @@ left him with.
 
 `sh-on`, `sh-off`, `os-on` and `os-off` set the two switches of **the
 account's own record** (the person's `os.users` record, which these used to
-set, is retired): the first is the **`sh`** verb (and **`!`**), the second is
+set, is retired): the first is the **`sh`** verb, the second is
 `OS.EXECUTE`, the two full-screen editors **`edit`** and **`micro`**, Python,
 and opening a file outside the account's own directory. Both default to off for
 every account `create.account` makes. After either the verb says where the

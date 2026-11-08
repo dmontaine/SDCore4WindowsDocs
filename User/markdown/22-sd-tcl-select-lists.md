@@ -70,7 +70,7 @@ clear.select all
 Cleared all numbered select lists
 ```
 
-`clearselect` is the same verb, spelled without the dot.
+(`clearselect`, the same verb spelled without the dot, was removed in 1.2-0.)
 
 ## Building a list
 
@@ -162,7 +162,7 @@ list kept in 3 is made the one the next command uses.
 
 ```
 select voc with type = 'F'
-execute.list analyse.file () ; pause
+execute.list analyze.file () ; pause
 ```
 
 Runs its commands, separated by semicolons, for each id of list 0 in turn: the
@@ -213,7 +213,6 @@ account's `$savedlists` file and outlives it.
 | **`delete.list`** *name* | delete the saved list |
 | **`copy.list`** *name* {`,`*new*} {**from** *file*} {**to** *file*} | copy one, or `*` for all |
 | **`sort.list`** *name* {**from** *file*} | sort a saved list, in place |
-| **`copy.listp`** {{**dict**} *file*} {*name* ... \| `*`} {`(`*options*} | the Pick form of `copy.list`: show a saved list, or copy it to another file |
 
 Both default to list 0, and `save.list` defaults the name to the list number.
 **`save.list`** takes **`keep`** to leave the active list as it was (it has always
@@ -271,48 +270,12 @@ sort.list reports
 A list that is not there is *Saved select list 'name' not found*, and no name is
 *Source list name required*.
 
-### `copy.listp`
-
-```
-copy.listp {{dict} file} {name ... | *} {(options}
-```
-
-The Pick form of `copy.list`, and the **same program as `copyp`**: its options and
-its `To:` question are `copyp`'s (`d` delete the source, `i` leave out the id, `n`
-no pagination, `o` overwrite, `p` to the printer, `s` leave out field numbers, `t`
-to the terminal). What differs is that the source file is **`$savedlists`**, where
-saved lists are kept, unless one is named. `*` is every saved list.
-
-```
-copy.listp reports (t
-```
-
-```
-Item reports
-0001 a.txt
-0002 b.txt
-0003 c.txt
-0004 subdir
-1 record(s) copied.
-```
-
-With `copy.listp *` and `t`, every saved list is shown. **When two or more words come
-before the options, the first is the source file if it opens as a file, and
-every word is a list name if it does not**; a file and a list with the same name
-are told apart by writing the file first (`copy.listp $savedlists reports`). After
-`dict` the next word is always the file. `copyp` itself still needs a file name.
-
 ## Combining two lists
 
-**There are two sets of verbs and they take different things. this is the
-easiest mistake on the page.**
+`merge.list` works on **list numbers**: the numbered lists in your session.
+(To combine saved lists, pick them up with `get.list` first.)
 
-| | takes | |
-|---|---|---|
-| **`list.union`** · **`list.inter`** · **`list.diff`** | **saved list names** | reads and writes `$savedlists` |
-| **`merge.list`** | **list numbers** | works on the numbered lists in your session |
-
-All four commands find a key of one list in the other without scanning it
+It finds a key of one list in the other without scanning it
 (since 16 Oct 2026), so lists of tens of thousands of keys merge in seconds
 where the time used to grow with the product of the two lengths. The result
 is what it always was: a union keeps the first list and adds each new key of
@@ -320,34 +283,7 @@ the second once; an intersection gives the keys of the second list that are in
 the first, a key repeated in the second repeated; a difference takes away one
 occurrence in the first list for each key of the second.
 
-Giving a number to `list.union` does not do the numbered thing — it looks for a
-saved list with that name and fails:
-
-```
-list.union 3 4 5
-```
-
-```
-First source list does not exist
-```
-
-### By name
-
-```
-list.union zzos zzin zzboth
-list.inter zzos zzin zzover
-```
-
-```
-47 records saved to select list 'zzboth'
-0 records saved to select list 'zzover'
-```
-
-Both write a **saved** list, not a numbered one, so `get.list` is how you pick
-the result up. The two answers above check each other: the sources hold 2 and 45
-records with nothing in common, so the union is 47 and the intersection is 0.
-
-### By number
+### Example
 
 ```
 merge.list 3 union 4 to 5
@@ -359,11 +295,12 @@ merge.list 3 intersect 4 to 6
 0 record(s) selected to select list 6
 ```
 
-The operator words are **`union`**, **`intersect`** (or `intersection`) and
-**`diff`** (or `difference`). `to` *n* names the target, defaulting to list 0,
+The operator words are **`union`**, **`intersect`** and **`diff`**
+(`intersection` and `difference`, which meant the same, were removed in 1.2-0).
+`to` *n* names the target, defaulting to list 0,
 and `count.sup` suppresses the count line.
 
-`list.diff` and `merge.list ... diff ...` give the records in the first list that
+`merge.list ... diff ...` gives the records in the first list that
 are not in the second, so **the order of the two arguments matters** where it
 does not for union and intersection.
 

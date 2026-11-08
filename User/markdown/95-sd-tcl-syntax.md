@@ -12,7 +12,7 @@ folds case, so any of this may be typed in either case.
 > **This page is generated, and it is checked for completeness rather
 > than proof-read for it.** The roster is computed from SD's own VOC:
 > every verb record in `newvoc`, plus the ones only `voc_template`
-> has, which is **183** verbs, and `tools/mktclsyntax.py` refuses to
+> has, which is **163** verbs, and `tools/mktclsyntax.py` refuses to
 > write the page if any of them has no line. The shapes come from the
 > subject documents, where each verb is described in full.
 
@@ -23,19 +23,17 @@ not refused — the name is simply not recognised.**
 
 | | | |
 |---|---|---|
-| **every account** | 158 verbs | `newvoc`, identical for every ordinary account |
-| **SDSYS only** | 25 more | in `voc_template` but not `newvoc` |
+| **every account** | 136 verbs | `newvoc`, identical for every ordinary account |
+| **SDSYS only** | 27 more | in `voc_template` but not `newvoc` |
 
 ## The verbs
 
 | | syntax | who |
 |---|---|---|
-| **`!`** | **`!`** *command* |  |
 | **`abort`** | **`abort`** {*message*} |  |
 | **`alias`** | **`alias`** *command* *target* |  |
-| **`analyse.file`** | **`analyse.file`** {**`dict`**} *file* {**`statistics`**} {**`lptr`**} |  |
 | **`analyse.index`** | **`analyse.index`** *file* {*index* {**`statistics`**} {**`detail`**}} {**`lptr`** {*n*}} {**`no.page`**} |  |
-| **`analyze.file`** | **`analyze.file`** — the same verb as **`analyse.file`** |  |
+| **`analyze.file`** | **`analyze.file`** {**`dict`**} *file* {**`statistics`**} {**`lptr`**} |  |
 | **`append.sd.path`** | **`append.sd.path`** {**`on`** \| **`off`**} | S |
 | **`autologout`** | **`autologout`** {*minutes*} |  |
 | **`backup.account`** | **`backup.account`** *account* {*account* …} {**`to`** *folder*}  ·  **`backup.account all`** {**`to`** *folder*} | S |
@@ -46,8 +44,6 @@ not refused — the name is simply not recognised.**
 | **`break`** | **`break on`** \| **`off`** \| **`on user`** *n* |  |
 | **`build.index`** | **`build.index`** *file* *field* … \| **`all`** |  |
 | **`catalog`** | **`catalog`** {*file* {*call.name*}} {*program*} {**`local`** \| **`global`** \| **`pcode`**} {**`no.xref`**} |  |
-| **`catalogue`** | **`catalogue`** — the same verb as **`catalog`** |  |
-| **`cd`** | **`cd`** {**`dict`** \| **`data`**} *file* {*i-type* …} {**`no.query`**} {**`no.page`**}  ·  **`cd local`**  ·  **`cd all`** |  |
 | **`clean.account`** | **`clean.account`** | S |
 | **`clear.abort`** | **`clear.abort`** |  |
 | **`clear.data`** | **`clear.data`** |  |
@@ -57,27 +53,20 @@ not refused — the name is simply not recognised.**
 | **`clear.prompts`** | **`clear.prompts`** |  |
 | **`clear.select`** | **`clear.select`** {*list.no*} |  |
 | **`clear.stack`** | **`clear.stack`** |  |
-| **`cleardata`** | **`cleardata`** — the same verb as **`clear.data`** |  |
-| **`clearinput`** | **`clearinput`** — the same verb as **`clear.input`** |  |
-| **`clearprompts`** | **`clearprompts`** — the same verb as **`clear.prompts`** |  |
-| **`clearselect`** | **`clearselect`** — the same verb as **`clear.select`** |  |
 | **`clr`** | **`clr`** |  |
 | **`cname`** | **`cname`** *old.file* **`to`** *new.file* |  |
 | **`command.logging`** | **`command.logging`** {**`on`** \| **`off`**} |  |
 | **`como`** | **`como on`** {*record*} \| **`off`** \| **`pause`** \| **`resume`** |  |
 | **`compare.files`** | **`compare.files`** {**`dict`**} *file1* {**`dict`**} *file2* {**`detail`**} |  |
-| **`compile.dict`** | **`compile.dict`** — the same verb as **`cd`** |  |
+| **`compile.dict`** | **`compile.dict`** {**`dict`** \| **`data`**} *file* {*i-type* …} {**`no.query`**} {**`no.page`**}  ·  **`compile.dict local`**  ·  **`compile.dict all`** |  |
 | **`config`** | **`config`** {**`lptr`** \| **`gpl`** \| **`contrib`** \| *param* *value*} | S |
 | **`configure.file`** | **`configure.file`** {**`dict`**} *voc.name* {*parameters*} \| **`default`** |  |
 | **`copy`** | **`copy from`** {**`dict`**} *src* {**`to`** {**`dict`**} *tgt*} {*id* …} {**`(options`**} |  |
 | **`copy.list`** | **`copy.list`** *list* {**`,`***new*} {**`from`** *src*} {**`to`** *tgt*} {*options*} |  |
-| **`copy.listp`** | **`copy.listp`** {{**`dict`**} *file*} {*name* … \| **`*`**} {**`(`***options*} |  |
-| **`copyp`** | **`copyp`** {**`dict`**} *file* *id* … {**`(options`**} |  |
 | **`count`** | **`count`** {**`dict`**} *file* {*selection*} |  |
 | **`create.account`** | **`create.account user`** *name* {**`ssh`** \| **`api`** \| **`both`** \| **`none`**} {**`sh-on`**} {**`os-on`**} {**`voc-on`**} {**`bp-on`**} {**`dict-on`**} {**`net-on`**} {**`files-on`**} {**`files-write-on`**} {**`files-admin-on`**} {**`shared-read-off`**} {**`shared-write-on`**} {**`no.query`**}  ·  **`create.account group`** *name* {**`no.query`**}  ·  **`create.account other`** *name* *pathname* {**`no.query`**} | S |
 | **`create.file`** | **`create.file`** {**`dict`**} *voc.name* {**`directory`**} {*parameters*} {**`server`** *server* {**`as`** *remote.name*}} |  |
 | **`create.index`** | **`create.index`** *file* *field* … {**`no.nulls`**} {**`pathname`** *path*} |  |
-| **`cs`** | **`cs`** — the same verb as **`clr`** |  |
 | **`ct`** | **`ct`** {**`dict`**} *file* {*id* … \| **`*`**} {**`(options`**} |  |
 | **`date`** | **`date`** \| **`internal`** \| *n* \| *date* |  |
 | **`date.format`** | **`date.format on`** \| **`off`** \| **`display`** |  |
@@ -86,7 +75,6 @@ not refused — the name is simply not recognised.**
 | **`delete`** | **`delete`** {**`dict`**} *file* {*id* …} {**`no.query`**} |  |
 | **`delete.account`** | **`delete.account`** *account* | S |
 | **`delete.catalog`** | **`delete.catalog`** *name* … {**`global`** \| **`local`**} |  |
-| **`delete.catalogue`** | **`delete.catalogue`** — the same verb as **`delete.catalog`** |  |
 | **`delete.common`** | **`delete.common`** *name* |  |
 | **`delete.file`** | **`delete.file`** {**`dict`** \| **`data`**} *voc.name* {**`force`**} {**`no.query`**} |  |
 | **`delete.index`** | **`delete.index`** *file* *field* … \| **`all`** |  |
@@ -118,11 +106,9 @@ not refused — the name is simply not recognised.**
 | **`inhibit.login`** | **`inhibit.login`** {**`on`** \| **`off`**} | S |
 | **`list`** | **`list`** {**`dict`**} *file* {*selection*} {*fields*} {*options*} |  |
 | **`list.common`** | **`list.common`** {**`all`**} |  |
-| **`list.diff`** | **`list.diff`** *list.1* {*list.2* {*tgt*}} {**`count.sup`**} |  |
 | **`list.files`** | **`list.files`** |  |
 | **`list.grants`** | **`list.grants`** *account* | S |
 | **`list.index`** | **`list.index`** *file* {*field* …} |  |
-| **`list.inter`** | **`list.inter`** *list.1* {*list.2* {*tgt*}} {**`count.sup`**} |  |
 | **`list.item`** | **`list.item`** {**`dict`**} *file* {*selection*} |  |
 | **`list.label`** | **`list.label`** {**`dict`**} *file* {*selection*} {*fields*} |  |
 | **`list.locks`** | **`list.locks`** | S |
@@ -130,14 +116,13 @@ not refused — the name is simply not recognised.**
 | **`list.readu`** | **`list.readu`** {*user.no*} {**`detail`**} {**`wait`**} {**`no.page`**} {**`lptr`** {*n*}} | S |
 | **`list.term.types`** | **`list.term.types`** {**`lptr`** {*n*}} |  |
 | **`list.triggers`** | **`list.triggers`** {*file* …} {**`lptr`** {*n*}} |  |
-| **`list.union`** | **`list.union`** *list.1* {*list.2* {*tgt*}} {**`count.sup`**} |  |
 | **`list.vars`** | **`list.vars`** {*pattern*} |  |
+| **`list.voc.removed`** | **`list.voc.removed`** {*account*}  —  the VOC records SD no longer ships and, with an account, what the next **`update.accounts`** would do in it (changes nothing) | S |
 | **`listu`** | **`listu`** {**`detail`**} {**`no.page`**} {**`lptr`** {*n*}} | S |
 | **`lock`** | **`lock`** *n* {**`no.wait`**} | S |
 | **`logmsg`** | **`logmsg`** *text* |  |
 | **`logout`** | **`logout`** \| *n* … \| **`all`** |  |
 | **`logto`** | **`logto`** *account* {**`reset`** {**`all`**}} |  |
-| **`make.index`** | **`make.index`** *file* *field* … {**`no.nulls`**} {**`pathname`** *path*} |  |
 | **`map`** | **`map`** {**`all`**} {**`lptr`** {*n*}} {**`file`** {*name*}} |  |
 | **`merge.list`** | **`merge.list`** *list.no* *rel.op* *list.no* {**`to`** *list.no*} {**`count.sup`**} |  |
 | **`message`** | **`message`** *user.no* {**`immediate`**} {*text*} |  |
@@ -145,7 +130,6 @@ not refused — the name is simply not recognised.**
 | **`modify.account`** | **`modify.account`** *account* **`add`** \| **`delete`** *user*  ·  *account* **`ssh`** \| **`api`** \| **`both`** \| **`none`**  ·  *account* **`sh-on`** \| **`sh-off`** \| **`os-on`** \| **`os-off`**  ·  *account* **`sd-on`** \| **`sd-off`**  ·  *account* **`voc-on`** \| **`voc-off`** \| **`bp-on`** \| **`bp-off`** \| **`dict-on`** \| **`dict-off`**  ·  *account* **`net-on`** \| **`net-off`**  ·  *account* **`shared-read-on`** \| **`shared-read-off`** \| **`shared-write-on`** \| **`shared-write-off`**  ·  *account* **`files-on`** \| **`files-off`** \| **`files-write-on`** \| **`files-write-off`** \| **`files-admin-on`** \| **`files-admin-off`**  ·  *account* **`start-menu`** \| **`start-terminal`** \| **`start-default`**  ·  *account* **`pins-on`** \| **`pins-off`**  ·  *account* **`suspended`** \| **`unsuspended`**  ·  any number of these actions except **`add`** and **`delete`** may follow the account, in one command | S |
 | **`modify.password`** | **`modify.password`** {*account*} |  |
 | **`move.list`** | **`move.list`** *n* **`to`** *m* {**`keep`**} |  |
-| **`nano`** | **`nano`** {**`dict`**} *file* *record* |  |
 | **`nls`** | **`nls`** {**`currency`** \| **`thousands`** \| **`decimal`** {*value*}}  ·  **`nls default`** |  |
 | **`nselect`** | **`nselect`** *file* {*list.no*} |  |
 | **`off`** | **`off`** |  |
@@ -157,7 +141,7 @@ not refused — the name is simply not recognised.**
 | **`printer`** | **`printer`** {*unit*} **`query`** \| **`at`** *name* \| **`file`** *file* *record* \| **`width`** *n* \| **`lines`** *n* \| **`top.margin`** *n* \| **`bottom.margin`** *n* \| **`left.margin`** *n* \| **`keep.open`** \| **`close`** \| **`reset`** |  |
 | **`profiler`** | **`profiler on`** {**`user`** *n*} {*event* …} \| **`off`** {**`user`** *n*} \| {**`display`**} {**`user`** *n*} |  |
 | **`pstat`** | **`pstat`** {**`user`** *n*} {**`level`** *n*} {**`no.page`**} {**`lptr`** {*n*}} |  |
-| **`pterm`** | **`pterm display`** \| **`lptr`** \| **`break`** … \| **`case`** … \| **`newline`** … \| **`return`** … \| **`binary`** … \| **`telnet`** … \| **`reset`** *string* \| **`prompt`** *p* *c* |  |
+| **`pterm`** | **`pterm display`** \| **`lptr`** \| **`break`** … \| **`newline`** … \| **`return`** … \| **`binary`** … \| **`telnet`** … \| **`reset`** *string* \| **`prompt`** *p* *c* |  |
 | **`qselect`** | **`qselect`** {**`dict`**} *file* {*id* … \| **`*`**} {**`(options`**} |  |
 | **`quit`** | **`quit`** — the same verb as **`off`** |  |
 | **`rebuild.all.indices`** | **`rebuild.all.indices`** {**`no.query`**} |  |
@@ -166,10 +150,10 @@ not refused — the name is simply not recognised.**
 | **`release`** | **`release`** *file* *id* …  ·  **`release filelock`** *file* |  |
 | **`remote.api`** | **`remote.api`** {**`on`** \| **`local`** \| **`off`**} | S |
 | **`remote.ssh`** | **`remote.ssh`** {**`on`** \| **`off`**} | S |
-| **`rename`** | **`rename`** — the same verb as **`cname`** |  |
 | **`report.src`** | **`report.src on`** \| **`off`** \| **`report.src`** to toggle |  |
 | **`report.style`** | **`report.style`** {*name* \| **`off`**} |  |
 | **`restore.account`** | **`restore.account`** *zipfile* *account* {*account* …} {**`no.query`**}  ·  **`restore.account`** *zipfile* **`all`** {**`no.query`**}  ·  **`restore.account latest`** *account* {*account* …} {**`no.query`**}  ·  **`restore.account latest all`** {**`no.query`**} | S |
+| **`restore.voc`** | **`restore.voc`** *account* *id*  ·  **`restore.voc`** *account* **`all`**  —  put back the newest saved copy of a record the VOC update removed; never overwrites | S |
 | **`revoke`** | **`revoke`** *account* **`from`** *user* | S |
 | **`run`** | **`run`** {*file*} *record* {*arguments*} |  |
 | **`save.list`** | **`save.list`** *list* {**`from`** *list.no*} |  |
@@ -184,7 +168,6 @@ not refused — the name is simply not recognised.**
 | **`set.date`** | **`set.date`** *date* | S |
 | **`set.exit.status`** | **`set.exit.status`** *n* |  |
 | **`set.file`** | **`set.file`** *account* *file* *pointer* |  |
-| **`set.queue`** | **`set.queue`** *queue* {, *width*, *depth*, *top*, *bottom*, *mode* {, *options*}}  ·  **`set.queue display`** {**`lptr`** {*unit*}}  ·  **`set.queue deleting`** *queue* |  |
 | **`set.trigger`** | **`set.trigger`** *file* *name* {*modes*} |  |
 | **`setptr`** | **`setptr`** *unit* \| **`default`**`,`*width*`,`*depth*`,`*top*`,`*bottom*`,`*mode* {`,`*options*}  ·  **`setptr display`**  ·  **`setptr`** *unit*`,`**`display`** |  |
 | **`settings.report`** | **`settings.report`** {*folder*} | S |
@@ -196,9 +179,6 @@ not refused — the name is simply not recognised.**
 | **`sort.item`** | **`sort.item`** {**`dict`**} *file* {*selection*} |  |
 | **`sort.label`** | **`sort.label`** {**`dict`**} *file* {*selection*} {*fields*} |  |
 | **`sort.list`** | **`sort.list`** *name* {**`from`** *file*} |  |
-| **`sp.assign`** | **`sp.assign`** {*options*} {, *setptr options*} |  |
-| **`sp.close`** | **`sp.close`** |  |
-| **`sp.open`** | **`sp.open`** |  |
 | **`sp.view`** | **`sp.view`** |  |
 | **`spool`** | **`spool`** *file* *id* … {**`lines`** *n* *m*} {**`lnum`**} {**`lptr`** *n*} |  |
 | **`sreformat`** | **`sreformat`** {**`dict`**} *file* {*selection*} {*fields*} |  |
@@ -207,7 +187,7 @@ not refused — the name is simply not recognised.**
 | **`status`** | **`status`** |  |
 | **`stop`** | **`stop`** |  |
 | **`sum`** | **`sum`** {**`dict`**} *file* {*selection*} *field* |  |
-| **`term`** | **`term`** \| *width*{`,`*lines*} {*type*} \| **`colour`** *bg*{`,`*fg*} \| **`default`** \| **`display`** |  |
+| **`term`** | **`term`** \| *width*{`,`*lines*} {*type*} \| **`color`** *bg*{`,`*fg*} \| **`default`** \| **`display`** |  |
 | **`time`** | **`time`** \| **`internal`** |  |
 | **`unlock`** | **`unlock file`** *n* {**`user`** *n*} *id* … \| **`all`** \| **`filelock`**  ·  **`unlock tasklock`** *n* … | S |
 | **`update.accounts`** | **`update.accounts`** {**`all`**} | S |
