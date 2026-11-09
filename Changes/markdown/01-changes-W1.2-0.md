@@ -62,6 +62,7 @@ Administrator commands from the openQM list.
 | `inhibit.login` | Added | administrator only: stops new sessions while maintenance is done; a killed backup no longer locks everybody out <!--s 387 g46--> |
 | `logout` | Changed | `logout n group` also ends the phantoms n started; `logout` of a session whose process has gone clears the entry and its locks <!--s 386--> |
 | `newvoc.mods` | Changed | applied to SDSYS's own VOC when SD is installed, as it already was to new accounts and by `update.accounts` <!--s 501--> |
+| `set.batch` | Added | allows or stops allowing a paragraph or sentence that an account may run from the command line (`sd -a<account> <command>`, as a scheduled job does), after checking it in that account's VOC; none is allowed as delivered; until now `batch.jobs` was edited by hand |
 
 ## API
 
