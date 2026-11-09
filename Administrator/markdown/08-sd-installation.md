@@ -102,7 +102,12 @@ symptom looks like a broken install and is not one.
 **Stopping the service ends every session on the machine**, without asking. It
 signals every entry in the user table and has no "are users logged in" check,
 so treat it as a machine-wide action rather than an administrative
-convenience.
+convenience. A session waiting at its prompt may not leave on that signal, so
+ten seconds later `sd -stop` (and `sd -restart`) ends every SD process still
+running with SIGKILL and says how many it ended, for example
+`1 process(es) still running after ten seconds were ended with SIGKILL`.
+A process whose program is not in SD's own folder is not touched. A session
+ended this way does not run its own logout.
 
 ### After an unclean shutdown
 
