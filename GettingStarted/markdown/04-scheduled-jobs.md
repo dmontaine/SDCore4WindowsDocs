@@ -46,6 +46,18 @@ Both shapes of record are read — one name per line, and a multivalued field 1 
 so a record written with **`ed`** and a record written by a program agree. A name
 still has to match exactly.
 
+**`set.batch` is the way to change a list.** Signed in as SDSYS:
+
+```
+:set.batch add fred my.report
+```
+
+`set.batch` checks that the name is a paragraph or a sentence in that account's
+VOC, the same test SD makes each time the command runs, and records the change in
+the audit trail. `set.batch remove fred my.report` takes it off, and `set.batch`
+alone lists every account's commands. SDSYS itself has no list: its sessions may
+run any command. Nothing is allowed as delivered.
+
 ## What may be listed
 
 Two rules, and both are tested when the command runs rather than when it is

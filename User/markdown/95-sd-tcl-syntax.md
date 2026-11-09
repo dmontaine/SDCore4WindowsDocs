@@ -165,6 +165,7 @@ not refused — the name is simply not recognised.**
 | **`selectindex`** | **`selectindex`** {**`dict`**} *file* *index* {*value*} {**`to`** *n*} |  |
 | **`set`** | **`set`** *name* *value* |  |
 | **`set.backup.directory`** | **`set.backup.directory`** {*folder*} | S |
+| **`set.batch`** | **`set.batch`** {{**`add`** \| **`remove`**} *account* *command*}  —  the commands an account may run from the command line, as a scheduled job runs one (none is allowed as delivered); without arguments, lists them | S |
 | **`set.date`** | **`set.date`** *date* | S |
 | **`set.exit.status`** | **`set.exit.status`** *n* |  |
 | **`set.file`** | **`set.file`** *account* *file* *pointer* |  |
