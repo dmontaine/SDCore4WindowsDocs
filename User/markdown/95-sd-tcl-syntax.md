@@ -12,7 +12,7 @@ folds case, so any of this may be typed in either case.
 > **This page is generated, and it is checked for completeness rather
 > than proof-read for it.** The roster is computed from SD's own VOC:
 > every verb record in `newvoc`, plus the ones only `voc_template`
-> has, which is **163** verbs, and `tools/mktclsyntax.py` refuses to
+> has, which is **185** verbs, and `tools/mktclsyntax.py` refuses to
 > write the page if any of them has no line. The shapes come from the
 > subject documents, where each verb is described in full.
 
@@ -23,8 +23,8 @@ not refused — the name is simply not recognised.**
 
 | | | |
 |---|---|---|
-| **every account** | 136 verbs | `newvoc`, identical for every ordinary account |
-| **SDSYS only** | 27 more | in `voc_template` but not `newvoc` |
+| **every account** | 148 verbs | `newvoc`, identical for every ordinary account |
+| **SDSYS only** | 37 more | in `voc_template` but not `newvoc` |
 
 ## The verbs
 
@@ -61,6 +61,7 @@ not refused — the name is simply not recognised.**
 | **`compile.dict`** | **`compile.dict`** {**`dict`** \| **`data`**} *file* {*i-type* …} {**`no.query`**} {**`no.page`**}  ·  **`compile.dict local`**  ·  **`compile.dict all`** |  |
 | **`config`** | **`config`** {**`lptr`** \| **`gpl`** \| **`contrib`** \| *param* *value*} | S |
 | **`configure.file`** | **`configure.file`** {**`dict`**} *voc.name* {*parameters*} \| **`default`** |  |
+| **`convert.data`** | **`convert.data`** *from.pathname* *to.pathname* {**`from`** *format*} {**`as`** *format*} {**`header`**} {**`no.query`**} |  |
 | **`copy`** | **`copy from`** {**`dict`**} *src* {**`to`** {**`dict`**} *tgt*} {*id* …} {**`(options`**} |  |
 | **`copy.list`** | **`copy.list`** *list* {**`,`***new*} {**`from`** *src*} {**`to`** *tgt*} {*options*} |  |
 | **`count`** | **`count`** {**`dict`**} *file* {*selection*} |  |
@@ -79,6 +80,8 @@ not refused — the name is simply not recognised.**
 | **`delete.file`** | **`delete.file`** {**`dict`** \| **`data`**} *voc.name* {**`force`**} {**`no.query`**} |  |
 | **`delete.index`** | **`delete.index`** *file* *field* … \| **`all`** |  |
 | **`delete.list`** | **`delete.list`** *list* |  |
+| **`delete.netlogin`** | **`delete.netlogin`** *server* |  |
+| **`delete.server`** | **`delete.server`** *name* | S |
 | **`disable.index`** | **`disable.index`** *file* *index* … \| **`all`** |  |
 | **`display`** | **`display`** *text* |  |
 | **`dump`** | **`dump`** {**`dict`**} *file* {*id* … \| **`*`**} {**`(options`**} |  |
@@ -87,6 +90,7 @@ not refused — the name is simply not recognised.**
 | **`edit`** | **`edit`** {**`dict`**} *file* *record* |  |
 | **`encrypt.key`** | **`encrypt.key set`** *name* *salt* {**`confirm`**}  ·  **`encrypt.key clear`** {*name*}  ·  **`encrypt.key list`** |  |
 | **`execute.list`** | **`execute.list`** *command* {**`;`** *command* …}  —  a pair of brackets `()` in a command is replaced by each id of list 0 in turn |  |
+| **`exit`** | **`exit`**  —  from the terminal that **`home`** gave, back to the home screen; anywhere else it ends the session as **`quit`** does |  |
 | **`file.stat`** | **`file.stat`** {**`dict`**} {*file* …} {**`lptr`** {*n*}} {**`no.page`**} |  |
 | **`find.file`** | **`find.file`** {**`dict`**} *file* |  |
 | **`find.program`** | **`find.program`** *name* {**`detail`**} |  |
@@ -100,9 +104,13 @@ not refused — the name is simply not recognised.**
 | **`get.stack`** | **`get.stack`** {*name*} |  |
 | **`go`** | **`go`** *label* |  |
 | **`grant`** | **`grant`** *account* **`to`** *user* | S |
+| **`home`** | **`home`**  —  the home screen: tiles for the account's tools, a terminal, switch account and sign out |  |
 | **`hsm`** | **`hsm on`** \| **`off`** \| **`display`** {**`user`** *n*} |  |
 | **`hush`** | **`hush on`** \| **`off`** \| **`hush`** to toggle |  |
 | **`if`** | **`if`** *condition* *command* |  |
+| **`import.csv`** | **`import.csv`** *pathname* *file* {**`header`**} {**`delimiter`** *x*} {**`quote`** *x*} {**`escape`** *x*} {**`id`** *column* \| **`generate`**} {**`dict`**} {**`overwriting`**} |  |
+| **`import.json`** | **`import.json`** *pathname* *collection.file* {**`id`** *name* \| **`generate`**} {**`overwriting`**} |  |
+| **`import.xml`** | **`import.xml`** *pathname* *file* {**`id`** *name* \| **`generate`**} {**`overwriting`**} |  |
 | **`inhibit.login`** | **`inhibit.login`** {**`on`** \| **`off`**} | S |
 | **`list`** | **`list`** {**`dict`**} *file* {*selection*} {*fields*} {*options*} |  |
 | **`list.common`** | **`list.common`** {**`all`**} |  |
@@ -114,22 +122,27 @@ not refused — the name is simply not recognised.**
 | **`list.locks`** | **`list.locks`** | S |
 | **`list.phantoms`** | **`list.phantoms`** {**`user`** *name*} |  |
 | **`list.readu`** | **`list.readu`** {*user.no*} {**`detail`**} {**`wait`**} {**`no.page`**} {**`lptr`** {*n*}} | S |
+| **`list.servers`** | **`list.servers`** {*name*} | S |
+| **`list.shared`** | **`list.shared`** | S |
 | **`list.term.types`** | **`list.term.types`** {**`lptr`** {*n*}} |  |
 | **`list.triggers`** | **`list.triggers`** {*file* …} {**`lptr`** {*n*}} |  |
 | **`list.vars`** | **`list.vars`** {*pattern*} |  |
 | **`list.voc.removed`** | **`list.voc.removed`** {*account*}  —  the VOC records SD no longer ships and, with an account, what the next **`update.accounts`** would do in it (changes nothing) | S |
 | **`listu`** | **`listu`** {**`detail`**} {**`no.page`**} {**`lptr`** {*n*}} | S |
+| **`load.help`** | **`load.help`**  —  load the shipped context help into the file context.help of the shared account (administrator) | S |
 | **`lock`** | **`lock`** *n* {**`no.wait`**} | S |
 | **`logmsg`** | **`logmsg`** *text* |  |
 | **`logout`** | **`logout`** \| *n* … \| **`all`** |  |
 | **`logto`** | **`logto`** *account* {**`reset`** {**`all`**}} |  |
 | **`map`** | **`map`** {**`all`**} {**`lptr`** {*n*}} {**`file`** {*name*}} |  |
+| **`menu`** | **`menu`**  —  the full-screen menu (the home screen), also from the terminal it gave you |  |
 | **`merge.list`** | **`merge.list`** *list.no* *rel.op* *list.no* {**`to`** *list.no*} {**`count.sup`**} |  |
 | **`message`** | **`message`** *user.no* {**`immediate`**} {*text*} |  |
 | **`micro`** | **`micro`** {**`dict`**} *file* *record* |  |
 | **`modify.account`** | **`modify.account`** *account* **`add`** \| **`delete`** *user*  ·  *account* **`ssh`** \| **`api`** \| **`both`** \| **`none`**  ·  *account* **`sh-on`** \| **`sh-off`** \| **`os-on`** \| **`os-off`**  ·  *account* **`sd-on`** \| **`sd-off`**  ·  *account* **`voc-on`** \| **`voc-off`** \| **`bp-on`** \| **`bp-off`** \| **`dict-on`** \| **`dict-off`**  ·  *account* **`net-on`** \| **`net-off`**  ·  *account* **`shared-read-on`** \| **`shared-read-off`** \| **`shared-write-on`** \| **`shared-write-off`**  ·  *account* **`files-on`** \| **`files-off`** \| **`files-write-on`** \| **`files-write-off`** \| **`files-admin-on`** \| **`files-admin-off`**  ·  *account* **`start-menu`** \| **`start-terminal`** \| **`start-default`**  ·  *account* **`pins-on`** \| **`pins-off`**  ·  *account* **`suspended`** \| **`unsuspended`**  ·  any number of these actions except **`add`** and **`delete`** may follow the account, in one command | S |
 | **`modify.password`** | **`modify.password`** {*account*} |  |
 | **`move.list`** | **`move.list`** *n* **`to`** *m* {**`keep`**} |  |
+| **`my.menu`** | **`my.menu`**  —  add your own programs to your home screen, when the administrator has allowed it (**`modify.account`** *account* **`pins-on`**) |  |
 | **`nls`** | **`nls`** {**`currency`** \| **`thousands`** \| **`decimal`** {*value*}}  ·  **`nls default`** |  |
 | **`nselect`** | **`nselect`** *file* {*list.no*} |  |
 | **`off`** | **`off`** |  |
@@ -169,6 +182,10 @@ not refused — the name is simply not recognised.**
 | **`set.date`** | **`set.date`** *date* | S |
 | **`set.exit.status`** | **`set.exit.status`** *n* |  |
 | **`set.file`** | **`set.file`** *account* *file* *pointer* |  |
+| **`set.netlogin`** | **`set.netlogin`** *server* |  |
+| **`set.server`** | **`set.server`** *name* *host* *port* *account* {*pin* \| **`connect`**} {**`read`** \| **`write`**} {**`accounts`** *a*`,`*b*`,`…} {**`no.query`**} | S |
+| **`set.start.default`** | **`set.start.default`** {**`menu`** \| **`terminal`**}  —  where accounts with no start setting of their own start; without a word, says what it is | S |
+| **`set.tile`** | **`set.tile`** {*account* *tile* **`on`** \| **`off`**}  —  turn a home screen tile off or on for one account (tiles are on as delivered; sign out cannot be turned off; *tile* **`recent`** is the Recent group); without arguments, says what is off | S |
 | **`set.trigger`** | **`set.trigger`** *file* *name* {*modes*} |  |
 | **`setptr`** | **`setptr`** *unit* \| **`default`**`,`*width*`,`*depth*`,`*top*`,`*bottom*`,`*mode* {`,`*options*}  ·  **`setptr display`**  ·  **`setptr`** *unit*`,`**`display`** |  |
 | **`settings.report`** | **`settings.report`** {*folder*} | S |
@@ -190,6 +207,10 @@ not refused — the name is simply not recognised.**
 | **`sum`** | **`sum`** {**`dict`**} *file* {*selection*} *field* |  |
 | **`term`** | **`term`** \| *width*{`,`*lines*} {*type*} \| **`color`** *bg*{`,`*fg*} \| **`default`** \| **`display`** |  |
 | **`time`** | **`time`** \| **`internal`** |  |
+| **`tool.gates`** | **`tool.gates`**  —  for the administrator the gate matrix (every account against every per-account gate; queued changes run as one **`modify.account`** command); in any other account, what this account may do and why (read only) |  |
+| **`tool.keys`** | **`tool.keys`** |  |
+| **`tool.menus`** | **`tool.menus`**  —  menu management (administrator): the home screen's tiles for each account, where each account starts, who may add their own programs | S |
+| **`tool.sessions`** | **`tool.sessions`**  —  sessions, locks and logout on one screen (administrator): every session and every lock, read again every three seconds; each key runs one **`logout`**, **`unlock`** or **`inhibit.login`** command after a box answered Run | S |
 | **`unlock`** | **`unlock file`** *n* {**`user`** *n*} *id* … \| **`all`** \| **`filelock`**  ·  **`unlock tasklock`** *n* … | S |
 | **`update.accounts`** | **`update.accounts`** {**`all`**} | S |
 | **`who`** | **`who`** |  |

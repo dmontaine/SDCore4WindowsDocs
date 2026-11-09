@@ -108,8 +108,11 @@ ends.
 ## OS.EXECUTE
 
 ```
-os.execute command {capturing variable}
+os.execute command {capturing variable | silent}
 ```
+
+`capturing` puts the command's output in the variable; `silent` throws it
+away, so nothing of it reaches the terminal.
 
 **It is gated per account, and a refusal aborts the program rather than
 setting a status.** In an ordinary account:

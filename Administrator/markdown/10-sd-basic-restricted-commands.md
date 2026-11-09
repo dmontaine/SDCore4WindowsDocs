@@ -96,7 +96,7 @@ itself administrator rights. That was demonstrated, not theorised.
 
 | | |
 |---|---|
-| **`fcontrol.int`** | `fcontrol.int(`*a*, *b*, *c*`)` ***(internal)*** - until this release this was `fcontrol`; that name is now the public function with openQM's numbers (User set, *File Handling*) |
+| **`fcontrol.int`** | `fcontrol.int(`*a*, *b*, *c*`)` ***(internal)*** |
 | **`find`** | `find` *x* `in` *arr* {, *occ*} `setting` *f* {, *v* {, *sv*}} `then` … `else` … ***(internal)*** |
 | **`formcsv`** | `formcsv(`*a*`)` ***(internal)*** |
 
@@ -180,15 +180,12 @@ itself administrator rights. That was demonstrated, not theorised.
 |---|---|
 | **`scan`** | `scan(`*a* {, *matrix*}`)` — *matrix* is a `dim`med one-dimensional name ***(internal)*** |
 | **`sdext`** | `sdext(`*a*, *b*, *c*`)` ***(internal)*** |
+| **`sdpyobj`** | `sdpyobj(`*a*, *b*, *c*, *d*`)` ***(internal)*** |
 | **`set.modes`** | `set.modes` *mask* ***(restricted)*** |
 | **`set.status`** | `set.status` *n* ***(restricted)*** |
 | **`set.trigger`** | `set.trigger` *file.var*, *mode*, *program* {, *modes*} ***(restricted)*** |
 | **`set.unassigned`** | `set.unassigned` *var* ***(restricted)*** |
-| **`sortadd`** | `sortadd` *key*, *data* ***(restricted)*** — this is the form with no sort variable; the form with one is open to every program (see the syntax card) |
-| **`sortclear`** | `sortclear` ***(restricted)*** — with no sort variable; the form with one is open to every program |
-| **`sortdata`** | `sortdata()` ***(internal)*** — with no argument; the form with a sort variable is open to every program |
 | **`sortinit`** | `sortinit` *keys*, *memory* ***(restricted)*** |
-| **`sortnext`** | `sortnext(`*matrix*`)` — *matrix* is a `dim`med one-dimensional name ***(internal)*** — the form with a sort variable is open to every program |
 
 ## T
 
@@ -217,8 +214,8 @@ itself administrator rights. That was demonstrated, not theorised.
 
 ## See also
 
-[Operating System Access](03-operating-system-access.html) covers the `sh`
-verb, which is the other thing an ordinary account cannot reach.
+[Operating System Access](03-operating-system-access.html) covers the `sh` and
+`!` verbs, which are the other thing an ordinary account cannot reach.
 [Encryption and the SDEXT interface](04-sd-encryption.html) explains why
 `sdext` is on this page and what it costs an application.
 

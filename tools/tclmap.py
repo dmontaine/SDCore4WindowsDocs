@@ -151,7 +151,11 @@ DOCS = [
  # arriving from the other direction: the name is on the page and the
  # explanation is not.  Each verb is assigned where it is actually explained.
  ('Administrator', '01a-account-maintenance.md', """
-   clean.account config delete.account set.date update.accounts
+   clean.account config delete.account list.voc.removed restore.voc set.date update.accounts
+ """),
+ # 9 Nov 26 (RELEASE_1.1 197): set.batch is explained on the scheduled jobs page of Getting Started; Core's Administrator guide has no such page.
+ ('GettingStarted', '04-scheduled-jobs.md', """
+   set.batch
  """),
  ('Administrator', '01b-backup-and-restore.md', """
    backup.account restore.account set.backup.directory settings.report
@@ -160,7 +164,7 @@ DOCS = [
    clear.locks inhibit.login list.locks list.readu listu lock logout tool.sessions unlock
  """),
  ('Administrator', '03-operating-system-access.md', """
-   sh !
+   sh
  """),
  ('Administrator', '05-remote-access-and-the-machine.md', """
    append.sd.path remote.api remote.ssh ssh.server

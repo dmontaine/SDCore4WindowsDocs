@@ -134,7 +134,7 @@ There are **41 internal verbs**, numbered, and the numbers are positional in the
 command processor's dispatch list. Several names share one: `off` and `quit` are
 both internal verb 1, and `clr` is internal verb 2. (`cs` for `clr`, and the
 run-together `cleardata`, `clearinput`, `clearprompts` and `clearselect` for
-`clear.data` and the rest, were second names for the same numbers and were
+`clear.data`, `clear.input` and the rest, were second names for the same numbers and were
 removed in 1.2-0.)
 
 ## Sentences and paragraphs
