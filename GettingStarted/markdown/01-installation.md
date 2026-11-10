@@ -192,6 +192,15 @@ the binaries.
 
 **The DLLs ship beside `sd.exe` on purpose.** Do not change their location.
 
+**The source is beside the installer, not installed.** SD Core is free
+software under the GNU General Public License, version 3 or later. Its complete
+source - the C, the system programs' BASIC (`gpl.bp`) and the build and
+installer scripts - is `SDCore4Windows-source-<version>.zip` beside
+`sd-setup-<version>.exe`, with a `.txt` file naming the commit it was built
+from. The installer puts none of it on the machine: SDSYS holds the compiled
+system programs (`gpl.bp.out`), and its VOC has no `gpl.bp` entry. An upgrade
+removes the `gpl.bp` folder and VOC entry an earlier release installed.
+
 ### Configuration
 
 Server and client both read `SD_CONFIG`, then fall back to

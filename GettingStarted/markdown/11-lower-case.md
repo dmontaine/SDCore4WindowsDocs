@@ -32,8 +32,8 @@ the `LOGIN` paragraph lookup, and `SET.FILE`'s default `qfile` pointer.
 | | |
 |---|---|
 | Commands in the VOC | **`list`**, `count`, **`select`**, **`create.file`**, **`setptr`** … and that is how they appear in `list voc` and `ct voc` |
-| System files on disk | `accounts`, `bp`, `bp.out`, `gpl.bp`, `messages`, `newvoc`, `pcode.out`, `syscom`, `voc`, `voc.dic`, `voc_template` and the rest |
-| The `BP` and `GPL.BP` VOC entries | `bp` and `gpl.bp` |
+| System files on disk | `accounts`, `bp`, `bp.out`, `gpl.bp.out`, `messages`, `newvoc`, `pcode.out`, `syscom`, `voc`, `voc.dic` and the rest |
+| The `BP` VOC entry | `bp` |
 | The hold file | `$hold` |
 | The saved select list file | `$savedlists` |
 | The command stack record | `$command.stack` |

@@ -42,7 +42,8 @@ program or query and enters the debugger if one is active.
 
 **bp** — the source file. An account's `bp` file is a directory file —
 an ordinary Windows folder with one file per program. `gpl.bp` is the
-shipped source for the system programs.
+source of the system programs; it is not installed, but is in the source zip
+beside the installer.
 
 ## C
 
