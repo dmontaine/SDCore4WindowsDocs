@@ -141,7 +141,7 @@ SD account it starts with every access gate closed:** no ssh, no API, no shell
 (`sh`), no `os.execute`, no `sd.accounts`, no right to save a change to a VOC, a
 program file or a dictionary, no SDNet, no writing the shared account's files, no
 files-only login, no administering files over that login, no pins on the home
-screen. Tick the box and the installer opens every one of those on your account,
+screen, no recovery copy of unsaved editor text. Tick the box and the installer opens every one of those on your account,
 reads the result back, and the last screen says whether they all opened; if any
 did not, `C:\ProgramData\SD\attach-account.log` names each one and the word to
 give for it. It opens only your account. `files-admin-on` administers files on
@@ -152,9 +152,23 @@ not show the box and leaves the account as it is.
 SDSYS opens a gate afterwards with `modify.account` *account* *word*, one word at a
 time or several together: `both` (ssh and the API), `sh-on`, `os-on`, `sd-on`,
 `voc-on`, `bp-on`, `dict-on`, `net-on`, `shared-write-on`, `files-on`,
-`files-write-on`, `files-admin-on` (it needs the two before it) and `pins-on`.
-The same word with `-off` closes it again (`none` closes ssh and the API).
+`files-write-on`, `files-admin-on` (it needs the two before it), `pins-on` and
+`recovery-on`. The same word with `-off` closes it again (`none` closes ssh and the API).
 Which computers can reach SD from the network is still decided by boxes 2 and 3.
+
+### 6. Where new sessions start
+
+Two choices, **Home screen** ticked. With the home screen, a session that signs on
+opens the full-screen home screen of tiles, and its Terminal tile gives the command
+prompt; with **Command prompt**, a session signs on at the `:` prompt and `HOME`
+opens the home screen. This sets the system default only: SDSYS changes it later
+with `set.start.default menu` or `set.start.default terminal`, and an account
+can have a start of its own (`modify.account` *account* `start-menu`,
+`start-terminal` or `start-default`). SDSYS itself always starts at the command
+prompt. A silent install chooses the command prompt with `/TASKS=startprompt`. An
+upgrade does not show the choice and keeps the start the system already has. If
+the command prompt was chosen and could not be set, the last screen says so and
+`C:\ProgramData\SD\set-start-default.log` says why.
 
 ### An installation with neither is a supported choice
 
