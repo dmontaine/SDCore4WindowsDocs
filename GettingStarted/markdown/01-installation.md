@@ -158,10 +158,10 @@ Which computers can reach SD from the network is still decided by boxes 2 and 3.
 
 ### 6. Where new sessions start
 
-Two choices, **Home screen** ticked. With the home screen, a session that signs on
-opens the full-screen home screen of tiles, and its Terminal tile gives the command
-prompt; with **Command prompt**, a session signs on at the `:` prompt and `HOME`
-opens the home screen. This sets the system default only: SDSYS changes it later
+One box in group 5, *Start new sessions at the command prompt, not the home
+screen*, unticked. Unticked, a session that signs on opens the full-screen home
+screen of tiles, and its Terminal tile gives the command prompt; ticked, a session
+signs on at the `:` prompt and `HOME` opens the home screen. This sets the system default only: SDSYS changes it later
 with `set.start.default menu` or `set.start.default terminal`, and an account
 can have a start of its own (`modify.account` *account* `start-menu`,
 `start-terminal` or `start-default`). SDSYS itself always starts at the command
