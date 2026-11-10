@@ -1,5 +1,6 @@
 Title: Changes in W1.2-0
 Subtitle: What was added, changed and removed since W1.1-3 (10 October 2026), by section and in alphabetical order.
+Columns: 23 11 66
 
 **This is the list of what changed between W1.1-3 (10 October 2026) and W1.2-0.** It is kept up to date as the
 release is built. It was started on 25 October 2026 from the Linux list for L1.2-0 (SD Core for Linux and SD Core for

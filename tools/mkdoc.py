@@ -682,7 +682,28 @@ def render(src, product, version):
     meta = getattr(md, 'Meta', {}) or {}
     title = ' '.join(meta.get('title', [])) or '(untitled)'
     subtitle = ' '.join(meta.get('subtitle', []))
-    return title, subtitle, md.toc, body
+    return title, subtitle, md.toc, body, columns_css(meta)
+
+
+def columns_css(meta):
+    """CSS for a page that asks for column widths.
+
+    From SD Core for Linux's mkdoc.py (24 Oct 2026, its owner's request for the changes document), carried 9 Nov 2026 for
+    RELEASE_1.1 177: the first column of the changes tables was as wide as its longest name, because td:first-child is nowrap,
+    and the third, which holds the description, was squeezed.  A page that has "Columns: 24 9 67" in its metadata gets fixed
+    widths in those percentages, and the first column wraps.  A page without it is unchanged.  Applies to every table of the
+    page, so such a page keeps one table shape throughout.
+    """
+    vals = ' '.join(meta.get('columns', [])).split()
+    if not vals or not all(v.isdigit() for v in vals):
+        return ''
+    css = ['table { table-layout: fixed; }',
+           'td:first-child, td:first-child code { white-space: normal; }',
+           'td:first-child { overflow-wrap: anywhere; }',
+           'td { overflow-wrap: break-word; }']
+    for i, v in enumerate(vals, 1):
+        css.append('th:nth-child(%d), td:nth-child(%d) { width: %s%%; }' % (i, i, v))
+    return '\n'.join(css) + '\n'
 
 
 def build(path, out_dir, product, version):
@@ -698,7 +719,7 @@ def build(path, out_dir, product, version):
         sys.stdout.write('  note: stripped a UTF-8 BOM from %s\n'
                          % os.path.basename(path))
 
-    title, subtitle, toc, body = render(src, product, version)
+    title, subtitle, toc, body, extra_css = render(src, product, version)
 
     if not body.strip():
         raise RuntimeError('%s rendered to an empty document' % path)
@@ -736,7 +757,7 @@ def build(path, out_dir, product, version):
         body = body.replace(LICENCE_MARKER, block)
 
     page = (PAGE
-            .replace('@CSS@', CSS)
+            .replace('@CSS@', CSS + extra_css)
             .replace('@TITLEPAGE@', titlepage)
             .replace('@PRODUCT@', html.escape(product))
             .replace('@VERSION@', html.escape(version))
