@@ -1,10 +1,10 @@
-Title: Changes in W1.2-0
+Title: Changes in W2.0-0
 Subtitle: What was added, changed and removed since W1.1-3 (10 October 2026), by section and in alphabetical order.
 Columns: 23 11 66
 
-**This is the list of what changed between W1.1-3 (10 October 2026) and W1.2-0.** It is kept up to date as the
+**This is the list of what changed between W1.1-3 (10 October 2026) and W2.0-0 (called W1.2-0 until 10 November 2026).** It is kept up to date as the
 release is built. It was started on 25 October 2026 from the Linux list for L1.2-0 (SD Core for Linux and SD Core for
-Windows carry the same openQM items) and the release changelog (`sdsys/changelog`, section "W1.2-0 - in progress"),
+Windows carry the same openQM items) and the release changelog (`sdsys/changelog`, section "W2.0-0 - in progress"),
 which has the full story of each change: what it does, why, and what it does not do. This document is the short form.
 **Nothing in it has been run on a real Windows installation yet.**
 
@@ -346,7 +346,7 @@ The debugger, from the openQM list.
 
 ## REMOVED
 
-These were in W1.1-3 - or were added and taken out again during W1.2-0 - and **SD no longer has them**. This is the one place where a removal is listed,
+These were in W1.1-3 - or were added and taken out again during W2.0-0 - and **SD no longer has them**. This is the one place where a removal is listed,
 whatever the area it belonged to. Most were removed because they existed only to make SD behave like another MultiValue
 product, or gave a second way to do something SD already does one way. **A program, a login paragraph or a `$basic.options` record that uses one has to
 be edited**; the last column says what to write instead. A program that was compiled with a removed mode keeps what it was
