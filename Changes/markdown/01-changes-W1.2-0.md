@@ -176,6 +176,7 @@ Data collections, JSON, XML, CSV and the verbs that import them.
 | collection files | Added | `create.file name collection`; records are collections stored as JSON; `read` and `write` them whole; `ct` shows JSON <!--s 304--> |
 | `collection()` and `c{name}` | Added | a collection is a set of named values read and written by name; `enumerate()`, `element.exists()` <!--s 311 518 529 339--> |
 | `csv.mode` | Added | how `printcsv`, `writecsv` and `formcsv()` quote, with a delimiter, quote and escape character <!--s 173 200--> |
+| `d` conversion: `i` code | Changed | fixed: the ISO week number is worked out without `yi` beside it (it gave whatever number was left in memory) |
 | `element` keyword in queries | Added | names an element of a collection file by its path, in a display list, `with`, `by`, `sum` and the like |
 | `expand()` and links | Added | a link `"file:id"` is followed; `trans()` of an `e` item |
 | file variable in a collection | Changed | a collection holding a file variable is written to a collection file as a null |
@@ -553,6 +554,8 @@ Fixes that close a way round a gate, and what the gates now ask.
 | group account folders | Changed | `C:\ProgramData\SD\group_accounts` is locked like `user_accounts`; before, a group account whose own folder failed to lock kept the access every SD user has to the data tree |
 | internal programs | Changed | the internal-mode bit in an object file is honoured only for an object from the global catalogue, which only SDSYS can write, or for the administrator; for any other object it is ignored |
 | operating system paths | Changed | `dir()`, `select.dir`, `deleteseq` of a path, `setptr ... as pathname`, a print file made at a path and a VOC pointer out of the account each ask the account's `os` switch, and `sd-on` for another SD account; every session is held to it, the console included |
+| hang-up and fault | Changed | fixed: a session whose connection dropped while it was writing the error log or the audit trail waited for itself for ever, and every later login behind it; the "Received termination signal" line is now written outside the signal, and a session that faults gives back its locks before it logs |
+| phantom debugger messages | Changed | `pdebug` and the phantom it debugs leave each other their messages in `sd\pdebug` in the `AppData\Local` folder of the user's profile (a private folder, made with access for that user, SYSTEM and Administrators only), not in `$ipc`, which every SD user can write; the two must be the same Windows user; message 12953 when the store cannot be set up |
 | `phantom` start-up records | Changed | `$ipc` is a file every SD user can write, so the records a new phantom runs, stacks and sets (command, `DATA` lines, log file, options) are sealed with a secret given only to the new process in its environment; a phantom whose records do not check runs nothing, says so and writes `phantom refused` to the audit trail |
 | print file refusal | Changed | outside the account: the message names the account instead of printing `%1` |
 | `sh` command | Changed | no account may use pipes, redirection or chaining in an `sh` command |

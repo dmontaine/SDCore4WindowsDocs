@@ -228,9 +228,22 @@ the seal again from what it read and **runs, stacks and sets nothing unless the 
 are the same**. A phantom whose records do not check ends at once, says so in its
 `como` log and to its parent (*Phantom n : start-up records missing or not from the
 process that started it, nothing was run*), and writes `phantom refused phantom=n` to
-the audit trail. If the secret cannot be made, no process is started. The
-conversation of the phantom debugger is not sealed; it is trusted as SD's shared
-memory is.
+the audit trail. If the secret cannot be made, no process is started.
+
+**The phantom debugger does not use `$IPC`.** `pdebug` and the phantom it debugs
+leave each other their messages in a private folder of the Windows user who runs
+them, `sd\pdebug` in the `AppData\Local` folder of that user's profile (found from
+the profile, never from `%LOCALAPPDATA%`). SD makes the folders when they are missing,
+with access for that user, SYSTEM and Administrators only, and uses the store only
+when no folder on the way is a link and nobody else can add, delete or rename
+anything from the profile down. So a `pdebug` and a phantom reach each other only
+when both run as the same Windows user; `pdebug` waiting and a phantom started
+afterwards by the same person works as before. When the store cannot be set up,
+`pdebug` says so and stops (*The debugger's private directory could not be set up
+(reason), so the phantom debugger cannot start*), and a phantom behaves as if no
+`pdebug` were waiting. The store outlives a restart of SD, so `pdebug` removes the
+records of its own user number when it starts, and a phantom ignores a start record
+whose `pdebug` has gone.
 
 ## What phantoms have I started: `status`
 
