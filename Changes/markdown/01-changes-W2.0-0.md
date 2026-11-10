@@ -514,7 +514,7 @@ The screen statement and its library, and what changed in the terminal handling 
 | `screen` statement | Added | menus, dialogues and forms from BASIC; tabs, text areas, tables and trees; scroll bars and progress bars; the mouse |
 | `screen form fill`, `stretch` | Added | a form that takes the whole window and follows it: a text area or table with `stretch` gets the spare room and what lies beyond it moves, with no code in the program; below the form's own size one warning holds the keyboard |
 | `screen move` size | Changed | a text area, table or tree takes a new size, and a label or entry field a new width; a text area or table keeps what it holds |
-| themes | Added | `mono` (the default), `classic` and `blue`; `screentheme=` in `sd.conf` chooses the default; a colour theme is refused where the terminal cannot show colour |
+| themes | Added | `paper` (the delivered one: a new install's `sd.conf` says `SCREENTHEME=paper`), `night`, `mono`, `classic` and `blue`; `screentheme=` in `sd.conf` chooses the default (no line means `mono`); Ctrl-T on a page changes it and keeps the choice for you; a color theme is refused where the terminal cannot show color |
 | toolkit window size | Changed | a page of the full-screen toolkit refuses a window of more than 500 columns by 300 lines before it takes the screen (opening one cost time as the square of the height); "Press Enter to return" no longer names the home screen |
 | window size | Changed | SD reads the terminal's window size at the start and when it is resized; `kernel(k$winsize)` answers it; `term w,h` holds until the next resize |
 
