@@ -508,9 +508,12 @@ The screen statement and its library, and what changed in the terminal handling 
 
 | Name | Change | What |
 |---|---|---|
+| console window at start | Changed | SD makes a classic console window smaller than 140 columns by 43 lines that size when it starts, or as big as the screen allows; it never makes a window smaller, and a Windows Terminal window or a script's console is left alone |
 | `debugger` full-screen display | Added | on a terminal that reports its size and has an alternate screen the debugger takes the whole screen; F1 help, F4 the program's screen; a terminal without one (the `windows` type today) keeps the line-by-line debugger |
 | immediate messages | Changed | `message ... immediate` is shown in a box over the alternate screen, or as lines and `Press return to continue` |
 | `screen` statement | Added | menus, dialogues and forms from BASIC; tabs, text areas, tables and trees; scroll bars and progress bars; the mouse |
+| `screen form fill`, `stretch` | Added | a form that takes the whole window and follows it: a text area or table with `stretch` gets the spare room and what lies beyond it moves, with no code in the program; below the form's own size one warning holds the keyboard |
+| `screen move` size | Changed | a text area, table or tree takes a new size, and a label or entry field a new width; a text area or table keeps what it holds |
 | themes | Added | `mono` (the default), `classic` and `blue`; `screentheme=` in `sd.conf` chooses the default; a colour theme is refused where the terminal cannot show colour |
 | toolkit window size | Changed | a page of the full-screen toolkit refuses a window of more than 500 columns by 300 lines before it takes the screen (opening one cost time as the square of the height); "Press Enter to return" no longer names the home screen |
 | window size | Changed | SD reads the terminal's window size at the start and when it is resized; `kernel(k$winsize)` answers it; `term w,h` holds until the next resize |
