@@ -530,6 +530,43 @@ group is made empty, and nobody is in it until you say so. You can then turn
 them off one account at a time, and a later install does not turn them back
 on. Only accounts made after the upgrade start with everything off.
 
+### The accounts on one screen: `tool.accounts`
+
+```
+tool.accounts
+```
+
+A full-screen page in SDSYS's VOC only (a window of 140 columns by 43 lines or more; in a bigger window this page, like every
+administrator page, uses the whole window, with more rows and wider boxes, and follows a resize). The list is every
+registered account but SDSYS: its name, its kind (user, group or other), whether it is suspended, **the
+gates that are on for it** (read the way `tool.gates` reads them: the register and the Windows groups) and
+how many sessions are signed on in it. The box at the foot shows the account under the cursor: its path,
+its Windows user and group, its routes, a group account's members, the gates that are on and who is signed
+on in it. **The gate switches are `tool.gates`'s, not this page's**: a new account has every gate off, as
+the verb makes it.
+
+| Key | Runs |
+|---|---|
+| `S` | `modify.account name suspended`, or `unsuspended` when the account is suspended already |
+| `A` | `modify.account group add user`, on a group account, for the Windows user you type |
+| `R` | `modify.account group delete user`, taking one away |
+| `C` | `create.account group name no.query`, `create.account other name path no.query` (the path written with forward slashes, such as `C:/Data`), or `create.account user name {none\|ssh\|api\|both}` |
+| `X` | `delete.account name`, after you type the account's name |
+
+Each shows its command and what it does in a box answered Run or Cancel, **and Cancel is what Enter
+chooses**. The verbs ask for the administrator again and write their own audit lines; the page runs
+nothing else. **`/`** goes to the next account whose name holds a text you type (any case; it goes
+round to the top): the letters are this page's commands, so `/` is how you find an account by typing.
+**Two of them are not run through the page**: creating a user account and deleting an account hand the
+terminal to the verb, because `create.account user` asks for the new person's password at a prompt of its
+own that shows nothing, and `delete.account` has no `no.query` and asks once for its own confirmation.
+Nothing typed at either prompt passes through the page; when the verb ends, the page takes the screen again
+and shows what is registered now. `X` asks no `remove.home` question: `delete.account` removes the profile
+of a Windows user SD made in any case. A suspended account is refused by LOGIN, ssh and the API; sessions
+already signed on in it keep running until they end; nothing changes in Windows, so lifting the suspension
+costs nothing. `F5` reads everything again, `F1` explains the page and `Ctrl-Q` leaves. Opening the page
+writes the audit line `tool start app=tool.accounts`.
+
 ### Every account against every gate: `tool.gates`
 
 ```

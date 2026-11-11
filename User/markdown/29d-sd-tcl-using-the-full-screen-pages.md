@@ -136,4 +136,4 @@ left it.
 ## Not in SD Core for Windows yet
 
 The AI line (an `AI>` row on every page where the administrator allows the AI) and the administrator pages
-`tool.accounts`, `tool.audit`, `tool.config` and `tool.jobs` are in SD Core for Linux and not here yet.
+`tool.audit` and `tool.jobs` are in SD Core for Linux and not here yet.
