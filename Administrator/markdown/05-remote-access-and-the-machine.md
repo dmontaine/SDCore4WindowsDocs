@@ -233,6 +233,34 @@ keyword, `where` prints the account pathname, and `@path` holds it. `set.path`
 would read as setting that. `os.path` collides with the notion of a host
 filesystem path. `append.sd.path` cannot be read as either.
 
+## Everything that reaches SD from outside, on one screen: `tool.remote`
+
+```
+tool.remote
+```
+
+A full-screen page in SDSYS's VOC only (a window of 140 columns by 43 lines or more) of five views,
+chosen with the keys `1` to `5`:
+
+| View | What it shows and does |
+|---|---|
+| `1` doors | what `remote.api` and `remote.ssh` say with no keyword: **the machine's own answer**, read back from `sd.conf` and the firewall rules, not what the page meant. `A` changes the API (`on`, `local` or `off`) and **gives the terminal to `remote.api`**, so that its restart question is yours to answer; `S` changes ssh (`on` or `off`) at once. Turning either **on** lets other computers reach this one, so its box wants the word `OPEN` typed |
+| `2` routes | every user account with the doors it has (`ssh`, `api`, `files`, `files-write`, `files-admin`) and the NET gate, and in words how it can be reached: a door is membership of its Windows group. It only shows: the switches are `tool.gates`'s |
+| `3` servers | the SDNet servers of the `netservers` file: name, address, remote account and mode, the pin shortened, the local accounts that may use it. `X` deletes the one under the cursor (`delete.server`, which does not ask itself, so the box is the question). `N` asks every field, checks them the way `set.server` does and gives **the terminal to the verb**, whose `connect` step shows the key the server presents and asks whether to trust it |
+| `4` connected | every session now by the door it came through: the user number, the kind (user, api, sdnet, phantom), the login user, the account and where it came from |
+| `5` TLS | this machine's TLS identity as `settings.report` gives it: the certificate fields and the public-key hash another SD server pins. Never the private key |
+
+**`A` can end your own session.** Going to or from `off` moves the listener, which SD opens only
+when it starts, so `remote.api` asks whether to restart SD now (Enter answers no), and a restart ends
+every SD session, this page's too. Answered no, the setting waits for the next start of SD.
+
+`remote.ssh` and `delete.server` run through the routine all the toolkit pages use, each only after a
+box that shows the command and what it does was answered Run (**Cancel is what Enter chooses**);
+`remote.api` and `set.server` are run by the verb itself on the terminal, after the same box. The verbs
+ask for the administrator again and write their own audit lines; the page writes nothing. `F5` reads
+everything again, `F1` explains the page and `Ctrl-Q` leaves. Opening the page writes the audit line
+`tool start app=tool.remote`.
+
 ## When a change fails
 
 All four report a failure rather than falling silent, and every failure message
