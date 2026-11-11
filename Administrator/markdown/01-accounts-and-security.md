@@ -179,6 +179,7 @@ these:
 | `OPENSEQ` and `OPENPATH` with a path | status 3035, so `OPEN ... ELSE` works as before |
 | `DIR()` and the `select.dir` verb | refused (the verb says why) |
 | `DELETESEQ` of a bare path | refused; the file is left alone |
+| `!OSCOPY`, `!IOSCOPY` and the `oscopy` verb | refused, status -4 (the verb says why) |
 | printing into a file by path (`setptr ... as pathname`, `SETPU`, or a `$hold` print name that climbs out with `..`) | refused |
 
 `..` is resolved before the test, so it does not get round it, and a path inside
@@ -269,8 +270,8 @@ pathname, `compile.dict data`, `generate`, `como on ... in`, and the `.s` and `.
 stack commands on an existing VOC record. Making a new file is not asked. `cname` will not take a
 program file out of its name, or put a file under one, for a person without the
 switch, so a rename is not a way round. `OPENSEQ` in such a place opens the file
-for reading only and cannot create one; `DELETESEQ` and a print file made there
-are refused. For these operating-system routes the name of the record or file
+for reading only and cannot create one; `DELETESEQ`, a print file made there,
+and `!OSCOPY` or `!IOSCOPY` into it are refused. For these operating-system routes the name of the record or file
 being made counts only when it is itself a directory or anything but a plain
 file, so a plain file called `sample.bp` in an ordinary directory is not held
 back, while a file inside the directory `bp` is. Over the API a client's
@@ -292,7 +293,7 @@ only, not again at `logto`.
 command — a new pointer made by `create.file`, a new saved sentence, a
 compiled I-type, the command stack — and anything done from the shell by an
 account that holds `sh-on` or `os-on`. The operating-system routes above
-(`OPENSEQ`, `DELETESEQ`, print files) are not looked at for an account that
+(`OPENSEQ`, `DELETESEQ`, print files, `!OSCOPY`, `!IOSCOPY`) are not looked at for an account that
 holds `os-on`, when the path is outside the account's own directory: `os-on`
 already trusts it with the whole machine. The switches are about changing
 these files by hand or by program, not a replacement for the operating-system

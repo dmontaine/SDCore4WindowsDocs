@@ -330,6 +330,38 @@ An item with no carriage return is **not rewritten**, so a second run says
 *0 record(s) fixed in notes*. The file must be a directory file (*is not a
 directory file*), and it must open (*Cannot open*). A file name is required.
 
+## Copying an operating system file
+
+```
+oscopy source target {overwrite | append}
+```
+
+Copies one **operating system** file, named by its path, which no record verb
+can do. Without an option it **will not replace** a target that exists:
+
+```
+oscopy C:/Users/pat/in.txt C:/Users/pat/out.txt
+oscopy C:/Users/pat/in.txt C:/Users/pat/out.txt
+```
+
+```
+C:/Users/pat/in.txt copied to C:/Users/pat/out.txt
+Target C:/Users/pat/out.txt already exists: give overwrite or append
+```
+
+`overwrite` replaces it and `append` adds the source to the end of it. A source
+that is not there is reported (*Source ... not found*); any other failure says
+*Cannot copy* with the status. **A directory is not copied** — the SD BASIC
+subroutine `!ioscopy` does a whole tree — and a program does the same as the
+verb with `!oscopy`.
+
+**The copy is done by Windows as you, so it has your own permissions and nobody
+else's**, and a path with a single quote in it is refused. **A path outside the
+account's own directory needs the `os-on` switch**, the same one as
+`OS.EXECUTE`; an account without it gets *name has no OS access, so a file or
+directory outside its own account cannot be reached by pathname* and nothing is
+copied.
+
 ## Triggers
 
 ```
@@ -498,8 +530,8 @@ dictionary changes only when the account has `bp.edit`, `voc.edit` or `dict.edit
 `cname`, `configure.file`, `compare.files`, `copy`, `create.file`,
 `delete`, `delete.file`, `dump`, `file.stat`, `fixdir`, `find.file`, `fstat`,
 `fstat.user`, `hsm`, `import.csv`, `import.json`, `import.xml`, `convert.data`,
-`list.triggers`, `set.trigger` are all in every
-account's VOC. (`oscopy` and `set.mode` are not provided.)
+`list.triggers`, `oscopy`, `set.trigger` are all in every
+account's VOC. (`set.mode` is not provided.)
 
 ## What is not here
 

@@ -147,6 +147,7 @@ not refused — the name is simply not recognised.**
 | **`nselect`** | **`nselect`** *file* {*list.no*} |  |
 | **`off`** | **`off`** |  |
 | **`option`** | **`option`** *name* {**`on`** \| **`off`** \| **`display`**}  ·  **`option all off`**  ·  **`option`** |  |
+| **`oscopy`** | **`oscopy`** *source* *target* {**`overwrite`** \| **`append`**} |  |
 | **`pause`** | **`pause`** {*seconds*} |  |
 | **`pdebug`** | **`pdebug`** {*command*} |  |
 | **`pdump`** | **`pdump`** *n* |  |
