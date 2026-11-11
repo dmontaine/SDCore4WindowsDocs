@@ -460,7 +460,9 @@ the fixes to SD's own code. The sections above are the openQM items that were bu
 | `shared` account | Added | a group account whose files every account opens by name, with no `logto` or pointer; made by the installer; its Windows group `sdg_shared` has no members |
 | `shared-read-off` | Added | withdraws the shared account's files from one account (on for every account as delivered); `shared-read-on` gives them back |
 | `shared-write-on` | Added | lets one account change the shared account's files (off as delivered); `shared-write-off` takes it away |
+| `set.config` | Added | changes one of 14 tuning parameters of `sd.conf` (administrator, through SDSYS's elevated helper): a name on the helper's list and a whole number inside the range SD enforces; the old file is kept as `sd.conf.bak` |
 | `ssh` and `api` | Changed | a new account gets neither; `create.account user name ssh`, `api` or `both` and `modify.account` change it |
+| `tool.config` | Added | full-screen page that shows every `sd.conf` parameter with what SD is running with, what the file says, the default and when a change takes effect, and names a line SD does not know; `E` changes one of 14 tuning parameters through `set.config` |
 | `update.accounts` deletion list | Changed | after the copy from `newvoc` it removes from the account's VOC the records on SD's deletion list (`sdsys/voc_removed`), but only the record SD shipped (not one of your own, not a `[locked]` one unless it is a verb), after saving a copy, and audits it; before `newvoc.mods` |
 | `voc-on` and `voc-off` | Added | per-account switch for saving a change to a VOC |
 

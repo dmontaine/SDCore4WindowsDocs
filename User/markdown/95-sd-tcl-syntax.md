@@ -180,6 +180,7 @@ not refused — the name is simply not recognised.**
 | **`set`** | **`set`** *name* *value* |  |
 | **`set.backup.directory`** | **`set.backup.directory`** {*folder*} | S |
 | **`set.batch`** | **`set.batch`** {{**`add`** \| **`remove`**} *account* *command*}  —  the commands an account may run from the command line, as a scheduled job runs one (none is allowed as delivered); without arguments, lists them | S |
+| **`set.config`** | **`set.config`** *parameter* *value*  —  changes one of 14 tuning parameters of **`sd.conf`** (administrator, through SDSYS's elevated helper); *value* is a whole number inside the range SD enforces | S |
 | **`set.date`** | **`set.date`** *date* | S |
 | **`set.exit.status`** | **`set.exit.status`** *n* |  |
 | **`set.file`** | **`set.file`** *account* *file* *pointer* |  |
@@ -208,6 +209,7 @@ not refused — the name is simply not recognised.**
 | **`sum`** | **`sum`** {**`dict`**} *file* {*selection*} *field* |  |
 | **`term`** | **`term`** \| *width*{`,`*lines*} {*type*} \| **`color`** *bg*{`,`*fg*} \| **`default`** \| **`display`** |  |
 | **`time`** | **`time`** \| **`internal`** |  |
+| **`tool.config`** | **`tool.config`**  —  the configuration on one screen (administrator): every parameter of **`sd.conf`** with what SD is running with, what the file says, the default and when a change takes effect, the backup directory and the operating system part of the settings report; **`E`** changes one of 14 tuning parameters through **`set.config`** behind a box answered Run, and shows why and the line to add by hand for every other | S |
 | **`tool.gates`** | **`tool.gates`**  —  for the administrator the gate matrix (every account against every per-account gate; queued changes run as one **`modify.account`** command); in any other account, what this account may do and why (read only) |  |
 | **`tool.keys`** | **`tool.keys`** |  |
 | **`tool.menus`** | **`tool.menus`**  —  menu management (administrator): the home screen's tiles for each account, where each account starts, who may add their own programs | S |

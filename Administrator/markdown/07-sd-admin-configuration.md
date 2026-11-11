@@ -101,7 +101,8 @@ of contributors.
 ## Changing a parameter
 
 Editing `sd.conf` and restarting SD is the durable route, and for most
-parameters it is the only one.
+parameters it is the only one. Fourteen tuning parameters can also be changed from SD itself, with
+`set.config` or the `E` key of `tool.config` (see *Changing a parameter from SD*, below).
 
 **23 parameters can also be changed for the current session:**
 
@@ -109,8 +110,8 @@ parameters it is the only one.
 config sortmem 8192
 ```
 
-That writes to the session's own copy of the settings, taken from shared memory
-when the session started. It does not reach `sd.conf`, it does not affect any
+That writes to the session's own copy of the settings, which the session read
+from `sd.conf` when it started. It does not reach `sd.conf`, it does not affect any
 other session, and it is gone when the session ends.
 
 The 23 are `DUMPDIR`, `FLTDIFF`, `FSYNC`, `GRPSIZE`, `INTPREC`,
@@ -121,6 +122,187 @@ The 23 are `DUMPDIR`, `FLTDIFF`, `FSYNC`, `GRPSIZE`, `INTPREC`,
 Everything else takes effect only when SD is next started. That includes every
 limit which sizes the shared memory segment and every setting the API listener
 reads.
+
+**A session reads `sd.conf` itself when it starts.** It does not copy the
+settings the service left in shared memory, which an SD user with a shell could
+change. So an edit to a setting a session keeps for itself (the 23 above, and
+others such as `USRDIR` and `GRPDIR`) reaches the sessions started after it,
+without a restart. **A bad line in `sd.conf` stops a new session from starting**,
+with the message `sd -start` gives, until it is repaired; SD and the sessions
+already running are not affected. Every SD user's session opens the file, so it
+stays readable by `sdusers`; only administrators can change it.
+
+## The parameters on one screen: `tool.config`
+
+```
+tool.config
+```
+
+A full-screen page in SDSYS's VOC only (a window of 140 columns by 43 lines or more). **It looks, and
+it can change 14 of the parameters**; it writes no file itself. A change is made by the verb
+`set.config` (see *Changing a parameter from SD*, below) through SDSYS's elevated helper, and only
+after you have typed a value, the page has checked it against the range SD enforces and a box has
+shown the exact command and been answered Run. The other 37 parameters are not changed from SD;
+editing the file as an administrator and restarting SD stays the way to change them.
+
+The page has three views. **P, the parameters**: one row for every parameter SD knows, from the table
+`config.table` in the system directory, which names every parameter SD reads. The columns are
+the value this SD is running with (what `config()` reports), the value `sd.conf` says now (the file is
+read again, a parameter written twice counted the way SD counts it, the flag parameters added up),
+the default (what SD uses when the file does not say), when a change takes effect and whether anything
+acts on it:
+
+| Takes effect | Meaning |
+|---|---|
+| `session` | a session reads `sd.conf` itself when it starts, so an edit reaches the sessions started after it, and not the ones already running |
+| `restart` | the parameter sizes or starts the system (everything in the shared memory segment, the API's settings); it takes effect when SD is next started |
+| `now` | a program reads `sd.conf` each time it uses the parameter (`BACKUPDIR`), so a change needs no restart and no new session |
+
+| Status | Meaning |
+|---|---|
+| `live` | something acts on it |
+| `file` | read from `sd.conf` by a program each time it is used, not by the kernel (`BACKUPDIR`) |
+| `inert` | accepted, and nothing on Windows acts on it (`SPOOLER`: SD prints through Windows printing) |
+| `unknown` | a name in the file that SD does not know |
+
+A row marked `*` is one where the file and the running SD disagree. The box at the foot says for that
+parameter whether the sessions started now will read the file's value (`session`) or SD keeps the old
+one until it is restarted (`restart`). **A name in the file that SD does not know is listed at the end
+as `unknown`, and the top of the page names it: SD does not start with it, and no new session starts
+while the file holds it** (the section *A name SD does not recognise stops it starting* above). `D`
+shows only the rows where the file and SD disagree, and `S` only the parameters the file sets. The last
+column, `Change`, says `e` for a parameter the page can change (press `E`) and `by hand` for every
+other.
+
+`SDSYS` and `BACKUPDIR` cannot be read with the `config()` function; the page says `(not readable)`
+for what SD is running with and shows the file's value. `DEBUG` is not compared: the function reports
+it in another form than the file writes it.
+
+**B, the backup directory**: the directory saved with `set.backup.directory` and whether it is there;
+**R, the report**: the operating system part of `settings.report` (ssh, the API and its firewall rule,
+the SD service and the groups), made when the view is opened and on F5. It holds no key and no
+password hash. `F5` reads the file, the backup directory and the report again; `E` changes the
+parameter under the cursor, or says why it cannot be changed here; `F1` explains the page; `Ctrl-Q`
+leaves. Opening the page writes the audit line `tool start app=tool.config`; a change writes the line
+of `set.config` (below), and nothing else the page does is written.
+
+### Changing a parameter from SD: `set.config` and the `E` key
+
+```
+set.config cleanup 600
+```
+
+The administrator's verb (SDSYS's VOC only). It changes **one** line of `C:\ProgramData\SD\sd.conf`:
+the first word is a parameter name (letters and digits; SD makes it capitals, as the file spells it)
+and the second a whole number of up to seven digits. It runs SDSYS's elevated helper
+(`sd-confset.ps1` in SD's program folder) to make the change; the helper checks everything again and is
+the authority. `set.config` prints `CLEANUP is now 600 in sd.conf` and, for a parameter that sizes the
+system, that it takes effect when SD is next stopped and started (`sd -restart`, or `Stop-Service SD`
+then `Start-Service SD`), or, for one a session reads for itself, that sessions started from now on use
+it. A refusal prints the helper's own sentence after `sd.conf was not changed:` and writes nothing.
+
+**What the helper does.** It accepts only the 14 parameters in the first table below, and only a value
+inside the range SD itself enforces for that parameter when SD starts (so it cannot accept
+what SD would refuse). It adds or replaces the line **inside the `[sd]` section**, the only place SD
+reads (a line appended after another section's header would be ignored without a word); a second
+line for the same parameter in an `[sd]` section is dropped, because SD keeps the last one; every
+other line, comments included, is kept exactly as it was, with the file's own line ends. The new file
+is written beside the old one and put in its place by one Windows replace, which keeps the old file's
+permissions, so a session that reads the file at that moment sees either the old text or the new,
+never half of it. **The file as it was is kept as `C:\ProgramData\SD\sd.conf.bak`** (one generation;
+a second change replaces it with the file as it was before that change). A change that says what the
+file already says writes nothing and leaves the `.bak` alone. A file holding anything but plain ASCII
+is refused, not rewritten. The helper writes `C:\ProgramData\SD\sd.conf` and nothing a caller passes
+moves it; when the session reads another file (the `SD_CONFIG` variable) the page says so in its box.
+Only an administrator's session can ask: the verb refuses any other, and `sd.conf` is closed to
+everyone else. SD has no key that puts `sd.conf.bak` back; from an elevated PowerShell prompt,
+`Copy-Item C:\ProgramData\SD\sd.conf.bak C:\ProgramData\SD\sd.conf` does.
+
+**One audit line** for each time the helper is asked: `set.config key=cleanup value=600 status=ok`, or
+`status=refused`. Every changeable parameter is a number, so the value is written.
+
+**On the page.** `E` on a row whose `Change` column says `e` asks for the new value (the question
+shows what SD runs with and what the file says), checks that it is a whole number inside the range
+before anything else happens, and then shows the exact command in the toolkit's box with a plain
+sentence about when it takes effect. Cancel, which is what Enter chooses, runs nothing. Run runs
+`set.config` and the page reads the file and SD's own values again and says what changed: the file's
+old and new value, and what SD is running with. `E` on any other row writes nothing: it shows why the
+parameter is not changed from SD, and the exact line to add by hand, as an administrator, in the
+`[sd]` section of the file SD reads.
+
+**The 14 parameters** are the tuning ones: capacity, performance, timeouts and the printer's defaults.
+Each is range-checked by SD and each only sizes or times something SD does; none is a door, a path, a
+command, a log or a security setting:
+
+| Parameter | Range | Takes effect |
+|---|---|---|
+| `CLEANUP` | 30 to 3600 | restart |
+| `DHCACHE` | 0 to 1024 | session |
+| `GRPSIZE` | 1 to 8 | session |
+| `LGNWAIT` | 0 to 32767 | restart |
+| `LPTRHIGH` | 10 to 32767 | session |
+| `LPTRWIDE` | 10 to 1000 | session |
+| `MAXCALL` | 10 to 1000000 | session |
+| `MAXRLOCK` | 0 to 100000 | session |
+| `NETREPLY` | 1 to 3600 | session |
+| `NETWAIT` | 1 to 3600 | session |
+| `NUMLOCKS` | 1 to 32767 | restart |
+| `RECCACHE` | 0 to 32 | session |
+| `SORTMRG` | 2 to 10 | session |
+| `USPLIT` | 0 to 1 | restart |
+
+**The other 37 are not changed from SD**, and the helper refuses them by name (a name it does not
+know at all it refuses with a different sentence, because an unknown name in `sd.conf` stops SD from
+starting). They are the doors and what they allow (`APIPORT`, `NETDIRS`, `NETFILES`, `SDCLIENT`),
+every path and command, the log, dump and diagnostic settings, the security throttle `PWDELAY`, the
+sizes and combinations that SD does not check or checks against each other, and the ones that change
+what existing programs compute. Change them by hand, as before. The page shows the same sentence in
+its box:
+
+| Parameter | Why it is not changed from SD |
+|---|---|
+| `APIPORT` | A door: it opens the API listener to the network. |
+| `BACKUPDIR` | A directory: set.backup.directory saves it, with its own checks of the path. |
+| `CMDSTACK` | Sizes a table in shared memory and SD checks no range: a mistake shows only at the next start. |
+| `DEADLOCK` | A diagnostic: 2 makes SD write a file of the locks involved; set it by hand while you hunt one. |
+| `DEBUG` | Debugging flags of the kernel: they change what SD writes and exposes. |
+| `DUMPDIR` | A directory: process dumps are written there and can hold what a session had in memory. |
+| `ERRLOG` | Sizes the error log; SD checks no range, and a small size discards its oldest entries sooner. |
+| `FDS` | Limits the file descriptors SD uses; SD checks no range: a mistake shows at the next start. |
+| `FLTDIFF` | Changes how every program compares floating point numbers. |
+| `FSYNC` | Trades the safety of data against speed; flag bits that SD does not check. |
+| `GRPDIR` | A directory: group accounts are made there. |
+| `INTPREC` | Changes the results of arithmetic in programs that already exist. |
+| `MAXIDLEN` | Structural: the longest record id of the whole system, which reaches every file and program. |
+| `MUSTLOCK` | Makes a write fail unless the record is locked first, which can stop programs that exist. |
+| `NETDIRS` | A door: it widens what an API session may reach beyond its own account. |
+| `NETFILES` | A door: bit 2 gates API request 29, a remote open of an account. |
+| `NUMFILES` | Sizes the open file table in shared memory; SD checks no range. |
+| `NUMUSERS` | Sizes the user table, which bounds who can sign on; SD checks no range. |
+| `OBJECTS` | Limits the programs a session keeps in memory; SD checks no range. |
+| `OBJMEM` | Limits the memory those programs may take; SD checks no range. |
+| `PDUMP` | Flag bits that say when a process dump is written; a dump can hold what a session had in memory. |
+| `PHANTOMS` | Must agree with USERPOOL: a wrong combination stops SD from starting. |
+| `PWDELAY` | A security throttle: the pause after a failed network sign-on; 0 removes it. |
+| `SAFEDIR` | Changes how SD replaces the files of a directory file, by writing a new one and renaming it. |
+| `SCREENTHEME` | Text that SD acts on; SD checks no value. |
+| `SDCLIENT` | A door: restricts what an API session may do, and a lower value loosens it. |
+| `SDSYS` | The system directory: SD cannot start, or finds another system, if it is wrong. |
+| `SH` | A command SD runs as an interactive shell. |
+| `SH1` | A command SD runs for a shell command line. |
+| `SORTMEM` | A size in kilobytes that SD does not check, so a mistake shows only when a sort runs. |
+| `SORTWORK` | A directory: the work files of a large sort are written there. |
+| `SPOOLER` | Nothing on Windows acts on it. |
+| `TEMPDIR` | A directory: temporary files are written there. |
+| `TERMINFO` | A directory: terminal definitions are read from there. |
+| `USERPOOL` | The highest user number: PHANTOMS is checked against it; a mistake stops SD. |
+| `USRDIR` | A directory: user accounts are made there. |
+| `YEARBASE` | Changes how every program reads a two-digit year; SD checks no range. |
+
+**What this does not do.** It does not restart SD: a `restart` parameter changes the file and the
+running SD keeps its old value until it is stopped and started. It does not reach a file other than
+`C:\ProgramData\SD\sd.conf`. It cannot change a parameter that SD does not range-check, however
+useful that would be; such a parameter joins the list when SD itself checks it.
 
 ## Sessions and limits
 
