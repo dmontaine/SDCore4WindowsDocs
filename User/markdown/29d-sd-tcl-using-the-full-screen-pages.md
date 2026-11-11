@@ -4,7 +4,8 @@ Subtitle: How to move around, choose, answer and get help on every full-screen p
 Every full-screen page of SD - the home screen, the development tools (`tool.files`, `tool.voc`, `tool.dict`,
 `tool.query`, `tool.bulk`, `tool.catalog`, `tool.test`), the administrator's pages, `sp.view` and the dictionary form -
 is built the same way and answers the same keys. Learn them once here; each page's own help (F1) adds only what is
-particular to that page. The home screen has a page of its own: [The Home Screen](29a-sd-tcl-the-home-screen.html).
+particular to that page. What the pages are *for* is on their own pages: [The Home Screen](29a-sd-tcl-the-home-screen.html),
+[The Development Tools](29c-sd-tcl-the-development-tools.html).
 
 ## The window
 
