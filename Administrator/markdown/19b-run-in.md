@@ -55,9 +55,10 @@ must be, in that account's VOC, exactly the entry SD ships: the record of the sa
 `newvoc`, its type letter and everything after the description. An account that has changed or
 removed one (its own `basic`, say) is refused before anything happens, and before anything is
 kept or changed: *run.in: basic is not SD's own entry in the VOC of account acme (it is missing or
-was changed there); nothing was run*. Put SD's own entry back in that account's VOC (the record of
-the same name in `newvoc`; `update.accounts` adds a missing entry but leaves a changed one alone)
-and try again. **An account whose VOC has no `no.catalog` keyword** (one made before the keyword
+was changed there); nothing was run*. Put SD's own entry back in that account's VOC and try again:
+`update.accounts` does it, since it adds a shipped entry that is missing and rewrites one that differs
+from the record of the same name in `newvoc` (it asks first where the type letter differs, and keeps an
+entry whose description says `[LOCKED]` unless it is a verb). **An account whose VOC has no `no.catalog` keyword** (one made before the keyword
 existed and not updated since) is refused for `basic` until its VOC has it.
 
 **On Windows that is not the whole of it.** An SDSYS session's own Windows token is elevated for the
