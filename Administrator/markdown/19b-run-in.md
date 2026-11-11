@@ -41,13 +41,19 @@ catalog if the directive says `global`. To catalog a program of an account, say 
 `run.in acme catalog bp prog`. `run.in` does not start the account's `login` paragraph (it would
 run with the administrator's rights), and it does not nest.
 
-## What it refuses on Windows, and why
+## The command does not run as the administrator
 
-**On Windows `run.in` is new authority.** `LOGTO` out of SDSYS gives up the administrator's rights
-and ends the elevated helper; `run.in` keeps both for the one command, so the command has the
-administrator's rights inside the account. And an SDSYS session's own Windows token is elevated, so
-anything of the account's that ran during the command would run as the elevated administrator. So,
-once it is in the account and before the command runs, `run.in` refuses:
+The account's files, VOC and programs are written by the account's user, so nothing in them is
+trusted. For the command itself the administrator flag is **off**, only the edit gate the command
+needs is on (`bp-edit` for `basic`, `catalog`, `decatalog` and `delete.catalog`, `dict-edit` for
+`compile.dict`), and `sh` and `os.execute` are off whatever the account's own switches say.
+Everything is put back when the command ends, the flag last. So `run.in acme catalog` with a
+`global` request is refused, as it would be for the account.
+
+**On Windows that is not the whole of it.** An SDSYS session's own Windows token is elevated for the
+whole session, and turning SD's flag off does not change it. So anything of the account's that ran
+during the command, and any file it read, would have the elevated administrator's reach. So, once
+it is in the account and before the command runs, `run.in` refuses:
 
 * **a command or option word that is not the VOC entry SD supplies.** The account's VOC entry for
   the command (`basic`, `catalog` ...) and for each option word (`no.catalog` included) must be
@@ -69,11 +75,21 @@ once it is in the account and before the command runs, `run.in` refuses:
   directive names while it compiles; under `run.in` it refuses it instead, and the compile fails
   with `$EXECUTE is not run in a compile that run.in runs`.
 
+And while the command runs:
+
+* **an include file or a dictionary outside the account.** A `$include` (or `include`), `$dict` or
+  `file` that leads outside the account's own directory, through a pointer in its VOC, fails the
+  compile: `... is outside the account: a compile started by run.in reads include records and
+  dictionaries in the account and syscom only`. SD's own `syscom` headers are still found.
+* **a Q-pointer out of the account.** A Q-pointer, or the *account*`:`*file* form, leads only into
+  the account the command runs in.
+* **`logto`.** `logto is refused while run.in is running a command in account acme`.
+
 Each refusal writes `run.in refused account=ACME reason=...` to the audit trail.
 
-**What it does not cover:** a source that includes a record (`$include`) from another of the
-account's files reads that file too; a read trigger on that file would run. The files a command
-reads by a name in the source are not listed in advance.
+**What it does not cover:** a source that includes a record from another of the account's own files
+reads that file too, and a read trigger on that file would run. The files a command reads by a name
+in the source are not listed in advance.
 
 ## The audit trail
 
