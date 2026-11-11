@@ -87,6 +87,10 @@ to it.
 and says exactly what it destroys and where. **A silent uninstall never
 deletes the database**, whatever the prompt would have offered.
 
+**The administrator's scheduled jobs are removed either way**: every SD task
+in Task Scheduler and its definition, since a task left behind would name a
+program that is gone.
+
 **The uninstaller does not remove OpenSSH.** It may predate SD or be in use by
 something else. It does restore `sshd_config`, keeping the original as
 `sshd_config.before-sd` — but it deliberately does **not** widen the firewall

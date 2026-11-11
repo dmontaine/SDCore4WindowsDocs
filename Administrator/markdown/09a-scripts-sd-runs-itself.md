@@ -65,17 +65,18 @@ they were doing.
 The verbs are covered in the SD Core for Windows administrator documentation,
 under *Remote access and the machine*.
 
-Three more verbs run a script for the Windows half of their work. **They are
-not for typing either**: each prints one closing line the verb reads, and
-nothing else.
+Four more verbs run a script for the Windows half of their work. **They are
+not for typing either**: each prints the closing lines the verb reads.
 
 | | Called by |
 |---|---|
 | `sd-account-archive.ps1` | `backup.account` and `restore.account` - writes the backup zip, unpacks one into a staging folder, counts what is there and puts a restored account in place. The zip is the shape SD Core for Linux writes, so a backup made on one can be read on the other, and a junction or symbolic link inside an account is refused rather than followed. Exit 0 done, 1 refused or failed, 2 could not run |
 | `sd-backupdir.ps1` | `set.backup.directory` - saves the folder those two verbs use when none is typed, as the one line `BACKUPDIR=<path>` in `sd.conf`. It makes the folder if needed and proves it can write there first. The path must be a full Windows path in plain ASCII. Exit 0 done, 1 refused or failed |
 | `sd-settings-os.ps1` | `settings.report` - the Windows sections of the report. It never prints a password or a private key; of the API's key-and-certificate file it decodes the certificate only. Exit 0 done, 1 failed |
+| `sd-jobs.ps1` | `set.job`, and `tool.jobs` through it - the job helper: makes, changes, deletes, starts and lists the administrator's scheduled jobs, each a Task Scheduler task `\SD\sdcore-job-`*name* with its definition in `C:\ProgramData\SD\sd-jobs`. It refuses any caller but the Windows account SDSYS, elevated. Exit 0 done, 1 refused or failed |
 
-See [Backing Up and Restoring Accounts](01b-backup-and-restore.html) for the verbs.
+See [Backing Up and Restoring Accounts](01b-backup-and-restore.html) and
+[Scheduled Jobs](17-scheduled-jobs.html) for the verbs.
 
 ## The ones the uninstaller runs
 
@@ -84,6 +85,7 @@ See [Backing Up and Restoring Accounts](01b-backup-and-restore.html) for the ver
 | `remove-sdaccounts.ps1` | takes away the Windows accounts SD created. Only runs if you ask for the data to be removed |
 | `reclaim-profiles.ps1` | removes the Windows profiles SD had to leave behind at the time |
 | `restore-sshonly.ps1` | puts every non-administrator SD account back into `sdsshonly`, reading the account register rather than anything local |
+| `sd-jobs.ps1` | run with `job-purge`: removes every scheduled administrator job, its task and its definition, whether or not the data is removed |
 
 `restore-sshonly.ps1` is the repair for a half-finished removal: an account
 that lost its deny rights but still exists would otherwise become an ordinary

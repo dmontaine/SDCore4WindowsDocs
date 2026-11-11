@@ -98,14 +98,20 @@ record in that account's VOC, with the commands on the lines after the type:
 **2. Check it runs when you type it**, in that account, before putting it on a
 timer.
 
-**3. Add the name to the account's record in `batch.jobs`**, signed in to
-Windows as SDSYS, elevated:
+**3. Add the name to the account's list**, signed in to Windows as SDSYS,
+elevated:
 
 ```
-:ed batch.jobs fred
+:set.batch add fred my.report
+my.report may now be run from the command line in account fred
 ```
 
-One command name per line. Create the record if the account has none.
+**Or use the Scheduled jobs page**, `tool.jobs`. It lists every account
+with the number of commands it may run this way. F6 or Enter moves to
+the account's paragraphs and sentences, each marked as allowed or not.
+Enter on one shows the `set.batch` command and what it does, and runs it
+only when you answer Run. The page does not write an account's schedule:
+step 4 is done in Task Scheduler.
 
 **4. Create the scheduled task.** Windows Task Scheduler runs it; two fields
 carry the whole of it:

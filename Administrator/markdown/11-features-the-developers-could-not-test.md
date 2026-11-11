@@ -142,6 +142,22 @@ credential outright.
 **To settle it.** Create an account, point a scheduled task at it, and see
 whether the task page accepts it.
 
+### The administrator's scheduled jobs
+
+**Known.** `set.job`, its job helper and the check that recognizes a job's run
+were tested piece by piece: the helper against a scratch folder with Task
+Scheduler left out, and the recognition against made-up tokens and files.
+
+**Not known.** None of it has run on an installed system. Whether the run Task
+Scheduler makes of SDSYS, with no stored password, carries the elevated batch
+logon that [Scheduled Jobs](17-scheduled-jobs.html) describes has not been seen,
+and nor has a `backup-all` started that way, or the uninstaller removing the
+jobs.
+
+**To settle it.** As SDSYS, `set.job add test backup-all every 5 minutes`, then
+`set.job run test`; read the audit trail for `reason=scheduled job job=test`,
+then `set.job delete test`.
+
 ## SD BASIC statements that compile but were never run
 
 | | why not |

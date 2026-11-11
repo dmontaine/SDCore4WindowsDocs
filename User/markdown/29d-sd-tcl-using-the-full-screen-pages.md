@@ -42,7 +42,7 @@ reverse video.
 | **F5** | Read everything again and draw the page again. |
 | **Ctrl-L** | Draw the whole page again, as it is, without reading anything. |
 | **Tab**, **Back-tab** (Shift-Tab) | Never move between boxes. In a form or a dialog they go from field to field; in the IDE's editor they indent and outdent; on `tool.gates` they move between the matrix's columns. |
-| **Ctrl-O** | The output of the commands this visit to the page ran: each command, and what it printed or why it was refused, newest first (*View > Output*). `tool.sessions` and `tool.test` show it in a pane of the page that Ctrl-O shows and hides; every other page shows it in a window over the page, where typing narrows it and Enter or Esc closes it. The status line still says the result of the last one. |
+| **Ctrl-O** | The output of the commands this visit to the page ran: each command, and what it printed or why it was refused, newest first (*View > Output*). `tool.jobs`, `tool.sessions` and `tool.test` show it in a pane of the page that Ctrl-O shows and hides; every other page shows it in a window over the page, where typing narrows it and Enter or Esc closes it. The status line still says the result of the last one. |
 | **Ctrl-T** | The next color theme (*View > Theme*): blue, classic, mono, night, paper, in that order, skipping any your terminal cannot show. **SD keeps your choice**: every page, the IDE, SED, the debugger and SP.VIEW start in it from then on, in this account and in later sessions, until you choose another. Where you have not chosen one, the site's theme is used (`SCREENTHEME`, set by the administrator). |
 | **Ctrl-K** | The keys of this page, with what each does (*Help > Keys*). |
 | *View > Mouse* | Stop the terminal reporting the mouse to SD, and start it again. While SD has the mouse, a click goes to SD rather than to the terminal's own text selection; with the mouse off you can select and copy text as at the prompt. The choice holds for every page and the IDE until you change it or sign off. It has no key. |
@@ -135,5 +135,5 @@ left it.
 
 ## Not in SD Core for Windows yet
 
-The AI line (an `AI>` row on every page where the administrator allows the AI) and the administrator pages
-`tool.audit` and `tool.jobs` are in SD Core for Linux and not here yet.
+The AI line (an `AI>` row on every page where the administrator allows the AI) and the administrator page
+`tool.audit` are in SD Core for Linux and not here yet.
