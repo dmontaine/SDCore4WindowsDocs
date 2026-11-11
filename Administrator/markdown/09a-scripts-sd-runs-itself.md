@@ -21,9 +21,13 @@ They are listed so that a name in a log or an error message can be looked up.
 | `install-editors.ps1` | makes sure the editors the `edit` and `micro` verbs run are on the machine |
 | `ssh-preflight.ps1` | asks whether SD may install here at all, and refuses a machine carrying an ssh server SD does not own. Runs before the wizard is drawn |
 | `sync-route-groups.ps1` | creates the two groups that decide which remote route an account may use, and seeds `sdssh` so an existing install does not lose ssh |
+| `make-shared.ps1` | makes the **shared account** at install time, the group account whose files every account with the `shared.read` gate opens by name. `-Preflight` runs before anything is changed and stops the install when an account named `shared` already exists that SD did not make. Exit 0 made (or, with `-Preflight`, go on), 2 already there and SD's, 3 SD would not start, 4 an account of that name in the way, 1 anything else |
+| `load-help.ps1` | loads the context help the `[?]` buttons show, from `sdsys\helptext` into the shared account's `context.help` file, at install and at upgrade. The records SD ships are replaced and any the administrator added are kept. It never stops the install. Exit 0 loaded, 2 nothing to load into (no shared account, or no help text), 3 SD would not start, 1 anything else |
+| `set-start-default.ps1` | sets where a new session starts to the command prompt, when that was the choice in the wizard (the home screen needs no script). It runs `set.start.default terminal` in an internal session and then checks that `start.default` says `terminal`. Fresh installs only. Exit 0 done, 3 SD would not start, 1 anything else |
 | `upgrade-dicts.ps1` | brings an upgraded install's dictionaries up to the release. Runs on an upgrade only |
 | `upgrade-voc.ps1` | brings every existing account's VOC up to the release, by running `update.accounts all`. Runs on an upgrade only |
 | `upgrade-nocase.ps1` | converts an upgraded install's files to case-insensitive record ids. Runs on an upgrade only. It reads each file first and converts only one that holds no two ids differing only by case; a file that does is left as it is and named in `C:\ProgramData\SD\nocase-upgrade.log`, and so is an indexed file, which needs `configure.file` by hand. Exit 0 clean, 2 finished with files left (read the log), 1 failed, 3 SD would not start |
+| `upgrade-gates.ps1` | carries an upgraded install's operating-system grants from the retired `os.users` file to each user account's own register fields (`sh` and `os.execute`), once, so nobody who had a shell or `os.execute` before the upgrade loses it. Runs on an upgrade only; the report is `C:\ProgramData\SD\upgrade-gates.log`. Exit 0 complete, 1 the walk did not finish, 3 SD would not start |
 | `secure-accounts.ps1` | the containers account directories are created in |
 | `secure-account-dirs.ps1` | the ACL on each account's own directory |
 | `secure-audit.ps1` | creates the audit trail and makes it append-only |
@@ -35,6 +39,7 @@ They are listed so that a name in a log or an error message can be looked up.
 | `secure-pcode.ps1` | locks the pcode library, which is the interpreter every session runs |
 | `secure-psdir.ps1` | the directory privileged scripts are written into |
 | `secure-reclaim.ps1` | creates the profile-reclaim store and locks it to SYSTEM |
+| `secure-sdnet.ps1` | creates the folder that holds each person's stored SDNet server logins, `C:\ProgramData\SD\sd-net`, and sets its ACL: SYSTEM and Administrators have full control, `sdusers` may make a sub-folder and nothing more, and the sub-folder a person makes is owned by them and open to no other SD user. It runs after the step that secures the data tree, and it never removes a folder that is there |
 | `secure-sysdirs.ps1` | takes Modify off the system directories that nothing writes |
 | `secure-tls.ps1` | creates the directory the API's TLS relay keeps its server key and certificate in, and locks it to SYSTEM and Administrators. An existing key is never deleted, so reinstalling keeps the identity clients already trust |
 
@@ -65,7 +70,7 @@ they were doing.
 The verbs are covered in the SD Core for Windows administrator documentation,
 under *Remote access and the machine*.
 
-Four more verbs run a script for the Windows half of their work. **They are
+More verbs run a script for the Windows half of their work. **They are
 not for typing either**: each prints the closing lines the verb reads.
 
 | | Called by |
@@ -73,6 +78,7 @@ not for typing either**: each prints the closing lines the verb reads.
 | `sd-account-archive.ps1` | `backup.account` and `restore.account` - writes the backup zip, unpacks one into a staging folder, counts what is there and puts a restored account in place. The zip is the shape SD Core for Linux writes, so a backup made on one can be read on the other, and a junction or symbolic link inside an account is refused rather than followed. Exit 0 done, 1 refused or failed, 2 could not run |
 | `sd-backupdir.ps1` | `set.backup.directory` - saves the folder those two verbs use when none is typed, as the one line `BACKUPDIR=<path>` in `sd.conf`. It makes the folder if needed and proves it can write there first. The path must be a full Windows path in plain ASCII. Exit 0 done, 1 refused or failed |
 | `sd-settings-os.ps1` | `settings.report` - the Windows sections of the report. It never prints a password or a private key; of the API's key-and-certificate file it decodes the certificate only. Exit 0 done, 1 failed |
+| `sd-confset.ps1` | `set.config`, and `tool.config` through it - changes **one** tuning parameter of `sd.conf`: one of fourteen names, digits only, inside the range `config.c` allows. SD runs it as SDSYS's elevated helper; it checks everything again, writes a new file beside `sd.conf` and replaces the old one, which stays as `sd.conf.bak` for one generation. Exit 0 done, 1 refused or failed |
 | `sd-jobs.ps1` | `set.job`, and `tool.jobs` through it - the job helper: makes, changes, deletes, starts and lists the administrator's scheduled jobs, each a Task Scheduler task `\SD\sdcore-job-`*name* with its definition in `C:\ProgramData\SD\sd-jobs`. It refuses any caller but the Windows account SDSYS, elevated. Exit 0 done, 1 refused or failed |
 
 See [Backing Up and Restoring Accounts](01b-backup-and-restore.html) and
