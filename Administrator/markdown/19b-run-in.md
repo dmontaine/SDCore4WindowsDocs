@@ -50,17 +50,21 @@ needs is on (`bp-edit` for `basic`, `catalog`, `decatalog` and `delete.catalog`,
 Everything is put back when the command ends, the flag last. So `run.in acme catalog` with a
 `global` request is refused, as it would be for the account.
 
+**The words must be SD's own.** The command word and every option word (`no.catalog` included)
+must be, in that account's VOC, exactly the entry SD ships: the record of the same name in
+`newvoc`, its type letter and everything after the description. An account that has changed or
+removed one (its own `basic`, say) is refused before anything happens, and before anything is
+kept or changed: *run.in: basic is not SD's own entry in the VOC of account acme (it is missing or
+was changed there); nothing was run*. Put SD's own entry back in that account's VOC (the record of
+the same name in `newvoc`; `update.accounts` adds a missing entry but leaves a changed one alone)
+and try again. **An account whose VOC has no `no.catalog` keyword** (one made before the keyword
+existed and not updated since) is refused for `basic` until its VOC has it.
+
 **On Windows that is not the whole of it.** An SDSYS session's own Windows token is elevated for the
 whole session, and turning SD's flag off does not change it. So anything of the account's that ran
 during the command, and any file it read, would have the elevated administrator's reach. So, once
-it is in the account and before the command runs, `run.in` refuses:
+it is in the account and before the command runs, `run.in` also refuses:
 
-* **a command or option word that is not the VOC entry SD supplies.** The account's VOC entry for
-  the command (`basic`, `catalog` ...) and for each option word (`no.catalog` included) must be
-  SD's own: the same as SDSYS's entry, its type letter and what it runs. An account could otherwise
-  make `basic` a program of its own. `basic in the VOC of account ACME is not the entry SD supplies;
-  run.in did not run the command`. **An account whose VOC has no `no.catalog` keyword** (one made
-  before the keyword existed and not updated since) is refused for `basic` until its VOC has it.
 * **a file the command writes that lies outside the account**: the named file's data and dictionary,
   the `.out` file of `basic` and `catalog`, and the private catalog of `catalog`, `decatalog` and
   `delete.catalog`. A path must be relative, with no `..`, no `@` token and no drive, and what of
@@ -73,7 +77,8 @@ it is in the account and before the command runs, `run.in` refuses:
   the command`.
 * **a `$execute` line in the source it compiles.** The compiler runs the command a `$execute`
   directive names while it compiles; under `run.in` it refuses it instead, and the compile fails
-  with `$EXECUTE is not run in a compile that run.in runs`.
+  with `$execute is refused in a compile started by run.in: it would run a command from the
+  administrator's session`.
 
 And while the command runs:
 
@@ -85,7 +90,8 @@ And while the command runs:
   the account the command runs in.
 * **`logto`.** `logto is refused while run.in is running a command in account acme`.
 
-Each refusal writes `run.in refused account=ACME reason=...` to the audit trail.
+Each refusal writes `run.in refused account=ACME reason=...` to the audit trail (a refused word
+also gives `word=`).
 
 **What it does not cover:** a source that includes a record from another of the account's own files
 reads that file too, and a read trigger on that file would run. The files a command reads by a name
