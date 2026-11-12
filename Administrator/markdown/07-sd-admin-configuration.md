@@ -31,7 +31,7 @@ It is plain text in one section:
 ```
 [sd]
 SDSYS=C:\ProgramData\SD\sdsys
-GRPSIZE=2
+GRPSIZE=4
 NUMUSERS=20
 ```
 
@@ -325,7 +325,7 @@ useful that would be; such a parameter joins the list when SD itself checks it.
 
 | Parameter | Default | Effect |
 |---|---|---|
-| `GRPSIZE` | 2 | Default group size for a new dynamic file, in 1 KB units. Read by `create.file` and `configure.file` when no group size is given |
+| `GRPSIZE` | 4 | Default group size for a new dynamic file, in 1 KB units. Read by `create.file` and `configure.file` when no group size is given. **4 since 12 Nov 2026** (the shipped `sd.conf` said 2): Linux measured 200,000 records of 130 bytes with 5 to 11 percent of their groups overflowed at 2 KB and under 2 percent at 4 KB. A system that is already installed keeps the `sd.conf` it has, and so keeps 2 until you change it; a file keeps the size it was made with |
 | `MAXIDLEN` | 63 | Maximum record id length. 63 is also the lower bound |
 | `MUSTLOCK` | 0 | When 1, a `write` or `delete` requires the record to be locked first |
 | `DEADLOCK` | 0 | When 1, SD traps deadlocks |
