@@ -140,7 +140,7 @@ Statements, functions, `$mode` words and compiler directives.
 | `open ... non.transactional` | Added | a write through that file variable is not undone by a rollback <!--s 64--> |
 | `openseq` | Added | `creating` makes the file at once; `shared` lets several processes append; a block device can be opened <!--s 485 397 112--> |
 | `option()` | Added | reads and sets the state of an option <!--s 224 473--> |
-| `ospath()` | Added | keys `os$fullpathx` and `os$info` <!--s 293 432 233--> |
+| `ospath()` | Added | keys `os$fullpathx` and `os$info`; and any program, not only an internal one, may now call `ospath()` with openQM's key numbers 0 to 18, behind the account's OS access (`os$uid`, `os$gid` and `os$modes` answer 0 on Windows; key 18 is the owner's Windows account name) <!--s 293 432 233--> |
 | `parse()` and `ttyget()` | Added | `parse()`, `sort.compare()`, `ttyget()`, `ttyset`: split by a pattern; compare by a sort rule; the terminal modes as an array <!--s g166 g183 g187 g190 g191--> |
 | `phantom` statement | Added | starts a phantom from a program; the log name may be a variable <!--s 390 351--> |
 | `precision inherit` | Added | takes the precision of the calling program <!--s 201--> |

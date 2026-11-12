@@ -372,6 +372,7 @@ exist.**
 | **`os.error`** | `os.error()` |
 | **`os.execute`** | `os.execute` *command* {`capturing` *var* | `silent`} |
 | **`osdelete`** | `osdelete` *pathname* |
+| **`ospath`** | `ospath(`*path*, *key* {, *qualifier*}`)` — keys 0 to 18, see [Status and the Machine](16a-sd-basic-status-and-the-machine.html); an internal program's own `ospath()` has other numbers |
 | **`osread`** | `osread` *var* `from` *pathname* `then` … `else` … |
 | **`oswrite`** | `oswrite` *expression* `to` *pathname* |
 | **`outerjoin`** | `outerjoin(`*a*, *b*, *c*`)` |

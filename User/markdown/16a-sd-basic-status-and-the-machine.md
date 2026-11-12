@@ -149,7 +149,6 @@ names something else entirely.** This program, in an ordinary account:
 
 ```
       v1 = kernel(28, 0)
-      v2 = ospath('C:', 1)
       v5 = option('X')
       v6 = pterm(1, '')
 ```
@@ -159,7 +158,6 @@ compiles to, at the **last line of the program**:
 ```
 41: Matrix KERNEL is not referenced in a DIM statement
 41: Matrix OPTION is not referenced in a DIM statement
-41: Matrix OSPATH is not referenced in a DIM statement
 41: Matrix PTERM is not referenced in a DIM statement
 WARNING: KERNEL is not assigned a value
 ```
@@ -173,11 +171,43 @@ is *"Right bracket not found where expected"*, because a matrix takes at most
 two subscripts.
 
 Internal-only: `kernel()` — and therefore the Windows path conversion —
-`ospath()`, `option()`, `pterm()`, `sdext()`, `testlock()` and `getlocks()`.
-The compiler's list is longer than that; those seven are the ones this page
+`option()`, `pterm()`, `sdext()`, `testlock()` and `getlocks()`.
+The compiler's list is longer than that; those six are the ones this page
 put in front of it. They are reachable only from a program compiled
 with `$internal`, which additionally requires an administrator in the `SDSYS`
 account.
+
+**`ospath()` is not on that list any more** (12 Nov 2026). Any program may call it,
+with the openQM keys, and the account's OS access decides what it may look at:
+
+```
+ospath(path, key {, qualifier})
+```
+
+| key | name | answer |
+|---|---|---|
+| 0 · 1 | | is *path* a valid path name (a drive letter and either `\` or `/`) · a valid single file name (text only, no gate) |
+| 2 | | it exists, as a file or a folder |
+| 3 | | a file name `D` and seven digits that is not in the folder *path* (the name, not the path) |
+| 4 · 9 | `os$fullpathx` | the full path name |
+| 5 | | delete a file or an **empty** folder — never a tree. True if it was removed |
+| 6 | | is it open in SD, by any user (the name may be in any case and with either separator) |
+| 7 | | when it was modified, as an epoch value; 0 if it is not there |
+| 8 | | flush this process's cache of dynamic files; true |
+| 10 | `os$parent` | the parent folder; a drive root such as `C:/` is its own |
+| 11 · 12 | `os$uid` · `os$gid` | **0 on Windows**: Windows has no such numbers |
+| 13 · 14 | | make a folder · make it and the levels above it; true if done |
+| 15 | `os$modes` | **0 on Windows**: Windows keeps an access list, not permission bits |
+| 16 · 17 | `os$is.file` · `os$is.dir` | a file · a folder |
+| 18 | | the owner's Windows account name; null if it is not there |
+
+The names are in the `keys.h` header; 6 and 18 have none, so give those as numbers. Every key that
+looks at or changes the disk (all but 0, 1, 4, 8, 9 and 10) asks the account's OS access first: an
+account with neither `os-on` nor `sd-on` is held to its own folder, and a refusal answers false (null
+for 3 and 18) with `status()` set to a permission error (3035). Deleting or making a folder also asks
+the edit switches for a VOC, a dictionary or a program file in the path, and is refused inside the
+shared account to anyone but SDSYS. An unknown key answers false with `status()` 1. The qualifier is
+read and ignored. An internal program's own `ospath()`, with its different numbers, is unchanged.
 
 **And some statements are restricted the same way.** These 34 are
 *"Unrecognised statement"* to a program that is not compiled `$internal` (they
