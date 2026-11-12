@@ -162,8 +162,10 @@ and updated, and any you added are left alone. If that step cannot run, the
 installer says so at the end rather than finishing quietly, and
 `upgrade-dicts.log` in `C:\ProgramData\SD` records what happened.
 
-Neither step can take anything away. `update.accounts` only ever adds records,
-so an account created before a verb was withdrawn keeps it.
+Neither step removes anything of yours. `update.accounts` adds and puts back
+only the records SD ships, and removes a record only when a release has
+withdrawn it and the account still holds the record SD shipped (the deletion
+list, in Account maintenance).
 
 ### An upgrade keeps what accounts could do: `sh`, `OS.EXECUTE` and the edit switches
 
