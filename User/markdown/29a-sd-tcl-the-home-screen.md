@@ -71,8 +71,10 @@ shows `administrator` at the top and at the right end of the menu bar; an accoun
 holder's page says `My tools` and `name @ account`. The two are built from one
 table and differ only in what is in it. The tools that other parts of SD add (the
 account manager, the gate matrix and the rest) each add their own tile when they
-are built. The *AI* menu of the menu bar holds one dim item, *AI is off*: the AI
-line is not built in SD Core for Windows.
+are built. The *AI* menu of the menu bar holds *Ask the AI*, which, like F6,
+moves to the AI line when the AI is on for your account; when it is not, the
+entry is dimmed and its reason is that the AI is not on for this account. The AI line is described in
+[SD TCL - Asking the AI](29b-sd-tcl-asking-the-ai.html).
 
 **The page scrolls.** It is laid out at its full height and only the rows that fit
 are drawn, with a scroll bar in the last column when there is more than fits, so
@@ -214,6 +216,45 @@ page has no tile to open it; and **Switch account** starts the other account at 
 top page. The Back tile cannot be turned off with `set.tile`. **The delivered page
 has no sub-menu yet**: this is the mechanism, in the page table of the `tool_home`
 program, for a page that wants one.
+
+## The AI line
+
+When the AI is on for your account (the administrator has chosen a provider, given it a
+key, **and allowed your account**; see [Asking the AI](29b-sd-tcl-asking-the-ai.html))
+the home screen has one more row, just above the status line, that starts **`AI>`**. Without
+the AI there is no such row and nothing on this page changes.
+
+**Press F6, choose AI > Ask the AI, or click the row**, type
+what you want in your own words, and press Enter:
+
+```
+AI> open the ide
+AI> show me who I am
+```
+
+Enter does not send anything. It shows the provider, the model, the size of all that will be
+sent, and **your request**. SD's own text that goes with it (one fixed instruction, the list of
+what this page can do, what the page says about itself) is sent and counted, but not shown. **Cancel is the default button**,
+so Enter alone sends nothing; choose **Send** (press `s`) to send. While the AI answers the row
+says so and **Esc gives the request up**.
+
+The answer comes in a popup. It says what the AI said, and it may *propose* one thing:
+
+| The AI proposes | What you see | What happens |
+|---|---|---|
+| a **tile** that opens a tool (Editor, IDE, Keys, and the administrator's tiles) | `The AI proposes: IDE - programs and files`, with **Accept** and Reject | **Accept** starts the tile exactly as a click on it would. Enter alone accepts, because the tile only opens a tool you could open anyway. |
+| the **Terminal** tile, or one of **your own programs** on the page | the same, with **Accept** and Reject | **Accept** starts it as a click would. **Enter alone rejects**: the Terminal tile leaves the screen for the command prompt and a program of yours runs a command you wrote, so neither starts unless you choose Accept. |
+| a **command** | the command on a line of its own, with **Run** and Cancel | **Run** runs it as the Terminal tile's prompt would, and waits for Enter. **Enter alone cancels**: a command never runs unless you choose Run. |
+| nothing | only what it said, with Close | nothing |
+
+What it cannot do: it is never offered **Sign out** or **Switch account**; a tile that is not on
+your page is ignored, with a note; a command with a control character in it or of more than 200
+characters is not shown; anything that is not one JSON object is shown as words, with a note, and
+nothing is proposed. The accepted tile or command runs with **your** rights: the gates of your
+account apply as they would if you had typed it.
+
+The audit trail records that you asked (`ai request account=... program=tk_ai bytes.out=...`),
+never what you asked or what came back.
 
 ## Not yet
 

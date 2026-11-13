@@ -19,9 +19,9 @@ which has the full story of each change: what it does, why, and what it does not
   The administrator turns the rest on, account by account, and can turn it off again.
 - A comment at the end of a row, `<!--s` then item numbers then `-->`, names the spreadsheet items the row covers. It is
   for whoever maintains this document and does not show on the page.
-- What SD Core for Windows does not have yet, and SD Core for Linux does, is not listed here. Of the larger features, that is
-  the AI helper (`tool.ai` and `set.ai`); SDNet, the home screen and the full-screen tools, the editors `sed`, `ced` and
-  `ide`, and the master files are in this release. The master files are files of pointers to every account's VOC,
+- What SD Core for Windows does not have yet, and SD Core for Linux does, is not listed here. SDNet, the home screen and the
+  full-screen tools, the editors `sed`, `ced` and `ide`, the master files and the AI helper (`ai`, `set.ai` and `tool.ai`)
+  are in this release. The master files are files of pointers to every account's VOC,
   dictionary and BASIC records (`tool.entries`); the earlier design's complete copies are dropped.
 
 ## Read this first: changes that alter what an existing system does
@@ -51,7 +51,7 @@ which has the full story of each change: what it does, why, and what it does not
 **[REMOVED](#removed)**: what SD no longer has, and what to write instead.
 
 **[New Features Unique to SD Core](#new-features-unique-to-sd-core)**, not part of openQM and not on the spreadsheet:
-[Administration](#administration) · [API and client library](#api-and-client-library) · [Encryption](#encryption) ·
+[Administration](#administration) · [AI](#ai) · [API and client library](#api-and-client-library) · [Encryption](#encryption) ·
 [Files](#files-1) · [Installer](#installer) · [Screen library and terminals](#screen-library-and-terminals) · [SDNet](#sdnet) ·
 [Security](#security) · [System](#system-1).
 
@@ -476,6 +476,20 @@ the fixes to SD's own code. The sections above are the openQM items that were bu
 | `tool.remote` | Added | full-screen page for everything that reaches SD from outside: the API and ssh doors as the machine reports them (changed after a box, and the word OPEN to turn one on; the API with the terminal given to `remote.api`, which asks whether to restart SD), the routes of each user account, the SDNet servers (delete, define with the terminal given to `set.server`), who is connected, and this machine's TLS identity. SD Core for Linux's view of the `sdsys` ssh login is not carried |
 | `update.accounts` deletion list | Changed | after the copy from `newvoc` it removes from the account's VOC the records on SD's deletion list (`sdsys/voc_removed`), but only the record SD shipped (not one of your own, not a `[locked]` one unless it is a verb), after saving a copy, and audits it; before `newvoc.mods` |
 | `voc-on` and `voc-off` | Added | per-account switch for saving a change to a VOC |
+
+### AI
+
+Off as delivered: no provider, no key, and no account has the gate. On Windows SDSYS, and any administrator of the machine,
+can read a provider's key; turning the AI on sends what a person types to the provider's servers.
+
+| Name | Change | What |
+|---|---|---|
+| `ai` gate | Added | per-account switch, `ai-on` and `ai-off` (also on `create.account`): membership of the Windows group `sdaiusers`, read by the helper at each request; off as delivered, except for the installing user's own account when the installer's "open every access gate" box is ticked; SDSYS needs none and may always use the AI once a provider and key are set |
+| `ai` line | Added | the home screen, every toolkit page but `tool.keys`, the IDE and `sed`, the collection editor, the debugger and the dictionary form: type a request, see what will be sent (Cancel the default), and accept or reject what the AI proposes; it never runs anything itself, and SD's own files are never sent |
+| `ai` verb | Added | asks an AI one question; shows the question and the size of all that will be sent, and sends only on `y` or `yes` |
+| `sd-ai` service | Added | the AI helper: a Windows service running Linux's Python helper under the all-users Python 3.13 or later, as `NT SERVICE\sd-ai`, on the pipe `\\.\pipe\sd-ai` (SD checks the pipe's owner first); keys encrypted with DPAPI for that account in `C:\ProgramData\SD\ai\keys`; set up by the installer only when such a Python is there, otherwise by `install-aihelper.ps1` |
+| `set.ai` | Added | SDSYS chooses the provider, model and key from the prompt; `set.ai models` lists the provider's own model names, and a model it does not list is warned about; needs the all-users Python |
+| `tool.ai` | Added | SDSYS page: Anthropic, OpenAI, Google, DeepSeek or custom, one provider for every account, each named provider with its address and a default model (a key is all it needs), each account's gate; S, one setup dialog: the key in a password field and the model chosen from the provider's own list |
 
 ### API and client library
 

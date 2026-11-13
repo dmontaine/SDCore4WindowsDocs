@@ -119,7 +119,7 @@ Changed afterwards with `remote.api on`, `local` or `off`.
 |---|---|
 | Install Python for all users | **unticked** |
 
-**Python is needed only for SD BASIC's `PY_` functions.** The release zip
+**Python is needed for SD BASIC's `PY_` functions and for the AI.** The release zip
 carries python.org's own Python installer in its `python\` folder, so nothing
 is downloaded. The box appears only when that folder is beside the installer
 and the machine has no all-users Python 3.13 or later already. Ticked, it
@@ -134,25 +134,43 @@ asked once. A silent upgrade shows no page and asks nothing.
 Python is a separate product with its own entry in *Apps*; uninstalling SD Core
 leaves it in place.
 
+**The AI helper runs under that Python.** When an all-users Python 3.13 or later
+is on the machine (already, or because the box was ticked), every install and
+upgrade sets up the Windows service `sd-ai`, which is the only part of SD that
+talks to an AI provider. Without one, nothing is set up for the AI and the last
+screen does not mention it. To add it later, install Python for all users, then
+run this in an **elevated** PowerShell window:
+
+```
+powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\install-aihelper.ps1" -Install
+```
+
+It exits 0 when the helper is running and 3 when there is still no all-users
+Python 3.13 or later; its log is `C:\ProgramData\SD\install-aihelper.log`. The
+service sends nothing until SDSYS has chosen a provider and set its key and an
+account has its `ai` gate: the Administrator set's *The AI Helper* says how, and
+what leaves the machine.
+
 ### 5. Your own account's access gates
 
 One box, unticked. A first install makes an SD account for the Windows user who runs it. **Like every
 SD account it starts with every access gate closed:** no ssh, no API, no shell
 (`sh`), no `os.execute`, no `sd.accounts`, no right to save a change to a VOC, a
 program file or a dictionary, no SDNet, no writing the shared account's files, no
-files-only login, no administering files over that login, no pins on the home
-screen, no recovery copy of unsaved editor text. Tick the box and the installer opens every one of those on your account,
+files-only login, no administering files over that login, no use of the AI, no
+pins on the home screen, no recovery copy of unsaved editor text. Tick the box and the installer opens every one of those on your account,
 reads the result back, and the last screen says whether they all opened; if any
 did not, `C:\ProgramData\SD\attach-account.log` names each one and the word to
 give for it. It opens only your account. `files-admin-on` administers files on
-this server over the files-only login, so tick the box only on a machine where
-you want that. A silent install ticks it with `/TASKS=opengates`. An upgrade does
+this server over the files-only login, and `ai-on` lets your account send text
+to the AI provider SDSYS chooses (nothing is sent until a provider and its key
+are set), so tick the box only on a machine where you want both. A silent install ticks it with `/TASKS=opengates`. An upgrade does
 not show the box and leaves the account as it is.
 
 SDSYS opens a gate afterwards with `modify.account` *account* *word*, one word at a
 time or several together: `both` (ssh and the API), `sh-on`, `os-on`, `sd-on`,
 `voc-on`, `bp-on`, `dict-on`, `net-on`, `shared-write-on`, `files-on`,
-`files-write-on`, `files-admin-on` (it needs the two before it), `pins-on` and
+`files-write-on`, `files-admin-on` (it needs the two before it), `ai-on`, `pins-on` and
 `recovery-on`. The same word with `-off` closes it again (`none` closes ssh and the API).
 Which computers can reach SD from the network is still decided by boxes 2 and 3.
 
@@ -231,7 +249,9 @@ your edits survive both upgrade and removal.
 | `sdsshonly` | carries the two deny rights that confine an account to ssh. Every account **`create.account`** makes joins it, unconditionally |
 | `sdu_<name>` | one per account, created by **`create.account`** |
 | `sdg_shared` | the group of the **shared account**, which the installer makes: files that every account can open by name (the Administrator guide's "The Shared Account"). It has no members |
+| `sdaiusers` | the AI gate: a person in it may use the AI provider SDSYS chooses. Made empty (the "open every access gate" box adds your own account) |
 | the service | **String Database (SD)** |
+| the AI helper service | **`sd-ai`** (*SD Core AI helper*), running as the virtual account `NT SERVICE\sd-ai`, with its folder `C:\ProgramData\SD\ai` (settings and keys) and its program in `C:\Program Files\SD\lib\sd-ai`. Only when an all-users Python 3.13 or later is on the machine; it sends nothing until SDSYS has chosen a provider and set a key |
 | ACLs | inheritance is broken on `C:\ProgramData\SD` and access granted narrowly. This is what makes the database private from the rest of the machine |
 
 **You must sign out and back in after being added to `sdusers`.** Windows
@@ -402,6 +422,13 @@ Every reason, warning and caveat that used to appear on them is here.
   *Installing Python...* line. Do not stop it. It must be an all-users install — a
   "for me only" Python cannot be reached by SD Core — which is the only kind
   the installer makes. Its own log is `C:\ProgramData\SD\python-install.log`.
+- **The AI is installed off.** With an all-users Python 3.13 or later, Setup
+  installs the AI helper service `sd-ai`, which starts with Windows. It has no
+  provider and no key, and no account may use it, until SDSYS turns it on. **On
+  Windows SDSYS is an elevated Administrator and can read a provider's key; so
+  can any Windows administrator of this machine. Turning the AI on sends what a
+  person types, and anything they paste, to the provider's servers on the
+  internet.** The Administrator set's *The AI Helper* has the rest.
 - **Accounts are separate from each other.** The permissions on each account's
   directory allow only SYSTEM, administrators and that account's own `sdu_`
   group. Administrators and SDSYS can read everything.
@@ -469,6 +496,7 @@ PowerShell prompt. This is what each failure means until it is put right:
 | Who may reach the SD Core API could not be set | No firewall rule was created, so other computers cannot reach port 4247 |
 | SD Core could NOT create its administrator account | There is no way into SD Core until it exists; the reason is in `install-sdsys.log` |
 | SD Core could NOT create an SD Core account for you | SD only admits accounts it creates and will not create one for a Windows account that already exists, so this is the one moment such an account can be made: running the installer again will not create it. The reason is in `attach-account.log` |
+| The AI helper service was NOT set up | Nobody can use the AI; nothing else is affected. The reason is in `install-aihelper.log`; run `install-aihelper.ps1 -Install` from `C:\Program Files\SD` (see *4. Python*) |
 | The OpenSSH server could NOT be installed | Usually a policy that blocks optional features, a metered connection, or no connection. Accounts cannot sign in over ssh until it is there (API-only accounts can use the API meanwhile) |
 | The dictionary, vocabulary or case-conversion step did not run | The upgrade kept what it had: SD Core works, a field added by the release may not be recognized, a command added by the release cannot be typed until `update.accounts` is run in SDSYS (answer Y), and records are still found typed in any case. If two record ids differ only by case the file is left unchanged: rename or delete one of each pair, then run `configure.file no.case` on it |
 
@@ -485,8 +513,11 @@ PowerShell prompt. This is what each failure means until it is put right:
   the next restart (the log names any that were left), and the sweep refuses
   to run rather than remove the last account able to sign in to Windows.
 - **`sdusers` is always left behind**, because deleting it would orphan the
-  permissions on your database. `sdssh`, `sdapi` and `sdsshonly` are removed
-  without asking.
+  permissions on your database. `sdssh`, `sdapi`, `sdaiusers` and `sdsshonly`
+  are removed without asking.
+- **The AI helper service `sd-ai` is removed with SD Core.** Its folder
+  `C:\ProgramData\SD\ai` (the AI settings and the provider keys) is part of the
+  database: when you keep the database, a reinstall finds them again.
 - **If something could not be removed**, it may be in use by a running SD Core
   process; treat anything marked for deletion as gone.
 

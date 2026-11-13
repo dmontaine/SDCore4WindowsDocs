@@ -37,7 +37,7 @@ reverse video.
 | **F2** | **Find an action**: a list of every entry of every menu, written `Menu > Entry` with its key. Type any part of a name to narrow the list, then Enter to do it, or Esc to close the list and do nothing. An entry that cannot be used now is marked *(not now)*; choosing it only tells you why. |
 | **F10**, Alt and a menu's letter, a click on the top row | Open the menu bar. |
 | **Esc** | Close what the page has open - a filter, a sub-view, the output pane, a sub-menu. When nothing is open, Esc opens the menu bar on the first menu whose first entry is not *Quit* (on most pages the second), so Esc and then Enter never leaves a page by accident. |
-| **F6**, **Shift-F6** | Move the keyboard to the next and the previous box, round and round. The same keys do this on every page and in the IDE. |
+| **F6**, **Shift-F6** | Move the keyboard to the next and the previous box, round and round. Where the AI is on for your account, the AI line at the foot of the page is one of the stops, after the last box. The same keys do this on every page and in the IDE. |
 | **Shift-F10** | The **action menu** of the box that has the keyboard, in the middle of the screen (see below). |
 | **F5** | Read everything again and draw the page again. |
 | **Ctrl-L** | Draw the whole page again, as it is, without reading anything. |
@@ -117,6 +117,29 @@ columns. **Type to narrow the list**, move with the arrow keys, **Enter** takes 
 taking nothing. A list that can delete (tool.query's saved queries, for example) deletes the chosen row with **Del**, after
 you type its name to confirm.
 
+## The AI line
+
+When the administrator has allowed the AI for your account, every page has an **`AI>`** row above the status line. Press
+**F6** until the cursor is there (it is the stop after the last box), choose **AI > Ask the AI**, or click the row; type what you want in your own words and press Enter. Nothing is sent yet: a box shows
+the provider, the size of all that will be sent, **your request** and anything of yours the page sends with it (a record's
+lines, a selection, earlier questions), with **Cancel** as the default; press **s** for Send. SD's own instructions to the
+AI are sent too and counted in the size, but not shown.
+
+The answer comes in a box. It can *propose* an action of the page - you choose Accept or Reject, and anything that runs a
+command or changes something defaults to Reject. It never runs anything by itself, and it works with your account's
+rights only.
+
+**Follow up**: the last button of an answer box asks a follow-up question. Your next question on the same page, within
+ten minutes, then carries up to the last three questions and answers with it, once - and the preview shows them in
+full before you send.
+
+On the **dictionary form** the AI line can also propose values for the item's fields: each proposed value is shown in
+full, Reject is the default, and an accepted value goes into its field only if the form accepts it. Nothing is written
+until you accept the form and save.
+
+The AI line never sees SD's own programs or system files; [Asking the AI](29b-sd-tcl-asking-the-ai.html) says exactly
+what is sent.
+
 ## The IDE's Tools menu
 
 In the IDE, **F10 then T** opens the **Tools** menu: Files, Dictionary, Vocabulary, Queries, Bulk update, Programs and
@@ -135,5 +158,4 @@ left it.
 
 ## Not in SD Core for Windows yet
 
-The AI line (an `AI>` row on every page where the administrator allows the AI) and the administrator page
-`tool.audit` are in SD Core for Linux and not here yet.
+The administrator page `tool.audit` is in SD Core for Linux and not here yet.

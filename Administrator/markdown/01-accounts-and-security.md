@@ -51,7 +51,7 @@ your own session.
 
 ```
 create.account user <name> {ssh | api | both | none} {sh-on} {os-on} {voc-on} {bp-on} {dict-on}
-                           {net-on} {files-on} {files-write-on} {files-admin-on} {shared-read-off} {shared-write-on}
+                           {net-on} {files-on} {files-write-on} {files-admin-on} {ai-on} {shared-read-off} {shared-write-on}
                            {start-menu | start-terminal} {pins-on} {no.query}
 
 create.account group <name> {start-menu | start-terminal} {pins-on} {no.query}
@@ -74,14 +74,15 @@ off or default as delivered.
 files of the `shared` account, [The Shared Account](13-the-shared-account.html),
 and not write them). Say nothing and it has no ssh, no API, no `sh` and no
 `OS.EXECUTE`, it cannot save a change to a VOC, a program file or a
-dictionary, it has no right to use a server defined for SDNet, and no
-files-only login; you open each one by naming it. `ssh`, `api` or `both` give
+dictionary, it has no right to use a server defined for SDNet, no
+files-only login and no use of the AI; you open each one by naming it. `ssh`, `api` or `both` give
 the remote routes (`none` is the default and is accepted so that a script can
 say so); `files-on` gives the narrower files-only API route (below, *The
 files-only route*); `sh-on` and `os-on` give the two operating-system switches,
 and they are independent, so `sh-on os-on` gives both and neither cancels the
 other; `voc-on`, `bp-on` and `dict-on` give the three edit switches (below),
-each on its own; `net-on` gives the SDNet switch (below). Two words go the
+each on its own; `net-on` gives the SDNet switch (below); `ai-on` gives the
+AI (below, *The AI*). Two words go the
 other way, because the `shared` account is open to every account unless you say
 otherwise: `shared-read-off` takes away the right to read its files and
 `shared-write-on` gives the right to write them. (The two words that restate the
@@ -102,8 +103,8 @@ Account fred has files no
 Account fred has shared.read yes, shared.write no
 ```
 
-(Two more lines, for `files-write` and `files-admin`, follow the `files` line;
-the remote-route line is the one for the words you gave.)
+(Three more lines, for `files-write`, `files-admin` and `ai`, follow the `files`
+line; the remote-route line is the one for the words you gave.)
 
 **A group account and an `other` account have no Windows user of their own,
 so `sh-on` and `os-on` are refused for them** — "is a group account and has
@@ -406,6 +407,7 @@ modify.account account voc-on | voc-off | bp-on | bp-off | dict-on | dict-off
 modify.account account shared-read-on | shared-read-off | shared-write-on | shared-write-off
 modify.account account net-on | net-off
 modify.account account files-on | files-off | files-write-on | files-write-off | files-admin-on | files-admin-off
+modify.account account ai-on | ai-off
 modify.account account start-menu | start-terminal | start-default
 modify.account account pins-on | pins-off
 modify.account account suspended | unsuspended
@@ -422,10 +424,11 @@ then carries out all of them, or none of them:
   with `api` (say `both`), `files-off` with `files-write-on`, and
   `files-admin-on` with `files-off` or `files-write-off` are the conflicts.
 * **The words are carried out in one fixed order whatever order they were
-  typed:** the route words, then `sh`, `os`, `sd`, the three edit switches and
-  `net`, then the files words (`files-on` before `files-write-on`, which needs
-  it, and that before `files-admin-on`), then the shared-account words, the
-  start and pins words, and the suspension last. Each is reported and audited
+  typed:** the route words, then `sh`, `os`, `sd`, the three edit switches,
+  `recovery` and `net`, then the shared-account words, then the files words
+  (`files-on` before `files-write-on`, which needs it, and that before
+  `files-admin-on`), then `ai-on` / `ai-off`, the start and pins words, and the
+  suspension last. Each is reported and audited
   exactly as if it had been given alone.
 * **A command of more than one action ends with a line** saying which were
   carried out, and if one could not be (a refusal such as `sh-on` on a group
@@ -475,6 +478,7 @@ signing in, `logto`, and the API.
 | **`shared-read-on`** \| **`shared-read-off`**, **`shared-write-on`** \| **`shared-write-off`** | open, and write, the files of the shared account by name (blank read means on, blank write means off; see [The Shared Account](13-the-shared-account.html)) |
 | **`net-on`** \| **`net-off`** | may use SDNet: open a file on another SD server (see [The NET switch](#the-net-switch-net-on-and-net-off)) |
 | **`files-on`** \| **`files-off`**, **`files-write-on`** \| **`files-write-off`**, **`files-admin-on`** \| **`files-admin-off`** | may log in over the API for files only, and, with the second pair, change files there, and, with the third, administer them there (see [The files-only route](#the-files-only-route-files-on-and-files-off)) |
+| **`ai-on`** \| **`ai-off`** | may use the AI the administrator has chosen: the `ai` verb and the AI line of the pages and editors (see [The AI](#the-ai-ai-on-and-ai-off)) |
 | **`add`** \| **`delete`** *user* | put a Windows user in, or out of, the account's group |
 
 **The first group is absolute and the second is not.** `ssh`/`api`/`both`/
@@ -579,8 +583,10 @@ same verb is the account holder's read-only "what my account may do" page,
 described in the User set under *What this account may do*). One row for each
 registered account but SDSYS, one column for each gate the system has, in the
 order `modify.account` carries them out: `ssh api sh os sd voc bp dict net sh-rd
-sh-wr files f-wr f-adm sock`. A cell says **ON**, **off**, a **dash** (the gate
-does not apply to this kind of account: ssh, api and files are routes for a
+sh-wr files f-wr f-adm ai home sock`. **`home`** is where a session of the account
+starts: ON is the home screen, off the command prompt (the words `start-menu` and
+`start-terminal`). A cell says **ON**, **off**, a **dash** (the gate
+does not apply to this kind of account: ssh, api, files and ai are routes for a
 person, and a group or other account has no Windows user of its own) or **plan**
 (not built yet; sockets). A star after a cell is a change you have queued; the
 cell shows the state it would have. Under the matrix a box says, for the cell
@@ -614,7 +620,7 @@ audited by the verb as if you had typed it.
   delivered, is left alone).
 * **Turning ON a gate that is off as delivered says so**, and says that leaving
   it off is the tighter choice. **Turning ON a gate that reaches beyond SD**
-  (ssh, api, sh, os, sd, net, files, files-write, files-admin) **asks for the
+  (ssh, api, sh, os, sd, net, files, files-write, files-admin, ai) **asks for the
   account's name to be typed**; turning anything OFF does not.
 * **ssh and api are one setting** in the verb: the words `ssh`, `api`, `both` and
   `none` SET the pair. The page therefore sends the one word that gives the pair
@@ -626,7 +632,8 @@ audited by the verb as if you had typed it.
   both directions. The page says so instead of queueing them.
 * **A change does not reach a session that is already running.** The box says when
   it reaches the person: the next sign-on (voc, bp, dict), the next account entry
-  (sh, os, sd, net, shared), the next login (ssh, api, files).
+  (sh, os, sd, net, shared), the next login (ssh, api, files) or the next
+  request (ai).
 * **Home-screen settings are not gates and are not on this page:** `pins-on` /
   `pins-off` and the three start words are managed on the menu management page
   (`tool.menus`, below).
@@ -917,6 +924,23 @@ login; withdraw it with `files-off`. `sdapi` is never touched by `files-on` or
 
 **Not run on Windows yet.** The route is carried from SD Core for Linux and compiled;
 no files-only login has been made against a real Windows installation.
+
+### The AI: `ai-on` and `ai-off`
+
+An account may send text to the AI provider you have chosen (the `ai` verb and the AI line of
+the pages and editors) **only if the person is in the Windows group `sdaiusers`**:
+`modify.account` *name* `ai-on`, `ai-off`, and `ai-on` in `create.account user`. **It is off for
+every new account.** The installer turns it on only for the installing user's own account, and
+only when its box *Open every access gate for your SD Core account* is ticked, because each request
+is paid for by whoever holds the provider's key and sends the person's text off the machine. The
+line printed is `Account fred has ai yes`, read back from the group. It stands alone (no other gate
+is needed), is for accounts that belong to a person (a group account is refused), needs the person
+to be in `sdusers`, and takes effect at the person's next request: the AI helper, the Windows
+service `sd-ai`, reads the group each time, from the Windows user it sees at the other end of its
+pipe. SDSYS has no gate and may always use the AI. The account's manifest records it as
+`route.ai`, and `restore.account` gives it back. Which provider, model and key, what leaves the
+machine, the security warning, and the page that does all of this, `tool.ai`, are in
+[The AI Helper](21-the-ai-helper.html).
 
 ## Passwords: `modify.password`
 
