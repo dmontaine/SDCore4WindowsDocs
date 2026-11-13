@@ -93,6 +93,7 @@ list.readu = **`list.readu`** {*user.no*} {**`detail`**} {**`wait`**} {**`no.pag
 list.vars = **`list.vars`** {*pattern*}
 listu = **`listu`** {**`detail`**} {**`no.page`**} {**`lptr`** {*n*}}
 lock = **`lock`** *n* {**`no.wait`**}
+lock.tracer = **`lock.tracer`** **`on`** | **`off`** | {**`user`** *n*} {**`lptr`** {*n*}} {**`no.page`**}
 logmsg =**`logmsg`** *text*
 logout = **`logout`** | *n* … | **`all`**
 logto = **`logto`** *account* {**`reset`** {**`all`**}}
