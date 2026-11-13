@@ -128,6 +128,27 @@ either. **The installer stops SD before an upgrade, as it always did, and that
 matters more now:** an SD left running from the old version could not be stopped
 by the new one, because the two no longer share a name.
 
+## Rights SD relies on, and checks
+
+SD trusts a program in its **global catalog** (`C:\ProgramData\SD\sdsys\gcat`) to run as
+part of the system, because only administrators can write there: the installer gives
+`sdusers` read and execute on the folder and nothing more, and every file in it
+inherits that. **The kernel therefore refuses to load a global catalog object that other
+users can write** - that is, one whose access list gives a right to write, append,
+delete, or change its permissions or owner to Everyone, Authenticated Users, Interactive,
+Users or `sdusers` - and stops with *&lt;name&gt; in the global catalog can be written by
+other users, so it was not loaded*. An installation never meets the check. If you see
+the message, someone changed the file's rights: `icacls` the file named back to the
+folder's rights (`icacls <file> /reset`), and look for why. A file whose rights cannot be
+read is refused too.
+
+SD's shared memory (the file under `C:\ProgramData\SD\shm`) and its semaphores can be
+reached by `sdusers`, SYSTEM and the Administrators only. **A member of `sdusers` can
+still write the shared memory**, because every SD session must, so nothing a session or
+the daemon *decides on* is read from it. In particular the daemon, `sdwind`, which runs
+as SYSTEM, takes the system directory from the `SDSYS=` line of `sd.conf`, not from the
+shared memory, and does not start without that line.
+
 ## Upgrading
 
 Installing a new release over an existing one replaces the shipped files and
