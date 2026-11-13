@@ -28,6 +28,7 @@ which has the full story of each change: what it does, why, and what it does not
 
 | Name | Change | What |
 |---|---|---|
+| `@who` | Changed | was the account name in upper case (`DON`); now lower case (`don`), as on SD Core for Linux. A program that compares it with an upper-case name must use `downcase()` or `upcase()` on both sides |
 | A new account | Changed | had the shell and `os.execute` open to its person and ssh and the API on; now has **no shell, no `os.execute`, no ssh, no API** and no right to save a VOC, a program file or a dictionary, and every gate is closed until SDSYS opens it (`modify.account`); it can open the files of the shared account by name, read only |
 | A person's shell and `os.execute` | Changed | were granted to the Windows person in `os.users`, so they followed the person into every account; now they are two settings of the account, and `os.users` is no longer read |
 | A session at the console | Changed | was not held to its account's directory when it opened a file by its path (only a session over the network was); now every session is, unless its account has `os-on`, or `sd-on` for another SD account |
