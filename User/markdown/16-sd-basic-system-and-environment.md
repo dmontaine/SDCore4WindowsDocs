@@ -118,11 +118,11 @@ open if it was not. `account.path()` gives the directory of an account from the
 accounts register, in either case of the name, and a null string when there is no
 such account.
 
-**A path is told only where the session could open it.** The session's own
-account directory and the files in it always; anything else only to an
-administrator session (SDSYS), and to any other session the answer is a null
-string (with `status()` 3035 from `vocpath()`). So a program cannot learn where
-another account lives, or which accounts there are, by asking.
+**A path is told only where the account could open it.** The account's own
+directory and the files in it always; anything else only to an account that has
+OS access (`os-on`), and to any other the answer is a null string (with
+`status()` 3035 from `vocpath()`). So a program cannot learn where another
+account lives, or which accounts there are, by asking.
 
 ### Unique values, and a few more
 
