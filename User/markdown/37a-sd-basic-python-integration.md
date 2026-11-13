@@ -233,6 +233,21 @@ if lc then stop 'PY_LISTCREATE failed: ' : lc
 lty = PY_OBJTYPE('zz_list')      * lty = 'list'
 ```
 
+## Example programs
+
+Four example programs are installed in the SDSYS account's `bp` file, as in
+SD Core for Linux:
+
+| Program | What it shows |
+|---|---|
+| `PY_TEST` | starting Python, running a short script, and reading its results back |
+| `PY_TEST2` | the same with data read from a file; set the path at the top (`xxxx` is an account name) before you run it |
+| `PY_JSON` | Python's `json` module on a file you name |
+| `PY_TERM` | a minimal prompt that runs the Python you type |
+
+Copy one into your own account's `bp` to compile and run it. Like any use
+of Python, it needs the account's OS switch.
+
 ## Continued in
 
 *Differences from W1.0-0*, earlier in this set, for the short version of

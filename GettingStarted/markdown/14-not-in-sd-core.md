@@ -195,9 +195,12 @@ net localgroup sdsshonly <name> /add
 catalogued `PCL` routine are both still there. What has gone is a second, older
 copy of the source sitting in `BP`.
 
-**SD now ships nothing into the SDSYS bp file.** It is created empty and is
-yours — and because of that, **`bp` and its compiled objects are now preserved
-when you upgrade**, alongside your accounts and the rest of your own data.
+**SD now ships only four programs into the SDSYS bp file**: `PY_JSON`,
+`PY_TERM`, `PY_TEST` and `PY_TEST2`, the examples for embedded Python (see
+*SD BASIC - Python Integration*). The rest of `bp` is yours — and because of
+that, **`bp` and its compiled objects are preserved when you upgrade**,
+alongside your accounts and the rest of your own data. An upgrade replaces
+those four programs by name and touches nothing else in `bp`.
 
 ## Things that were never features, and are not coming
 
