@@ -262,7 +262,9 @@ exception.** The documentation PDFs are files in the `pdf` directory of the shar
 account (`C:\ProgramData\SD\group_accounts\shared\pdf`), which every SD user may read.
 A person reads one by copying it, or by opening it with a reader they start
 themselves. A help box that has more in the documentation names the PDF on its last
-line.
+line, exactly as it is named in the `pdf` directory: the book comes first, then the
+chapter (`administrator-01-accounts-and-security.pdf`; the books are `user`,
+`administrator` and `gettingstarted`).
 
 **No SD user can add, change or remove a document there.** The installer makes the
 directory with its own permissions: SYSTEM and Administrators full control, `sdusers`
