@@ -130,10 +130,11 @@ two steps used to run in an order that deleted `sdusers` (the list of which
 accounts to remove) before the removal ran, so it silently found nothing to
 do and left every one of those accounts able to sign in to Windows.
 
-**The `voc_template` directory is no longer installed.** It was a build-time
-source for SDSYS's own VOC and nothing on an installed system ever read it;
-an upgrade removes one an earlier release left behind. SDSYS's own VOC is
-unaffected.
+**`voc_template` now keeps SDSYS's own VOC current.** It is installed, without
+the `gpl.bp`, `first.compile` and `second.compile` records (the source is not
+installed), and only administrators can change it. `update.accounts` run in
+SDSYS refreshes SDSYS's own VOC from it, and every other account's from
+`newvoc`, so SDSYS keeps its administration pages.
 
 ## The API port is 4247, and nothing can change it
 

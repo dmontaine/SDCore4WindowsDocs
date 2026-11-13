@@ -190,9 +190,9 @@ explanations of *why* are gone from the wizard and live instead in
 [Installing SD Core](01-installation.html#warnings-and-things-to-know),
 under *Warnings and things to know*. Nothing Setup actually does changed.
 
-**The `voc_template` directory is no longer installed** — it was a build-time
-copy that nothing on an installed system ever read, and an upgrade removes
-one an earlier release left behind.
+**`voc_template` keeps SDSYS's own VOC current**: an upgrade replaces it, and
+`update.accounts` refreshes SDSYS's VOC from it (every other account's from
+`newvoc`).
 
 ## Upgrading is quieter, and no longer hangs
 
