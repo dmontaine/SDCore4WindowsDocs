@@ -84,6 +84,7 @@ not refused — the name is simply not recognised.**
 | **`delete.server`** | **`delete.server`** *name* | S |
 | **`disable.index`** | **`disable.index`** *file* *index* … \| **`all`** |  |
 | **`display`** | **`display`** *text* |  |
+| **`docs.install`** | **`docs.install`** *directory* | S |
 | **`dump`** | **`dump`** {**`dict`**} *file* {*id* … \| **`*`**} {**`(options`**} |  |
 | **`echo`** | **`echo on`** \| **`off`** \| **`echo`** to toggle |  |
 | **`ed`** | **`ed`** {**`dict`**} *file* {*id* …} |  |

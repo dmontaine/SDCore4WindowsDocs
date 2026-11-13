@@ -309,6 +309,7 @@ Commands and VOC verbs that every account has, and the command language.
 | `delete` | Changed | a record another user holds locked is reported and skipped <!--s 50--> |
 | `delete.account` | Changed | not stopped by a file it cannot open when it looks for references <!--s 348--> |
 | `delete.common all except` | Added | deletes every named common block but those listed <!--s 425--> |
+| `docs.install` | Added | SDSYS puts a directory of PDFs into the shared account's `pdf` directory; the installer runs it on the `pdf` folder beside it, and copies the release's changes document there too |
 | `ed` | Changed | `l` with no text as the first command works; marks typed in input; `ev` on a compound `i`-type; line numbers show positions in edit values mode; `spool` closes the printer; external commands; automatic ids <!--s 264 268 320 331 375 446 523 305--> |
 | `fstat` | Changed | wider columns <!--s 55--> |
 | `fstat.user` | Added | file activity of each session <!--s g44--> |

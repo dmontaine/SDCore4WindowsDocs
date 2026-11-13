@@ -251,6 +251,47 @@ The step is quiet for the ordinary case: a session moving between two
 ordinary accounts never had privilege, so nothing is given up and nothing
 is written to the audit trail.
 
+## The documentation in the shared account
+
+```
+docs.install directory
+```
+
+**SD starts no program for an account whose `os-on` and `sh-on` are off: there is no
+exception.** The documentation PDFs are files in the `pdf` directory of the shared
+account (`C:\ProgramData\SD\group_accounts\shared\pdf`), which every SD user may read.
+A person reads one by copying it, or by opening it with a reader they start
+themselves. A help box that has more in the documentation names the PDF on its last
+line.
+
+**No SD user can add, change or remove a document there.** The installer makes the
+directory with its own permissions: SYSTEM and Administrators full control, `sdusers`
+read only. It does not take the shared account's own permission, which lets
+`sdusers` write.
+
+### Where the documents come from
+
+The PDFs are generated from the documentation and are not part of the source tree.
+**A release package carries them**, in a folder `pdf` beside the installer, and
+**the installer puts them in the shared account with `docs.install`**. An installer
+run without that folder says so in `C:\ProgramData\SD\shared-docs.log`, and the
+install goes on. At any other time, or for documents of your own, SDSYS runs:
+
+```
+docs.install C:\path\to\the\pdf\files
+```
+
+which copies every `*.pdf` of that directory into the shared account's `pdf`
+directory. A file is copied only if its name is lower case letters, digits and
+`. _ -`, ends in `.pdf` and does not begin with a dot, and the file begins with
+`%PDF-`; anything else is skipped and named. A document already there is replaced.
+
+**The changes document comes with the installer.** A release package holds, beside
+the installer, the document that lists what changed in the release as
+`sd-core-for-windows-<version>-changes.pdf`, `.html` and `.md`. The installer copies
+each of them into the same `pdf` directory. A file that is a link, or whose name has
+a capital or another character, is not copied, and the log says so.
+
 ## See also
 
 [Accounts and Security](01-accounts-and-security.html) ·

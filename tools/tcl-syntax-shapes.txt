@@ -65,6 +65,7 @@ delete.file = **`delete.file`** {**`dict`** | **`data`**} *voc.name* {**`force`*
 delete.index = **`delete.index`** *file* *field* … | **`all`**
 delete.list = **`delete.list`** *list*
 display = **`display`** *text*
+docs.install = **`docs.install`** *directory*
 dump = **`dump`** {**`dict`**} *file* {*id* … | **`*`**} {**`(options`**}
 echo = **`echo on`** | **`off`** | **`echo`** to toggle
 ed = **`ed`** {**`dict`**} *file* {*id* …}
