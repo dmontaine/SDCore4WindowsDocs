@@ -368,6 +368,7 @@ exist.**
 | **`open.socket`** | `open.socket(`*addr*, *port*, *flags* {, *context*}`)` |
 | **`openpath`** | `openpath` *path* `to` *file.var* {`readonly`} {`on error` …} `then` … `else` … |
 | **`openseq`** | `openseq` *path* `to` *file.var* {`append`} {`overwrite`} {`readonly`} `then` … `else` … — ***`then` = it existed, `else` = it was created*** |
+| **`opentemp`** | `opentemp` {*path*} {`non.transactional`} `to` *file.var* {`on error` …} `then` … `else` … |
 | **`ors`** | `ors(`*a*, *b*`)` |
 | **`os.error`** | `os.error()` |
 | **`os.execute`** | `os.execute` *command* {`capturing` *var* | `silent`} |

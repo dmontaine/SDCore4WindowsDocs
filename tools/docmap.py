@@ -9,7 +9,7 @@
 # page that documents it, and the names BCOMP's five tables do not hold are removed.
 # 13 Nov 26 (Windows, RELEASE_1.1 269): carried from SDCore4LinuxDocs 89dd60f, the table here having fallen 105 names
 # behind.  Two Windows changes: SILENT is assigned to 02 (BCOMP accepts it since 3 Nov and page 02 documents it beside
-# CAPTURING; Linux's table lacks it too, told by mail), and OPENTEMP is left out until RELEASE_1.1 251 carries it.
+# CAPTURING; Linux's table lacks it too, told by mail).  OPENTEMP, left out until RELEASE_1.1 251 carried it, is back in 07.
 #
 import re
 import sys
@@ -98,7 +98,7 @@ DOCS = {
    CREATE.FILE CREATE CONFIGURE.FILE FILEINFO FILE OUTERJOIN TRANS RTRANS
    RECORDLOCKED RECORDLOCKL RECORDLOCKU FILELOCK FILEUNLOCK LOCK UNLOCK RELEASE
    RELEASE.LOCK TRANSACTION COMMIT ROLLBACK SET.TRIGGER FLUSH DIR MODIFY LOCKED
-   OVERWRITE READONLY WAITING FROM FCONTROL FLUSH.DH.CACHE SYNC
+   OVERWRITE READONLY WAITING FROM FCONTROL FLUSH.DH.CACHE OPENTEMP SYNC
    NON.TRANSACTIONAL
 """,
  '08 Select Lists': """
