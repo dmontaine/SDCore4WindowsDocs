@@ -454,6 +454,8 @@ the fixes to SD's own code. The sections above are the openQM items that were bu
 | `dict-on` and `dict-off` | Added | per-account switch for saving a change to a dictionary |
 | home screen | Added | a tile whose action is `menu:name` opens a page of its own with a Back tile (Esc, Backspace go back); **View > Recent group** keeps the tiles a person started last, off as delivered; `set.tile account recent off` forbids it |
 | `list.shared` | Added | SDSYS's list of the files of the shared account that an account with `shared.read` can open by name |
+| `lock.tracer` | Added | administrator only: logs every lock taken and released, with program and line, to the file `locktrace`, which only the SD service writes |
+| audit trail | Changed | the SD service writes it, naming each session's Windows user (`DOMAIN\name`) and process as Windows sees them; one user's records past 600 in a minute are dropped with one line saying how many; it starts a new file at 1 MB while SD runs |
 | `list.voc.removed` | Added | administrator only: the VOC records SD no longer ships, with the release each went in and what to write instead; given an account, what the next `update.accounts` would do in it (changes nothing) |
 | `modify.account` | Changed | takes more than one action in a command (`modify.account fred sh-on os-on voc-on`), all carried out or none; no action at all prints the usage |
 | new account defaults | Changed | a new account has no shell, no `os.execute`, no ssh, no API and no edit rights; SDSYS opens each, account by account |

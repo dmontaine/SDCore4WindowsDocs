@@ -186,7 +186,7 @@ DOCS = [
    backup.account restore.account set.backup.directory settings.report tool.backups
  """),
  ('Administrator', '02-sessions-and-locks.md', """
-   clear.locks inhibit.login list.locks list.readu listu lock logout tool.sessions unlock
+   clear.locks inhibit.login list.locks list.readu listu lock lock.tracer logout tool.sessions unlock
  """),
  ('Administrator', '03-operating-system-access.md', """
    sh docs.install
