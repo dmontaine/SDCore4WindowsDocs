@@ -165,9 +165,18 @@ like nothing else.
 |---|---|
 | **SD** | starts `sd.exe` in the data directory, in a classic console window (it runs `conhost.exe`) |
 
-**The Start Menu entry always opens a classic console window.** On Windows 11,
-a console program started plainly is handed to Windows Terminal when that is
-the default terminal, and there SD's full-screen pages can take about a second
-to draw; in the classic console they draw at once. Typing `sd` in a window
-that is already open runs it in that window, whatever kind it is.
+**SD always runs in a window of its own**, as a Windows application does. The
+Start Menu entry opens it; typing `sd` at a PowerShell or cmd prompt opens it
+too, and the prompt comes back at once, as it does after `notepad`. The window
+is a classic console window that SD controls: it starts at 140 columns by 43
+lines (make it bigger whenever you like) and is titled **SD Core**. SD is
+designed for Windows 11 on a screen of at least 1920 by 1080.
+
+When SD ends normally (`OFF`) its window closes. **When it ends with an error,
+for example a refused sign-in, the window stays open** with "SD ended with
+status *n*. Press Enter to close this window." so the reason can be read.
+
+These still run where you type them, because they open no session: `sd` with a
+command (`sd COUNT VOC`), the switches such as `sd -start` and `sd -stop`,
+anything whose input or output is redirected, and an ssh session.
 | **Check the SD installation** | the post-install check, re-runnable at any time. Closes on a keypress |

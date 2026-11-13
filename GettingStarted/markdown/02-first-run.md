@@ -60,14 +60,11 @@ the `WINDOWS` definition shipped keeps its old setting until **`update.accounts`
 80 × 24** (it was 120 × 36 until 25 October 2026). **A console window narrower
 than that makes ordinary reports look wrapped or truncated** and the report is
 not at fault. SD's own full-screen programs (`sed`, `ced`, `ide`, the home
-screen) want a window of at least 140 columns by 43 lines. **When SD starts in
-a classic console window smaller than that** (the window the Start Menu entry
-opens, or one you typed `sd` in), **it makes the window 140 by 43**, or as big
-as the screen allows; it never makes a window smaller. **In Windows Terminal
-SD leaves the window alone**: it is the terminal's, so make it big enough
-yourself (or set the profile's launch size). For full screen, press **F11** in
-Windows Terminal and **Alt+Enter** in a classic console window, where F11 goes
-to SD instead. Widen the window, or
+screen) want a window of at least 140 columns by 43 lines, **which is the size
+SD's own window starts at**: SD always runs in a window of its own, whether
+from the Start Menu or typed at a prompt (see *Running SD*). For full screen,
+press **Alt+Enter** (in SD's window F11 goes to SD). If a report still looks
+cramped, widen the window, or
 set it for the session with `term default` — which puts the 140 × 42 back and
 prints nothing while doing it, so check with a bare `term` afterwards.
 `term 140,42` is the same thing typed out. See
