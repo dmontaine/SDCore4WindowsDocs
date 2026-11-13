@@ -12,7 +12,7 @@ folds case, so any of this may be typed in either case.
 > **This page is generated, and it is checked for completeness rather
 > than proof-read for it.** The roster is computed from SD's own VOC:
 > every verb record in `newvoc`, plus the ones only `voc_template`
-> has, which is **210** verbs, and `tools/mktclsyntax.py` refuses to
+> has, which is **211** verbs, and `tools/mktclsyntax.py` refuses to
 > write the page if any of them has no line. The shapes come from the
 > subject documents, where each verb is described in full.
 
@@ -24,7 +24,7 @@ not refused — the name is simply not recognised.**
 | | | |
 |---|---|---|
 | **every account** | 160 verbs | `newvoc`, identical for every ordinary account |
-| **SDSYS only** | 50 more | in `voc_template` but not `newvoc` |
+| **SDSYS only** | 51 more | in `voc_template` but not `newvoc` |
 
 ## The verbs
 
@@ -168,6 +168,7 @@ not refused — the name is simply not recognised.**
 | **`reformat`** | **`reformat`** {**`dict`**} *file* {*selection*} {*fields*} |  |
 | **`release`** | **`release`** *file* *id* …  ·  **`release filelock`** *file* |  |
 | **`remote.api`** | **`remote.api`** {**`on`** \| **`local`** \| **`off`**} | S |
+| **`remote.sdsys`** | **`remote.sdsys`** {**`on`** \| **`off`**}  —  from SDRADMIN's remote session also **`audit`** {*n*} and **`accounts`** | S |
 | **`remote.ssh`** | **`remote.ssh`** {**`on`** \| **`off`**} | S |
 | **`report.src`** | **`report.src on`** \| **`off`** \| **`report.src`** to toggle |  |
 | **`report.style`** | **`report.style`** {*name* \| **`off`**} |  |

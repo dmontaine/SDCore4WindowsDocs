@@ -215,6 +215,10 @@ DOCS = [
  ('Administrator', '21-the-ai-helper.md', """
    set.ai tool.ai
  """),
+ # 13 Nov 26 (RELEASE_1.1 202): remote administration over ssh (Linux's remote.sdsys, the SDRADMIN account here).
+ ('Administrator', '22-remote-administration.md', """
+   remote.sdsys
+ """),
  # 25 Oct 26 SDNet carry (RELEASE_1.1 171): the SDNet client's five verbs are explained on the Administrator page for SDNet.
  ('Administrator', '12a-sdnet.md', """
    set.server delete.server list.servers set.netlogin delete.netlogin

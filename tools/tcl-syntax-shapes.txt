@@ -123,6 +123,7 @@ report.src = **`report.src on`** | **`off`** | **`report.src`** to toggle
 report.style = **`report.style`** {*name* | **`off`**}
 remote.api = **`remote.api`** {**`on`** | **`local`** | **`off`**}
 remote.ssh = **`remote.ssh`** {**`on`** | **`off`**}
+remote.sdsys = **`remote.sdsys`** {**`on`** | **`off`**}  —  from SDRADMIN's remote session also **`audit`** {*n*} and **`accounts`**
 restore.account = **`restore.account`** *zipfile* *account* {*account* …} {**`no.query`**}  ·  **`restore.account`** *zipfile* **`all`** {**`no.query`**}  ·  **`restore.account latest`** *account* {*account* …} {**`no.query`**}  ·  **`restore.account latest all`** {**`no.query`**}
 revoke = **`revoke`** *account* **`from`** *user*
 run = **`run`** {*file*} *record* {*arguments*}
