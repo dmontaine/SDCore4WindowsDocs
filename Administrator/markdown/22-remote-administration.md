@@ -34,10 +34,21 @@ account goes with the question about the Windows accounts SD made.
 
 ## What SDRADMIN can do
 
-Once signed in, SDRADMIN can use `create.account`, `delete.account`, `modify.account`, `modify.password`, and
-`remote.sdsys off`, `remote.sdsys audit` {*n*}, `remote.sdsys accounts` and `remote.sdsys` with no keyword. A helper
-checks every word and runs the command as the administrator would at the console. Every request is in the audit
-trail, and in `C:\ProgramData\SD\remote-admin\broker.log`, which only administrators can read.
+Once signed in, SDRADMIN can type, with the console's own words:
+
+- `create.account`, `delete.account`, `modify.account`, `modify.password`;
+- `remote.sdsys off`, `remote.sdsys audit` {*n*}, `remote.sdsys accounts`, and `remote.sdsys` with no keyword;
+- `remote.ssh on`, `remote.ssh off`, and `remote.ssh` with no keyword (the report);
+- `remote.api on`, `remote.api local`, `remote.api off`, and `remote.api` with no keyword (the report).
+
+A helper checks every word and runs the command as the administrator would at the console. Every request is in the
+audit trail, and in `C:\ProgramData\SD\remote-admin\broker.log`, which only administrators can read.
+
+From the remote session, `remote.api on` and `remote.api off` do not restart SD: the firewall part takes effect at
+once, and the listener opens or closes the next time SD starts. To restart now, type the command at the console and
+answer `y`. `remote.ssh off` from the remote session keeps the session it was typed in, but no other computer can then
+sign in over ssh, SDRADMIN included, until `remote.ssh on` is typed at the console; remote administration itself
+stays on.
 
 ## Security warning: what opening it means
 
@@ -49,6 +60,7 @@ ssh port, **can**:
 - suspend accounts;
 - **delete any SD account together with all of its data**; only your backups can bring it back;
 - read the audit trail and the list of accounts;
+- open or shut ssh access and API access to this computer (`remote.ssh`, `remote.api`);
 - shut remote administration.
 
 They **cannot**:
