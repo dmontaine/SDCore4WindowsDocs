@@ -6,6 +6,11 @@
 # *italics* = you supply it.  `backticks` = typed as it stands.  {braces} =
 # optional.  Taken from documents 01 to 17, where these were measured, and
 # from BCOMP's statement compilers where no page covers them.
+#
+# 12 Nov 2026: a regeneration (10416ee, 9 Nov) dropped hand edits made to the pages, so they are here now (FCONTROL, WRITE,
+# WRITEU).  ONE HAND EDIT CANNOT LIVE HERE: OSPATH is both a public intrinsic and an internal one, and mksyntax.py puts a name on
+# one page only, so its line on User 94 and its note on Administrator 10 (a964dc2) are made by hand.  After a regeneration, put
+# both back from a964dc2.
 
 ABORT = `abort` {*message*}
 ADD = `add` *n* `to` *variable*
@@ -247,13 +252,13 @@ WAKE = `wake` *user.no*
 WATCH = `watch` *var*
 WEOFSEQ = `weofseq` *file.var* {`on error` …}
 WHILE = clause of `loop`: `loop` … `while` *condition* … `repeat`
-WRITE = `write` *var* `to` *file.var*, *id* {`on error` …} — ***inside a transaction the lock must already be held***
+WRITE = `write` *var* `to` *file.var*, *id* {`on error` …} — ***inside a transaction the lock must already be held***  ·  `write` *var* `to` *file.var* `creating.seqkey` *id.var* {`on error` …} — a hashed file numbers the record itself
 WRITEBLK = `writeblk` *var* `to` *file.var* {`on error` …}
 WRITECSV = `writecsv` *value*, … `to` *file.var* {`delimiter` *d*} {`quote` *q*} {`escape` *e*} `then` … `else` …
 WRITEPKT = `writepkt` *data*
 WRITESEQ = `writeseq` *var* `to` *file.var* {`on error` …} `then` … `else` …
 WRITESEQF = `writeseqf` *var* `to` *file.var* {`on error` …} `then` … `else` …
-WRITEU = `writeu` *var* `to` *file.var*, *id* {`on error` …}
+WRITEU = `writeu` *var* `to` *file.var*, *id* {`on error` …}  ·  `writeu` *var* `to` *file.var* `creating.seqkey` *id.var* {`on error` …}
 WRITEV = `writev` *var* `to` *file.var*, *id*, *field* {`on error` …}
 WRITEVU = `writevu` *var* `to` *file.var*, *id*, *field* {`on error` …}
 FOLDS = `folds(`*arr*, *width* {, *delimiter*}`)`
@@ -326,7 +331,7 @@ CEIL = `ceil(`*value*`)`
 CONVERT = `convert(`*from.characters*, *to.characters*, *string*`)`
 DIGEST = `digest(`*string*, *is.file*, *mode*`)`
 EPOCH = `epoch()`
-FCONTROL = `fcontrol(`*file.var*, *action* {, *qualifier*}`)`
+FCONTROL = `fcontrol(`*file.var*, *action* {, *qualifier*}`)` — *action* `FC$SET.SEQ.KEY` 2, `FC$GET.SEQ.KEY` 3, 5 (field access, always 1), `FC$VALID.ID` 6, `FC$MINMOD` 7; `FC$SYNC` 1 and `FC$CRLF` 4 stop the program ([File Handling](07-sd-basic-file-handling.html))
 FLOOR = `floor(`*value*`)`
 FORMLISTV = `formlistv` *array* `to` *list.var*
 GETLISTV = `getlistv` *name* `to` *list.var* {`setting` *count*} `then` … `else` …

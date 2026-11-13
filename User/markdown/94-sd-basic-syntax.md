@@ -177,7 +177,7 @@ exist.**
 
 | | |
 |---|---|
-| **`fcontrol`** | `fcontrol(`*file.var*, *action* {, *qualifier*}`)` |
+| **`fcontrol`** | `fcontrol(`*file.var*, *action* {, *qualifier*}`)` — *action* `FC$SET.SEQ.KEY` 2, `FC$GET.SEQ.KEY` 3, 5 (field access, always 1), `FC$VALID.ID` 6, `FC$MINMOD` 7; `FC$SYNC` 1 and `FC$CRLF` 4 stop the program ([File Handling](07-sd-basic-file-handling.html)) |
 | **`field`** | `field(`*string*, *delimiter*, *occurrence* {, *count*}`)` |
 | **`fields`** | `fields(`*arr*, *delimiter*, *occurrence* {, *count*}`)` |
 | **`fieldstore`** | `fieldstore(`*a*, *b*, *c*, *d*, *e*`)` |
@@ -589,7 +589,7 @@ exist.**
 | **`wake`** | `wake` *user.no* |
 | **`weofseq`** | `weofseq` *file.var* {`on error` …} |
 | **`while`** | clause of `loop`: `loop` … `while` *condition* … `repeat` |
-| **`write`** | `write` *var* `to` *file.var*, *id* {`on error` …} — ***inside a transaction the lock must already be held*** |
+| **`write`** | `write` *var* `to` *file.var*, *id* {`on error` …} — ***inside a transaction the lock must already be held***  ·  `write` *var* `to` *file.var* `creating.seqkey` *id.var* {`on error` …} — a hashed file numbers the record itself |
 | **`write.socket`** | `write.socket(`*a*, *b*, *c*, *d*`)` |
 | **`writeblk`** | `writeblk` *var* `to` *file.var* {`on error` …} |
 | **`writecsv`** | `writecsv` *value*, … `to` *file.var* {`delimiter` *d*} {`quote` *q*} {`escape` *e*} `then` … `else` … |
@@ -597,7 +597,7 @@ exist.**
 | **`writelist`** | `writelist` *array* `to` *name*   (`on` may be written for `to`) |
 | **`writeseq`** | `writeseq` *var* `to` *file.var* {`on error` …} `then` … `else` … |
 | **`writeseqf`** | `writeseqf` *var* `to` *file.var* {`on error` …} `then` … `else` … |
-| **`writeu`** | `writeu` *var* `to` *file.var*, *id* {`on error` …} |
+| **`writeu`** | `writeu` *var* `to` *file.var*, *id* {`on error` …}  ·  `writeu` *var* `to` *file.var* `creating.seqkey` *id.var* {`on error` …} |
 | **`writev`** | `writev` *var* `to` *file.var*, *id*, *field* {`on error` …} |
 | **`writevu`** | `writevu` *var* `to` *file.var*, *id*, *field* {`on error` …} |
 

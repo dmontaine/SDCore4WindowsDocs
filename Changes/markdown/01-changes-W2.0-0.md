@@ -19,8 +19,10 @@ which has the full story of each change: what it does, why, and what it does not
   The administrator turns the rest on, account by account, and can turn it off again.
 - A comment at the end of a row, `<!--s` then item numbers then `-->`, names the spreadsheet items the row covers. It is
   for whoever maintains this document and does not show on the page.
-- What SD Core for Windows does not have yet, and SD Core for Linux does, is not listed here. The list for Linux has the AI
-  features, SDNet, the home screen and the full-screen tools, the master files and the full-screen editors `sed`, `ced` and `ide`.
+- What SD Core for Windows does not have yet, and SD Core for Linux does, is not listed here. Of the larger features, that is
+  the AI helper (`tool.ai` and `set.ai`); SDNet, the home screen and the full-screen tools, the editors `sed`, `ced` and
+  `ide`, and the master files are in this release. The master files are files of pointers to every account's VOC,
+  dictionary and BASIC records (`tool.entries`); the earlier design's complete copies are dropped.
 
 ## Read this first: changes that alter what an existing system does
 
