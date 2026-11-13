@@ -143,6 +143,10 @@ DOCS = [
  ('User', '29a-sd-tcl-the-home-screen.md', """
    exit home menu my.menu set.start.default set.tile tool.keys
  """),
+ # 13 Nov 26 (RELEASE_1.1 246): the AI, carried from Linux S.69 (Linux's map has the same two entries).
+ ('User', '29b-sd-tcl-asking-the-ai.md', """
+   ai
+ """),
  ('User', '29c-sd-tcl-the-development-tools.md', """
    tool.files tool.voc
  """),
@@ -206,6 +210,10 @@ DOCS = [
  """),
  ('Administrator', '19b-run-in.md', """
    run.in
+ """),
+ # 13 Nov 26 (RELEASE_1.1 246): Linux's page is Administrator 20; here 20 is the audit trail, so the AI is 21 (the help records name it).
+ ('Administrator', '21-the-ai-helper.md', """
+   set.ai tool.ai
  """),
  # 25 Oct 26 SDNet carry (RELEASE_1.1 171): the SDNet client's five verbs are explained on the Administrator page for SDNet.
  ('Administrator', '12a-sdnet.md', """
