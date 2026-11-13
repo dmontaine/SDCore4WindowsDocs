@@ -163,5 +163,11 @@ like nothing else.
 
 | | |
 |---|---|
-| **SD** | starts `sd.exe` in the data directory |
+| **SD** | starts `sd.exe` in the data directory, in a classic console window (it runs `conhost.exe`) |
+
+**The Start Menu entry always opens a classic console window.** On Windows 11,
+a console program started plainly is handed to Windows Terminal when that is
+the default terminal, and there SD's full-screen pages can take about a second
+to draw; in the classic console they draw at once. Typing `sd` in a window
+that is already open runs it in that window, whatever kind it is.
 | **Check the SD installation** | the post-install check, re-runnable at any time. Closes on a keypress |
