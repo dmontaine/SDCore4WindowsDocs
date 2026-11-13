@@ -5,7 +5,7 @@ SD uses a terminfo database to know what byte sequences a terminal sends for
 each key, and what sequences to emit for screen control — cursor movement,
 clear, colour, bold, underline.
 
-Most installations never touch it. The 51 shipped definitions cover the
+Most installations never touch it. The shipped definitions cover the
 terminals in ordinary use, and `windows` works with any Windows console, cmd,
 PowerShell or Windows Terminal session.
 
@@ -30,7 +30,7 @@ consoles, cmd, PowerShell and Windows Terminal.
 
 ## What ships
 
-**About 50 terminfo definitions ship with SD**, compiling to **82 terminal
+**26 terminfo definitions ship with SD**, compiling to **37 terminal
 names** — the extra names are variants. For example, `vt100-w` is an alias
 that maps to the same definition as its base name.
 

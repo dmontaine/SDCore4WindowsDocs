@@ -133,7 +133,7 @@ start the answers with `s`.
 
 ```
 > sdfix -B C:\sdi_demo\plain
-[ SDFIX W1.1-3   Copyright, Ladybridge Systems, 2007.  All rights reserved. ]
+[ SDFIX W2.0-0   Copyright, Ladybridge Systems, 2007.  All rights reserved. ]
 
 Processing C:\sdi_demo\plain
 Checking file header...
