@@ -173,8 +173,9 @@ lines (make it bigger whenever you like) and is titled **SD Core**. SD is
 designed for Windows 11 on a screen of at least 1920 by 1080.
 
 When SD ends normally (`OFF`) its window closes. **When it ends with an error,
-for example a refused sign-in, the window stays open** with "SD ended with
-status *n*. Press Enter to close this window." so the reason can be read.
+for example a refused sign-in, the window stays open** with "SD stopped - the
+reason is shown above. Press Enter to close this window. (exit status *n*)", so
+the reason can be read.
 
 These still run where you type them, because they open no session: `sd` with a
 command (`sd COUNT VOC`), the switches such as `sd -start` and `sd -stop`,
