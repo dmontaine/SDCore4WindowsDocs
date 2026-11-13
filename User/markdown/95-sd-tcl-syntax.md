@@ -44,6 +44,7 @@ not refused — the name is simply not recognised.**
 | **`break`** | **`break on`** \| **`off`** \| **`on user`** *n* |  |
 | **`build.index`** | **`build.index`** *file* *field* … \| **`all`** |  |
 | **`catalog`** | **`catalog`** {*file* {*call.name*}} {*program*} {**`local`** \| **`global`** \| **`pcode`**} {**`no.xref`**} |  |
+| **`ced`** | **`ced`** {**`dict`**} *file* {*id* … \| **`*`**} |  |
 | **`clean.account`** | **`clean.account`** | S |
 | **`clear.abort`** | **`clear.abort`** |  |
 | **`clear.data`** | **`clear.data`** |  |
@@ -108,6 +109,7 @@ not refused — the name is simply not recognised.**
 | **`home`** | **`home`**  —  the home screen: tiles for the account's tools, a terminal, switch account and sign out |  |
 | **`hsm`** | **`hsm on`** \| **`off`** \| **`display`** {**`user`** *n*} |  |
 | **`hush`** | **`hush on`** \| **`off`** \| **`hush`** to toggle |  |
+| **`ide`** | **`ide`** {*file* *record*} |  |
 | **`if`** | **`if`** *condition* *command* |  |
 | **`import.csv`** | **`import.csv`** *pathname* *file* {**`header`**} {**`delimiter`** *x*} {**`quote`** *x*} {**`escape`** *x*} {**`id`** *column* \| **`generate`**} {**`dict`**} {**`overwriting`**} |  |
 | **`import.json`** | **`import.json`** *pathname* *collection.file* {**`id`** *name* \| **`generate`**} {**`overwriting`**} |  |
@@ -176,6 +178,7 @@ not refused — the name is simply not recognised.**
 | **`save.stack`** | **`save.stack`** {*name*} |  |
 | **`scan`** | **`scan`** {**`dict`**} *file* {*selection*} {*id* …} {**`all`**} {**`no.case`**} {**`all.match`** \| **`no.match`**} {**`strings`** *file* *record*} **`for`** *"text"* … |  |
 | **`search`** | **`search`** {**`dict`**} *file* {*selection*} |  |
+| **`sed`** | **`sed`** {**`dict`**} *file* {*record* \| **`creating.seqkey`**} |  |
 | **`select`** | **`select`** {**`dict`**} *file* {*selection*} {*list.no*} |  |
 | **`select.dir`** | **`select.dir`** *pathname* {**`to`** *n*} |  |
 | **`selectindex`** | **`selectindex`** {**`dict`**} *file* *index* {*value*} {**`to`** *n*} |  |
@@ -212,14 +215,23 @@ not refused — the name is simply not recognised.**
 | **`sum`** | **`sum`** {**`dict`**} *file* {*selection*} *field* |  |
 | **`term`** | **`term`** \| *width*{`,`*lines*} {*type*} \| **`color`** *bg*{`,`*fg*} \| **`default`** \| **`display`** |  |
 | **`time`** | **`time`** \| **`internal`** |  |
+| **`tool.accounts`** | **`tool.accounts`**  —  the accounts on one screen (administrator): every account with its kind, suspension, gates that are on and sessions; **`modify.account`** (suspend, add or take away a person) and **`create.account`** behind a box answered Run, and **`delete.account`** after the name is typed, with the terminal given to the verb where it asks for a password or confirms | S |
+| **`tool.backups`** | **`tool.backups`**  —  backups and restores on one screen (administrator): the saved folder, the archives in it with the manifest of each, who else is signed in, and **`backup.account`**, **`restore.account`** and **`set.backup.directory`** behind a box answered Run | S |
+| **`tool.bulk`** | **`tool.bulk`**  —  a bulk update of one data file of the account: choose the records (conditions, a saved list or every record), up to ten operations from a closed set, a dry run that writes nothing, apply under record locks after a box that asks the file's name typed, and undo of the last run |  |
+| **`tool.catalog`** | **`tool.catalog`**  —  the programs of the account on one screen: compiled or not, current or stale, and where each is cataloged (private, local, global); compile it, catalog it privately or locally, and take a catalog entry out, each through its own verb after a box that shows the command |  |
 | **`tool.config`** | **`tool.config`**  —  the configuration on one screen (administrator): every parameter of **`sd.conf`** with what SD is running with, what the file says, the default and when a change takes effect, the backup directory and the operating system part of the settings report; **`E`** changes one of 14 tuning parameters through **`set.config`** behind a box answered Run, and shows why and the line to add by hand for every other | S |
+| **`tool.dict`** | **`tool.dict`** {*file*}  —  the dictionary of a file on one screen: its items by type with their heading, format, conversion and expression, described in words; make an item (the page writes the record itself, after a box, only if dict-edit is on), edit one in SED, delete or compile one through its verb, try one on a record; and the file's indices (make, build, delete, list) |  |
 | **`tool.entries`** | **`tool.entries`**  —  the master files page (administrator): the VOC entries, the dictionary items and the programs (K) of every registered account read from the account's own files, with the edit gates it holds; filter by a part of an id (or a heading) or find it in every account; a pointer whose target lies outside the account is marked **`>`**; **`E`** and **`N`** edit or make a record, **`D`** deletes one and **`C`** compiles a program (through **`run.in`**), each in its own account; **`G`** changes every row shown and **`U`** puts the last change back | S |
+| **`tool.files`** | **`tool.files`**  —  the files of the account on one screen: kind, records, modulus, size, indices, trigger; make, clear and delete a file, each through its own verb after a box that shows the command; analyze a file and list its indices and triggers by handing the terminal to the verb |  |
 | **`tool.gates`** | **`tool.gates`**  —  for the administrator the gate matrix (every account against every per-account gate; queued changes run as one **`modify.account`** command); in any other account, what this account may do and why (read only) |  |
 | **`tool.jobs`** | **`tool.jobs`**  —  the Scheduled jobs page (administrator): every account and the paragraphs and sentences it may run from the command line, changed through **`set.batch`** after a box answered Run; **`J`** shows the administrator's own scheduled jobs, made, changed, deleted and run now through **`set.job`** | S |
 | **`tool.keys`** | **`tool.keys`** |  |
 | **`tool.menus`** | **`tool.menus`**  —  menu management (administrator): the home screen's tiles for each account, where each account starts, who may add their own programs | S |
+| **`tool.query`** | **`tool.query`** {*file*}  —  the query and report builder: choose a file, mark its columns (break and total), set conditions, sorts and options, read the list / sort / count / sum sentence they make, run it into a results box, and save the query in your file &queries& and load it again; every sentence is checked before it runs |  |
 | **`tool.remote`** | **`tool.remote`**  —  everything that reaches SD from outside, on one screen (administrator): the two doors as the machine reports them (**`remote.api`**, with the terminal given to the verb for its restart question, and **`remote.ssh`**, each changed after a box and the word OPEN to turn one on), the routes of each user account, the SDNet servers (**`delete.server`**; **`set.server`** with the terminal given to the verb), who is connected, and this machine's TLS identity | S |
 | **`tool.sessions`** | **`tool.sessions`**  —  sessions, locks and logout on one screen (administrator): every session and every lock, read again every three seconds; each key runs one **`logout`**, **`unlock`** or **`inhibit.login`** command after a box answered Run | S |
+| **`tool.test`** | **`tool.test`**  —  the tests of the account on one screen: the test.* programs of its program files, run with run and judged by the last line N passed, M failed (pass, fail, no verdict; an abort is a fail); run one, all of those shown or the failed ones (after a box), read what a test printed, compile a test that has no object code through basic after a box that shows the command |  |
+| **`tool.voc`** | **`tool.voc`**  —  the vocabulary of the account on one screen: every VOC entry with its type, what it points at, whether the pointer works and how it differs from the VOC SD ships; an entry is edited in the IDE (its voc-edit gate asked), and a keyword entry is never deleted |  |
 | **`unlock`** | **`unlock file`** *n* {**`user`** *n*} *id* … \| **`all`** \| **`filelock`**  ·  **`unlock tasklock`** *n* … | S |
 | **`update.accounts`** | **`update.accounts`** {**`all`**} | S |
 | **`who`** | **`who`** |  |
