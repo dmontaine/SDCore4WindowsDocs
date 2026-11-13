@@ -52,6 +52,12 @@ SETS = {
     "Administrator": {
         "desc": "For administrators. Accounts, security, remote access, encryption, configuration, installation, and what an ordinary program may not compile.",
     },
+    # 13 Nov 26 (RELEASE_1.1 270): the TUI Guide, from SDCore4LinuxDocs, where it is a document of its own listed with the
+    # administrator's documents (Linux owner, 3 Nov 2026).  Its routines are this tree's !tk ones, level with Linux's but
+    # for the renumbered messages.
+    "TUIGuide": {
+        "desc": "SD Text User Interface - Programmer's Guide. Building a full-screen page of your own in SD BASIC with the !tk routines: the frame, the menu bar, the finder, forms, confirm boxes and pick lists, with worked examples.",
+    },
 }
 
 
