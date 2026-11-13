@@ -13,6 +13,7 @@ run.in acme catalog bp prog local no.query
 run.in acme decatalog prog
 run.in acme delete.catalog prog local
 run.in acme compile.dict cust total
+run.in acme debug bp prog
 ```
 
 The verb is in the SDSYS VOC only and refuses anyone else ("Command requires administrator
@@ -23,10 +24,22 @@ happens and says so ("run.in: the command did not finish; the session is back in
 `LOGTO SDSYS` is refused for everybody, so without this an administrator who had gone into an
 account would have no way back for the rest of the session.
 
-**There is no `debug` on Windows** (Linux has a sixth command, `run.in` *account* `debug` *file*
-*program*): the debugger runs the account's program, and here it would run with the session's
-elevated token. `run.in acme debug bp prog` is refused (`debug is not a command run.in runs`).
-Debug a program in its own account.
+## Debugging a program in another account: `run.in` *account* `debug` *file* *program*
+
+The program does not run in your session. An SDSYS session's token is elevated for the whole session, so on
+Windows the SD service starts **a separate SD process of that account** for it, as the local Windows account
+`sdrunin`, with the account's own group and `sdusers`, no privileges and no administrator rights. It has no shell,
+no `os.execute` and no edit gates, and cannot start another process. The debugger appears in your window; while the
+program runs, its screen and keyboard are your window's. A resize of your window while it runs does not reach it.
+If the run cannot start, SD says why (message 12599).
+
+The installer creates the local account `sdrunin`; nobody can sign in as it, and uninstalling removes it.
+
+> **Security warning.** The program can do whatever a session of that account can do, including changing that
+> account's files. Its output goes to your elevated window as it writes it, as it would on Linux, so a program
+> written to deceive can draw anything there. Do not type passwords or other secrets into it unless you trust its
+> code. The debugger's AI command is not available for these runs: the program's text is not trusted in an elevated
+> session.
 
 ## What it checks before it changes anything
 
