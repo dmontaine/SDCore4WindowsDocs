@@ -110,6 +110,42 @@ Puts accounts back from a backup.
 **While a restore runs, nobody else may be signed in to SD**, and new sign-ins
 are refused until it finishes.
 
+## Backups and restores on one screen: `tool.backups`
+
+```
+tool.backups
+```
+
+A full-screen page in SDSYS's VOC only (a window of 140 columns by 43 lines or
+more). The top box names the saved backup folder, says how many archives it
+holds, and says **whether anyone else is signed in**: `backup.account` and
+`restore.account` both run only when every other session has logged out, so the
+page lists the other sessions and **shows no box for a command while any is
+there**. The list is the archives in the folder (the files
+`SD-host-what-yyyymmdd-hhmmss.zip`), newest first: when each was made, its size,
+and how many accounts it holds. The box at the foot shows the manifest of the
+one under the cursor, read without unpacking anything.
+
+| Key | Runs |
+|---|---|
+| `B` | `backup.account all` |
+| `A` | `backup.account name ...`, for the account names you type |
+| `R` | `restore.account archive all no.query`, the archive under the cursor |
+| `D` | `set.backup.directory path`, for the absolute path you type |
+
+Each shows its command in a box answered Run or Cancel, **and Cancel is what
+Enter chooses**. The page runs those four commands and no other; the verbs ask
+for the administrator again and write their own audit lines. **A restore
+replaces every account the archive holds**, so its box lists them and wants the
+word `RESTORE` typed; the page then gives `no.query`, because the verb's own
+question cannot be answered through a page. **A restore that would have to make
+an account is refused by the page**, because a new account asks for a password:
+restore such an archive at the prompt.
+
+The packing is done by SDSYS, which runs elevated. `F5` reads the folder, the
+archives and the sessions again, `F1` explains the page and `Ctrl-Q` leaves.
+Opening the page writes the audit line `tool start app=tool.backups`.
+
 ## What the system looks like: `settings.report`
 
 ```

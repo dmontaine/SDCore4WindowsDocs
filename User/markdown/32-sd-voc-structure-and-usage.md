@@ -138,8 +138,8 @@ target, and the remaining fields carry options.
 
 | Field 2 | Field 3 | What it does |
 |---|---|---|
-| `CA` | *catalogue name* | a catalogued program — 99 of the shipped verbs |
-| `IN` | *number* | internal verb *n*, handled by the command processor itself — 42 verbs |
+| `CA` | *catalogue name* | a catalogued program — 163 of the shipped verbs |
+| `IN` | *number* | internal verb *n*, handled by the command processor itself — 38 verbs |
 | `OS` | *text* | an operating-system command — `sh`, and nothing else |
 | `CS` | *path* | a locally catalogued function |
 

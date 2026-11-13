@@ -93,7 +93,7 @@ DOCS = [
    analyze.file clear.file cname compare.files configure.file
    convert.data copy create.file ct delete delete.file dump file.stat find.file fixdir fstat
    fstat.user hsm import.csv import.json import.xml list.files list.triggers profiler
-   set.file set.trigger
+   set.file set.trigger oscopy
  """),
  ('User', '21-sd-tcl-query-processor.md', """
    count list list.item list.label reformat scan search show sort sort.item
@@ -109,8 +109,11 @@ DOCS = [
    rebuild.all.indices selectindex
  """),
  ('User', '24-sd-tcl-programs-and-the-catalogue.md', """
-   basic catalog compile.dict debug decatalog delete.catalog
-   delete.common find.program format generate list.common map run
+   basic catalog decatalog delete.catalog map run
+ """),
+ # 13 Nov 26 (RELEASE_1.1 269): 24 was cut in two; the program-development verbs and the IDE are explained on 24a.
+ ('User', '24a-sd-tcl-find-program-dictionaries-and-the-ide.md', """
+   compile.dict debug delete.common find.program format generate ide list.common
  """),
  ('User', '25-sd-tcl-ed.md', """
    ed
@@ -120,6 +123,13 @@ DOCS = [
  """),
  ('User', '27-sd-tcl-micro.md', """
    micro
+ """),
+ # 13 Nov 26 (RELEASE_1.1 269): the pages carried with the TUI (RELEASE_1.1 197) had no entry here.
+ ('User', '27a-sd-tcl-sed.md', """
+   sed
+ """),
+ ('User', '27b-sd-tcl-ced.md', """
+   ced
  """),
  ('User', '28-sd-tcl-printing-and-spooling.md', """
    block.print block.term printer setptr
@@ -133,6 +143,21 @@ DOCS = [
  ('User', '29a-sd-tcl-the-home-screen.md', """
    exit home menu my.menu set.start.default set.tile tool.keys
  """),
+ ('User', '29c-sd-tcl-the-development-tools.md', """
+   tool.files tool.voc
+ """),
+ ('User', '29c1-sd-tcl-tool-dict.md', """
+   tool.dict
+ """),
+ ('User', '29c2-sd-tcl-tool-query.md', """
+   tool.query
+ """),
+ ('User', '29c3-sd-tcl-tool-bulk.md', """
+   tool.bulk
+ """),
+ ('User', '29c4-sd-tcl-tool-catalog-and-tool-test.md', """
+   tool.catalog tool.test
+ """),
  ('User', '30-sd-tcl-processes-and-phantoms.md', """
    list.phantoms pdebug pdump phantom pstat status
  """),
@@ -141,7 +166,7 @@ DOCS = [
  """),
  ('Administrator', '01-accounts-and-security.md', """
    create.account grant list.grants load.help modify.account modify.password revoke
-   tool.gates tool.menus
+   tool.gates tool.menus tool.accounts
  """),
  # THE MAINTENANCE VERBS MOVED TO 01a AND ONLY ONE OF THEM SAID SO.  tclmap
  # reported set.date and passed the other four, because 01 still MENTIONS
@@ -158,16 +183,29 @@ DOCS = [
    set.batch
  """),
  ('Administrator', '01b-backup-and-restore.md', """
-   backup.account restore.account set.backup.directory settings.report
+   backup.account restore.account set.backup.directory settings.report tool.backups
  """),
  ('Administrator', '02-sessions-and-locks.md', """
    clear.locks inhibit.login list.locks list.readu listu lock logout tool.sessions unlock
  """),
  ('Administrator', '03-operating-system-access.md', """
-   sh
+   sh docs.install
  """),
  ('Administrator', '05-remote-access-and-the-machine.md', """
-   append.sd.path remote.api remote.ssh ssh.server
+   append.sd.path remote.api remote.ssh ssh.server tool.remote
+ """),
+ # 13 Nov 26 (RELEASE_1.1 269): the configuration verbs (RELEASE_1.1 218), scheduled jobs (222), the master files and run.in (201).
+ ('Administrator', '07-sd-admin-configuration.md', """
+   set.config tool.config
+ """),
+ ('Administrator', '17-scheduled-jobs.md', """
+   set.job tool.jobs
+ """),
+ ('Administrator', '19-the-master-files.md', """
+   tool.entries
+ """),
+ ('Administrator', '19b-run-in.md', """
+   run.in
  """),
  # 25 Oct 26 SDNet carry (RELEASE_1.1 171): the SDNet client's five verbs are explained on the Administrator page for SDNet.
  ('Administrator', '12a-sdnet.md', """
