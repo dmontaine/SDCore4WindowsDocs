@@ -162,7 +162,7 @@ acts on it:
 |---|---|
 | `live` | something acts on it |
 | `file` | read from `sd.conf` by a program each time it is used, not by the kernel (`BACKUPDIR`) |
-| `inert` | accepted, and nothing on Windows acts on it (`SPOOLER`: SD prints through Windows printing) |
+| `inert` | accepted, and nothing on Windows acts on it (none at present) |
 | `unknown` | a name in the file that SD does not know |
 
 A row marked `*` is one where the file and the running SD disagree. The box at the foot says for that
@@ -292,7 +292,7 @@ its box:
 | `SH1` | A command SD runs for a shell command line. |
 | `SORTMEM` | A size in kilobytes that SD does not check, so a mistake shows only when a sort runs. |
 | `SORTWORK` | A directory: the work files of a large sort are written there. |
-| `SPOOLER` | Nothing on Windows acts on it. |
+| `SPOOLER` | Text that names a printer; check the printer's exact name in Windows first. |
 | `TEMPDIR` | A directory: temporary files are written there. |
 | `TERMINFO` | A directory: terminal definitions are read from there. |
 | `USERPOOL` | The highest user number: PHANTOMS is checked against it; a mistake stops SD. |
@@ -380,7 +380,7 @@ about one account.
 |---|---|---|
 | `LPTRWIDE` | 80 | Default page width for the printer. Range 10 to 1000 |
 | `LPTRHIGH` | 66 | Default page depth for the printer. Range 10 to 32767 |
-| `SPOOLER` | empty | The spooler to hand print jobs to |
+| `SPOOLER` | empty | The Windows printer a print job goes to when `setptr` names none (`at` wins); empty is the Windows default printer. On SD Core for Linux it is the spooler command instead |
 
 ## Sorting
 
