@@ -1,0 +1,31 @@
+Title: SD and AI Agents: the Guide, the Knowledge Pack and the Skill
+Subtitle: What an AI agent is given to work in SD, how it is kept true, and the one rule that does not bend: the gates are walls.
+
+An AI agent (Claude Code, or any tool that reads files) that is asked to write SD BASIC meets a language that looks like OpenQM, UniVerse or D3 and is not. It guesses names that SD lacks, and the compiler's answer to a missing function is a complaint about a matrix nobody declared. This page describes what SD supplies to prevent that. **It supplies documents. It does not connect an agent to SD, it holds no key and it calls no model.** The installer copies two parts, as text, to `C:\ProgramData\SD\sdsys\agent-pack\`: the guide and the pack. Only the administrators can change them, they are the description of the installed version, and an ordinary account cannot read them from inside SD, because a path outside the account needs `os-on`. They are there for the administrator to copy to the machine where an agent runs.
+
+## What is in it
+
+| | |
+|---|---|
+| **The guide** (`guide/sd-basic-guide.md`) | about eight thousand words: the language, the system around it, and what SD does not have, with twenty-odd worked programs, and a table of names that SD does not have |
+| **The knowledge pack** (`pack/`) | generated from SD itself: one chunk for each TCL verb and query keyword, VOC record type and layer, dictionary item type, format and conversion code, BASIC statement, function, `$mode` and `option`, message, account word, `sd.conf` setting and key constant, with the file and line each came from. Real VOC records and real dictionary items are quoted verbatim |
+| **The skill** (`skill/sd-core/`) | a Claude Code skill: `SKILL.md` and, under `references/`, the guide and the pack. An agent that is installed with it reads the guide first and looks items up by chunk id. It is in the source repository, not installed |
+| **A CLAUDE.md template and the recipe** | for a project that lives in an SD account, and for giving the agent an account of its own. The recipe is described for the administrator in the Administrator set, *Giving an AI Agent an Account* |
+
+## Where the facts come from
+
+The pack is not typed. Its lists are computed from SD itself: a verb is a VOC record of type `V`, a message is a file, a statement is a name in the compiler's tables, a setting is a branch of the configuration reader. Meaning that no program can state (what a query keyword does) is quoted from this documentation by heading. Each chunk names the file and line it came from, and a check fails when the pack and SD disagree.
+
+## The rule that does not bend
+
+The gates (ssh, API, `sh`, `os.execute`, saving to a VOC, a program file or a dictionary, files on another server, the shared account) are off for a new account and are switched on only by SDSYS. The guide states them so that an agent stops at them. It shows the refusal each one gives in an ordinary account, and it teaches no way round any. When one stops an agent, the instruction in the guide is to say which gate it was and to stop; whether to switch it on is for the person who owns the machine.
+
+## What it does not do
+
+It does not make an agent right; it makes the commonest mistakes cheap to avoid. It describes SD Core for Windows at its stamp plus the release in progress; items marked 2.0-0 may be missing from a released install and from SD Core Solo for Windows.
+
+## See also
+
+[SD Basic - Program Structure](01-sd-basic-program-structure.html) ·
+[SD Basic - Syntax](94-sd-basic-syntax.html) ·
+[SD TCL - Syntax](95-sd-tcl-syntax.html).
