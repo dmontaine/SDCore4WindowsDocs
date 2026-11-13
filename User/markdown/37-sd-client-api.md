@@ -139,6 +139,19 @@ that also has the API route.
 
 *Measured:* a test program with no server running (`gplsrc\sdclilib\tests\thread_smoke.c`) shows two threads each keeping their own connect error, 32 threads connecting, failing and disconnecting together without meeting a session or error that is not theirs, and the slots of ended threads free again. A run of several threads against a real server has not been made.
 
+### How big a request may be, and what the server does with one it cannot accept
+
+Every request starts with a 4-byte length that counts the whole packet, itself included, and a 2-byte request code, so the smallest packet is 6 bytes. The client library never sends one that breaks the rules below, so a program using it does not meet them; they matter to a program that speaks the protocol itself, and to anyone probing the port.
+
+| When | A packet may declare |
+|---|---|
+| before the client has logged in (the server is still the SD service's own process, running as LocalSystem) | 6 to 65,536 bytes. The login messages are all under 4 KB |
+| after the login | 6 to 1,073,741,832 bytes: the largest SD string (1,073,741,822) plus the 10 bytes of header the client library allows for, the number `SD_MAX_PACKET_BYTES` in the library |
+
+A packet that declares anything else (below 6, negative, or over the limit) is not read: the server ends the session at once and writes one line to the Windows Application event log, source `sd_Log` (`API packet length ... refused (before login)` or `(after login)`). The same test applies to the reply a client sends to an `INPUT` prompt.
+
+*Before 13 Nov 2026 the Windows client library refused any reply over 256 MB, so a record larger than that could be written through it but not read back, and `SDWriteBlk` and `SDWriteSeq` stopped at the same size.*
+
 ## Server status codes
 
 | Constant | Value | Meaning |
