@@ -74,6 +74,7 @@ The server side of the API, the client library and the language headers.
 
 | Name | Change | What |
 |---|---|---|
+| API `clearfile` | Changed | fixed: it cleared whichever file a stale counter pointed at instead of the file the client named |
 | client library headers | Added | C# (`sdclient.cs`) and PHP (`sdclient.php`) beside the six already there; neither has been run against a runtime <!--s g200--> |
 | client library: dictionary | Added | `sdevaluate`, `sdevalconv`, `sdiconv`, `sdoconv`, `sdiconvs`, `sdoconvs` <!--s 247 409--> |
 | client library: files | Added | `sdopenseq`, `sdreadseq`, `sdreadblk`, `sdwriteseq`, `sdwriteblk`, `sdseek`, `sdweofseq` <!--s 441--> |
@@ -139,6 +140,8 @@ Statements, functions, `$mode` words and compiler directives.
 | `$mode partial.expressions` | Added | `a and b` and `a or b` stop evaluating as soon as the value is known <!--s 417--> |
 | `$mode strict.equate` | Added | warns when a name given to `equate` or `$define` is also a statement or function name <!--s 582--> |
 | `$mode trap.unused.main` | Added | `trap.unused` for the program's own variables <!--s g227--> |
+| named common | Changed | fixed: a program that kept a class object in named common made the process end with a crash at logout; the objects are now released first |
+| named common with a `$` or `_` name | Changed | the system's own common blocks: only an internal program may declare or join one; any other program stops with message 12603 |
 | `no.query` on cataloguing | Added | the `basic` command, the `$catalogue` directive and the `catalogue` line of `$basic.options` take `no.query`, which stops the compiler asking before it removes an older entry <!--s 27 191--> |
 | `open ... non.transactional` | Added | a write through that file variable is not undone by a rollback <!--s 64--> |
 | `openseq` | Added | `creating` makes the file at once; `shared` lets several processes append; a block device can be opened <!--s 485 397 112--> |
@@ -333,8 +336,10 @@ Commands and VOC verbs that every account has, and the command language.
 | `profiler` | Added | records what the programs of a session do and where <!--s g66 g203--> |
 | `redo` | Added | runs a command again and again, `times` and `every` <!--s 188--> |
 | saved list verbs | Changed | `save.list`, `get.list`, `delete.list`: `keep`, `deleting`, `count.sup`, a default name, a name left out, `in file` <!--s 2 384 387 401 494--> |
+| `sed` open of a missing path | Changed | fixed: opening a path that does not exist kept the name locked until the editor was closed |
 | `selectindex` | Added | the command form of the statement <!--s 119--> |
 | `setptr` | Changed | `form.feed`, `inform`, `eject`, `as ... in file`; the digits of `next` <!--s 51 59 70 139 448--> |
+| `sh` with no command | Changed | fixed: starts the interactive shell again (the check for shell metacharacters had made it fail for everybody); it still needs the account's `sh` switch |
 | `show.list` | Added | a page at a time, starring and clearing items <!--s 449--> |
 | `sort.list`, `select.dir` | Added | sort a saved list; select the files of a directory <!--s 158 465--> |
 | `sp.view` | Changed | `by field`; `x` deletes the item shown; shows where output goes for every print unit mode <!--s 450 560--> |
@@ -578,6 +583,7 @@ free checks pass, and it has not been run against another server.
 | SDNet logins | Added | `set.netlogin`, `delete.netlogin`: a person's login on a server, kept as derived values and never the password, in a folder only that person and the administrators can open |
 | `set.server` | Added | defines a server; `connect` shows its key hash for you to confirm <!--s g84 147--> |
 | `settings.report` | Changed | the `[api]` section shows the hash of the API's public key, the figure another administrator pins |
+| tls close | Changed | fixed: closing a TLS connection no longer ends the process when the other side has already gone |
 | tls reads | Changed | fixed: a half record or a late ticket made a read wait without limit |
 | uninstall | Changed | removing SD with its data also removes the groups `sdfiles`, `sdfileswrite` and `sdfilesadmin`; removing a person removes their stored server logins |
 
