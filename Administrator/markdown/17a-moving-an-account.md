@@ -40,7 +40,9 @@ using them between two machines.
 3. Back the account up. Several names, or `all`, make one zip, named
    `SD-`*host*`-`*accounts*`-`*yyyymmdd-hhmmss*`.zip`. SD counts the files, bytes and directories
    of each account before it packs, compares them with what it wrote, and **deletes the zip if
-   they differ**. The restore checks the same numbers.
+   they differ**. The restore checks the same numbers. A junction or other link inside an account
+   is not followed and not packed; the backup goes on and names it:
+   *Not in the backup: C:\ProgramData\SD\user_accounts\jack\link*.
 4. **Copy the zip to the new machine** with whatever you use for files (a network share, a USB
    drive, `scp`). SD has no verb for this.
 
