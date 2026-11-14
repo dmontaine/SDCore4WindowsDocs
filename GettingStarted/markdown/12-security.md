@@ -165,20 +165,33 @@ member of its group.
 
 ### The system directories are read-only to ordinary users
 
-Seven parts of the SD data area could be changed by anyone in `sdusers`. They
-are now readable by everyone who needs them and writable only by an
-administrator:
+These parts of the SD data area are readable by everyone who needs them and
+writable only by an administrator:
 
 ```
 sdsys\accounts    the register of accounts
-sdsys\$map        sdsys\messages    sdsys\newvoc
+sdsys\$map        sdsys\messages    sdsys\newvoc     sdsys\voc
 sdsys\bp          sdsys\cat         SD's own programs
+sdsys\voc_template  sdsys\voc_removed  sdsys\voc_removed.saved
+sdsys\config.table
+sdsys\syscom      sdsys\terminfo    sdsys\terminfo.src  sdsys\helptext
+sdsys\dir_dict    sdsys\licence     sdsys\contrib    sdsys\start.default
+sdsys\agent-pack  sdsys\bp.out      sdsys\pcode.out
+sdsys\dict.dic    sdsys\voc.dic     sdsys\$map.dic   sdsys\accounts.dic
 sd.conf           the configuration read at start-up
 ```
+
+**The `sdsys` folder itself takes no new file from an ordinary user.** What is
+already in it keeps the access it has, so the entries below still work.
 
 **Nothing an ordinary user does needs to write them** — not the spooler, not
 saved lists, not a phantom. The commands that *do* write them are already
 administrator commands and are unaffected.
+
+**Left writable by every SD user, deliberately:** `sdsys\$ipc`, `sdsys\errlog`
+(every session adds to the error log), `sdsys\prt`, `sdsys\$hold` and
+`sdsys\$hold.dic` (the print queue and held output). `sdsys\dumps` and
+`sdsys\pstmp` have access lists of their own.
 
 **`sdsys\$ipc` is deliberately unchanged.** Every session writes to it, and
 it is how a **`phantom`** is given its command. **What a phantom takes from it is
@@ -188,12 +201,18 @@ records with it, and the new process runs nothing from them unless the seal chec
 
 The global catalogue and the pcode library are locked the same way.
 
-> **An existing installation is not changed by an upgrade**, because the
-> installer never overwrites a data area that is already there. To apply it to
-> one you already have, run this once per path from an elevated prompt:
+> **Every install sets these, an upgrade included.** If the closing screen says
+> one was NOT locked, it names the path; run this from an elevated prompt with
+> that path:
 >
 > ```
 > powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\secure-sysdirs.ps1" -Path "C:\ProgramData\SD\sdsys\accounts"
+> ```
+>
+> For the `sdsys` folder itself, add `-KeepChildren`:
+>
+> ```
+> powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\secure-sysdirs.ps1" -Path "C:\ProgramData\SD\sdsys" -KeepChildren
 > ```
 
 ### The credential file
