@@ -409,9 +409,11 @@ high shows the left part of the lines and works as usual.
 The program's own screen is kept by the terminal (that is what the alternate
 screen is): when you let the program run, the debugger gives the terminal back
 and the program's output is on its own screen, and it is on the alternate
-screen again at the next stop. The colours are the screen library's: the
-`classic` theme while the debugger is up if the program asked for none, and
-whatever the program or the site chose otherwise.
+screen again at the next stop. The colours are the screen library's: if the
+program asked for no theme, the debugger uses the theme you chose with Ctrl-T,
+else the site's theme (`SCREENTHEME` in `sd.conf`, which the installer sets to
+`paper`) while it is up, and the `classic` one when neither names one; and whatever
+the program asked for otherwise.
 
 **On a terminal with no alternate screen, and in a session that is not a
 terminal, the debugger is line by line.** Every command works, as the

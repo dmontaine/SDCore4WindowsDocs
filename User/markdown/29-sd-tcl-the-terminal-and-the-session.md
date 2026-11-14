@@ -443,6 +443,9 @@ from SD BASIC (see [Data Conversion](06-sd-basic-data-conversion.html)). SD Core
 is English only; `nls` has nothing to do with the language of messages, month
 names or day names.
 
+Large letters on the terminal, `block.term`, are described with `block.print` in
+[SD TCL - Printing and Spooling](28-sd-tcl-printing-and-spooling.html).
+
 ## Waiting
 
 ```

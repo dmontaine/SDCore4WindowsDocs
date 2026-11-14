@@ -155,6 +155,7 @@ machine.
 | `!CREATE_USER` `!DELETE_USER` `!SET_PASSWD` | the Windows account half of `create.account`, `delete.account` and `modify.password` |
 | `!CRED_SET` `!CRED_VERIFY` | write and check a credential in the credential store |
 | `!SD_GET_SALT` `!SD_KEY_FROM_PW` | the key derivation behind that credential |
+| `!PW_COMPLEX` | SD's password rule — 8 characters with a lower-case letter, an upper-case letter, a digit and a symbol |
 | `!ELEVATE` | starts, uses and stops the elevated helper |
 | `!PS_SCRIPT` `!PS_SCRIPTO` | run a PowerShell script through that helper, without and with its output |
 | `!IS_USER` `!IS_GROUP` `!IS_GRP_MEMBER` `!IS_SD_USER` `!OS_GROUP` | Windows account and group questions |
