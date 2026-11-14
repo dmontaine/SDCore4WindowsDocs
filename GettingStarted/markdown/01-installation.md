@@ -134,6 +134,8 @@ asked once. A silent upgrade shows no page and asks nothing.
 Python is a separate product with its own entry in *Apps*; uninstalling SD Core
 leaves it in place.
 
+### The AI helper (no box)
+
 **The AI helper needs no Python.** Every install and upgrade sets up the
 Windows service `sd-ai`, which is the only part of SD that talks to an AI
 provider; the AI is off as delivered. To set the service up again, run this in
