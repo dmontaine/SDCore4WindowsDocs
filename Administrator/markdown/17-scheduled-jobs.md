@@ -207,6 +207,13 @@ definition edited by hand is shown as damaged, and a task edited by hand is writ
 `set.job change`. Task Scheduler shows the task, its trigger and its last result; what a run printed is
 not kept, and what it did is in the audit trail.
 
+**The `SD` folder in Task Scheduler is SYSTEM's and the administrators' only.** By Windows' default any
+signed-in user may create a top-level Task Scheduler folder, or a task inside an existing one, so
+`set.job` registers a job only into an `SD` folder that SYSTEM, Administrators or one of its members owns,
+closes it to everyone else, and removes a task of the job's name before registering it, never updating
+one in place. Setup makes the folder that way at install. A folder `SD` owned by anyone else is refused
+until an administrator deletes it.
+
 **Uninstalling SD** removes every `sdcore-job-` task, then the definitions and their folder, **whether
 or not the database is kept**: a task left behind would name a program that is gone.
 

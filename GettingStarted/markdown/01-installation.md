@@ -369,6 +369,13 @@ Every reason, warning and caveat that used to appear on them is here.
   SD Core to the system PATH unless you clear that option. The program files
   (`C:\Program Files\SD`) and the database (`C:\ProgramData\SD`) cannot be
   moved.
+- **The Task Scheduler folder `SD`.** Setup makes it, open to SYSTEM and
+  administrators only: scheduled jobs and remote administration keep tasks there
+  that run as SDSYS or SYSTEM, and by Windows' default any signed-in user could
+  otherwise create that folder, or a task in it, first. A folder `SD` that is
+  already there and owned by an administrator is closed the same way; one owned
+  by anyone else is named on the installer's last screen, and SD will not use it
+  until an administrator deletes it.
 - **Sign out and back in afterwards.** Windows applies a new group membership
   only when you sign in. Until you do, `sd` answers that it is not recognized
   (in a window opened before the install — a new window cures that), that it
