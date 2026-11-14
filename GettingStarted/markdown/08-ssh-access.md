@@ -264,14 +264,18 @@ SDSYS over ssh at all — local or remote — would hand out a session with no
 consent prompt in front of it. Refusing the connection outright, rather than
 trying to filter what it can do once inside, is what closes that.
 
-### If you rely on remote administration today
+### Administering SD from another computer
 
-**It does not work, and that is deliberate.** Use the console, or a
-service-installed remote desktop, signed in as SDSYS. An account that needs
-ordinary, non-administrative work from another machine was never an
+**SDSYS itself never signs in over ssh, and that is deliberate.** Use the
+console, or a service-installed remote desktop, signed in as SDSYS. To manage
+SD accounts from another computer, the administrator can open remote
+administration for the separate account SDRADMIN with `remote.sdsys on`; it
+is shut as delivered, and the Administrator Guide's chapter *Remote
+Administration over ssh* says what opening it means for security. An account
+that needs ordinary, non-administrative work from another machine was never an
 administration question — give it its own `ssh`/`api`/`both` route with
 `create.account` or `modify.account`.
 
-**Scheduled tasks are affected too.** A task that runs unattended has no
-screen either, so nothing can become SDSYS to run one. List the command in
-the SD system file `batch.jobs`, run from an ordinary account.
+**Scheduled work that must run as SDSYS** is set up at the console with
+`set.job`, which hands it to Windows Task Scheduler; see the Administrator
+Guide's chapter *Scheduled Jobs*.

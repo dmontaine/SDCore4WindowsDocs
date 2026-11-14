@@ -19,13 +19,26 @@ PowerShell:
 powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\remote-admin.ps1" -Status
 ```
 
-with `-On` or `-Off` in place of `-Status`. `tool.remote` shows remote administration as its sixth view.
+with `-On` or `-Off` in place of `-Status`. Run by an administrator other than SDSYS, `-On` also needs SDSYS's Windows
+password (see below), typed at a hidden prompt:
+
+```
+powershell -ExecutionPolicy Bypass -Command "& 'C:\Program Files\SD\remote-admin.ps1' -On -SdsysPassword (Read-Host 'SDSYS password' -AsSecureString)"
+```
+
+`tool.remote` shows remote administration as its sixth view.
 
 ## The account
 
 The first `remote.sdsys on` makes SDRADMIN and asks for its Windows password. **Choose a long password used nowhere
 else.** To change it later, run `net user SDRADMIN *` in an elevated prompt. That Windows password is the only one:
 SD does not ask SDRADMIN for a second.
+
+Run anywhere but at SDSYS's own console (the installer runs it as the administrator who is installing), `remote.sdsys
+on` also asks for **SDSYS's** Windows password. The broker that carries out SDRADMIN's requests is a scheduled task that
+runs as SDSYS, and Windows lets only SDSYS itself, or someone who gives SDSYS's password, set up such a task. The
+password is used for that once; the task is kept as "run whether the user is logged on or not, without storing the
+password", so Windows keeps no copy of it. A wrong password changes nothing.
 
 SDRADMIN is never a Windows administrator. It may sign in over ssh only: not at the console, not by Remote Desktop,
 not as a scheduled task. It lands in its own SD account, with every gate shut, and cannot `logto` another account.
