@@ -80,10 +80,38 @@ an *older* copy of the library cannot connect at all: the server waits for the
 encryption handshake and closes the connection after ten seconds of silence.
 Relink it.
 
-**A client does not yet check the server's certificate.** The encryption stops
-a machine in the middle from reading traffic or logging in on your behalf, but
-such a machine could still record a login attempt and try to guess the password
-later, offline. Use long API passwords that are not reused elsewhere.
+**The client library remembers each server's certificate.** The first time a
+client library connects to a server it keeps that server's certificate; after
+that it connects only to a server that presents the same one. This is *first
+use* trust: the first connection is taken on trust, and every later one is
+checked, so a machine in the middle cannot pose as the server and collect a
+login to guess the password from offline.
+
+| | |
+|---|---|
+| **What is kept** | the SHA-256 of the server's whole certificate, as 64 lower-case hex digits |
+| **Where** | `%USERPROFILE%\.sdcore\known_servers`, or the file named by the environment variable `SD_KNOWN_SERVERS`; one line per server, `host:port` and the digits. A different port is a different server |
+| **When it is checked** | right after the secure connection is made and before anything is sent — no login byte, no password |
+
+**A changed certificate is refused**, with *"THE SERVER'S CERTIFICATE HAS CHANGED
+since this client first connected to host:port (pinned ..., now ...). The
+connection was refused before any password was sent. If the server was
+reinstalled, remove the line for host:port from ... and connect again"*. Nothing
+updates the file by itself and nothing asks you; **removing the line is the
+remedy**, and only if you know why the certificate changed. **A file that cannot
+be opened or written refuses the connection** ("cannot pin the server: cannot
+open ...") rather than connecting unchecked, so a program that runs with no user
+profile, such as a service, needs `SD_KNOWN_SERVERS` set to a file it may write.
+
+**A server whose certificate was replaced is a different server to a client that
+knew the old one** — for instance SD installed on a fresh data folder. The
+client refuses it until its line is removed.
+
+**What this does not cover.** The very first connection is trusted, as with
+`ssh`: a machine in the middle at that moment would be remembered in the
+server's place. **Programs that reach another SD with the `!sdclient` class or
+SDNet do not go through the client library and are not pinned.** Use long API
+passwords that are not reused elsewhere.
 
 **A low-privilege Windows account, `sdrelay`, appears in Computer Management.**
 The small helper program that ends the encryption for each connection

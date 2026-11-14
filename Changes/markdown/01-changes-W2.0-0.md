@@ -79,6 +79,7 @@ The server side of the API, the client library and the language headers.
 | client library: dictionary | Added | `sdevaluate`, `sdevalconv`, `sdiconv`, `sdoconv`, `sdiconvs`, `sdoconvs` <!--s 247 409--> |
 | client library: files | Added | `sdopenseq`, `sdreadseq`, `sdreadblk`, `sdwriteseq`, `sdwriteblk`, `sdseek`, `sdweofseq` <!--s 441--> |
 | client library: more functions | Added | `sdrevision`, `sdgetvar`, `sdsystem`, `sdindices`, `sdtrans`, `sdrtrans`, `sdtxn` <!--s 89 195 410 499 442--> |
+| client library: server certificate | Added | the library remembers a server's certificate the first time (`%USERPROFILE%\.sdcore\known_servers`, or `SD_KNOWN_SERVERS`) and refuses a different one before any login byte is sent; a file it cannot use refuses the connection; the same as Solo and SD Core for Linux |
 | client library: threads | Added | each thread has its own session, transfer buffer and arguments; several threads may use the library <!--s 456--> |
 | `master.login` | Changed | the paragraph runs for API connections as for interactive and phantom sessions <!--s 170--> |
 

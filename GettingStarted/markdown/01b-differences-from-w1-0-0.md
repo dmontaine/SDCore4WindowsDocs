@@ -93,11 +93,13 @@ and belonging to no group. **Leave it alone**: SD's service creates it and
 removes it. If it is deleted by hand, every API connection is refused until
 the service is reinstalled.
 
-**What this does not do**: a client does not yet check the server's
-certificate. The encryption stops a machine in the middle from reading
+**What this did not do in W1.1**: a client did not check the server's
+certificate. The encryption stopped a machine in the middle from reading
 traffic or logging in on your behalf, but such a machine could still record
-a login attempt and try to guess the password later, offline. Use long API
-passwords that are not reused elsewhere.
+a login attempt and try to guess the password later, offline. From W2.0-0 the
+client library remembers each server's certificate (API access, "The client
+library remembers each server's certificate"). Use long API passwords that
+are not reused elsewhere.
 
 **An API session now runs as the Windows user who logged in**, not as the
 service account. Before this, every API session ran as LocalSystem and only

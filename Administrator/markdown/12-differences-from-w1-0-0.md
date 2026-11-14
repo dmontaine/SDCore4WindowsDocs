@@ -91,8 +91,10 @@ client's behalf or read the traffic, even by pretending to be the server.
 The client libraries (`sdclilib`, `sdclient`, the BASIC `!sdclient` class)
 negotiate this automatically; a program linked against an **older** copy of
 the library cannot connect — the server waits out a ten-second handshake
-timeout and closes the connection. A client does not yet check the server's
-certificate, so use API passwords that are long and not reused elsewhere.
+timeout and closes the connection. In W1.1 a client did not check the server's
+certificate; from W2.0-0 the client library remembers each server's certificate
+and refuses a different one. Use API passwords that are long and not reused
+elsewhere.
 
 **A new local Windows account, `sdrelay`, will appear in Computer
 Management** the first time an API connection is made — do not delete it or
