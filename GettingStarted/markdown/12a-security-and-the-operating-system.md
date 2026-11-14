@@ -111,7 +111,8 @@ too, with the reason.**
 
 **This is not the error log and does not behave like it.** The error log throws
 away its oldest half when it fills; the audit file is **renamed with the date
-and time and a new one started, so nothing is ever discarded.** Removing the
+and time and a new one started when it reaches one megabyte (by the audit
+service as it writes, and by `sd -start`), so nothing is ever discarded.** Removing the
 old ones is your decision — SD will not do it for you, and they will
 accumulate.
 

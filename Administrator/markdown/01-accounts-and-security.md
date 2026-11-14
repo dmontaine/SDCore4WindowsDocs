@@ -180,6 +180,7 @@ these:
 | `OPENSEQ` and `OPENPATH` with a path | status 3035, so `OPEN ... ELSE` works as before |
 | `DIR()` and the `select.dir` verb | refused (the verb says why) |
 | `DELETESEQ` of a bare path | refused; the file is left alone |
+| `OPENTEMP` with a pathname or in the temporary directory, `DIGEST` of a file, and the file keys of `OSPATH()` | the `ELSE` branch, or a null result, with status 3035 (`DIGEST`'s `STATUS()` says the file is outside what the account may reach) |
 | `!OSCOPY`, `!IOSCOPY` and the `oscopy` verb | refused, status -4 (the verb says why) |
 | printing into a file by path (`setptr ... as pathname`, `SETPU`, or a `$hold` print name that climbs out with `..`) | refused |
 

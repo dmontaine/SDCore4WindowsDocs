@@ -35,13 +35,14 @@ Everything after the verb is the command:
 hello-from-the-shell
 ```
 
-**There is no interactive shell at the prompt.** A bare `sh`, with nothing
-after it, is refused with the same "Error 2" as below, so a script, a phantom
-or a scheduled job that types it does not hang waiting for somebody at a
-keyboard. (Until 25 October 2026 a bare `sh` from an account on the `os.users`
-list handed control to an interactive PowerShell and **waited for ever** when
-there was nobody at the keyboard.) For a session of your own, sign in to
-Windows.
+**A bare `sh`, with nothing after it, starts an interactive shell** (Windows
+PowerShell; the filter below is for a typed command, and until 7 November 2026
+it refused an empty one too, with the same "Error 2"). `exit` brings you back
+to the SD prompt. It needs the account's `sh-on` switch like any other `sh`: an
+account without it is refused first, with "<name> is not permitted to use the
+operating system shell". (Until 25 October 2026 a bare `sh` from an account on
+the `os.users` list handed control to an interactive PowerShell; from then until
+7 November it was refused.)
 
 ## The shell you get is Windows PowerShell 5.1
 

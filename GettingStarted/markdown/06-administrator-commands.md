@@ -197,8 +197,10 @@ SD's own system programs are exempt, so **`create.account`** and the
 
 **No account gets a pipe, a redirect or a chain at the prompt.** `sh`
 refuses a command that holds `;`, `|`, `&`, `$`, a backquote, `<`, `>` or a
-newline — for every account, SDSYS included, switch or no switch. A bare `sh`
-is refused too. Write the work into a script and run the script:
+newline — for every account, SDSYS included, switch or no switch. (A bare `sh`,
+with nothing after it, is not a command, so it is not filtered: it starts an
+interactive shell for an account that has `sh-on`, and `exit` brings you back.)
+Write the work into a script and run the script:
 `sh powershell -File .\nightly.ps1`. (Until 25 October 2026 a person on the
 `os.users` list could type `sh dir | more`; nobody can now.)
 

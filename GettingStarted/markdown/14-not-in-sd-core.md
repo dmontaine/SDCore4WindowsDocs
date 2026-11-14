@@ -19,6 +19,7 @@ SD Core for Windows.
 |---|---|
 | `update.record` — the full-screen record editor | **`sed`**, **`edit`** or **`ed`** |
 | `modify` — the full-screen record editor from OpenQM | **`sed`**, **`edit`** or **`ed`** |
+| `nano` — the second external editor (removed in 2.0-0) | **`micro`**, **`sed`** or **`ed`** |
 
 **`sed` was on this page and has come off it (25 October 2026).** It was removed
 once because its Emacs-style keys are hard to remember, and came back with a menu
@@ -30,7 +31,7 @@ and `ide`, a workbench for programs and files.
 **SD Core's full-screen editing is `sed`, `edit` and `micro`**; the last two open
 the record in Microsoft Edit and in micro — see
 [Programmer commands](07-programmer-commands.html#editors), which also says
-what each is good for and what they cannot do. The two above are
+what each is good for and what they cannot do. The three removed programs above are
 gone as *programs*; the capability is not.
 
 `modify` is not in SD Core at all, for any account.

@@ -31,6 +31,16 @@ release adds can be typed in accounts that already existed. This did not happen
 before W1.0-0: an upgrade replaced the shipped files and no existing account —
 including the system account — ever gained a new verb.
 
+**The parameters SD no longer has are taken out of a kept `sd.conf` for
+you.** SD refuses to start on a name it does not recognize, so when you install
+over a kept `sd.conf`, the installer removes each line that names a parameter
+this release dropped (`APILOGIN`, `CODEPAGE`, `CREATUSR`, `EXCLREM`,
+`FILERULE`, `FIXUSERS`, `GDI`, `INVCASE`, `JNLDIR`, `JNLMODE`, `PORTMAP`,
+`RINGWAIT` and `TXCHAR`) before anything starts SD, and writes which to the
+installer's own setup log. A configuration file you copy in by hand from an
+older installation needs the same done to it; see *Configuration* in the
+Administrator set.
+
 To refresh one account by hand afterwards, `update.accounts` in that account
 updates it and offers the rest.
 
