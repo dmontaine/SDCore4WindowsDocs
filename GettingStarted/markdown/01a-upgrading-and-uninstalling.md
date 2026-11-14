@@ -116,6 +116,14 @@ stays closed.** The note is removed by that install, and by any uninstall that
 leaves no `sd.conf`; a silent uninstall keeps `sd.conf` and so keeps the note.
 Change the setting at any time with `remote.api`.
 
+**A reinstall over a kept `sd.conf` does not ask who may reach ssh.** The three
+"let other computers on your network connect to this one over ssh" boxes are not
+shown. An ssh server that was already here keeps its firewall rule exactly as it
+was: open stays open, closed stays closed. A server the install adds itself is
+reachable from this computer only, as on a new machine; `remote.ssh` changes it
+afterwards. The "Install the OpenSSH server" box is still shown, and ssh is
+still limited to SD's accounts.
+
 ## Continued in
 
 [Differences from W1.0-0](01b-differences-from-w1-0-0.html) — everything
