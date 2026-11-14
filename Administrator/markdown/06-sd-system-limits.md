@@ -117,13 +117,16 @@ records that exist only in `voc_template`.
 
 | | VOC records |
 |---|---|
-| An ordinary account (`newvoc`) | **398** |
-| SDSYS (`voc_template`) | **431** |
+| An ordinary account (`newvoc`) | **384** |
+| SDSYS (`voc_template`) | **448** |
 
 **These are record counts, not verb counts** — a VOC record may be a verb, a
 keyword, a file pointer, a sentence or a paragraph, and only some are verbs.
 Counted directly from the shipped directories (`newvoc`/`voc_template`),
-matching what `count voc` reports in a freshly created account.
+matching what `count voc` reports in a freshly created account. (The
+TCL-verb subset specifically — 211 in SDSYS's VOC and 160 in an ordinary
+account's, `sh`/`micro` included — is counted separately in the *User*
+set's SD TCL syntax card.)
 
 ## Configuration
 
