@@ -35,7 +35,7 @@ a script is never taken for someone typing.
  File  Go  View  AI  Help                                                       home  alice@sales
 
    alice @ sales                                                  <> Switch account   -> Sign out
-   Thursday 22 Oct 2026  -  18:52
+   Thursday 22 Oct 2026  -  18:52  -  SD Core for Windows W2.0-0
 
    My tools
      [=]                  </>                    [ ]
@@ -79,7 +79,7 @@ entry is dimmed and its reason is that the AI is not on for this account. The AI
 **The page scrolls.** It is laid out at its full height and only the rows that fit
 are drawn, with a scroll bar in the last column when there is more than fits, so
 the number of tiles can pass the height of the screen. The header (your name, the
-date and time, Switch account and Sign out) stays where it is.
+date and time, the product and its version, Switch account and Sign out) stays where it is.
 
 ## Keys and the mouse
 

@@ -453,6 +453,7 @@ the fixes to SD's own code. The sections above are the openQM items that were bu
 | `create.account` start words | Added | `start-menu` or `start-terminal` says where the new account starts and `pins-on` lets the person add programs to their home screen; two different start words, or a word that is neither, are refused before anything is made |
 | `dict-on` and `dict-off` | Added | per-account switch for saving a change to a dictionary |
 | home screen | Added | a tile whose action is `menu:name` opens a page of its own with a Back tile (Esc, Backspace go back); **View > Recent group** keeps the tiles a person started last, off as delivered; `set.tile account recent off` forbids it |
+| home screen version | Added | the header's date line ends with the product and its version (`SD Core for Windows W2.0-0`) |
 | `list.shared` | Added | SDSYS's list of the files of the shared account that an account with `shared.read` can open by name |
 | `remote.sdsys` | Added | remote administration over ssh by a separate account, SDRADMIN (never a Windows administrator; one fixed list of account commands); shut as delivered and not asked about by the installer; opened only by the administrator, as SDSYS, with `remote.sdsys on`; see Administrator 22 for what opening it means |
 | `lock.tracer` | Added | administrator only: logs every lock taken and released, with program and line, to the file `locktrace`, which only the SD service writes |
