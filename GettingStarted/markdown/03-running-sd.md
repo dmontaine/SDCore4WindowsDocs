@@ -62,6 +62,13 @@ process id and the command to stop it with.
 > Get-Process sdwind
 > ```
 
+**A script may capture what `sd -start` prints.** `$x = sd -start` or
+`sd -start | Tee-Object start.log` returns as soon as SD has started. The
+background process it leaves running does not keep the script's pipe: it writes
+to `/dev/null` instead, so anything it prints after the start is not seen there.
+Sent to a file or a console window, its output goes there as before, and so does
+the SD service's own log.
+
 ## After an unclean shutdown
 
 If SD is stopped abruptly — the power goes, or the process is killed — it

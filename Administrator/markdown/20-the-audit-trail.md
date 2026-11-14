@@ -54,13 +54,45 @@ in and is not a setting.
 
 **SDSYS reads it**, being an administrator; no ordinary account can.
 
-## Reading it
+## Reading it: `tool.audit`
 
-This release has no full-screen page for the trail on Windows. Read the file as an administrator: open
-`C:\ProgramData\SD\sdsys\audit` (or a rotated `audit.yyyymmdd-hhmmss` beside it) in an editor started
-as administrator.
+`tool.audit` is a page in SDSYS's VOC only. It needs a window of at least 140 columns by 43 lines, like
+the other toolkit pages, and it asks the kernel for the administrator before it reads anything.
+
+The top box names the file shown, its size, the lines loaded, whether older lines remain, the filters in
+force and whether the page is following the file. The list under it is the trail, the oldest loaded line
+at the top and the newest at the bottom, one row to a line: time, user, event words, then the pairs. The
+box at the foot shows the whole line under the cursor, wrapped, and the same line cut into its parts.
+
+**The page reads from the end of the file, in blocks, and never reads a large trail whole.** It opens
+on the newest 200 lines that pass the filter; when the cursor goes above the first line it loads 200
+more. It keeps at most 3000 lines; beyond that it drops the newest while you go back and the oldest
+while you follow. A last line that has no line end yet (the service is writing it) is left until it is
+whole.
+
+| Key | What it does |
+|---|---|
+| Up, Down, PgUp, PgDn | move; above the first loaded line, older lines are loaded when the file has them |
+| Home, End | the first loaded line; the newest line (End reads the file again) |
+| F | asks, one after another: from, to, event words, account, user, text. `from` and `to` are the start of a time stamp (`2026-10-25`, or `2026-10-25 14:30`; `to` with only a date includes the whole day). Event, account, user and text are matched without regard to case; `account` is the line's `account=` value, `user` its `user=` |
+| / | the same as F: on every page `/` is the key that finds by typing |
+| C | clears the filters |
+| D | goes to the first line at or after a time; no filter changes |
+| O | shows the next audit file: the current one, then the rotated ones, newest first |
+| L | follows the file: new lines are read every three seconds, and the cursor stays on the newest line if it was there |
+| X | saves the lines loaded to a record of the `$HOLD` file of your account, named `audit.yyyymmdd.hhmmss`, and writes the audit line `tool export app=tool.audit lines=n record=id`. `ED $HOLD id` reads it |
+| F5 | reads again |
+| F1, ? | explain the page |
+| Ctrl-Q | leave |
+
+**The page changes nothing.** It runs no command and writes no account or system record. Opening it
+writes `tool start app=tool.audit`, and X writes the one export line; both are on the trail.
+
+The file can also be read outside SD: open `C:\ProgramData\SD\sdsys\audit` (or a rotated
+`audit.yyyymmdd-hhmmss` beside it) in an editor started as administrator.
 
 ## What the trail does not do
 
 It does not show an account holder's own lines: the trail names every account, user and address on the
-machine. Nothing in SD edits, deletes or prunes a line.
+machine, and a view limited to one account would need the kernel to filter, which has not been built.
+Nothing in SD edits, deletes or prunes a line.

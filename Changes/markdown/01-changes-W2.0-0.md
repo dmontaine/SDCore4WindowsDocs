@@ -136,6 +136,7 @@ Statements, functions, `$mode` words and compiler directives.
 | `$mode debug.equates` | Added | keeps `equate` and `$define` tokens in the object so the debugger can show, set and watch them <!--s g218 246 239--> |
 | `$mode explicit` | Added | a variable must be named in a `dim` statement before it is used <!--s g220 234--> |
 | `$mode` lists | Changed | `$mode` takes several names separated by commas, each with an optional minus <!--s 105--> |
+| `$mode trap.unused` | Changed | warns only of a variable set by a plain `x = ...` and never read; a variable a statement fills (`readu`, `locate ... setting`) is not reported |
 | `$mode non.durable.txn` | Added | a committed nested transaction writes nothing until the outer one commits <!--s g221 442--> |
 | `$mode partial.expressions` | Added | `a and b` and `a or b` stop evaluating as soon as the value is known <!--s 417--> |
 | `$mode strict.equate` | Added | warns when a name given to `equate` or `$define` is also a statement or function name <!--s 582--> |
@@ -479,6 +480,7 @@ the fixes to SD's own code. The sections above are the openQM items that were bu
 | `set.job` | Added | the administrator's scheduled jobs: makes, changes, deletes or starts now one of two fixed jobs (`backup-all`, `update-accounts`) on one of five schedules, each a Task Scheduler task that runs as SDSYS with no stored password, through the job helper `sd-jobs.ps1`; alone, lists them with their next and last runs; each change audited, and every audit line of a run ends `job=`*name*; nothing is scheduled as delivered, and uninstalling removes every job |
 | `ssh` and `api` | Changed | a new account gets neither; `create.account user name ssh`, `api` or `both` and `modify.account` change it |
 | `tool.accounts` | Added | full-screen page of every account: its kind, suspension, the gates that are on and who is signed on; suspends or lifts, adds or takes away a person of a group account, creates (the verb asks for a password on the terminal) and deletes (after the name is typed; the account's Windows profile is removed with it, so there is no question about the home folder) |
+| `tool.audit` | Added | full-screen page that reads the audit trail from its end, a screen at a time: filters by time, event, account, user and text, go to a time, follow the file, the rotated files, and the lines shown saved to a record of `$HOLD`; administrator only, and it changes nothing |
 | `tool.config` | Added | full-screen page that shows every `sd.conf` parameter with what SD is running with, what the file says, the default and when a change takes effect, and names a line SD does not know; `E` changes one of 14 tuning parameters through `set.config` |
 | `tool.jobs` | Added | full-screen Scheduled jobs page: every account with the paragraphs and sentences it may run from the command line, changed through `set.batch` behind a box answered Run (an account's schedule is still a task of its own Windows user); its Jobs view (`J`) lists the administrator's scheduled jobs and makes, changes, deletes (the name typed) and starts them through `set.job` |
 | `tool.remote` | Added | full-screen page for everything that reaches SD from outside: the API and ssh doors as the machine reports them (changed after a box, and the word OPEN to turn one on; the API with the terminal given to `remote.api`, which asks whether to restart SD), the routes of each user account, the SDNet servers (delete, define with the terminal given to `set.server`), who is connected, and this machine's TLS identity. SD Core for Linux's view of the `sdsys` ssh login is not carried |
@@ -610,6 +612,7 @@ Fixes that close a way round a gate, and what the gates now ask.
 
 | Name | Change | What |
 |---|---|---|
+| `sd -start` | Changed | a script that captures its output through a pipe (`$x = sd -start`) gets it and goes on; the background process kept the pipe and the script waited until `sd -stop`. A phantom gives back a pipe the same way; a file or a console window is kept |
 | `sd -status` | Changed | fixed an overrun on a server that recorded no start time |
 | `sd -stop` and `sd -restart` | Changed | an SD process still running ten seconds after the termination signal is ended with SIGKILL, and the stop says how many; before, it was left running with SD gone under it |
 | terminal size | Changed | SD asks the terminal for its size at the start and when it is resized, instead of using the terminal type's 120 by 36 |

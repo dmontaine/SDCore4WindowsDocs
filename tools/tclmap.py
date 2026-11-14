@@ -208,6 +208,10 @@ DOCS = [
  ('Administrator', '19-the-master-files.md', """
    tool.entries
  """),
+ # 14 Nov 26 (RELEASE_1.1 247): the audit trail page, carried from Linux; in voc_template (SDSYS's set), not in newvoc.
+ ('Administrator', '20-the-audit-trail.md', """
+   tool.audit
+ """),
  ('Administrator', '19b-run-in.md', """
    run.in
  """),

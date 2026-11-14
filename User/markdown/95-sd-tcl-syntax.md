@@ -12,7 +12,7 @@ folds case, so any of this may be typed in either case.
 > **This page is generated, and it is checked for completeness rather
 > than proof-read for it.** The roster is computed from SD's own VOC:
 > every verb record in `newvoc`, plus the ones only `voc_template`
-> has, which is **211** verbs, and `tools/mktclsyntax.py` refuses to
+> has, which is **212** verbs, and `tools/mktclsyntax.py` refuses to
 > write the page if any of them has no line. The shapes come from the
 > subject documents, where each verb is described in full.
 
@@ -24,7 +24,7 @@ not refused — the name is simply not recognised.**
 | | | |
 |---|---|---|
 | **every account** | 160 verbs | `newvoc`, identical for every ordinary account |
-| **SDSYS only** | 51 more | in `voc_template` but not `newvoc` |
+| **SDSYS only** | 52 more | in `voc_template` but not `newvoc` |
 
 ## The verbs
 
@@ -221,6 +221,7 @@ not refused — the name is simply not recognised.**
 | **`time`** | **`time`** \| **`internal`** |  |
 | **`tool.accounts`** | **`tool.accounts`**  —  the accounts on one screen (administrator): every account with its kind, suspension, gates that are on and sessions; **`modify.account`** (suspend, add or take away a person) and **`create.account`** behind a box answered Run, and **`delete.account`** after the name is typed, with the terminal given to the verb where it asks for a password or confirms | S |
 | **`tool.ai`** | **`tool.ai`**  —  the AI choice page (administrator): the provider with a check box (Anthropic, OpenAI, Google, DeepSeek or Custom), its model (each named provider has a default) and key, and which accounts may use the AI | S |
+| **`tool.audit`** | **`tool.audit`**  —  the audit trail on one screen (administrator): read from its end a screen at a time, with filters by time, event, account, user and text, go to a time, follow, the rotated files, and the lines shown saved to a record of **`$HOLD`**; it runs no command | S |
 | **`tool.backups`** | **`tool.backups`**  —  backups and restores on one screen (administrator): the saved folder, the archives in it with the manifest of each, who else is signed in, and **`backup.account`**, **`restore.account`** and **`set.backup.directory`** behind a box answered Run | S |
 | **`tool.bulk`** | **`tool.bulk`**  —  a bulk update of one data file of the account: choose the records (conditions, a saved list or every record), up to ten operations from a closed set, a dry run that writes nothing, apply under record locks after a box that asks the file's name typed, and undo of the last run |  |
 | **`tool.catalog`** | **`tool.catalog`**  —  the programs of the account on one screen: compiled or not, current or stale, and where each is cataloged (private, local, global); compile it, catalog it privately or locally, and take a catalog entry out, each through its own verb after a box that shows the command |  |

@@ -157,7 +157,3 @@ left it.
 - **The colors are hard to read**: the site's colors are the administrator's choice (`SCREENTHEME`; the delivered `paper`
   is dark text on light gray, and `night` is light text on black); `tool.keys` shows what your terminal can display, and which
   keys it sends.
-
-## Not in SD Core for Windows yet
-
-The administrator page `tool.audit` is in SD Core for Linux and not here yet.
