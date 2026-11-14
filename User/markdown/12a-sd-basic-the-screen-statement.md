@@ -617,8 +617,9 @@ on any terminal; **`classic`**, dark text on light dialogues over a blue desktop
 the **syntax colours** added, for a dark and a light terminal background (the colours that
 `screen memo ... syntax` uses for the language; `classic` and `blue`
 have them too, `mono` has none). **A program that never asks gets `mono`**, unless
-the administrator has set `SCREENTHEME=` in `sd.conf` to the theme the site wants; a
-program that asks for a theme gets the one it asked for.
+you have chosen a theme with Ctrl-T on one of SD's own pages (SD keeps that choice, and
+`screen open` starts in it) or the administrator has set `SCREENTHEME=` in `sd.conf` to the
+theme the site wants; a program that asks for a theme gets the one it asked for.
 `screen theme` gives `else` for a name that is not a theme, on a terminal that cannot
 show colour and in a phantom, and leaves the theme as it was; `returning` holds the name
 in force. A null name only answers. If the library owns the screen it is drawn again in

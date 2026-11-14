@@ -54,7 +54,8 @@ Encoding **202** takes a 44 character base64 key, which is what `sdkey()` and
 `sdrandkey()` make. Encoding 201 (hexadecimal) wants a 64 hex character key, which they
 do not make. A wrong key gives the null string and `status()` **10201**; changing one
 character of the cipher text does the same, because the value carries a check; a key of
-the wrong length is **10204**; an empty value is **10200**. The cipher text of a value is
+the wrong length is **10204**; an empty value is **10200**. A passphrase passed straight
+in as the key is still **10204**. The cipher text of a value is
 different every time it is made, so the same salary encrypts to two different strings.
 
 ## The XE conversion: show the field decrypted
@@ -99,7 +100,8 @@ encrypt.key clear salary
 `set` takes the salt that `sdsalt()` made. **Use `confirm` the first time:** it asks for the
 passphrase twice, because data encrypted under a mistyped passphrase cannot be read again.
 `clear` with no name empties the ring. The verb applies no strength rule to the passphrase;
-a long phrase of words is a better one than eight characters of every kind.
+a long phrase of words is a better one than eight characters of every kind. It writes the
+key's name, never the passphrase or the key, to the audit trail.
 
 ### What is stored
 
