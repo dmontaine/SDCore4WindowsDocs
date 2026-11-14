@@ -119,7 +119,7 @@ Changed afterwards with `remote.api on`, `local` or `off`.
 |---|---|
 | Install Python for all users | **unticked** |
 
-**Python is needed for SD BASIC's `PY_` functions and for the AI.** The release zip
+**Python is needed only for SD BASIC's `PY_` functions.** The release zip
 carries python.org's own Python installer in its `python\` folder, so nothing
 is downloaded. The box appears only when that folder is beside the installer
 and the machine has no all-users Python 3.13 or later already. Ticked, it
@@ -134,19 +134,17 @@ asked once. A silent upgrade shows no page and asks nothing.
 Python is a separate product with its own entry in *Apps*; uninstalling SD Core
 leaves it in place.
 
-**The AI helper runs under that Python.** When an all-users Python 3.13 or later
-is on the machine (already, or because the box was ticked), every install and
-upgrade sets up the Windows service `sd-ai`, which is the only part of SD that
-talks to an AI provider. Without one, nothing is set up for the AI and the last
-screen does not mention it. To add it later, install Python for all users, then
-run this in an **elevated** PowerShell window:
+**The AI helper needs no Python.** Every install and upgrade sets up the
+Windows service `sd-ai`, which is the only part of SD that talks to an AI
+provider; the AI is off as delivered. To set the service up again, run this in
+an **elevated** PowerShell window:
 
 ```
 powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\install-aihelper.ps1" -Install
 ```
 
-It exits 0 when the helper is running and 3 when there is still no all-users
-Python 3.13 or later; its log is `C:\ProgramData\SD\install-aihelper.log`. The
+It exits 0 when the helper is running; its log is
+`C:\ProgramData\SD\install-aihelper.log`. The
 service sends nothing until SDSYS has chosen a provider and set its key and an
 account has its `ai` gate: the Administrator set's *The AI Helper* says how, and
 what leaves the machine.
@@ -251,7 +249,7 @@ your edits survive both upgrade and removal.
 | `sdg_shared` | the group of the **shared account**, which the installer makes: files that every account can open by name (the Administrator guide's "The Shared Account"). It has no members |
 | `sdaiusers` | the AI gate: a person in it may use the AI provider SDSYS chooses. Made empty (the "open every access gate" box adds your own account) |
 | the service | **String Database (SD)** |
-| the AI helper service | **`sd-ai`** (*SD Core AI helper*), running as the virtual account `NT SERVICE\sd-ai`, with its folder `C:\ProgramData\SD\ai` (settings and keys) and its program in `C:\Program Files\SD\lib\sd-ai`. Only when an all-users Python 3.13 or later is on the machine; it sends nothing until SDSYS has chosen a provider and set a key |
+| the AI helper service | **`sd-ai`** (*SD Core AI helper*), running as the virtual account `NT SERVICE\sd-ai`, with its folder `C:\ProgramData\SD\ai` (settings and keys) and its program in `C:\Program Files\SD\lib\sd-ai`. It sends nothing until SDSYS has chosen a provider and set a key |
 | ACLs | inheritance is broken on `C:\ProgramData\SD` and access granted narrowly. This is what makes the database private from the rest of the machine |
 
 **You must sign out and back in after being added to `sdusers`.** Windows
@@ -422,7 +420,7 @@ Every reason, warning and caveat that used to appear on them is here.
   *Installing Python...* line. Do not stop it. It must be an all-users install — a
   "for me only" Python cannot be reached by SD Core — which is the only kind
   the installer makes. Its own log is `C:\ProgramData\SD\python-install.log`.
-- **The AI is installed off.** With an all-users Python 3.13 or later, Setup
+- **The AI is installed off.** Setup
   installs the AI helper service `sd-ai`, which starts with Windows. It has no
   provider and no key, and no account may use it, until SDSYS turns it on. **On
   Windows SDSYS is an elevated Administrator and can read a provider's key; so
@@ -496,7 +494,7 @@ PowerShell prompt. This is what each failure means until it is put right:
 | Who may reach the SD Core API could not be set | No firewall rule was created, so other computers cannot reach port 4247 |
 | SD Core could NOT create its administrator account | There is no way into SD Core until it exists; the reason is in `install-sdsys.log` |
 | SD Core could NOT create an SD Core account for you | SD only admits accounts it creates and will not create one for a Windows account that already exists, so this is the one moment such an account can be made: running the installer again will not create it. The reason is in `attach-account.log` |
-| The AI helper service was NOT set up | Nobody can use the AI; nothing else is affected. The reason is in `install-aihelper.log`; run `install-aihelper.ps1 -Install` from `C:\Program Files\SD` (see *4. Python*) |
+| The AI helper service was NOT set up | Nobody can use the AI; nothing else is affected. The reason is in `install-aihelper.log`; run `install-aihelper.ps1 -Install` from `C:\Program Files\SD` (see *4. Python*, which also covers the AI helper) |
 | The OpenSSH server could NOT be installed | Usually a policy that blocks optional features, a metered connection, or no connection. Accounts cannot sign in over ssh until it is there (API-only accounts can use the API meanwhile) |
 | The dictionary, vocabulary or case-conversion step did not run | The upgrade kept what it had: SD Core works, a field added by the release may not be recognized, a command added by the release cannot be typed until `update.accounts` is run in SDSYS (answer Y), and records are still found typed in any case. If two record ids differ only by case the file is left unchanged: rename or delete one of each pair, then run `configure.file no.case` on it |
 

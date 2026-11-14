@@ -39,29 +39,27 @@ Nothing the AI returns is run, and the output of a command is never given back t
 
 | Piece | What it is |
 |---|---|
-| The service `sd-ai` | The helper, a Python program (`C:\Program Files\SD\lib\sd-ai\sd-ai`) run by the all-users Python 3.13 or later as the Windows service **`sd-ai`** (display name *SD Core AI helper*). It runs as the virtual account **`NT SERVICE\sd-ai`**: no password to keep, no interactive sign-in, a security identifier of its own. It starts automatically, with a restricted service SID (it can write only where its own account is granted) and one privilege (`SeChangeNotifyPrivilege`), and Windows restarts it twice if it fails. For each request it starts one short-lived process of the same program, as the same account; a job object ends them all when the service stops. It is the only part of SD that connects outward and the only part that can read a key. |
+| The service `sd-ai` | The helper, a native program (`C:\Program Files\SD\lib\sd-ai\sd-ai.exe`), runs as the Windows service **`sd-ai`** (display name *SD Core AI helper*). It runs as the virtual account **`NT SERVICE\sd-ai`**: no password to keep, no interactive sign-in, a security identifier of its own. It starts automatically, with a restricted service SID (it can write only where its own account is granted) and one privilege (`SeChangeNotifyPrivilege`), and Windows restarts it twice if it fails. For each request it starts one short-lived process of the same program, as the same account; a job object ends them all when the service stops. It is the only part of SD that connects outward and the only part that can read a key. |
 | `\\.\pipe\sd-ai` | The named pipe the service listens on: at most 16 connections at once, none from another computer (remote clients are rejected). Its access list is SYSTEM and the service in full, and `sdusers` and Administrators may connect and read and write; nobody else may open it, and nobody but the service may add another instance of it. The service is its owner. Whoever connects is identified by Windows, not by anything they write. |
-| `C:\Program Files\SD\lib\sd-ai\` | The program, the administrator's client (`sd-ai-ctl`, run through `sd-ai-ctl.ps1`), `sd-ai-python.ps1` (which finds the Python), and the two data files below. Only administrators can change them; no SD account can. |
+| `C:\Program Files\SD\lib\sd-ai\` | The program `sd-ai.exe` (it is also the administrator's client) and the two data files below. Only administrators can change them; no SD account can. |
 | `ai-providers` | In that folder: the connection details that come with SD for Anthropic, OpenAI, Google and DeepSeek, and each one's default model. |
 | `ai-context` | In that folder: the standing text that comes with SD. An install replaces it. Your own text, when you have saved one, is `C:\ProgramData\SD\ai\context` and is kept by an upgrade. |
 | `C:\ProgramData\SD\ai\` | The helper's own folder: the settings (`ai.conf`), your standing text (`context`), the counters of the limits (`state\`) and the helper's log (`sd-ai.log`: the caller's security identifier, the provider, the result and the sizes of each request, never the text or the key). SYSTEM has full control, the service may change it, Administrators may read it. An upgrade keeps it, and so does an uninstall that keeps the database. |
 | `C:\ProgramData\SD\ai\keys\` | One key file per provider. Open only to the service and SYSTEM; each file is encrypted with Windows DPAPI for the service account, so a copy of the file, a backup or a copied disk does not carry a usable key. A key file whose access list names anyone else is refused, not repaired. |
 | `sdaiusers` | The Windows group that is the **gate**. Membership of it is what lets an account use the AI. The installer makes it empty. |
-| `install-aihelper.ps1` | In `C:\Program Files\SD\`: makes, starts and removes the service. The installer runs it; you run it after installing Python (see [Python](#python)). |
+| `install-aihelper.ps1` | In `C:\Program Files\SD\`: makes, starts and removes the service. The installer runs it; run it yourself if the service was not set up (see [Setting the service up again](#setting-the-service-up-again)). |
 
 The helper asks Windows who is calling (the account of the process at the other end of the pipe, read at identification level: it can read who called and can never act as them), so the gate does not depend on SD's own programs being honest: a program that talks to the pipe directly gets the same answer. **Before sending anything, SD checks that the pipe's owner is `NT SERVICE\sd-ai`.** The pipe namespace is shared by the whole machine, so while the service is stopped any user could create a pipe of that name and read every request sent to it. A session that finds a pipe owned by anyone else sends nothing, writes `ai refused reason=pipe.owner` to the audit trail and says the helper could not be reached. The service itself refuses to start if a pipe of its name already exists, and says so in the Application log.
 
-## Python
+## Setting the service up again
 
-The helper is a Python program, and Windows has no Python of its own. **The AI needs Python 3.13 or later installed for all users** (64-bit, registered for the whole machine; a "for me only" Python cannot be reached by the service). The installer's box *Install Python for all users* installs one from the release's `python\` folder. With such a Python on the machine, the installer sets up the service; without one, it sets up nothing for the AI and says nothing about it, the `ai` verb says the helper could not be reached, and `set.ai` says *The AI needs Python 3.13 or later installed for all users, and none was found*.
-
-To add the AI afterwards, install Python for all users, then run this in an **elevated** PowerShell window:
+The helper needs nothing beyond SD itself: no Python. Every install and upgrade sets up the service. To set it up again, run this in an **elevated** PowerShell window:
 
 ```
 powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\install-aihelper.ps1" -Install
 ```
 
-It prints what it made, read back from the machine (the service's state, account, start type and command, whether the pipe is there, and the access lists of the two folders), and exits **0** when the helper is running, **3** when there is still no all-users Python 3.13 or later (it then removes any service it finds, and keeps your settings and keys), **2** when it was not run elevated, and **1** for anything else. Its log is `C:\ProgramData\SD\install-aihelper.log`. Every install and upgrade runs it again, so a Python that has moved is picked up.
+It prints what it made, read back from the machine (the service's state, account, start type and command, whether the pipe is there, and the access lists of the two folders), and exits **0** when the helper is running, **2** when it was not run elevated (or its program files are missing), and **1** for anything else. Its log is `C:\ProgramData\SD\install-aihelper.log`.
 
 ## Who may ask
 
@@ -75,7 +73,7 @@ It prints what it made, read back from the machine (the service's state, account
 
 **Sessions that get no AI.** The helper refuses a process running as one of Windows' own service accounts (LocalSystem, LocalService, NetworkService), because such a process is never a person and never SDSYS. A session at the console or over ssh runs as the person's own Windows user; an API session is started as the Windows user who logged in; a phantom runs as the session that started it; an account's scheduled job runs as that account's Windows user. A session that nobody can answer (a phantom, a scheduled job, a script fed from a file) reaches the preview and sends nothing, because only a typed `y` or `yes` sends.
 
-**Another Windows administrator.** As on Linux, where root may change the settings, an elevated administrator of this machine may change the AI settings by running the helper's client directly (`C:\Program Files\SD\lib\sd-ai\sd-ai-ctl.ps1`, the words of `set.ai` below). Inside SD only SDSYS can: `set.ai` and `tool.ai` are SDSYS's.
+**Another Windows administrator.** As on Linux, where root may change the settings, an elevated administrator of this machine may change the AI settings by running the helper's client directly (`C:\Program Files\SD\lib\sd-ai\sd-ai.exe`, the words of `set.ai` below). Inside SD only SDSYS can: `set.ai` and `tool.ai` are SDSYS's.
 
 ## The things that turn it on
 
@@ -84,7 +82,7 @@ It prints what it made, read back from the machine (the service's state, account
 3. **A key** for that provider, from the provider's own account. It is typed or pasted in the setup dialog (shown as `*`) or at the helper's own prompt, and kept for the helper only.
 4. **The gate for each account that may use it**: `modify.account NAME ai-on`.
 
-The same provider and the same model serve every account; there is no choice per account and no key per account. Of the four, only the provider, the key and the gates have to be supplied: the AI stays off until all three are. The service must be running as well (see [Python](#python)).
+The same provider and the same model serve every account; there is no choice per account and no key per account. Of the four, only the provider, the key and the gates have to be supplied: the AI stays off until all three are. The service must be running as well (see [Setting the service up again](#setting-the-service-up-again)).
 
 ## The AI choice page: `tool.ai`
 
@@ -145,7 +143,7 @@ set.ai context HEX | -
 
 For the administrator only (SDSYS's VOC). Alone it says what is set: the provider in use, each provider's address, model and whether its key is set, the certificate file and the limits. It never shows a key. `provider none` turns the AI off for everyone. `models` asks the provider, with its key, for the names of its models and prints them, one to a line. `model` keeps the name you give, and says so when the provider does not list it (`deepseek does not list a model named Deepseek-V4-Pro, so requests may be refused`, then `It lists deepseek-v4-pro (model names are case-sensitive)`). `key` hands the console to the helper's prompt; nothing typed there reaches SD. `key PROVIDER handover` is what the page runs: it hands the page's file to the helper's client and removes it. When a provider refuses a request, its own explanation is shown after the HTTP status (`the provider refused the request (HTTP 400): Model Not Exist`), cut to one line, with any copy of the key taken out; a refused key (401 or 403) shows only that the key was not accepted. A word may hold letters, digits and `. _ : / @ + , -` and nothing else, so **a path is written with forward slashes**: `set.ai ca C:/ProgramData/SD/ai/ca.pem`. The helper checks every result whole before it writes it: one provider selected means its details are complete, a Custom address is `https://` with no query string, a limit is a whole number in range.
 
-`set.ai` runs the helper's client, `C:\Program Files\SD\lib\sd-ai\sd-ai-ctl.ps1`, through PowerShell; the client finds the all-users Python itself. The helper decides from the Windows user it reads off the pipe that the caller is the administrator, so the client needs no password.
+`set.ai` runs the helper's client, `C:\Program Files\SD\lib\sd-ai\sd-ai.exe`. The helper decides from the Windows user it reads off the pipe that the caller is the administrator, so the client needs no password.
 
 The limits, and what they are as delivered:
 
@@ -234,12 +232,11 @@ Start with the service. In an ordinary or an elevated prompt:
 sc.exe query sd-ai
 ```
 
-A `STATE` line that ends `RUNNING` is what you want. `The specified service does not exist as an installed service` means it was never set up: usually there was no all-users Python 3.13 or later when SD was installed (see [Python](#python)). A service that is stopped and will not start writes the reason to the **Application** event log with the source **`sd-ai`** (Event Viewer, *Windows Logs*, *Application*), for example when a pipe of its name was already made by someone else. The installer's record of setting it up is `C:\ProgramData\SD\install-aihelper.log`, and the helper's own record of each request is `C:\ProgramData\SD\ai\sd-ai.log`.
+A `STATE` line that ends `RUNNING` is what you want. `The specified service does not exist as an installed service` means it was never set up: see `install-aihelper.log` (see [Setting the service up again](#setting-the-service-up-again)). A service that is stopped and will not start writes the reason to the **Application** event log with the source **`sd-ai`** (Event Viewer, *Windows Logs*, *Application*), for example when a pipe of its name was already made by someone else. The installer's record of setting it up is `C:\ProgramData\SD\install-aihelper.log`, and the helper's own record of each request is `C:\ProgramData\SD\ai\sd-ai.log`.
 
 | What you see | What it means |
 |---|---|
 | `The AI helper could not be reached: it is not running, or it is not installed` | the service is not running, is not installed, or the pipe is not the service's (then the audit trail has `ai refused reason=pipe.owner`): `sc.exe query sd-ai`, the Application log, and `install-aihelper.ps1` |
-| `The AI needs Python 3.13 or later installed for all users, and none was found` | from `set.ai`: install Python for all users, then run `install-aihelper.ps1 -Install` elevated |
 | `The AI is off: the administrator has not chosen a provider (tool.ai or set.ai)` | nothing is checked on the page (`set.ai provider ...`) |
 | `The AI is not set up for anthropic: the administrator has not set its key` (or `model`) | the provider is chosen but its key is missing; a model is missing only for Custom, which has no default (the named providers have one) |
 | `This account may not use the AI: the administrator can allow it with modify.account NAME ai-on` | the account's Windows user is not in `sdaiusers`, or the session runs as one of Windows' service accounts |
