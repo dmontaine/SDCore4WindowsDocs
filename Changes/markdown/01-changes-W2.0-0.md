@@ -278,6 +278,7 @@ The kernel, `sd.conf`, and the numbered keys.
 | `config` | Changed | lists the new settings; `config()` reads them |
 | `deadlock=2` | Added | saves the lock tables when a deadlock is found <!--s 500--> |
 | `fileinfo()` | Added | the keys 1022 to 1040 as the openQM manual numbers them; `fl$seqtype`, `fl$locks`; 1021 now answers the user numbers <!--s 62 113 498 337--> |
+| installer: the API after an uninstall that kept `sd.conf` | Changed | an API that was open to other computers is open again after the next install; a closed one stays closed (the uninstaller notes the rule's scope in the registry before it removes the rule) |
 | `intprec` | Changed | default 11 <!--s 6--> |
 | lock table | Changed | the time each lock was taken and each wait began is noted; more than 65,535 locks in a file work; a program that filled the table can be logged out <!--s 487 344 532--> |
 | `numlocks` | Changed | range checked, 1 to 32767 |

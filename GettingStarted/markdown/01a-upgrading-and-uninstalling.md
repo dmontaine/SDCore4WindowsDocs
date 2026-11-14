@@ -106,6 +106,16 @@ something else. It does restore `sshd_config`, keeping the original as
 `sshd_config.before-sd` — but it deliberately does **not** widen the firewall
 rule back, because restoring it would mean opening a port on the way out.
 
+**The uninstaller removes the SD Core API's own firewall rule, and a reinstall
+puts it back as it was if you kept `sd.conf`.** Before the rule goes, the
+uninstaller notes whether it let other computers in (one value in the registry,
+`HKLM\SOFTWARE\SD\SetupNotes`, which only an administrator can write). If it did,
+and `sd.conf` is still there with the API switched on, the next install makes
+that open rule again, and says so on the closing page. **An API that was closed
+stays closed.** The note is removed by that install, and by any uninstall that
+leaves no `sd.conf`; a silent uninstall keeps `sd.conf` and so keeps the note.
+Change the setting at any time with `remote.api`.
+
 ## Continued in
 
 [Differences from W1.0-0](01b-differences-from-w1-0-0.html) — everything
