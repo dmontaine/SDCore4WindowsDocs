@@ -192,7 +192,7 @@ program in a phantom process"*. The debugger itself is covered in
 ## Who has these verbs
 
 **Every account has all of them now**: `format`, `list.common`, `basic`,
-`catalog`, `compile.dict`, `debug`, `delete.catalog`,
+`catalog`, `compile.dict`, `debug`, `decatalog`, `delete.catalog`,
 `delete.common`, `find.program`, `generate`, `map`, `run`.
 
 **Running a catalogued program never needed any of these anyway** — a

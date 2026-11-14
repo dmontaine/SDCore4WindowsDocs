@@ -5,9 +5,9 @@ The query processor is how you ask a file a question from the command line. It
 selects records, sorts them, formats them into columns and totals them, and it
 does all of that from one line of typing.
 
-**Twelve verbs on this page are the same program.** `list`, `sort`, `count` and
-the rest are one catalogued program reached through fourteen VOC records, each
-carrying a number that says which verb was typed. Two of the fourteen —
+**Thirteen verbs on this page are the same program.** `list`, `sort`, `count` and
+the rest are one catalogued program reached through fifteen VOC records, each
+carrying a number that says which verb was typed. Two of the fifteen —
 `select` and `sselect` — build a list instead of printing one and are covered in
 [SD TCL - Select Lists](22-sd-tcl-select-lists.html).
 
@@ -345,30 +345,31 @@ number — which is genuinely useful on a printed report, because it says how th
 report was produced. `heading` replaces it:
 
 ```
-sort voc with processor = "$QPROC" by @id dispatch processor heading "QP verbs"
+sort voc with processor = "$qproc" by @id dispatch processor heading "QP verbs"
 ```
 
 ```
 QP verbs
 @ID.................   Dsp   Processor...............
-count                  CA    $QPROC
-list                   CA    $QPROC
-list.item              CA    $QPROC
-list.label             CA    $QPROC
-reformat               CA    $QPROC
-search                 CA    $QPROC
-select                 CA    $QPROC
-show                   CA    $QPROC
-sort                   CA    $QPROC
-sort.item              CA    $QPROC
-sort.label             CA    $QPROC
-sreformat              CA    $QPROC
-sselect                CA    $QPROC
-sum                    CA    $QPROC
-14 record(s) listed
+count                  CA    $qproc
+list                   CA    $qproc
+list.item              CA    $qproc
+list.label             CA    $qproc
+reformat               CA    $qproc
+scan                   CA    $qproc
+search                 CA    $qproc
+select                 CA    $qproc
+show                   CA    $qproc
+sort                   CA    $qproc
+sort.item              CA    $qproc
+sort.label             CA    $qproc
+sreformat              CA    $qproc
+sselect                CA    $qproc
+sum                    CA    $qproc
+15 record(s) listed
 ```
 
-**That is the query processor listing itself** — all fourteen VOC records that
+**That is the query processor listing itself** — all fifteen VOC records that
 reach it, including `count`, which is a keyword record that doubles as a verb.
 
 `footing` does the same at the bottom of the page. Both accept the usual
@@ -612,7 +613,7 @@ named.
 
 | | |
 |---|---|
-| **standard** | `count` `list` `list.item` `list.label` `search` `show` `sort` `sort.label` `sum` |
+| **standard** | `count` `list` `list.item` `list.label` `scan` `search` `show` `sort` `sort.label` `sum` |
 | **programmer** | `reformat` `sreformat` `sort.item` |
 
 Reading and reporting are available to every account; the two verbs that
