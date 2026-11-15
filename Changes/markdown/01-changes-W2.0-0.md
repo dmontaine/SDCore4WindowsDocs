@@ -470,7 +470,9 @@ the fixes to SD's own code. The sections above are the openQM items that were bu
 | `lock.tracer` | Added | administrator only: logs every lock taken and released, with program and line, to the file `locktrace`, which only the SD service writes |
 | audit trail | Changed | the SD service writes it, naming each session's Windows user (`DOMAIN\name`) and process as Windows sees them; one user's records past 600 in a minute are dropped with one line saying how many; it starts a new file at 1 MB while SD runs |
 | `list.voc.removed` | Added | administrator only: the VOC records SD no longer ships, with the release each went in and what to write instead; given an account, what the next `update.accounts` would do in it (changes nothing) |
+| `logto` by the administrator | Changed | runs no `login` paragraph of the account it enters and does not open the home screen: the administrator lands at the prompt (owner's ruling; an ordinary user's `logto` is unchanged) |
 | `modify.account` | Changed | takes more than one action in a command (`modify.account fred sh-on os-on voc-on`), all carried out or none; no action at all prints the usage |
+| `modify.account add` and `delete` | Changed | fixed: a program that ran the verb with `execute` read `@system.return.code` as -1 after a change that had been made; it is now 0 (done, or nothing to change) or a failure code |
 | new account defaults | Changed | a new account has no shell, no `os.execute`, no ssh, no API and no edit rights; SDSYS opens each, account by account |
 | `restore.account` | Changed | fixed: no longer overwrites a different global program of the same name |
 | `restore.voc` | Added | administrator only: puts back the newest saved copy of a VOC record the update removed, or all of an account's; never overwrites a record the account holds, and audits what it puts back |
