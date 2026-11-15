@@ -479,6 +479,7 @@ the fixes to SD's own code. The sections above are the openQM items that were bu
 | `receive` | Added | opens a transfer for plain-text files coming in to the account's file `xfer.in` from an sftp client (WinSCP, FileZilla, Windows' own `sftp`) signed in with the person's ssh login, waits, and says what came with each file's SHA-256; `receive overwrite` may replace a file that is there |
 | `send` | Added | `send <file> <id> ...` copies records that are plain text to the account's file `xfer.out` and opens a transfer for an sftp client to fetch them; the same switches and the same confinement as `receive` |
 | `tool.gates` xfer gate | Added | an xfer column for file transfer (`xfer-on`, `xfer-off`), read from the register as the transfer server reads it; user accounts only; turning it ON asks for the account's name |
+| `logto sdsys` | Changed | the administrator's session (signed in to Windows as SDSYS at its desktop), having gone to another account, can come back with `logto sdsys` instead of signing out; every other session is still refused (10002) |
 | home screen Receive files | Added | a tile that runs `receive` and waits for Enter after it, shown only where a transfer can be opened (`XFER` on, the person's own account, the `xfer` gate) |
 | new account defaults | Changed | a new account has no shell, no `os.execute`, no ssh, no API and no edit rights; SDSYS opens each, account by account |
 | `restore.account` | Changed | fixed: no longer overwrites a different global program of the same name |

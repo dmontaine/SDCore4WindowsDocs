@@ -237,10 +237,11 @@ stopped** — and there is no `logto` back.
 :logto sales
 ```
 
-This session is now `sales`, an ordinary account, permanently for its own
-lifetime. `logto sdsys` from here — or from any other account — is refused
-outright, whatever the session's elevation: SDSYS is reached one way only,
-by signing in to Windows as the `sdsys` account and starting `sd` fresh. See
+This session is now `sales`, an ordinary account. `logto sdsys` from here is
+refused, whatever the session's elevation, unless this very session signed in to
+Windows as the `sdsys` account at its desktop: that session, and only that one,
+may `logto sdsys` to come back. SDSYS is first reached one way only, by signing
+in to Windows as the `sdsys` account and starting `sd` fresh. See
 [Accounts and Security](01-accounts-and-security.html#read-this-before-anything-else-being-sdsys-is-the-whole-of-it).
 
 **This is deliberate, and stricter than the old design it replaced.** A

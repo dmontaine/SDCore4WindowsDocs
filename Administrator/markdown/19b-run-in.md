@@ -21,8 +21,8 @@ privileges"). It runs **one** command from the list above, in a **registered** a
 SDSYS itself, never a path), and **it is back in SDSYS when the command ends**. That includes a
 command that aborts, a break and a run-time error: the session is put back before anything else
 happens and says so ("run.in: the command did not finish; the session is back in account acme").
-`LOGTO SDSYS` is refused for everybody, so without this an administrator who had gone into an
-account would have no way back for the rest of the session.
+Without this an administrator would be left in the account, with the command's reach, until typing
+`LOGTO SDSYS` (the administrator's way back by hand; it is refused to every other session).
 
 ## Debugging a program in another account: `run.in` *account* `debug` *file* *program*
 

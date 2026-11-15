@@ -140,11 +140,12 @@ your Windows account. So the short form means *I am still where I started* and
 the long form means *I have moved* — which makes `who` the quick way to find
 out whether a `logto` actually took effect.
 
-**`SDSYS` cannot appear after `from` here, because `logto sdsys` is refused
-outright from any other account.** Administering SD means signing in to
-Windows as the `sdsys` account itself and starting a fresh session, not
-`logto`-ing there from one you already have — see the *Administrator* set's
-*Accounts and Security* chapter.
+**`from SDSYS` means a session that signed in to Windows as the administrator.**
+Only such a session can `logto sdsys` to come back from an account it visited;
+`logto sdsys` from any other session is refused outright. Becoming the
+administrator means signing in to Windows as the `sdsys` account itself and
+starting a fresh session — see the *Administrator* set's *Accounts and
+Security* chapter.
 
 ### `logto … reset` and `logto … reset all`
 
