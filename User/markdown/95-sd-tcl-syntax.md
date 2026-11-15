@@ -12,7 +12,7 @@ folds case, so any of this may be typed in either case.
 > **This page is generated, and it is checked for completeness rather
 > than proof-read for it.** The roster is computed from SD's own VOC:
 > every verb record in `newvoc`, plus the ones only `voc_template`
-> has, which is **212** verbs, and `tools/mktclsyntax.py` refuses to
+> has, which is **214** verbs, and `tools/mktclsyntax.py` refuses to
 > write the page if any of them has no line. The shapes come from the
 > subject documents, where each verb is described in full.
 
@@ -23,7 +23,7 @@ not refused — the name is simply not recognised.**
 
 | | | |
 |---|---|---|
-| **every account** | 160 verbs | `newvoc`, identical for every ordinary account |
+| **every account** | 162 verbs | `newvoc`, identical for every ordinary account |
 | **SDSYS only** | 52 more | in `voc_template` but not `newvoc` |
 
 ## The verbs
@@ -164,6 +164,7 @@ not refused — the name is simply not recognised.**
 | **`qselect`** | **`qselect`** {**`dict`**} *file* {*id* … \| **`*`**} {**`(options`**} |  |
 | **`quit`** | **`quit`** — the same verb as **`off`** |  |
 | **`rebuild.all.indices`** | **`rebuild.all.indices`** {**`no.query`**} |  |
+| **`receive`** | **`receive`** {**`overwrite`**} |  |
 | **`redo`** | **`redo`** {**`times`** *n*} {**`every`** *s*} *command* |  |
 | **`reformat`** | **`reformat`** {**`dict`**} *file* {*selection*} {*fields*} |  |
 | **`release`** | **`release`** *file* *id* …  ·  **`release filelock`** *file* |  |
@@ -185,6 +186,7 @@ not refused — the name is simply not recognised.**
 | **`select`** | **`select`** {**`dict`**} *file* {*selection*} {*list.no*} |  |
 | **`select.dir`** | **`select.dir`** *pathname* {**`to`** *n*} |  |
 | **`selectindex`** | **`selectindex`** {**`dict`**} *file* *index* {*value*} {**`to`** *n*} |  |
+| **`send`** | **`send`** *file* *id* {*id* …} |  |
 | **`set`** | **`set`** *name* *value* |  |
 | **`set.ai`** | **`set.ai`**  ·  **`set.ai provider`** *name* \| **`none`**  ·  **`set.ai model`** *provider* *name* \| **`-`**  ·  **`set.ai models`** *provider*  ·  **`set.ai key`** *provider* {**`clear`** \| **`handover`**}  ·  **`set.ai custom`** *name* *url* *format* *auth* *version* *maxparam* \| **`clear`**  ·  **`set.ai ca`** *path* \| **`-`**  ·  **`set.ai limit`** *name* *number*  ·  **`set.ai context`** *hex* \| **`-`**  —  the AI provider, model, key, limits and standing text for every account (administrator); the key is typed at the helper's own prompt | S |
 | **`set.backup.directory`** | **`set.backup.directory`** {*folder*} | S |

@@ -162,6 +162,10 @@ DOCS = [
  ('User', '29c4-sd-tcl-tool-catalog-and-tool-test.md', """
    tool.catalog tool.test
  """),
+ # 15 Nov 26 (RELEASE_1.1 299): file transfer, carried from Linux S.242 (Linux's map has the same entry).
+ ('User', '29e-sd-tcl-moving-files-in-and-out.md', """
+   receive send
+ """),
  ('User', '30-sd-tcl-processes-and-phantoms.md', """
    list.phantoms pdebug pdump phantom pstat status
  """),

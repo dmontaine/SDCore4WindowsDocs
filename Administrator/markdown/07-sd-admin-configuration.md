@@ -297,6 +297,13 @@ its box:
 | `TERMINFO` | A directory: terminal definitions are read from there. |
 | `USERPOOL` | The highest user number: PHANTOMS is checked against it; a mistake stops SD. |
 | `USRDIR` | A directory: user accounts are made there. |
+| `XFER` | A door: 1 opens file transfer over ssh for every account that has xfer-on. |
+| `XFERFILE` | A transfer limit: raising it lets one file fill more of the disk. |
+| `XFERIDLE` | A transfer limit: raising it keeps an unused slot open longer. |
+| `XFERKIND` | A transfer filter: blank takes any plain-text file. |
+| `XFERMAX` | A transfer limit: 0 lets a slot stay open for as long as its session does. |
+| `XFERSLOT` | A transfer limit: raising it lets one slot fill more of the disk. |
+| `XFERWAIT` | A transfer limit: raising it keeps a slot open longer before anyone connects. |
 | `YEARBASE` | Changes how every program reads a two-digit year; SD checks no range. |
 
 **What this does not do.** It does not restart SD: a `restart` parameter changes the file and the
@@ -373,6 +380,32 @@ about one account.
 
 `SDCLIENT` is not reported by the `config` verb and has no entry in the shipped
 `sd.conf`. It defaults to 0, which permits everything.
+
+## File transfer over ssh
+
+File transfer lets a person move plain-text files (CSV, JSON, BASIC source, any
+text) into and out of their own account with an sftp client over the same ssh
+login they use for SD. It is delivered off twice: `XFER` below is the system's
+switch, and each account also needs `modify.account <account> xfer-on`. Both
+must be on before anything can be transferred. **Turning them on lets that
+person put files into, and take copies out of, their account from another
+machine**, with the `receive` and `send` commands and an sftp client; what
+that opens and how it is confined is in *Accounts and Security: File
+transfer*. The parameters are read by each process as it starts, so a change
+is seen by the next session and the next connection without restarting SD.
+
+| Parameter | Default | Effect |
+|---|---|---|
+| `XFER` | 0 | `1` lets accounts that have `xfer-on` transfer files; `0` refuses every transfer |
+| `XFERFILE` | 10240 | The largest file one transfer slot takes, in kilobytes (1 to 1048576) |
+| `XFERSLOT` | 102400 | The most one slot takes in all its files, in kilobytes (1 to 4194304) |
+| `XFERWAIT` | 600 | Seconds a slot waits for the sftp client's first connection (10 to 3600) |
+| `XFERIDLE` | 120 | Seconds a slot stays open with nothing happening after a client has connected (10 to 3600). A file being sent keeps it open; one left half sent and silent this long is dropped |
+| `XFERMAX` | 3600 | Seconds a slot may stay open at most; `0` removes the ceiling (0 to 86400). At the ceiling the transfer ends and a file that is not complete is dropped |
+| `XFERKIND` | blank | The extensions a received file must have, separated by commas; blank takes any plain-text file (no NUL byte and no SD mark byte) |
+
+None of them can be changed from `tool.config` or `set.config`; edit
+`C:\ProgramData\SD\sd.conf` by hand (in an elevated editor). `config('XFER')` and the others read them.
 
 ## Printing
 

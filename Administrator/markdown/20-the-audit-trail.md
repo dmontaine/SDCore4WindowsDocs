@@ -91,6 +91,32 @@ writes `tool start app=tool.audit`, and X writes the one export line; both are o
 The file can also be read outside SD: open `C:\ProgramData\SD\sdsys\audit` (or a rotated
 `audit.yyyymmdd-hhmmss` beside it) in an editor started as administrator.
 
+## File transfer lines
+
+**A file transfer writes lines that begin `xfer`** (*Accounts and Security: File transfer*). The person's
+session writes the opening and the closing; the connection of their sftp client, a process of its own,
+writes the rest:
+
+```
+xfer open dir=in overwrite=no account=fred
+xfer connect dir=in holder=14 from=192.0.2.7 account=fred
+xfer file dir=in bytes=1840 sha256=3cba0fa3...46b44 name=orders.csv
+xfer refused reason=not plain text bytes=0 name=logo.png
+xfer disconnect dir=in why=eof files=1 bytes=1840 refusals=1
+xfer close dir=in why=done files=1 bytes=1840 account=fred
+```
+
+`dir` is `in` for `receive` and `out` for `send`; `holder` is the user number of the session that opened
+the transfer; `name` is last because a name may hold spaces. A connection that is turned away before any
+transfer is `xfer refused reason=... from=... user=...`, the reason being one of: `xfer is off`, `xfer-on is
+not set`, `not a user account`, `the account is suspended`, `no slot is open`, `the slot ran out of time`,
+`no transfer directory`, and the reasons a sign-on is refused. A refused file names its reason: `not plain
+text`, `name is there`, `not a name sd takes`, `not a kind of file taken`, `file over xferfile`, `slot over
+xferslot`, `not sent whole`, `receive slot gives nothing out`, `send slot takes nothing in`, `not a file this
+connection sent`. `why` on a disconnect is `eof` (the client left), `closed` (the session closed the
+transfer or ended), `idle`, `max` or `logout`; on a close it is `done` (Enter), `wait` (no connection came),
+`idle`, `max` or `input ended`. There are also `xfer rename to=... from=...` and `xfer remove name=...`.
+
 ## What the trail does not do
 
 It does not show an account holder's own lines: the trail names every account, user and address on the

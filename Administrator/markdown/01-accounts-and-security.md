@@ -52,7 +52,7 @@ your own session.
 ```
 create.account user <name> {ssh | api | both | none} {sh-on} {os-on} {voc-on} {bp-on} {dict-on}
                            {net-on} {files-on} {files-write-on} {files-admin-on} {ai-on} {shared-read-off} {shared-write-on}
-                           {start-menu | start-terminal} {pins-on} {no.query}
+                           {start-menu | start-terminal} {pins-on} {xfer-on} {no.query}
 
 create.account group <name> {start-menu | start-terminal} {pins-on} {no.query}
 
@@ -409,6 +409,7 @@ modify.account account shared-read-on | shared-read-off | shared-write-on | shar
 modify.account account net-on | net-off
 modify.account account files-on | files-off | files-write-on | files-write-off | files-admin-on | files-admin-off
 modify.account account ai-on | ai-off
+modify.account account xfer-on | xfer-off
 modify.account account start-menu | start-terminal | start-default
 modify.account account pins-on | pins-off
 modify.account account suspended | unsuspended
@@ -426,7 +427,7 @@ then carries out all of them, or none of them:
   `files-admin-on` with `files-off` or `files-write-off` are the conflicts.
 * **The words are carried out in one fixed order whatever order they were
   typed:** the route words, then `sh`, `os`, `sd`, the three edit switches,
-  `recovery` and `net`, then the shared-account words, then the files words
+  `recovery`, `xfer` and `net`, then the shared-account words, then the files words
   (`files-on` before `files-write-on`, which needs it, and that before
   `files-admin-on`), then `ai-on` / `ai-off`, the start and pins words, and the
   suspension last. Each is reported and audited
@@ -641,6 +642,52 @@ audited by the verb as if you had typed it.
 
 *Not run on a Windows console yet.* The page is Linux's, carried here and
 compiled; it needs a window of at least 140 columns by 43 lines.
+
+### File transfer: `xfer-on` and `xfer-off`
+
+```
+modify.account account xfer-on | xfer-off
+create.account user <name> xfer-on
+:modify.account fred xfer-on
+Account fred may move files over its ssh login (receive / send): yes
+```
+
+With `xfer-on`, and with `XFER=1` in `C:\ProgramData\SD\sd.conf`, the account's person can move plain-text
+files into and out of their own account with an sftp client (WinSCP, FileZilla, Windows' own `sftp`) signed
+in with the same name and password as for ssh. They open each transfer themselves, from their SD session,
+with `receive` or `send` (*User: Moving Files In and Out*); nothing can be moved before that command is typed
+or after it ends.
+
+**What turning it on opens, plainly.** That person can then bring text of their choosing into the account
+from another machine, and take copies of the account's records out to another machine. That is all it
+opens, and it is held to this:
+
+* **Off twice as delivered.** `XFER` is 0 and every account has the switch off; both must be on. Neither is
+  changed by an upgrade.
+* **One directory.** Files come in to `xfer.in` and go out from `xfer.out`, two directory files in the
+  account's own directory, and the client can reach nothing else: no other directory, no path, no link is
+  followed, and nothing is made, renamed or removed except a file the same connection has just sent. The
+  server is SD itself; there is no shell and no Windows sftp server behind it.
+* **Plain text only.** A file with a NUL byte or one of the bytes 248 to 255 is refused, in either
+  direction, and so is a name that is not a plain file name. `XFERKIND` narrows it to the extensions you
+  list. `XFERFILE` and `XFERSLOT` bound the size of a file and of a whole transfer; `XFERWAIT`, `XFERIDLE`
+  and `XFERMAX` bound the time (*Configuration*).
+* **Nothing is replaced** unless the person typed `receive overwrite`.
+* **User accounts only, and the person's own.** A group or `other` account is refused the switch ("... is
+  not a user account, and file transfer is only for a user account, for its own person; nothing was
+  changed"), the transfer is opened from the account named after the Windows user and not from one reached
+  with `logto`, and the administrator (`sdsys`) has no transfer at all.
+* **It needs the ssh route.** The client signs in over ssh, so an account with no `ssh` route cannot
+  connect. A file that arrives is only a record in `xfer.in`: bringing a program in does not compile or run
+  it, and what the person may then do with it is what the account's other switches allow.
+* **Everything is in the audit trail**: each opening and closing, each connection with the address it came
+  from, each file with its size and SHA-256, and each refusal with its reason.
+
+A change takes effect at the next connection: the register is read each time a client connects. To end a
+transfer that is under way, `logout` the person's session or the connection (it shows in `listu` as `sftp`).
+
+**On Windows, sshd needs no change of SD's for this.** SD's ssh settings already send every ssh session,
+an sftp request included, to SD; until a transfer is opened, an sftp client is told in words that none is.
 
 ### Where a session starts: `start-menu`, `start-terminal`, `start-default` and `set.start.default`
 

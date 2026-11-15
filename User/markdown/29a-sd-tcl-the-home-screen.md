@@ -57,6 +57,7 @@ a script is never taken for someone typing.
 | **Record editor** | runs `ced` |
 | **Terminal** | leaves the screen for the ordinary command prompt (below) |
 | **Keys** | runs `tool.keys`, the terminal and keyboard diagnostic |
+| **Receive files** | runs `receive` (*Moving files in and out*), then waits for Enter so you can read what came; it is there only when a transfer can be opened: the system allows file transfer, you are in your own account, and your account has the `xfer` gate |
 | **Switch account** | a list of the accounts you may enter; then the home screen of the one you pick |
 | **Sign out** | asks `Sign out of SD?` and ends the session |
 
