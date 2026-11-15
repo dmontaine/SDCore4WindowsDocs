@@ -176,7 +176,7 @@ sdsys\voc_template  sdsys\voc_removed  sdsys\voc_removed.saved
 sdsys\config.table
 sdsys\syscom      sdsys\terminfo    sdsys\terminfo.src  sdsys\helptext
 sdsys\dir_dict    sdsys\licence     sdsys\contrib    sdsys\start.default
-sdsys\agent-pack  sdsys\bp.out      sdsys\pcode.out
+sdsys\agent-pack  sdsys\bp.out      sdsys\pcode.out  sdsys\stacks (SDSYS's command history)
 sdsys\dict.dic    sdsys\voc.dic     sdsys\$map.dic   sdsys\accounts.dic
 sdsys\$hold       sdsys\$hold.dic   (your held output is in your own account's $hold)
 sd.conf           the configuration read at start-up
