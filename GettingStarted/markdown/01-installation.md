@@ -381,7 +381,9 @@ Every reason, warning and caveat that used to appear on them is here.
 - **Sign out and back in afterwards.** Windows applies a new group membership
   only when you sign in. Until you do, `sd` answers that it is not recognized
   (in a window opened before the install — a new window cures that), that it
-  cannot open its files, or `Error 5 getting semaphores`. Only signing out
+  cannot open its files, or `Error 5 getting semaphores` (followed by two lines
+  saying that this Windows user is not an SD user, or was made one after
+  signing in, and what to do). Only signing out
   cures those two. Switching to another user and back does not, and
   `whoami /groups` does not list `sdusers` until you have signed out.
 - **An existing account called `shared` stops the install.** The name `shared`
