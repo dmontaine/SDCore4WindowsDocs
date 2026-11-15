@@ -95,6 +95,16 @@ folder and no accounts, so an earlier install or removal did not finish."*
 setup again.** A machine with no data folder, and a folder with at least one
 account, are not affected.
 
+A plain delete can stop on `C:\ProgramData\SD\ai\keys`: that folder is locked to
+the AI service and SYSTEM, so even an administrator is refused. Take ownership
+first, in an **elevated** PowerShell:
+
+    takeown /f C:\ProgramData\SD /r /d y
+    icacls C:\ProgramData\SD /grant *S-1-5-32-544:(OI)(CI)F /t /c /q
+    Remove-Item C:\ProgramData\SD -Recurse -Force
+
+`*S-1-5-32-544` is the Administrators group.
+
 ## Uninstalling
 
 It is the standard Windows uninstall — Settings ▸ Apps, or `unins000.exe`.
