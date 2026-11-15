@@ -248,6 +248,17 @@ session that could `logto` back into SDSYS would let the elevated helper
 outlive the rights it belongs to; refusing the return closes that rather
 than relying on the helper alone to behave.
 
+**A Windows process cannot give up its own administrator rights, and SD tells
+you so.** The flag and the helper end at the `logto`, but the Windows process
+that is running the session stays elevated (measured: high integrity, 24
+privileges). A program that session starts, where the account's switches allow
+one, can use those rights. So, once per `logto` out of `SDSYS`, SD prints:
+*"This session started as an administrator and keeps its Windows administrator
+rights in account ... A program it starts can use them. Sign out and sign in to
+... to work without them."* **To work as that account without the rights, sign
+out and sign in to it.** An ordinary account moving to another account sees
+nothing, because it never had them.
+
 The step is quiet for the ordinary case: a session moving between two
 ordinary accounts never had privilege, so nothing is given up and nothing
 is written to the audit trail.

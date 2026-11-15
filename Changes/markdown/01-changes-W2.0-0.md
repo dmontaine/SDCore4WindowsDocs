@@ -279,9 +279,11 @@ The kernel, `sd.conf`, and the numbered keys.
 | `deadlock=2` | Added | saves the lock tables when a deadlock is found <!--s 500--> |
 | `fileinfo()` | Added | the keys 1022 to 1040 as the openQM manual numbers them; `fl$seqtype`, `fl$locks`; 1021 now answers the user numbers <!--s 62 113 498 337--> |
 | installer: the API after an uninstall that kept `sd.conf` | Changed | an API that was open to other computers is open again after the next install; a closed one stays closed (the uninstaller notes the rule's scope in the registry before it removes the rule) |
+| installer: a data folder with no accounts | Added | setup refuses a `C:\ProgramData\SD` that has a `sdsys` folder and no account in `sdsys\accounts`, and says to delete it or restore it from a backup |
 | installer: ssh access over a kept `sd.conf` | Changed | a reinstall over a kept `sd.conf` no longer asks who may reach ssh and leaves an existing server's firewall rule as it was |
 | `intprec` | Changed | default 11 <!--s 6--> |
 | lock table | Changed | the time each lock was taken and each wait began is noted; more than 65,535 locks in a file work; a program that filled the table can be logged out <!--s 487 344 532--> |
+| `logto` out of SDSYS | Changed | prints once that the session keeps its Windows administrator rights and to sign out and in to work without them (Windows only) |
 | `numlocks` | Changed | range checked, 1 to 32767 |
 | `phantoms=u,n` | Added | keeps user numbers for phantoms started with `user` <!--s 31 g296--> |
 | process dump | Changed | shows the length of each string, the variables of objects and the environment <!--s 22 125 569 439--> |

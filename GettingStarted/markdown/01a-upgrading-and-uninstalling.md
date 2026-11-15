@@ -84,6 +84,17 @@ no `NLS` command in any VOC, and W1.1-1 puts it in new ones. Accounts that
 already exist get it from `update.accounts`. Everything else in this upgrade is
 as described above.
 
+### Setup refuses a data folder that has a system folder and no accounts
+
+If `C:\ProgramData\SD` holds a `sdsys` folder but its account register
+(`sdsys\accounts`) has no account in it, an earlier install or removal did not
+finish, and installing over it would make no accounts and report success. Setup
+stops before it copies anything and says so: *"The data folder ... has a system
+folder and no accounts, so an earlier install or removal did not finish."*
+**To correct it, delete `C:\ProgramData\SD`, or restore it from a backup, and run
+setup again.** A machine with no data folder, and a folder with at least one
+account, are not affected.
+
 ## Uninstalling
 
 It is the standard Windows uninstall — Settings ▸ Apps, or `unins000.exe`.
