@@ -69,6 +69,13 @@ to `/dev/null` instead, so anything it prints after the start is not seen there.
 Sent to a file or a console window, its output goes there as before, and so does
 the SD service's own log.
 
+**One arrangement still waits.** `sd -start` run through `cmd /c ... > file` from a
+PowerShell script whose own output is captured (`*> file`) returned, but the
+script went on waiting until SD was stopped: the background process kept a
+Windows handle to the script's output, which it cannot see to give back. Run
+`sd -start` directly as above, or use `sd -restart` or `Start-Service SD`, which
+were measured returning at once.
+
 ## After an unclean shutdown
 
 If SD is stopped abruptly — the power goes, or the process is killed — it
