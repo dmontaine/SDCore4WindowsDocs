@@ -8,12 +8,19 @@ decision**, made at this computer, signed in to Windows as SDSYS, with `remote.s
 ```
 remote.sdsys on
 remote.sdsys off
+remote.sdsys ssh {on | off}
 remote.sdsys
 ```
 
-`remote.sdsys off` shuts it again at once and logs SDRADMIN out. `remote.sdsys` with no keyword shows each wall: the
-account, the `sdssh` group, the sshd arm, the broker and the state. An elevated administrator can do the same from
-PowerShell:
+`remote.sdsys off` shuts it again at once and logs SDRADMIN out; `ssh on` and `ssh off` are the same as `on` and `off`.
+`remote.sdsys` with no keyword shows each wall: the account, the `sdssh` group, the sshd arm, the broker and the state,
+and then whether the API door is open (`remote.sdsys ssh` shows the walls alone).
+
+**The API is a separate door.** SDSYS itself through the API from another computer is shut as delivered too, and is
+opened with `remote.sdsys api on`, for chosen addresses; it is described on its own page,
+[Remote Administration through the API](22a-remote-administration-through-the-api.html). This page is about ssh.
+
+An elevated administrator can show or shut the ssh walls from PowerShell:
 
 ```
 powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\remote-admin.ps1" -Status
