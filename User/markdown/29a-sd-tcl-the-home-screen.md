@@ -239,7 +239,8 @@ what this page can do, what the page says about itself) is sent and counted, but
 so Enter alone sends nothing; choose **Send** (press `s`) to send. While the AI answers the row
 says so and **Esc gives the request up**.
 
-The answer comes in a popup. It says what the AI said, and it may *propose* one thing:
+The answer comes in a popup. It shows the whole of what the AI said, in its paragraphs; an answer longer than the popup
+scrolls with PgUp and PgDn (Home and End go to its start and end). It may also *propose* one thing:
 
 | The AI proposes | What you see | What happens |
 |---|---|---|
