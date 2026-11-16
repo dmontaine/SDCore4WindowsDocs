@@ -172,20 +172,19 @@ remote.api {on | local | off {restart | no.restart}}
 
 | | |
 |---|---|
-| `on` | SD listens on port 4247 and other computers may connect |
-| `local` | SD listens on port 4247 and only this computer may connect |
+| `on` | SD listens on port 4247 on every address and other computers may connect |
+| `local` | SD listens on `127.0.0.1:4247` only, and only this computer may connect |
 | `off` | SD opens no API socket at all |
 
 **There are two axes here and the verb sets both.** `APIPORT` in `sd.conf`
-decides whether SD opens a socket at all; the firewall rule decides who may
-reach it. `local` exists because they are separate — listener up, firewall shut.
+decides whether SD opens a socket at all, and `APILOCAL=1` beside it makes that
+socket listen on the loopback address only; the firewall rule decides who may
+reach it. `local` sets both narrow: a loopback listener and the rule shut, so
+Windows never asks whether to let SD's listener through, as it did when
+`local` still listened on every address.
 
-That is also why the three keywords behave differently:
-
-| | |
-|---|---|
-| `on` and `off` | change whether SD opens a socket, which it decides when it starts. They offer to restart SD |
-| `local` and `on` | differ only in the firewall when the listener is already up, and take effect at once |
+**SD opens its socket when it starts, so any move between `on`, `local` and
+`off` offers to restart SD.** The firewall part takes effect at once.
 
 **The restart ends every SD session, including the one that asked for it.** The
 verb says so in the question rather than afterwards. Declining leaves the
@@ -256,9 +255,9 @@ chosen with the keys `1` to `5`:
 | `4` connected | every session now by the door it came through: the user number, the kind (user, api, sdnet, phantom), the login user, the account and where it came from |
 | `5` TLS | this machine's TLS identity as `settings.report` gives it: the certificate fields and the public-key hash another SD server pins. Never the private key |
 
-**`A` can end your own session.** Going to or from `off` moves the listener, which SD opens only
-when it starts, so `remote.api` asks whether to restart SD now (Enter answers no), and a restart ends
-every SD session, this page's too. Answered no, the setting waits for the next start of SD.
+**`A` can end your own session.** Any move between `on`, `local` and `off` moves the listener, which SD
+opens only when it starts, so `A`'s form asks whether to restart SD now (`later` is the default), and a
+restart ends every SD session, this page's too. Answered `later`, the setting waits for the next start of SD.
 
 `remote.ssh` and `delete.server` run through the routine all the toolkit pages use, each only after a
 box that shows the command and what it does was answered Run (**Cancel is what Enter chooses**);

@@ -333,10 +333,10 @@ Windows as SDSYS, elevated — and all four report when given no keyword:
 They are covered in the SD Core for Windows administrator documentation, under
 *Remote access and the machine*.
 
-`remote.api on` and `off` change whether SD opens a socket at all, which it
-decides at start-up, so they offer to restart SD — and that restart ends every
-session including the one that asked. `local` and `on` differ only in the
-firewall and take effect at once.
+`remote.api on`, `local` and `off` change the socket SD opens (on every address,
+on `127.0.0.1` only, or none), which it decides at start-up, so they offer to
+restart SD — and that restart ends every session including the one that asked.
+An install whose API is not for other computers listens on `127.0.0.1` only.
 
 The underlying scripts are still on the machine and can be run directly if you
 prefer, from an elevated prompt:
