@@ -167,7 +167,7 @@ rather than reporting a state it cannot have.
 ## remote.api
 
 ```
-remote.api {on | local | off}
+remote.api {on | local | off {restart | no.restart}}
 ```
 
 | | |
@@ -190,6 +190,12 @@ That is also why the three keywords behave differently:
 **The restart ends every SD session, including the one that asked for it.** The
 verb says so in the question rather than afterwards. Declining leaves the
 setting written and it takes effect when SD is next started.
+
+**`restart` or `no.restart` after the word answers that question in advance**,
+so nothing is asked: `restart` restarts SD if the listener moved, `no.restart`
+leaves the change for SD's next start. The `tool.remote` page asks it on its own
+form and passes the answer this way. A move between `on` and `local` restarts
+nothing either way.
 
 If the listener is set but the firewall rule cannot be written, the verb says
 which half succeeded and prints the two commands that set the rule by hand.
@@ -244,7 +250,7 @@ chosen with the keys `1` to `5`:
 
 | View | What it shows and does |
 |---|---|
-| `1` doors | what `remote.api` and `remote.ssh` say with no keyword: **the machine's own answer**, read back from `sd.conf` and the firewall rules, not what the page meant. `A` changes the API (`on`, `local` or `off`) and **gives the terminal to `remote.api`**, so that its restart question is yours to answer; `S` changes ssh (`on` or `off`) at once. Each is chosen from a list that starts on `off`. Turning either **on** lets other computers reach this one, so its box wants the word `open` typed (in either case) |
+| `1` doors | what `remote.api` and `remote.ssh` say with no keyword: **the machine's own answer**, read back from `sd.conf` and the firewall rules, not what the page meant. `A` changes the API (`on`, `local` or `off`) on one form that also asks whether to restart SD now if the change needs it (to or from `off`; `later` is the default), and runs `remote.api ... restart` or `no.restart`, so nothing is asked on the terminal; `S` changes ssh (`on` or `off`) at once. Each starts on `off`. Turning either **on** lets other computers reach this one, so its box wants the word `open` typed (in either case) |
 | `2` routes | every user account with the doors it has (`ssh`, `api`, `files`, `files-write`, `files-admin`) and the NET gate, and in words how it can be reached: a door is membership of its Windows group. It only shows: the switches are `tool.gates`'s |
 | `3` servers | the SDNet servers of the `netservers` file: name, address, remote account and mode, the pin shortened, the local accounts that may use it. `X` deletes the one under the cursor (`delete.server`, which does not ask itself, so the box is the question). `N` asks every field, checks them the way `set.server` does and gives **the terminal to the verb**, whose `connect` step shows the key the server presents and asks whether to trust it |
 | `4` connected | every session now by the door it came through: the user number, the kind (user, api, sdnet, phantom), the login user, the account and where it came from |

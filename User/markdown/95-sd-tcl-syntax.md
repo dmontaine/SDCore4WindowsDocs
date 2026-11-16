@@ -168,7 +168,7 @@ not refused — the name is simply not recognised.**
 | **`redo`** | **`redo`** {**`times`** *n*} {**`every`** *s*} *command* |  |
 | **`reformat`** | **`reformat`** {**`dict`**} *file* {*selection*} {*fields*} |  |
 | **`release`** | **`release`** *file* *id* …  ·  **`release filelock`** *file* |  |
-| **`remote.api`** | **`remote.api`** {**`on`** \| **`local`** \| **`off`**} | S |
+| **`remote.api`** | **`remote.api`** {**`on`** \| **`local`** \| **`off`** {**`restart`** \| **`no.restart`**}} | S |
 | **`remote.sdsys`** | **`remote.sdsys`** {**`on`** \| **`off`**}  —  from SDRADMIN's remote session also **`audit`** {*n*} and **`accounts`** | S |
 | **`remote.ssh`** | **`remote.ssh`** {**`on`** \| **`off`**} | S |
 | **`report.src`** | **`report.src on`** \| **`off`** \| **`report.src`** to toggle |  |
