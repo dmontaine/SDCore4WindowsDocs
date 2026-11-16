@@ -302,7 +302,7 @@ Windows writes do not.
 ## Deleting an account: `delete.account`
 
 ```
-delete.account account.name
+delete.account account.name {remove.home} {no.query}
 ```
 
 Removes the account directory, its Windows group, its SD password record, its
@@ -316,6 +316,10 @@ audit trail.
 works on SD Core for Linux, where the word removes the Windows-equivalent of a
 home folder that is otherwise kept. Here the profile is removed anyway, so the
 word changes nothing.
+
+**`no.query` leaves the confirmation out.** It is for a caller that has asked
+already: `tool.accounts` gives it after you have typed the account's name in
+its own dialog. Typed at the prompt it deletes at once, so leave it off there.
 
 **It will not delete a Windows account SD did not create.** The account is
 left in place and it says so.

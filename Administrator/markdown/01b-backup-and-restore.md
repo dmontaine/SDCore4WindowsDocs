@@ -137,7 +137,7 @@ Each shows its command in a box answered Run or Cancel, **and Cancel is what
 Enter chooses**. The page runs those four commands and no other; the verbs ask
 for the administrator again and write their own audit lines. **A restore
 replaces every account the archive holds**, so its box lists them and wants the
-word `RESTORE` typed; the page then gives `no.query`, because the verb's own
+word `restore` typed (in either case); the page then gives `no.query`, because the verb's own
 question cannot be answered through a page. **A restore that would have to make
 an account is refused by the page**, because a new account asks for a password:
 restore such an archive at the prompt.
