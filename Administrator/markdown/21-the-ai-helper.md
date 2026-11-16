@@ -154,7 +154,7 @@ The limits, and what they are as delivered:
 | `timeout` | 30 | seconds to wait for the provider (at most 300) |
 | `bytes-request` | 65536 | the most that may be sent in one request |
 | `bytes-reply` | 65536 | the most that may come back |
-| `max-tokens` | 1024 | the longest answer asked for |
+| `max-tokens` | 1024 | the longest answer asked for, at the prompt (`ai`) and on every page: raise it for longer answers, lower it for shorter ones (a provider may refuse a figure above its model's own limit) |
 
 ## The standing text
 
