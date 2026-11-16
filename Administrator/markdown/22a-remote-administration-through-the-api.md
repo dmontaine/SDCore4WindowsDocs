@@ -57,8 +57,9 @@ A range of length 0 (`0.0.0.0/0`, `::/0`) is refused: it would be every address,
 anything is changed, and so is `any` together with other addresses. SD's API listens on IPv4, so an
 IPv6 address or range is accepted and kept but no client reaches SD from one.
 
-SDRADMIN's remote session cannot open or shut this door. An API session signed in as SDSYS can, as
-it can do everything else the administrator does.
+SDRADMIN's remote session over ssh can open and shut this door too, with the same words
+([Remote Administration over ssh](22-remote-administration.html)). So can an API session signed in as
+SDSYS, as it can do everything else the administrator does.
 
 The same can be done without SD, in an elevated PowerShell:
 

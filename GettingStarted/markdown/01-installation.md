@@ -158,13 +158,15 @@ SD account it starts with every access gate closed:** no ssh, no API, no shell
 (`sh`), no `os.execute`, no `sd.accounts`, no right to save a change to a VOC, a
 program file or a dictionary, no SDNet, no writing the shared account's files, no
 files-only login, no administering files over that login, no use of the AI, no
-pins on the home screen, no recovery copy of unsaved editor text. Tick the box and the installer opens every one of those on your account,
+pins on the home screen, no recovery copy of unsaved editor text, no file transfer
+(`receive` and `send`). Tick the box and the installer opens every one of those on your account,
 reads the result back, and the last screen says whether they all opened; if any
 did not, `C:\ProgramData\SD\attach-account.log` names each one and the word to
 give for it. It opens only your account. `files-admin-on` administers files on
 this server over the files-only login, and `ai-on` lets your account send text
 to the AI provider SDSYS chooses (nothing is sent until a provider and its key
-are set), so tick the box only on a machine where you want both. A silent install ticks it with `/TASKS=opengates`. An upgrade does
+are set), so tick the box only on a machine where you want both. File transfer also needs `XFER=1` in
+`sd.conf`, which the box does not set: the account's switch alone moves nothing. A silent install ticks it with `/TASKS=opengates`. An upgrade does
 not show the box and leaves the account as it is.
 
 SDSYS opens a gate afterwards with `modify.account` *account* *word*, one word at a

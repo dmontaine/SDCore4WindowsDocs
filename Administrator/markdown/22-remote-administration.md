@@ -46,7 +46,10 @@ account goes with the question about the Windows accounts SD made.
 Once signed in, SDRADMIN can type, with the console's own words:
 
 - `create.account`, `delete.account`, `modify.account`, `modify.password`;
-- `remote.sdsys off`, `remote.sdsys audit` {*n*}, `remote.sdsys accounts`, and `remote.sdsys` with no keyword;
+- `remote.sdsys off` (or `ssh off`), `remote.sdsys ssh`, `remote.sdsys audit` {*n*}, `remote.sdsys accounts`, and `remote.sdsys`
+  with no keyword;
+- `remote.sdsys api on` *address* ..., `remote.sdsys api on any`, `remote.sdsys api off`, and `remote.sdsys api` (the report): SDSYS's
+  door through the API, described in [Remote Administration through the API](22a-remote-administration-through-the-api.html);
 - `remote.ssh on`, `remote.ssh off`, and `remote.ssh` with no keyword (the report);
 - `remote.api on`, `remote.api local`, `remote.api off`, and `remote.api` with no keyword (the report).
 
@@ -70,6 +73,8 @@ ssh port, **can**:
 - **delete any SD account together with all of its data**; only your backups can bring it back;
 - read the audit trail and the list of accounts;
 - open or shut ssh access and API access to this computer (`remote.ssh`, `remote.api`);
+- open SDSYS's door through the API for any addresses (`remote.sdsys api on`), after which anyone at those addresses who knows
+  SDSYS's SD password is the administrator; or shut it;
 - shut remote administration.
 
 They **cannot**:
