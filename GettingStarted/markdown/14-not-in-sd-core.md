@@ -21,10 +21,8 @@ SD Core for Windows.
 | `modify` — the full-screen record editor from OpenQM | **`sed`**, **`edit`** or **`ed`** |
 | `nano` — the second external editor (removed in 2.0-0) | **`micro`**, **`sed`** or **`ed`** |
 
-**`sed` was on this page and has come off it (25 October 2026).** It was removed
-once because its Emacs-style keys are hard to remember, and came back with a menu
-bar that shows the key of every action. It runs inside SD, so it needs no
-operating-system permission, and it needs a window of 140 columns by 42 lines.
+**`sed` has a menu bar that shows the key of every action.** It runs inside SD, so it needs no
+operating-system permission, and it needs a window of 140 columns by 43 lines.
 With it came `ced`, a full-screen editor for a record that is a data collection,
 and `ide`, a workbench for programs and files.
 
@@ -36,24 +34,17 @@ gone as *programs*; the capability is not.
 
 `modify` is not in SD Core at all, for any account.
 
-> **`micro` was on this page and has come off it — under its own name.** It
-> was removed on 17 Aug 2026 because it launched an external editor, which is a
-> way out of SD onto the machine underneath it. That was reversed on
-> 26 Aug 2026, and there are now **two** full-screen editors, **`edit`** and
-> **`micro`**: the same idea, done deliberately, gated by the account's `os-on`
-> switch — every account has the verb, not every account has the permission —
-> and refused over the API regardless (a session with no terminal has nowhere to
-> draw a full screen).
+> **`edit` and `micro`** are two full-screen editors that start an external
+> program: gated by the account's `os-on` switch — every account has the verb,
+> not every account has the permission — and refused over the API regardless (a
+> session with no terminal has nowhere to draw a full screen).
 
 **`modify.account` and `modify.password` are not affected.** They are
 different verbs with different programs behind them. `modify.account` is
 SDSYS's alone; `modify.password` is every account's, for its own password —
 only naming a different account needs SDSYS.
 
-> **`ed`** was never affected by the keyboard faults that hit the full-screen
-> editors — it reads whole lines and goes through the command-line editor. **If
-> backspace is ever reported broken in `ed`, that is a new fault, not an old
-> one returning.**
+> **`ed`** reads whole lines and goes through the command-line editor.
 
 ## The PROC language
 
@@ -61,8 +52,8 @@ only naming a different account needs SDSYS.
 supported instead of running.** Your `PQ` records are left alone — it is the
 interpreter that has gone, not the records.
 
-**Do not confuse PROC with the query processor.** `LIST`, `COUNT`, `SELECT`
-and `SORT` are unaffected. They are a different thing despite the similar name.
+**Do not confuse PROC with the query processor.** `list`, `count`, `select`
+and `sort` are unaffected. They are a different thing despite the similar name.
 
 ## SDNet — remote file access
 
@@ -81,16 +72,10 @@ login change files there (`files-write-on` on that server); configuring, indexin
 creating and deleting a remote file, and the file's counter, need a third permission
 there (`files-admin-on`). It uses the other
 server's API port over TLS and does not put a password in any file. The
-*Administrator* set's *SDNet* page describes it. **It has been compiled on
-Windows and has not yet been run against another server.** Nothing from the old
+*Administrator* set's *SDNet* page describes it. Nothing from the old
 version is back: no `;` in a path, no port 4245, no password in any file.
 
-**Why the old one went:** each server's user name and password were kept in `sd.conf`,
-obscured with a simple letter substitution that is not encryption, and the
-session ran over port 4245. There was also no way to switch the feature off —
-the `NETFILES` setting was read at start-up and then never consulted.
-
-**The API is not affected.** `SDClient` and the remote API are a separate
+**The API is not affected.** `!sdclient` and the remote API are a separate
 mechanism and are unchanged. See [API access](09-api-access.html).
 
 **`NETFILES` is still accepted in `sd.conf`**, so an existing configuration file
@@ -103,7 +88,7 @@ detail.
 ## Virtual file systems
 
 **SD has never been able to open a virtual file system.** Nothing in the
-file-opening code ever recognised a `VFS:` pathname. What the language carried
+file-opening code ever recognized a `VFS:` pathname. What the language carried
 was the *outline* of one, and none of it could be reached: a VOC F-pointer
 written as `VFS:something` was reported as a virtual file system, passed the
 name resolver, and then failed to open with an unrelated error.
@@ -121,8 +106,7 @@ ER$VFS.CLASS     SYSCOM ERR.H
 ER$VFS.NGLBL     SYSCOM ERR.H
 ```
 
-`FTYPE` no longer returns `VFS` for a `VFS:` pathname. **Error numbers 3038,
-3039 and 3040 are retired and will not be given a new meaning.**
+`ftype` no longer returns `VFS` for a `VFS:` pathname.
 
 **IF ONE OF YOUR PROGRAMS REFERS TO ANY OF THESE, it was testing for a state
 SD could not reach, and the test can be deleted.**
@@ -131,6 +115,14 @@ Two unreachable pieces went with it: `_EXTENDLIST`, installed into the SDSYS
 `GPL.BP` file and loaded at every start-up although nothing ever called it; and
 the debugger's `(Networked)` file type, which no file could report once SDNet
 was gone.
+
+## Tape and restore
+
+The `TAPE`/`RESTORE` subsystem is gone, along with the assumption of a
+tape-backed sequential medium it was built around. Back up and restore SD
+data with `backup.account` and `restore.account` (see [Administrator
+commands](06-administrator-commands.html)), at the file level with the service
+stopped, or through your own export/import BASIC.
 
 ## Language and locale
 
@@ -158,11 +150,7 @@ set's *SD BASIC - Python Integration* chapter.
 
 ## Field-level encryption
 
-**`encrypt.field` is gone, and with it field-level encryption from TCL.** The
-verb is in **no account's VOC at any tier** — it left
-`newvoc/TIER.ADD.ADMINISTRATOR` before W1.0-0. While it was still there it could not
-have worked: the `$CRYPTO` program behind it is not in the distribution, and
-every form of the verb failed at load, before it looked at what you typed.
+**`encrypt.field` is gone, and with it field-level encryption from TCL.**
 
 **Encryption in SD BASIC is unaffected and is the supported route.**
 `sdencrypt()` and `sddecrypt()` ship — see *SD Basic - System and Environment*
@@ -193,7 +181,7 @@ net localgroup sdsshonly <name> /add
 `VFS.CLS` (a template class module) are no longer installed there.
 
 **PCL is unaffected as a printer feature** — the `PCL` keyword and the
-catalogued `PCL` routine are both still there. What has gone is a second, older
+cataloged `PCL` routine are both still there. What has gone is a second, older
 copy of the source sitting in `BP`.
 
 **SD now ships only four programs into the SDSYS bp file**: `PY_JSON`,
@@ -212,7 +200,7 @@ another MultiValue system will otherwise assume they exist.
 the access model and is settled. One Windows setting covers Remote Desktop and
 the physical keyboard together, so allowing one allows the other. A verb that
 lifted the restriction was built and deleted the next day for exactly that
-reason. If you want it, you want Windows Server, RDP client access licences and
+reason. If you want it, you want Windows Server, RDP client access licenses and
 probably a commercial product built for it. See
 [ssh access](08-ssh-access.html).
 

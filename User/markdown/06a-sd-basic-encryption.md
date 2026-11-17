@@ -8,11 +8,6 @@ administrator override: **a passphrase that is forgotten is data that is lost.**
 the passphrase and the salt safe, and prove that you can decrypt from a backup before you
 rely on any of this.
 
-> **Carried from SD Core for Linux and not yet run on Windows (20 October 2026).** The
-> functions, the `XE` conversion and the `encrypt.key` verb on this page were written and
-> tested for SD Core for Linux. They are built into this release, but nothing of them has
-> been run on an installed Windows system yet.
-
 SD folds case, so a program may be written in either case. Functions and codes are
 shown here in lower case. *Italics* mark something you supply.
 
@@ -75,10 +70,9 @@ item puts it in field 3: `D`, the field number, `XE;salary`, a heading, a format
 ### The key ring
 
 The conversion never holds a key. It names one, and the key is looked up in a **ring in
-the memory of your own process**: it is set by `!keyset`, cleared by `!keyclear`, by
-`logto` or at sign-on, and not handed to a phantom (a phantom that must decrypt calls
-`!keyset` itself). The ring is never written to a disk, the audit trail or a `$como`
-file. It holds 16 keys.
+the memory of your own process**: it is set by `!keyset`, cleared by `!keyclear` or by
+`logto`, and not handed to a phantom (a phantom that must decrypt calls `!keyset` itself).
+The ring is never written to a disk, the audit trail or a `$como` file. It holds 16 keys.
 
 ```
 call !keyset(name, key, id)     ;* id: the key's id (8 hex digits), or '' and status() 10213, 10204, 10203 or 10211
@@ -99,8 +93,9 @@ encrypt.key clear salary
 
 `set` takes the salt that `sdsalt()` made. **Use `confirm` the first time:** it asks for the
 passphrase twice, because data encrypted under a mistyped passphrase cannot be read again.
-`clear` with no name empties the ring. The verb applies no strength rule to the passphrase;
-a long phrase of words is a better one than eight characters of every kind. It writes the
+`clear` with no name empties the ring. The verb refuses a passphrase of fewer than 12
+characters (since 30 October 2026) and has no other rule; `sdkey()` itself takes any passphrase that is not empty. A long phrase of
+words is a better passphrase than eight characters of every kind. It writes the
 key's name, never the passphrase or the key, to the audit trail.
 
 ### What is stored
@@ -185,3 +180,6 @@ or key into; the strings your program held are freed, not wiped, so keep them sh
 | a passphrase kept in a file, a variable or a command line | is as safe as the file, the variable or the history |
 | a forgotten passphrase or a lost salt | is lost data |
 | the disk | is protected by the operating system (BitLocker, or the file system's own encryption), not by SD |
+
+**Cost:** twenty thousand `oconv(value, 'XE')` calls take under a second on an ordinary machine,
+so a listing of a large file is not slowed noticeably. `sdkey()` is the one slow call.

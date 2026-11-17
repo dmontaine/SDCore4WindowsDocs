@@ -9,15 +9,13 @@ documentation talks about.
 
 **This page is that half of the language.** [SD Basic - Program
 Structure](01-sd-basic-program-structure.html) covers the traditional shape —
-one program, one flat variable space, `gosub` to a label, `call` to a catalogued
+one program, one flat variable space, `gosub` to a label, `call` to a cataloged
 subroutine — and everything here is an alternative to it, not an extension of
 it.
 
-**Everything on this page was compiled and run** on SD Core for Windows W1.0-0
-before it was written down. Where a listing shows an error, that error was
-produced, not composed. The programs are in the documentation repository —
-<https://github.com/dmontaine/SDCore4WindowsDocs> — as
-`tools\probes\p18-class-base.b`, `p18-class.b` and `p18-objects.b`.
+`class` and `object` support is part of the SD BASIC compiler and works the same
+way on SD Core for Windows and on SD Core for Linux. Where a listing shows an
+error, that is the error the compiler gives.
 
 ## Scope, and the one thing to get straight first
 
@@ -71,7 +69,7 @@ have never been set.
 gosub tally(3, 4, answer)
 ```
 
-`call` looks in the catalogue. Against a local subroutine it compiles cleanly
+`call` looks in the catalog. Against a local subroutine it compiles cleanly
 and then fails at run time:
 
 ```
@@ -147,15 +145,15 @@ end
 `private` and `public` declare member *variables*; `public subroutine` and
 `public function` declare methods; `get` and `set` declare a property.
 
-A class is catalogued and instantiated like any other program, and **a private
-catalogue is enough** — nothing here needs an elevated session:
+A class is cataloged and instantiated like any other program, and **a private
+catalog is enough** — nothing here needs an elevated session:
 
 ```
 :basic bp zzcls
 Compiling bp zzcls
 0 error(s)
 :catalog bp zzcls
-ZZCLS added to private catalogue
+ZZCLS added to private catalog
 ```
 
 ## Objects
@@ -215,7 +213,7 @@ can validate, transform or compute without the caller knowing.
 
 ```
 :crt p->balance
-000003C1: Unrecognised property/method name (BALANCE). at line 92
+000003C1: Unrecognized property/method name (BALANCE). at line 92
 ```
 
 **Note the wording.** It is not *"private"* — from outside the class the name is
@@ -241,7 +239,7 @@ that declares it and to every class that inherits it, and invisible to everythin
 the main program, an unrelated class, and a sibling that shares only the parent. A child
 reaches its parent's restricted members through the inherited object, as it reaches the public
 ones (`parent->secret()`); a program that tries gets the same answer it gets for a private
-name, *Unrecognised property/method name (SECRET)*. **The child object does not pass
+name, *Unrecognized property/method name (SECRET)*. **The child object does not pass
 the parent's restricted names on to the caller** — `c->secret()` from the main program is
 refused although `c` inherits it.
 
@@ -282,14 +280,14 @@ element, as `mat m = value` does.
 | a constant `@`-variable | `@fm @vm @sm @tm @im @true @false` |
 
 Anything else — a variable name, a changing `@`-variable such as `@userno`, an expression such as
-`5 + 1` — is a compile error, message 11394. After `public a = 5` the `+ 1` is not a statement.
+`5 + 1` — is a compile error, message 12399. After `public a = 5` the `+ 1` is not a statement.
 
 A variable with no value starts as it always did.
 
 ## Running a class
 
 A class module with a `main` subroutine can be run from TCL, by its module name or by its
-catalogue name, as a program is:
+catalog name, as a program is:
 
 ```
 class zzcm1
@@ -315,7 +313,7 @@ DESTROYED
 
 `run` makes the object, so `create.object` runs first, calls `main`, and lets the object go, so
 `destroy.object` runs last. A class with no `main` still gets its object made and
-`create.object` run; the reference to `main` is then refused with *Unrecognised property/method name
+`create.object` run; the reference to `main` is then refused with *Unrecognized property/method name
 (MAIN)*. **`call` of a class is still refused** — *A CLASS routine may not be used in this way*.
 
 ## Construction and destruction
@@ -381,7 +379,7 @@ class derived inherits base as parent(-3, 'x y')
 
 They reach the base class's `create.object` as its arguments, the same constants as a variable's
 starting value (see *Starting values*): numbers, strings, `char(n)` and the constant `@`-variables. **At
-most 32** may be given (message 11393). A class that inherits with no brackets works as before.
+most 32** may be given (message 12398). A class that inherits with no brackets works as before.
 
 The last row is the interesting one: **a base class's private state stays
 private, and reaches the outside only through whatever the base chooses to
@@ -427,11 +425,11 @@ does.**
 |---|---|
 | **`gosub` label** | a few lines, used once, sharing the program's variables on purpose |
 | **local subroutine or function** | anything with working variables of its own, or that you want to be sure touches nothing else |
-| **catalogued subroutine** | logic more than one program needs |
+| **cataloged subroutine** | logic more than one program needs |
 | **class module** | state that has a lifetime — something opened, held and closed — or several instances of the same thing at once |
 
 ## See also
 
 [SD Basic - Program Structure](01-sd-basic-program-structure.html) ·
 [SD Basic - Program Control](02-sd-basic-program-control.html) ·
-[SD TCL - Programs and the Catalogue](24-sd-tcl-programs-and-the-catalogue.html).
+[SD TCL - Programs and the Catalog](24-sd-tcl-programs-and-the-catalogue.html).

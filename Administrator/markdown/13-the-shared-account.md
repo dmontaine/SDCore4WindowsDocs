@@ -13,8 +13,7 @@ pointer to make in the account's VOC, and `list`, `sort`, `select`, `count` and 
 > (`modify.account` *name* `shared-read-off`) from an account that should not have it **before**
 > you fill the account. Writing is the other way: it is off until you turn it on.
 
-This page is the full description. **Not yet seen to work on a real installation** (see the end of
-the page).
+This page is the full description.
 
 ## The switches
 
@@ -94,7 +93,7 @@ An `open` of a name looks, in this order, at:
 8. **The kernel's test of the path.** The file must exist and lie strictly *inside* `shared`'s
    directory, and no part of the path below the directory may be a VOC, a program file
    (`bp`, `bp.out`, `*.bp`, `*.bp.out`), a dictionary (except the one asked for) or
-   `shared`'s private catalogue. A pointer in `shared`'s VOC to a file anywhere else is refused.
+   `shared`'s private catalog. A pointer in `shared`'s VOC to a file anywhere else is refused.
 9. **The audit line**, once for each name in a session, after the name has been accepted.
 
 A refusal at any step is not a message: the name is simply not there, and the `open` takes its
@@ -105,7 +104,7 @@ one other place it is let into, when it has `shared.read`.
 
 ### What is not shared
 
-The **VOC, verbs, sentences, paragraphs, catalogue and programs of `shared` are never reached from
+The **VOC, verbs, sentences, paragraphs, catalog and programs of `shared` are never reached from
 another account.** Only data files, and their dictionaries, are shared. A program kept in `shared`
 is not run from another account by name, and `shared`'s `voc` and `bp` cannot be opened as data by
 any name. The administrator's own `open` does not follow `shared` either: SDSYS reaches the files
@@ -139,8 +138,8 @@ with `logto shared`.
   *name*) on an account where `shared-write-on` has been given to the account **`shared`** itself.
   Inside `logto shared` the switches are the account `shared`'s own record; a blank means write
   off. A maintainer changes records, never structure.
-* **The administrator** is never refused a record write or a structure change, and is not given
-  the by-name lookup (it uses `logto shared`).
+* **The local administrator** is never refused a record write or a structure change, and is not
+  given the by-name lookup (it uses `logto shared`). SDSYS's own `open` does not follow `shared`.
 * **`basic`** writes an object file by name, so compiling a source that lies in `shared` needs the
   rights to write there; without `shared.write` the compile is refused and nothing is written.
 
@@ -191,21 +190,20 @@ is suspended, it says "There is no shared account in service".
 5. **Withdrawal takes effect at the person's next entry.** `shared.read` is tested when a file
    is opened: a file already open stays usable until the person signs off or enters another
    account. `shared.write` is tested at every write.
-6. **The API's `sdsys` login is not given the shared files.** The API is never open to SDSYS on
-   Windows, so the rule Linux has for it does not exist here.
+6. **SDSYS over the API is the administrator.** When the administrator has opened that door
+   (`remote.sdsys api on`), a session of SDSYS runs with SDSYS's full rights, as at the keyboard
+   ([Remote Administration through the API](22a-remote-administration-through-the-api.html)), so it is
+   never refused a record write and is not given the by-name lookup either: its own `open` does not
+   follow `shared`.
 
 ## What is not done
 
 * `shared` is not replicated to other servers.
-* The programs of `shared` are not shared: there is no catalogue of shared programs.
+* The programs of `shared` are not shared: there is no catalog of shared programs.
 * Every `open` that misses the account's own VOC for an ordinary lower-case name now reads the
   register and `shared`'s VOC to see; nothing caches a miss yet. Names that begin with a symbol and
   the standard names never reach the disk.
 * SD Core Solo has one account, and does not have this.
-* **Not yet seen to work on a real installation:** the installer's creation of the account, the
-  access list of the directory, the lookup and the switches in a live session, and the network entry.
-  The decisions in the installer's scripts (the preflight, the access-list check, the re-stamp rule)
-  have been run against test folders.
 
 ## See also
 

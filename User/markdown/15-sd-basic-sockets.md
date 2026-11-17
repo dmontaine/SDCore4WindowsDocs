@@ -39,16 +39,15 @@ cli = open.socket('127.0.0.1', 45123, 0)
 inc = accept.socket.connection(srv, 2000)
 ```
 
-Flags `0` is TCP, stream. `0x00010000` selects UDP and `0x00020000` ICMP.
-
 The optional fourth argument of `open.socket` is a **connect timeout in
 seconds**. When it runs out the call returns 0 with `status()` **7005**, as any
 failed connect does; zero, a negative number or no argument means no limit of
 SD's own (the system's connect timeout applies). On a socket opened with the TLS
 flag it also bounds the TLS handshake. Before this release the fourth argument was
 an unused place for a security context and had to be zero. It is not used with the
-non-blocking flag. Carried from SD Core for Linux and compiled; not yet run on
-Windows.
+non-blocking flag.
+
+Flags `0` is TCP, stream. `0x00010000` selects UDP and `0x00020000` ICMP.
 
 **Both fail by returning zero, not by taking an `else` branch** — they are
 functions, and there is no `then`/`else` on them. Test with
@@ -300,11 +299,13 @@ finished is the newline it went looking for.
 ## What is not here
 
 **`writepkt` is a restricted statement** — internal programs only. In an
-ordinary account it is *"Unrecognised statement"*. It writes an SDClient
+ordinary account it is *"Unrecognized statement"*. It writes an SDClient
 protocol packet and is not a general socket write.
 
-**No TLS.** There is nothing in SD BASIC that speaks HTTPS; a socket carries
-whatever bytes you put on it. Anything encrypted has to terminate outside SD.
+**No HTTPS.** There is nothing in SD BASIC that speaks HTTPS; a socket carries
+whatever bytes you put on it. The one TLS there is, the `SKT$TLS` flag above, is a
+TLS 1.3 client made for an SD server's own API port, and it does not verify the
+certificate. Anything else encrypted has to terminate outside SD.
 
 **The whole of this page is TCP.** `0x00010000` and `0x00020000` are the UDP
 and ICMP flag values.

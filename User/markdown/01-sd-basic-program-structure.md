@@ -19,7 +19,7 @@ function name {(argument, ...)} {var.args}
 
 | | |
 |---|---|
-| **program** | runs on its own. Started by `run`, by its catalogued name, or from another program with `execute` |
+| **program** | runs on its own. Started by `run`, by its cataloged name, or from another program with `execute` |
 | **subroutine** | called by `call`, and returns nothing. Its arguments carry values back |
 | **function** | called inside an expression, and returns a value with `return` |
 
@@ -82,7 +82,7 @@ There is no function form of `call` (`subr()` is gone). Where you want a result
 in an expression, declare a function with `deffun` and call that.
 
 There is no call by file and program name (`call "bp prog"`): a program is
-called by its catalogued name.
+called by its cataloged name.
 
 **Arguments are passed by reference, not by value.** A subroutine that
 assigns to one of its parameters changes the caller's variable. That is how a
@@ -237,9 +237,8 @@ With `m` holding `7`, `7`, `7`:
 > keyword as a **variable name** and the program aborts at run time with
 > *"Unassigned variable USING"*, with both `using` and `USING`.
 >
-> **This is inherited, not introduced by this port** — the `st.matbuild` block
-> in `BCOMP` is byte-identical to the one in the upstream `sdb64` tree. **The
-> delimiter is always a field mark.** If you need another one, use `matbuild`
+> **This is inherited from the upstream `sdb64` code, not introduced by this port.**
+> **The delimiter is always a field mark.** If you need another one, use `matbuild`
 > and then `change()`, or build the string with a `for` loop.
 
 `matparse` splits on the delimiter you give and stops when the matrix is full;
@@ -366,7 +365,7 @@ $mode -name
 
 A mode changes how one program is compiled. **Every mode is off unless the
 program asks for it**, and a program that does not ask sees no change. A name
-with a minus in front turns the mode off again. The ones below are the 1.2-0
+with a minus in front turns the mode off again. The ones below are the 2.0-0
 additions; each is described by what it does and does **not** do.
 
 | mode | what it does |
@@ -389,6 +388,27 @@ additions; each is described by what it does and does **not** do.
 | **`dir.dtm`** | writing a record to a directory file moves the directory's date and time modified. The system moves it only when a name is added or removed, so a replaced record leaves it as it was. **Closing a written sequential file does not do this** |
 | **`spool.command`** | shows the operating system command that prints a job, just before it runs; a diagnostic aid |
 | **`inherit.ownership`** | `create.file` gives a new file (the directory and everything in it) the **owner and group of the account directory** in place of those of the user who made it, **where Windows allows it**; where it refuses nothing is said. Existing files are not changed. **Off by default:** turn it on for an account in its `login` paragraph, as an administrator's decision |
+
+## Changing the size of a matrix passed in: `redim`
+
+```
+redim name(rows {, cols})
+```
+
+Inside a subroutine, `redim` gives a matrix argument (`mat a`) a new size, and **the
+caller's matrix takes that size**: what the subroutine stores in it, in the old elements
+and in the new ones, is there when the call returns.
+
+```
+subroutine grow(mat a)
+   redim a(10)
+   a(8) = 'eight'
+   return
+end
+```
+
+A matrix argument needs no `dim` of its own in the subroutine, in a `local subroutine`
+either: it is the caller's matrix, with the caller's size, until a `redim` changes it.
 
 ## What is not here
 

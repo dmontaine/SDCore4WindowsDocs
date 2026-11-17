@@ -24,7 +24,7 @@ The page continues in [The master files: programs and global changes](19a-the-ma
 
 **`tool.entries`** is the page that looks at the accounts' own files and copies nothing: it is in the SDSYS VOC only and
 refuses anyone else before it reads anything. **It lists the VOC entries, the dictionary items and
-the programs, and it edits, deletes and compiles each in the account it belongs to** (below).
+the programs, and it edits, deletes, compiles and debugs each in the account it belongs to** (below).
 
 ```
 tool.entries
@@ -142,7 +142,5 @@ delete).
   in, SDSYS's included.
 * **It does not remove a catalog entry when it deletes a program.** The entry is the account's;
   `run.in` *account* `delete.catalog` or `decatalog` removes it.
-* **It does not debug.** `B` says it is not built on Windows: `run.in` has no `debug` here (see
-  [run.in](19b-run-in.html)). Debug a program in its own account.
 * **It does not see a change made outside SD** any differently from SD itself: the page reads the
   accounts' files when it is asked to, so a change made in Windows is simply there at the next read.

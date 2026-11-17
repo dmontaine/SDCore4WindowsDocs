@@ -8,17 +8,17 @@ hold them back from a *standard* account and only give them to a
 each of them does, not a list of what you have been given.
 
 **A few, named as they come up below, still need more than the verb**:
-cataloguing globally, and reaching the operating system through the two
+cataloging globally, and reaching the operating system through the two
 full-screen editors, are gated separately from the VOC — see
 [What actually gates these](#what-actually-gates-these) at the foot of this
 page.
 
-## Compile, catalogue and run
+## Compile, catalog and run
 
 | | |
 |---|---|
 | **`basic`** | compile SD BASIC source |
-| **`catalog`** | add to the catalogue |
+| **`catalog`** | add to the catalog |
 | **`delete.catalog`** | remove from it |
 | **`compile.dict`** | compile dictionary items |
 | **`run`** | run a compiled program |
@@ -26,8 +26,8 @@ page.
 | **`generate`** | generate source |
 | **`phantom`** | start a background process |
 
-> **Cataloguing globally is SDSYS's alone.** Adding to or removing from the
-> system-wide catalogue needs SDSYS; private and local cataloguing work from
+> **Cataloging globally is SDSYS's alone.** Adding to or removing from the
+> system-wide catalog needs SDSYS; private and local cataloging work from
 > any account. That is a separate control from having the verb at all — see
 > [Administrator commands](06-administrator-commands.html).
 
@@ -38,7 +38,7 @@ page.
 | **`ed`** | the line editor. Needs nothing installed |
 | **`edit`** | a **full-screen** editor — opens the record in Microsoft Edit |
 | **`micro`** | a **full-screen** editor — opens the record in micro |
-| **`sed`** | a **full-screen** editor that runs **inside** SD: drop-down menus that show the keys, colour for the language, split windows and macros. Needs a window of 140 columns by 42 lines, and no operating-system permission |
+| **`sed`** | a **full-screen** editor that runs **inside** SD: drop-down menus that show the keys, color for the language, split windows and macros. Needs a window of 140 columns by 42 lines, and no operating-system permission |
 | **`ced`** | a full-screen editor for a record that is a **data collection** (JSON), one level at a time with the type of every element shown |
 | **`ide`** | a full-screen workbench: the files and records, the program and its compile messages on one screen |
 | **`debug`** | the BASIC debugger |
@@ -62,7 +62,7 @@ edit  dict customers name
 
 Either verb writes the record to a working copy, opens the editor on it,
 reads it back, and asks whether to save. For a `bp` record it then offers
-the compile and the catalogue.
+the compile and the catalog.
 
 **Both are terminal editors**, so both work over ssh as well as at the
 console. Where a machine does not have one, the SD installer installs it; if
@@ -80,14 +80,14 @@ verbs:
 | **`edit`** | plain text |
 
 **It applies to a `bp` record and to nothing else.** SD names the working
-copy so that micro can recognise the language — a record edited out of any
+copy so that micro can recognize the language — a record edited out of any
 other file is treated as plain text, which is correct for a VOC entry or a
 data record.
 
 > **The word lists are generated from the compiler.** They come out of
 > `BCOMP`'s own tables — **218 statements, 37 reserved words and 176
 > intrinsic functions** — so the highlighting cannot drift from the
-> language. **If a name you expect is not coloured, that is worth
+> language. **If a name you expect is not colored, that is worth
 > reporting**: it means the two have come apart, which is exactly what
 > generating them was meant to prevent.
 
@@ -180,9 +180,8 @@ reporting** with the terminal you connected from.
 
 **`sed`, `ced` and `ide` run inside SD** and draw the screen themselves, so they need
 no operating-system permission and no editor installed; they need a terminal window of
-at least 140 columns by 42 lines (the debugger and the home screen use the same
-frame). Nothing was run on a Windows console when they were carried, and the
-User set's *The SED Screen Editor* page says so.
+at least 140 columns by 43 lines (the debugger and the home screen use the same
+frame).
 
 The removed full-screen editors are a different matter: `update.record` and
 `modify` are gone and are not coming back. See
@@ -217,7 +216,7 @@ The removed full-screen editors are a different matter: `update.record` and
 
 ## What actually gates these
 
-**Having the verb is not the whole story for two things above: cataloguing
+**Having the verb is not the whole story for two things above: cataloging
 globally, and the two full-screen editors.** Both need more than being in
 the VOC — and since every account has the VOC now, this is the part worth
 knowing before you rely on anything in this page as a boundary.
@@ -273,7 +272,7 @@ that rather than being told about `os-on`.
 Compiling into a reused file name previously produced an object SD could
 not subsequently open.
 
-**Object code and the catalogue are replaced on upgrade.** The compiled
+**Object code and the catalog are replaced on upgrade.** The compiled
 programs, the BASIC source SD ships, the messages, include records and VOC
 templates are all overwritten by a new release. **Anything you have written
 into the SDSYS `bp` file, and anything you have compiled from it, survives

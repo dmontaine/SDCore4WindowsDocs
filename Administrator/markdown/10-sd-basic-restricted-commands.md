@@ -14,17 +14,14 @@ the real cause.
 *Italics* mark something you supply, **bold** a word typed as it stands, and
 braces an optional part.
 
-> **This page is generated from `BCOMP`'s own tables** by
-> `tools/mksyntax.py`, the same script that builds the User set's syntax card,
-> and the two **partition** the roster: every name the compiler accepts is on
-> exactly one of them, and the script refuses to write either page if that
-> stops being true.
+> This page and the User set's syntax card **partition** the roster: every name
+> the compiler accepts is on exactly one of them.
 
 ## The three kinds, and how each one fails
 
 | | |
 |---|---|
-| ***(restricted)*** | a statement in `BCOMP`'s `restricted.statements`. An ordinary account gets ***"Unrecognised statement"***, which at least names the right line |
+| ***(restricted)*** | a statement in `BCOMP`'s `restricted.statements`. An ordinary account gets ***"Unrecognized statement"***, which at least names the right line |
 | ***(internal)*** | a function in `BCOMP`'s `int.intrinsics`. ***The message names something else entirely***: an unknown function is read as a matrix reference, so the complaint is ***"Matrix X is not referenced in a DIM statement"*** — reported at the **last line of the program**, nowhere near the call. With three or more arguments it is *"Right bracket not found where expected"* instead, because a matrix takes at most two subscripts |
 | ***(no such thing)*** | in a table with no opcode behind it. It compiles for **nobody** — `$internal` does not help |
 
@@ -96,7 +93,7 @@ itself administrator rights. That was demonstrated, not theorised.
 
 | | |
 |---|---|
-| **`fcontrol.int`** | `fcontrol.int(`*a*, *b*, *c*`)` ***(internal)*** |
+| **`fcontrol.int`** | `fcontrol.int(`*a*, *b*, *c*`)` ***(internal)*** — `fcontrol` is the public function with openQM's numbers; this is the internal one |
 | **`find`** | `find` *x* `in` *arr* {, *occ*} `setting` *f* {, *v* {, *sv*}} `then` … `else` … ***(internal)*** |
 | **`formcsv`** | `formcsv(`*a*`)` ***(internal)*** |
 
@@ -185,7 +182,11 @@ itself administrator rights. That was demonstrated, not theorised.
 | **`set.status`** | `set.status` *n* ***(restricted)*** |
 | **`set.trigger`** | `set.trigger` *file.var*, *mode*, *program* {, *modes*} ***(restricted)*** |
 | **`set.unassigned`** | `set.unassigned` *var* ***(restricted)*** |
+| **`sortadd`** | `sortadd` *key*, *data* ***(restricted)*** — this is the form with no sort variable; the form with one is open to every program (see the syntax card) |
+| **`sortclear`** | `sortclear` ***(restricted)*** — with no sort variable; the form with one is open to every program |
+| **`sortdata`** | `sortdata()` ***(internal)*** — with no argument; the form with a sort variable is open to every program |
 | **`sortinit`** | `sortinit` *keys*, *memory* ***(restricted)*** |
+| **`sortnext`** | `sortnext(`*matrix*`)` — *matrix* is a `dim`med one-dimensional name ***(internal)*** — the form with a sort variable is open to every program |
 
 ## T
 
@@ -214,8 +215,8 @@ itself administrator rights. That was demonstrated, not theorised.
 
 ## See also
 
-[Operating System Access](03-operating-system-access.html) covers the `sh` and
-`!` verbs, which are the other thing an ordinary account cannot reach.
+[Operating System Access](03-operating-system-access.html) covers the `sh`
+verb, which is the other thing an ordinary account cannot reach.
 [Encryption and the SDEXT interface](04-sd-encryption.html) explains why
 `sdext` is on this page and what it costs an application.
 

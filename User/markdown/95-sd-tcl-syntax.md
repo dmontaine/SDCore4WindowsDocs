@@ -9,17 +9,12 @@ have forgotten its arguments, it is here. If you want to know what it
 braces an optional part, and a vertical bar separates alternatives. SD
 folds case, so any of this may be typed in either case.
 
-> **This page is generated, and it is checked for completeness rather
-> than proof-read for it.** The roster is computed from SD's own VOC:
-> every verb record in `newvoc`, plus the ones only `voc_template`
-> has, which is **216** verbs, and `tools/mktclsyntax.py` refuses to
-> write the page if any of them has no line. The shapes come from the
+> This page lists every verb SD ships (**216** of them). The shapes come from the
 > subject documents, where each verb is described in full.
 
-**The "who" column is the VOC, not an opinion.** It is computed by
-reading `newvoc` and `voc_template` directly, so it cannot drift from
-what an account actually gets. **A verb your account does not have is
-not refused — the name is simply not recognised.**
+**The "who" column is the VOC, not an opinion.** It is taken from the
+vocabulary SD installs, so it says what an account actually gets. **A verb your account does not have is
+not refused — the name is simply not recognized.**
 
 | | | |
 |---|---|---|
@@ -37,7 +32,7 @@ not refused — the name is simply not recognised.**
 | **`analyze.file`** | **`analyze.file`** {**`dict`**} *file* {**`statistics`**} {**`lptr`**} |  |
 | **`append.sd.path`** | **`append.sd.path`** {**`on`** \| **`off`**} | S |
 | **`autologout`** | **`autologout`** {*minutes*} |  |
-| **`backup.account`** | **`backup.account`** *account* {*account* …} {**`to`** *folder*}  ·  **`backup.account all`** {**`to`** *folder*} | S |
+| **`backup.account`** | **`backup.account`** *name* … {**`to`** *directory*}  ·  **`backup.account all`** {**`to`** *directory*} | S |
 | **`basic`** | **`basic`** {*file*} *record* {*record* …} |  |
 | **`bell`** | **`bell on`** \| **`off`** |  |
 | **`block.print`** | **`block.print`** *text* |  |
@@ -62,12 +57,12 @@ not refused — the name is simply not recognised.**
 | **`compare.files`** | **`compare.files`** {**`dict`**} *file1* {**`dict`**} *file2* {**`detail`**} |  |
 | **`compile.dict`** | **`compile.dict`** {**`dict`** \| **`data`**} *file* {*i-type* …} {**`no.query`**} {**`no.page`**}  ·  **`compile.dict local`**  ·  **`compile.dict all`** |  |
 | **`config`** | **`config`** {**`lptr`** \| **`gpl`** \| **`contrib`** \| *param* *value*} | S |
-| **`configure.file`** | **`configure.file`** {**`dict`**} *voc.name* {*parameters*} \| **`default`** |  |
+| **`configure.file`** | **`configure.file`** {**`dict`**} *voc.name* {*parameters*} \| **`default`**  ·  **`configure.file`** *voc.name* **`next`** *n* \| **`query`** |  |
 | **`convert.data`** | **`convert.data`** *from.pathname* *to.pathname* {**`from`** *format*} {**`as`** *format*} {**`header`**} {**`no.query`**} |  |
 | **`copy`** | **`copy from`** {**`dict`**} *src* {**`to`** {**`dict`**} *tgt*} {*id* …} {**`(options`**} |  |
 | **`copy.list`** | **`copy.list`** *list* {**`,`***new*} {**`from`** *src*} {**`to`** *tgt*} {*options*} |  |
 | **`count`** | **`count`** {**`dict`**} *file* {*selection*} |  |
-| **`create.account`** | **`create.account user`** *name* {**`ssh`** \| **`api`** \| **`both`** \| **`none`**} {**`sh-on`**} {**`os-on`**} {**`voc-on`**} {**`bp-on`**} {**`dict-on`**} {**`net-on`**} {**`files-on`**} {**`files-write-on`**} {**`files-admin-on`**} {**`ai-on`**} {**`shared-read-off`**} {**`shared-write-on`**} {**`no.query`**}  ·  **`create.account group`** *name* {**`no.query`**}  ·  **`create.account other`** *name* *pathname* {**`no.query`**} | S |
+| **`create.account`** | **`create.account user`** *name* {**`ssh`** \| **`api`** \| **`both`** \| **`none`**} {**`sh-on`**} {**`os-on`**} {**`voc-on`**} {**`bp-on`**} {**`dict-on`**} {**`net-on`**} {**`files-on`**} {**`files-write-on`**} {**`files-admin-on`**} {**`ai-on`**} {**`shared-read-off`**} {**`shared-write-on`**} {**`start-menu`** \| **`start-terminal`**} {**`pins-on`**} {**`recovery-on`**} {**`xfer-on`**} {**`no.query`**}  ·  **`create.account group`** *name* {**`start-menu`** \| **`start-terminal`**} {**`pins-on`**} {**`no.query`**}  ·  **`create.account other`** *name* *pathname* {**`start-menu`** \| **`start-terminal`**} {**`pins-on`**} {**`no.query`**} | S |
 | **`create.file`** | **`create.file`** {**`dict`**} *voc.name* {**`directory`**} {*parameters*} {**`server`** *server* {**`as`** *remote.name*}} |  |
 | **`create.index`** | **`create.index`** *file* *field* … {**`no.nulls`**} {**`pathname`** *path*} |  |
 | **`ct`** | **`ct`** {**`dict`**} *file* {*id* … \| **`*`**} {**`(options`**} |  |
@@ -86,10 +81,10 @@ not refused — the name is simply not recognised.**
 | **`delete.server`** | **`delete.server`** *name* | S |
 | **`disable.index`** | **`disable.index`** *file* *index* … \| **`all`** |  |
 | **`display`** | **`display`** *text* |  |
-| **`docs.install`** | **`docs.install`** *directory* | S |
+| **`docs.install`** | **`docs.install`** *directory*  —  copy the PDF files of a directory into the shared account's pdf directory (administrator) | S |
 | **`dump`** | **`dump`** {**`dict`**} *file* {*id* … \| **`*`**} {**`(options`**} |  |
 | **`echo`** | **`echo on`** \| **`off`** \| **`echo`** to toggle |  |
-| **`ed`** | **`ed`** {**`dict`**} *file* {*id* …} |  |
+| **`ed`** | **`ed`** {**`dict`**} *file* {*id* … \| **`creating.seqkey`**} |  |
 | **`edit`** | **`edit`** {**`dict`**} *file* *record* |  |
 | **`encrypt.key`** | **`encrypt.key set`** *name* *salt* {**`confirm`**}  ·  **`encrypt.key clear`** {*name*}  ·  **`encrypt.key list`** |  |
 | **`execute.list`** | **`execute.list`** *command* {**`;`** *command* …}  —  a pair of brackets `()` in a command is replaced by each id of list 0 in turn |  |
@@ -117,7 +112,7 @@ not refused — the name is simply not recognised.**
 | **`import.xml`** | **`import.xml`** *pathname* *file* {**`id`** *name* \| **`generate`**} {**`overwriting`**} |  |
 | **`inhibit.login`** | **`inhibit.login`** {**`on`** \| **`off`**} | S |
 | **`list`** | **`list`** {**`dict`**} *file* {*selection*} {*fields*} {*options*} |  |
-| **`list.common`** | **`list.common`** {**`all`**} |  |
+| **`list.common`** | **`list.common`** {**`all`**} {**`detail`**} |  |
 | **`list.files`** | **`list.files`** |  |
 | **`list.grants`** | **`list.grants`** *account* | S |
 | **`list.index`** | **`list.index`** *file* {*field* …} |  |
@@ -145,7 +140,7 @@ not refused — the name is simply not recognised.**
 | **`merge.list`** | **`merge.list`** *list.no* *rel.op* *list.no* {**`to`** *list.no*} {**`count.sup`**} |  |
 | **`message`** | **`message`** *user.no* {**`immediate`**} {*text*} |  |
 | **`micro`** | **`micro`** {**`dict`**} *file* *record* |  |
-| **`modify.account`** | **`modify.account`** *account* **`add`** \| **`delete`** *user*  ·  *account* **`ssh`** \| **`api`** \| **`both`** \| **`none`**  ·  *account* **`sh-on`** \| **`sh-off`** \| **`os-on`** \| **`os-off`**  ·  *account* **`sd-on`** \| **`sd-off`**  ·  *account* **`voc-on`** \| **`voc-off`** \| **`bp-on`** \| **`bp-off`** \| **`dict-on`** \| **`dict-off`**  ·  *account* **`net-on`** \| **`net-off`**  ·  *account* **`shared-read-on`** \| **`shared-read-off`** \| **`shared-write-on`** \| **`shared-write-off`**  ·  *account* **`files-on`** \| **`files-off`** \| **`files-write-on`** \| **`files-write-off`** \| **`files-admin-on`** \| **`files-admin-off`**  ·  *account* **`ai-on`** \| **`ai-off`**  ·  *account* **`start-menu`** \| **`start-terminal`** \| **`start-default`**  ·  *account* **`pins-on`** \| **`pins-off`**  ·  *account* **`suspended`** \| **`unsuspended`**  ·  any number of these actions except **`add`** and **`delete`** may follow the account, in one command | S |
+| **`modify.account`** | **`modify.account`** *account* **`add`** \| **`delete`** *user*  ·  *account* **`ssh`** \| **`api`** \| **`both`** \| **`none`**  ·  *account* **`sh-on`** \| **`sh-off`** \| **`os-on`** \| **`os-off`**  ·  *account* **`sd-on`** \| **`sd-off`**  ·  *account* **`voc-on`** \| **`voc-off`** \| **`bp-on`** \| **`bp-off`** \| **`dict-on`** \| **`dict-off`** \| **`recovery-on`** \| **`recovery-off`** \| **`xfer-on`** \| **`xfer-off`**  ·  *account* **`net-on`** \| **`net-off`**  ·  *account* **`shared-read-on`** \| **`shared-read-off`** \| **`shared-write-on`** \| **`shared-write-off`**  ·  *account* **`files-on`** \| **`files-off`** \| **`files-write-on`** \| **`files-write-off`** \| **`files-admin-on`** \| **`files-admin-off`**  ·  *account* **`ai-on`** \| **`ai-off`**  ·  *account* **`start-menu`** \| **`start-terminal`** \| **`start-default`**  ·  *account* **`pins-on`** \| **`pins-off`**  ·  *account* **`suspended`** \| **`unsuspended`**  ·  any number of these actions except **`add`** and **`delete`** may follow the account, in one command | S |
 | **`modify.password`** | **`modify.password`** {*account*} |  |
 | **`move.list`** | **`move.list`** *n* **`to`** *m* {**`keep`**} |  |
 | **`my.menu`** | **`my.menu`**  —  add your own programs to your home screen, when the administrator has allowed it (**`modify.account`** *account* **`pins-on`**) |  |
@@ -175,11 +170,11 @@ not refused — the name is simply not recognised.**
 | **`remove.examples`** | **`remove.examples`** {*account* …}  —  take the shipped example programs, with their compiled objects, out of examples.bp of every account (or the accounts named); programs you added are kept (administrator) | S |
 | **`report.src`** | **`report.src on`** \| **`off`** \| **`report.src`** to toggle |  |
 | **`report.style`** | **`report.style`** {*name* \| **`off`**} |  |
-| **`restore.account`** | **`restore.account`** *zipfile* *account* {*account* …} {**`no.query`**}  ·  **`restore.account`** *zipfile* **`all`** {**`no.query`**}  ·  **`restore.account latest`** *account* {*account* …} {**`no.query`**}  ·  **`restore.account latest all`** {**`no.query`**} | S |
+| **`restore.account`** | **`restore.account`** *archive* *name* … {**`no.query`**}  ·  **`restore.account`** *archive* **`all`** {**`no.query`**}  ·  **`restore.account latest`** *name* … \| **`all`** {**`no.query`**} | S |
 | **`restore.voc`** | **`restore.voc`** *account* *id*  ·  **`restore.voc`** *account* **`all`**  —  put back the newest saved copy of a record the VOC update removed; never overwrites | S |
 | **`revoke`** | **`revoke`** *account* **`from`** *user* | S |
 | **`run`** | **`run`** {*file*} *record* {*arguments*} |  |
-| **`run.in`** | **`run.in`** *account* {**`basic`** *file* *program* {**`debugging`**} {**`no.query`**} \| **`catalog`** *file* *program* {**`local`**} {**`no.query`**} \| **`decatalog`** *program* \| **`delete.catalog`** *program* {**`local`**} \| **`compile.dict`** *file* *item*}  —  the administrator runs one of these commands inside another account and is back in SDSYS afterwards, whatever happens to it; the account's LOGIN does not run and its **`basic`** never catalogs (it is given **`no.catalog`**); refused when a word of the command is not the VOC entry SD supplies in that account, when a file it writes lies outside the account, when a file it opens has a trigger, or (in a compile) at a **`$execute`** line | S |
+| **`run.in`** | **`run.in`** *account* {**`basic`** *file* *program* {**`debugging`**} {**`no.query`**} \| **`catalog`** *file* *program* {**`local`**} {**`no.query`**} \| **`decatalog`** *program* \| **`delete.catalog`** *program* {**`local`**} \| **`debug`** *file* *program* \| **`compile.dict`** *file* *item*}  —  the administrator runs one of these commands inside another account and is back in SDSYS afterwards, whatever happens to it; the account's LOGIN does not run and its **`basic`** never catalogs (it is given **`no.catalog`**); refused when a word of the command is not the VOC entry SD supplies in that account, when a file it writes lies outside the account, when a file it opens has a trigger, or (in a compile) at a **`$execute`** line | S |
 | **`save.list`** | **`save.list`** *list* {**`from`** *list.no*} |  |
 | **`save.stack`** | **`save.stack`** {*name*} |  |
 | **`scan`** | **`scan`** {**`dict`**} *file* {*selection*} {*id* …} {**`all`**} {**`no.case`**} {**`all.match`** \| **`no.match`**} {**`strings`** *file* *record*} **`for`** *"text"* … |  |
@@ -191,7 +186,7 @@ not refused — the name is simply not recognised.**
 | **`send`** | **`send`** *file* *id* {*id* …} |  |
 | **`set`** | **`set`** *name* *value* |  |
 | **`set.ai`** | **`set.ai`**  ·  **`set.ai provider`** *name* \| **`none`**  ·  **`set.ai model`** *provider* *name* \| **`-`**  ·  **`set.ai models`** *provider*  ·  **`set.ai key`** *provider* {**`clear`** \| **`handover`**}  ·  **`set.ai custom`** *name* *url* *format* *auth* *version* *maxparam* \| **`clear`**  ·  **`set.ai ca`** *path* \| **`-`**  ·  **`set.ai limit`** *name* *number*  ·  **`set.ai context`** *hex* \| **`-`**  —  the AI provider, model, key, limits and standing text for every account (administrator); the key is typed at the helper's own prompt | S |
-| **`set.backup.directory`** | **`set.backup.directory`** {*folder*} | S |
+| **`set.backup.directory`** | **`set.backup.directory`** {*directory*} | S |
 | **`set.batch`** | **`set.batch`** {{**`add`** \| **`remove`**} *account* *command*}  —  the commands an account may run from the command line, as a scheduled job runs one (none is allowed as delivered); without arguments, lists them | S |
 | **`set.config`** | **`set.config`** *parameter* *value*  —  changes one of 14 tuning parameters of **`sd.conf`** (administrator, through SDSYS's elevated helper); *value* is a whole number inside the range SD enforces | S |
 | **`set.date`** | **`set.date`** *date* | S |
@@ -204,7 +199,7 @@ not refused — the name is simply not recognised.**
 | **`set.tile`** | **`set.tile`** {*account* *tile* **`on`** \| **`off`**}  —  turn a home screen tile off or on for one account (tiles are on as delivered; sign out cannot be turned off; *tile* **`recent`** is the Recent group); without arguments, says what is off | S |
 | **`set.trigger`** | **`set.trigger`** *file* *name* {*modes*} |  |
 | **`setptr`** | **`setptr`** *unit* \| **`default`**`,`*width*`,`*depth*`,`*top*`,`*bottom*`,`*mode* {`,`*options*}  ·  **`setptr display`**  ·  **`setptr`** *unit*`,`**`display`** |  |
-| **`settings.report`** | **`settings.report`** {*folder*} | S |
+| **`settings.report`** | **`settings.report`** {*directory*} | S |
 | **`sh`** | **`sh`** *command* |  |
 | **`show`** | **`show`** {**`dict`**} *file* {*selection*} |  |
 | **`show.list`** | **`show.list`** {*n*} |  |
@@ -226,7 +221,7 @@ not refused — the name is simply not recognised.**
 | **`tool.accounts`** | **`tool.accounts`**  —  the accounts on one screen (administrator): every account with its kind, suspension, gates that are on and sessions; **`modify.account`** (suspend, add or take away a person) and **`create.account`** behind a box answered Run, and **`delete.account`** from one dialog where the name is typed and Run pressed, with the terminal given to the verb only where it asks for a password | S |
 | **`tool.ai`** | **`tool.ai`**  —  the AI choice page (administrator): the provider with a check box (Anthropic, OpenAI, Google, DeepSeek or Custom), its model (each named provider has a default) and key, and which accounts may use the AI | S |
 | **`tool.audit`** | **`tool.audit`**  —  the audit trail on one screen (administrator): read from its end a screen at a time, with filters by time, event, account, user and text, go to a time, follow, the rotated files, and the lines shown saved to a record of **`$HOLD`**; it runs no command | S |
-| **`tool.backups`** | **`tool.backups`**  —  backups and restores on one screen (administrator): the saved folder, the archives in it with the manifest of each, who else is signed in, and **`backup.account`**, **`restore.account`** and **`set.backup.directory`** behind a box answered Run | S |
+| **`tool.backups`** | **`tool.backups`**  —  backups and restores on one screen (administrator): the saved directory, the archives in it with the manifest of each, who else is signed on, and **`backup.account`**, **`restore.account`** and **`set.backup.directory`** behind a box answered Run | S |
 | **`tool.bulk`** | **`tool.bulk`**  —  a bulk update of one data file of the account: choose the records (conditions, a saved list or every record), up to ten operations from a closed set, a dry run that writes nothing, apply under record locks after a box that asks the file's name typed, and undo of the last run |  |
 | **`tool.catalog`** | **`tool.catalog`**  —  the programs of the account on one screen: compiled or not, current or stale, and where each is cataloged (private, local, global); compile it, catalog it privately or locally, and take a catalog entry out, each through its own verb after a box that shows the command |  |
 | **`tool.config`** | **`tool.config`**  —  the configuration on one screen (administrator): every parameter of **`sd.conf`** with what SD is running with, what the file says, the default and when a change takes effect, the backup directory and the operating system part of the settings report; **`E`** changes one of 14 tuning parameters through **`set.config`** behind a box answered Run, and shows why and the line to add by hand for every other | S |
@@ -238,7 +233,7 @@ not refused — the name is simply not recognised.**
 | **`tool.keys`** | **`tool.keys`** |  |
 | **`tool.menus`** | **`tool.menus`**  —  menu management (administrator): the home screen's tiles for each account, where each account starts, who may add their own programs | S |
 | **`tool.query`** | **`tool.query`** {*file*}  —  the query and report builder: choose a file, mark its columns (break and total), set conditions, sorts and options, read the list / sort / count / sum sentence they make, run it into a results box, and save the query in your file &queries& and load it again; every sentence is checked before it runs |  |
-| **`tool.remote`** | **`tool.remote`**  —  everything that reaches SD from outside, on one screen (administrator): the two doors as the machine reports them (**`remote.api`**, with the terminal given to the verb for its restart question, and **`remote.ssh`**, each changed after a box and the word OPEN to turn one on), the routes of each user account, the SDNet servers (**`delete.server`**; **`set.server`** with the terminal given to the verb), who is connected, and this machine's TLS identity | S |
+| **`tool.remote`** | **`tool.remote`**  —  everything that reaches SD from outside, on one screen (administrator): the two doors as the machine reports them (**`remote.api`**, its restart question asked in the page's own dialog, and **`remote.ssh`**, each changed after a box and the word OPEN to turn one on), the routes of each user account, the SDNet servers (**`delete.server`**; **`set.server`** with the terminal given to the verb), who is connected, this machine's TLS identity, and SDRADMIN's remote administration session (**`remote.sdsys`**, opened after a box and the word OPEN with the terminal given to the verb, shut after a box) | S |
 | **`tool.sessions`** | **`tool.sessions`**  —  sessions, locks and logout on one screen (administrator): every session and every lock, read again every three seconds; each key runs one **`logout`**, **`unlock`** or **`inhibit.login`** command after a box answered Run | S |
 | **`tool.test`** | **`tool.test`**  —  the tests of the account on one screen: the test.* programs of its program files, run with run and judged by the last line N passed, M failed (pass, fail, no verdict; an abort is a fail); run one, all of those shown or the failed ones (after a box), read what a test printed, compile a test that has no object code through basic after a box that shows the command |  |
 | **`tool.voc`** | **`tool.voc`**  —  the vocabulary of the account on one screen: every VOC entry with its type, what it points at, whether the pointer works and how it differs from the VOC SD ships; an entry is edited in the IDE (its voc-edit gate asked), and a keyword entry is never deleted |  |

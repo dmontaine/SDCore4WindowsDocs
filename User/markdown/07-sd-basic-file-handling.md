@@ -132,6 +132,20 @@ There is no "insert only" form — read first if that distinction matters, and
 hold a lock between the read and the write or two sessions will both find it
 absent.
 
+### Files an account may not change: the edit switches
+
+Three kinds of file can be changed only by an account whose administrator
+has given it the matching switch (`voc-on`, `bp-on`, `dict-on`; see the
+*Administrator* set, *Accounts and security*): a **VOC** (a file called
+`voc`), a **dictionary** (a name ending `.dic`) and a **program file** (`bp`,
+`bp.out`, or a name ending `.bp` or `.bp.out`). Without the switch `write`,
+`writev`, `matwrite`, `delete` and `clearfile` on such a file stop the program
+with a message that names the missing switch, or, with an `on error` clause,
+take that clause and leave `status()` set; nothing is changed. Reading is
+never refused, and neither is a file of any other name. The compiler and
+`catalog` refuse in the same way without `bp-on`. The switch is that of the
+account the person signed on to, so `logto` does not change the answer.
+
 ### Letting the file number its records: `creating.seqkey`
 
 ```
@@ -144,22 +158,22 @@ under the counter's next value, **1** in a file that has never used it, and `id.
 is given that id (as text). An update lock on the new id is taken for the write and
 released before the next statement, or with `writeu` **kept**. In a transaction the id is
 taken at the `write`, not at the `commit`, so a transaction that does not commit leaves a gap.
-**A directory file is refused** (*WRITE ... CREATING.SEQKEY needs a hashed file*, message 12353;
+**A directory file is refused** (*WRITE … CREATING.SEQKEY needs a hashed file*, message 12353;
 status 3005 under `on error`) and `id.variable` is left as it was. `fileinfo(file, 1031)` is
 the id of the last record written this way (0 if none), and `configure.file` *file* `next` *n*
 sets the next id (`next query` shows it).
 
-**An id that already names a record is skipped.** Before it uses an id, `write ... creating.seqkey`
+**An id that already names a record is skipped.** Before it uses an id, `write … creating.seqkey`
 looks in the file: if a record is already there (written by a copy, by a load, or by a program that
 chose its own numbers) it takes the next id instead, so that record is never overwritten. **This is
-SD's behaviour, not openQM's** - openQM does not look, and its manual tells the programmer to write
+SD's behavior, not openQM's** - openQM does not look, and its manual tells the programmer to write
 every record of the file this way. The skipped numbers leave gaps. In a transaction only the records
 already committed to the file are looked at; an id this process took earlier is never given out twice.
 **`clear.file` keeps the counter**, so the ids go on from where they were; `configure.file`
 *file* `next 1` starts them again. A file made by `copy` starts its own counter at 1, even when
 records with numeric ids were copied in; the skipping is what protects them. The counter is changed in
 the file header at once, so a power failure can leave it one behind the records; setting it with
-`configure.file ... next` puts that right. The client library
+`configure.file … next` puts that right. The client library
 has it as `SDWriteSeqKey` and `SDWriteuSeqKey` ([SD Client API](37-sd-client-api.html)). On a file
 reached through an `N` pointer to another SD server it works only with the administration
 group on that server ([Programming with a Remote File](42-sd-programming-with-a-remote-file.html)).
@@ -170,13 +184,13 @@ group on that server ([Programming with a Remote File](42-sd-programming-with-a-
 result = fcontrol(file.variable, action {, qualifier})
 ```
 
-`fcontrol` has openQM 4's action numbers, and the tokens `FC$...` are in `keys.h`. An ordinary
+`fcontrol` has openQM 4's action numbers, and the tokens `FC$…` are in `keys.h`. An ordinary
 program may use it; it changes only the file it is given.
 
 | action | token | what it does |
 |---|---|---|
 | 1 | `FC$SYNC` | forced writes of a hashed file: the qualifier 1 turns them on, 0 off, -1 only asks. The result is the state before the call. See *Forced writes* below |
-| 2 | `FC$SET.SEQ.KEY` | the qualifier *n* (1 or more) becomes the next id `write ... creating.seqkey` gives out; returns 1 |
+| 2 | `FC$SET.SEQ.KEY` | the qualifier *n* (1 or more) becomes the next id `write … creating.seqkey` gives out; returns 1 |
 | 3 | `FC$GET.SEQ.KEY` | takes the next id and moves the counter on, so a program can reserve an id without writing a record; the null string if the file is not hashed |
 | 4 | `FC$CRLF` | the line terminator mode of a directory file or a sequential file: the qualifier 0 to 3 sets it, -1 only asks. The result is the mode before the call. See *Line terminators* below |
 | 5 | | does the user have access to the field position in the qualifier? Always 1: SD has no field level encryption |
@@ -231,7 +245,7 @@ open file starts in the mode its VOC entry names with one of the letters in fiel
 ignores them), and `fcontrol(f, FC$CRLF, mode)` changes it for that file variable only. **A file with no letter and no
 `fcontrol` behaves as it always has here:** a `read` ends a line at CR LF or LF and keeps a lone CR, a `write` ends it with
 CR LF, a `readseq` ends a line at LF and drops a CR in front of it, a `writeseq` adds CR LF. So a program that never asks
-changes nothing. **That behaviour is none of the four modes**, so `fcontrol(f, FC$CRLF, -1)` on such a file gives the number
+changes nothing. **That behavior is none of the four modes**, so `fcontrol(f, FC$CRLF, -1)` on such a file gives the number
 SD Core for Linux gives, 0 for a directory file and 2 for a sequential file, which is not exactly what this port does; setting
 a mode makes the file follow the table. The modes are for a directory that another system's tools write: a CRLF file read in
 mode 2 or 3 has no stray CR on each line (it has one on every line in mode 0), and a file read in mode 1 can hold an LF inside
@@ -398,7 +412,7 @@ rtrans({dict} file.name, record.id, field, action)
 
 Both fetch one field of one record from a file, opening it if needed. `trans`
 takes a file name; `rtrans` takes an already-open file variable instead.
-(`xlate` was a second name for `trans` and was removed in 1.2-0.)
+(`xlate` was a second name for `trans` and was removed in 2.0-0.)
 
 The *action* says what to do when the record is missing — **or when the file
 cannot be opened at all**, which takes the same action:
@@ -433,7 +447,10 @@ it is what the examples on this page use.
 
 `set.trigger` attaches a program that runs on every write or delete to a file.
 A trigger runs inside the caller's transaction, so anything it does is part of
-the same all-or-nothing unit.
+the same all-or-nothing unit. A directory file can have one too (18 Oct 2026): it is
+called by `read`, `write`, `delete` and `clearfile`, and not by `writeseq`, `writeblk`,
+`oswrite` or `osdelete`; see *Triggers* in
+[SD TCL - Files and Records](20-sd-tcl-files-and-records.html).
 
 ## What is not here
 

@@ -345,7 +345,7 @@ says why**:
 |---|---|
 | `1` | the mode is not one of those five (this includes openQM's `MD4`, which is broken and which OpenSSL 3 no longer provides by default) |
 | `3003` | no such file |
-| `3035` | the file is outside what the session may reach: a network (API) session is held to its containment, as for `openseq`; a local session is limited only by Windows. An `$internal` program is exempt |
+| `3035` | the file is not one the account may reach: **an account without the OS gate (`os-on`) can read only files inside its own directory**, as `openseq`; a network (API) session is held to its containment. An `$internal` program is exempt, as it is for `openseq` |
 | `1008` | not a regular file (a directory, say), or it could not be read (Windows refused it, for one) |
 
 A digest is not a way to store a password: use the system's login. It is for

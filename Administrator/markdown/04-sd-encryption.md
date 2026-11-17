@@ -13,11 +13,6 @@ the data an application chooses to encrypt.
 SD folds case, so a command may be typed in either case. Commands are shown
 here in lower case.
 
-> **Carried from SD Core for Linux and not yet run on Windows (20 October
-> 2026).** The functions, the `XE` conversion and the `encrypt.key` verb below
-> were written and tested for SD Core for Linux. They are built into this
-> release, but nothing of them has been run on an installed Windows system yet.
-
 ## The short version
 
 **For credentials**, nothing needs configuring. Passwords are never stored. SD
@@ -38,7 +33,7 @@ writes the application.
 
 | Layer | What it is | Protects against | Does not protect against |
 |---|---|---|---|
-| The disk | encryption of the volume the SD directories are on, by the operating system (BitLocker, or the file system's own encryption). SD is unchanged and this set has no page for it | a stolen or discarded disk; a backup copied off the machine | anyone signed in to the running system; an administrator; a mounted volume |
+| The disk | encryption of the volume the SD directories are on, by the operating system (BitLocker, or the file system's own encryption). SD is unchanged. It has a page of its own in this set ([Encrypting the data SD keeps on disk](04a-data-at-rest.html)) | a stolen or discarded disk; a backup copied off the machine | anyone signed in to the running system; an administrator; a mounted volume |
 | The program | `sdkey()` and `sdencrypt()` in an application | a copy of the SD files, a backup, a person with file access but not the key | the program itself, its variables, anyone who holds the key |
 | The conversion | `XE` in a dictionary item, with the key held in a ring in the process | the same, and the field reads decrypted for a session that holds the key | the same, and an administrator or a debugger on that process |
 
@@ -153,18 +148,16 @@ whether `arg` holds several values rather than one.
 internal function table, so an ordinary account does not merely get refused —
 it gets a misleading error. An unknown function is read as a matrix reference,
 so the complaint is about a `dim` statement the program does not contain,
-reported at the last line rather than at the call. That behaviour is covered by
+reported at the last line rather than at the call. That behavior is covered by
 [SD Basic - Restricted Commands](10-sd-basic-restricted-commands.html) in this
 set.
 
 `$internal` needs both halves: the compiler tests for internal mode **and** for
-the administrator flag. Internal mode alone was enough until 13 August 2026 and
-was not safe, because internal programs are the only ones that may set the
-administrator flag.
+the administrator flag.
 
 ### The keys
 
-Eleven are implemented. Every binary value is base64, because the interface
+Every binary value is base64, because the interface
 carries NUL-terminated strings and a raw 32-byte digest would contain a mark
 character about one time in nine. The argument buffers are zeroed when a call
 ends.
@@ -196,14 +189,14 @@ refusal.
 ### What uses it
 
 Nine shipped programs call `sdext()` for the cryptographic keys, and they are the
-whole of that use: `APISRVR`, `CRED_SET`, `CRED_VERIFY`, `SD_GET_SALT`,
-`SD_KEY_FROM_PW`, `SDCLIENT`, and the three key ring subroutines `KEYRING_SET`,
-`KEYRING_CLEAR` and `KEYRING_LIST`. (The `PY_` functions also go through
+whole of that use: `apisrvr`, `cred_set`, `cred_verify`, `sd_get_salt`,
+`sd_key_from_pw`, `sdclient`, and the three key ring subroutines `keyring_set`,
+`keyring_clear` and `keyring_list`. (The `PY_` functions also go through
 `sdext()`, with their own keys.)
 
-The last three are catalogued for general use as `!keyset`, `!keyclear` and
+The last three are cataloged for general use as `!keyset`, `!keyclear` and
 `!keylist`, so an application reaches the ring without reaching `sdext()`. The
-first six are not catalogued for general use, and none has a VOC entry, so they
+first six are not cataloged for general use, and none has a VOC entry, so they
 are not an indirect route to the interface either.
 
 ## Two constants that are not SDEXT keys

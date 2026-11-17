@@ -10,7 +10,7 @@ are shown here in lower case. In the tables, *italics* mark something you supply
 and **bold** marks a word typed as it stands; braces mark an optional part.
 
 > **Every listing on this page was produced by running it**, on SD Core for
-> Windows W1.0-0, in an administrator account. The file being queried is `voc`,
+> Windows, in an administrator account. The file being queried is `voc`,
 > because it is the one file every account has.
 
 ## The one thing to understand first
@@ -70,7 +70,7 @@ clear.select all
 Cleared all numbered select lists
 ```
 
-(`clearselect`, the same verb spelled without the dot, was removed in 1.2-0.)
+(`clearselect`, the same verb spelled without the dot, was removed in 2.0-0.)
 
 ## Building a list
 
@@ -118,8 +118,10 @@ select.dir C:/Users/pat/reports
 ```
 
 There is no option to keep only files or only directories. The directory is read
-**as you**, with the permissions of the Windows user the session runs as. A directory
-that cannot be read is *Cannot read directory* and the
+**as you**, with the permissions of the Windows user the session runs as. A path outside the account's own directory
+needs the `os-on` switch, as `oscopy` does; without it the verb says *name has no
+OS access, so a file or directory outside its own account cannot be reached by
+pathname*. A directory that cannot be read is *Cannot read directory* and the
 pathname; a missing pathname is *Directory pathname required*. A `to` with no
 number, or a bad one, is *Select list number missing or invalid*.
 
@@ -296,7 +298,7 @@ merge.list 3 intersect 4 to 6
 ```
 
 The operator words are **`union`**, **`intersect`** and **`diff`**
-(`intersection` and `difference`, which meant the same, were removed in 1.2-0).
+(`intersection` and `difference`, which meant the same, were removed in 2.0-0).
 `to` *n* names the target, defaulting to list 0,
 and `count.sup` suppresses the count line.
 
@@ -308,7 +310,7 @@ does not for union and intersection.
 
 **All of them are in every account.** Building, saving and combining lists
 is reading, and nothing on this page changes a record. (`select.dir` reads an
-operating system directory, with the Windows user's own permissions.)
+operating system directory, and that is where the `os-on` switch comes in.)
 
 ## See also
 

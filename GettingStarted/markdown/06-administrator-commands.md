@@ -7,18 +7,23 @@ account's; that model is gone. Every ordinary account now gets the same VOC
 — see [Accounts](05-account-types.html) — and administration is not a verb
 an account can be given. It is SDSYS, a single Windows account the installer
 makes, reached by signing in to Windows as SDSYS and running `sd`, elevated.
-Typing one of these verbs from any other account says it is not recognised,
+Typing one of these verbs from any other account says it is not recognized,
 not that you lack permission for it.
 
 ## Accounts
 
 ```
-create.account  user <name> {ssh|api|both|none} {sh-on} {os-on} ...
+create.account  user <name>
 create.account  group <name>
 delete.account  <name>
 modify.account  <name> add|delete <user>
 modify.account  <name> ssh|api|both|none
-modify.account  <name> sh-on|sh-off|os-on|os-off
+modify.account  <name> sh-on|sh-off
+modify.account  <name> os-on|os-off
+modify.account  <name> voc-on|voc-off
+modify.account  <name> bp-on|bp-off
+modify.account  <name> dict-on|dict-off
+modify.account  <name> files-on|files-off
 modify.account  <name> suspended|unsuspended
 update.accounts {all}
 clean.account
@@ -28,9 +33,12 @@ Covered in full in [Accounts](05-account-types.html) and
 [Managing accounts](05a-managing-accounts.html). The points worth repeating
 here:
 
-- **A new user account starts with every door shut.** Say nothing and
-  `create.account user` gives it no ssh, no API, no `sh`, no `OS.EXECUTE`; you
-  name each thing it is to have (`ssh`, `api` or `both`, `sh-on`, `os-on`, ...).
+- **A new account has no ssh, no API, no `sh` and no `OS.EXECUTE`, and it
+  cannot save a change to a VOC, a program file or a dictionary.**
+  `ssh`, `api`, `both`, `sh-on`, `os-on`, `voc-on`, `bp-on` and `dict-on` give
+  them, at `create.account` or later with `modify.account`; SDSYS has no ssh
+  route, and its API door from another computer opens only when the
+  administrator runs `remote.sdsys api on`, which is not one of these settings.
 - **`modify.account` says what the access *is*, not what to add.**
   `modify.account fred api` takes ssh away.
 - **`modify.account` takes several actions in one command**
@@ -108,7 +116,9 @@ config
 set.date
 ```
 
-**`config`** reports the configuration parameters in force.
+**`config`** reports the configuration parameters in force. **`set.date`**
+sets the date *this session* sees, for testing date-dependent programs; the
+machine's clock and every other session are untouched.
 
 ## The remote doors
 
@@ -128,8 +138,7 @@ one account's — see [ssh access](08-ssh-access.html) and
 **Who may use `sh` is a switch on each account, not a matter of elevation.**
 `sh` is in every ordinary account's VOC; whether it *does* anything is
 a separate permission, **kept in the account's own record and off for a new
-account.** (Until 25 October 2026 it was a record per person in a file,
-`os.users`; that file is no longer read.)
+account.**
 
 ### How you grant it
 
@@ -201,8 +210,7 @@ newline — for every account, SDSYS included, switch or no switch. (A bare `sh`
 with nothing after it, is not a command, so it is not filtered: it starts an
 interactive shell for an account that has `sh-on`, and `exit` brings you back.)
 Write the work into a script and run the script:
-`sh powershell -File .\nightly.ps1`. (Until 25 October 2026 a person on the
-`os.users` list could type `sh dir | more`; nobody can now.)
+`sh powershell -File .\nightly.ps1`.
 
 **`os-on` is also what lets an account name a file outside its own
 directory.** Without it, opening a file by its path, `dir()`, `select.dir`,
@@ -224,7 +232,9 @@ no API route to arrive over in the first place — see
 ## The full list
 
 **`create.account`** · **`delete.account`** · **`modify.account`** ·
-**`update.accounts`** · **`clean.account`** · **`grant`** · **`revoke`** ·
+**`update.accounts`** · **`clean.account`** · **`backup.account`** ·
+**`restore.account`** · **`set.backup.directory`** · **`set.config`** ·
+**`settings.report`** · **`grant`** · **`revoke`** ·
 **`list.grants`** · **`unlock`** · **`config`** · **`listu`** ·
 **`list.readu`** · **`list.locks`** · **`clear.locks`** · **`lock`** ·
 **`logout`** · **`set.date`** · **`remote.api`** · **`remote.ssh`** ·

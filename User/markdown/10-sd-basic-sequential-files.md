@@ -46,6 +46,8 @@ and the next `writeseq` takes *its* `else` branch.
 | **append** | position at the end, so writes add to what is there |
 | **overwrite** | truncate on open |
 | **readonly** | open without taking a write lock |
+| **creating** | when the name does not exist, make the file now (an existing file is opened as without the word). **The file is made exclusively** (since 30 October 2026): if something has taken the name by the moment it is made, nothing is created and `status()` is 6032. **The file is made only once the lock on its name is held** (since 2 November 2026): when another session holds the name, the `locked` clause runs (or, without one, the open waits) and nothing is made - before, an empty file was left behind. The directory it goes in must be there; it is never made |
+| **shared** | includes `creating`, but keeps open-or-create, so that several processes can add to one file; it is not exclusive |
 
 ## Reading
 
@@ -140,17 +142,18 @@ osdelete pathname
 `osread` reads the **whole** of the file into the variable, byte for byte: a
 newline stays a newline and is not turned into a field mark, and a mark
 character stays what it is. `then` is taken when the file was read; `else` when
-it could not be opened or read (a missing file, or no Windows permission on it),
-and the variable is then the null string. A file over
+it could not be opened or read (a missing file, no permission, **a path the
+account may not reach**), and the variable is then the null string. A file over
 a gigabyte takes `else`. `oswrite` makes the file, or replaces it and **cuts it
 to the length of the data**, with no change to a byte; `status()` is 0 if it was
 written. `osdelete` deletes a file and says nothing if it cannot: `status()`
 tells. **It deletes a file only**, where the openQM statement deletes a
 directory too, so that a mistake cannot take a directory and what is in it.
 
-They are built on `openseq` and `deleteseq`, so **they reach what those reach**:
-whatever the Windows user the session runs as can read, write or delete (a
-failure leaves `status()` at the system error, 3035 for a refused write).
+They are built on `openseq` and `deleteseq`, so **the OS-access gate is the
+same as theirs**: an account without it reaches only its own directory by these
+statements (`oswrite` to anywhere else leaves `status()` 3035 and writes
+nothing), and one with it reaches what the Windows user the session runs as can.
 openQM's `on error` clause is not supported; a fault is the `status()`. They
 take no locks.
 
@@ -230,7 +233,8 @@ how a program tells the two apart.
 **The wait is for each character, not for the whole read**: a read of 100 characters with
 `waiting 5` can take as long as the characters keep arriving inside five seconds of each other.
 
-A pipe or device is opened by its pathname, as any other `openseq` of a path. **It has not been
+A pipe or device is opened by its pathname, so the account's OS access gate applies as it does to
+any other `openseq` of a path. **It has not been
 tried here on a pipe, a serial port or any other device**; it has been tried on an ordinary file. `get` with no `from` is still a class
 module's property declaration, as in [SD Basic - Modern Program Structure](18-sd-basic-modern-program-structure.html).
 

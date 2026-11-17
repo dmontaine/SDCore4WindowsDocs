@@ -231,7 +231,7 @@ print total '10r2'
 With `t` holding `1234.5`, `t '10R2'` gives `␣␣␣1234.50`. **There is
 no `fmt` keyword in this form** — writing `t fmt '10R2'` compiles `fmt` as a
 variable name and aborts at run time with *"Unassigned variable FMT"*. The
-qualifier is recognised by juxtaposition alone, which is why it is allowed only
+qualifier is recognized by juxtaposition alone, which is why it is allowed only
 where an expression cannot be followed by something else.
 
 ## Characters and codes
@@ -276,7 +276,7 @@ array.
 
 Missing pieces leave their variables empty; extra pieces are discarded.
 
-`dparse.csv` does the same for a CSV line, honouring quoting — see
+`dparse.csv` does the same for a CSV line, honoring quoting — see
 [SD Basic - CSV Files](11-sd-basic-csv-files.html).
 
 ## Dictionary conversions
@@ -300,10 +300,16 @@ getnls(key)
 setnls key, value
 ```
 
-Report and set three values, named by the keys `NLS$CURRENCY` (the currency
-symbol), `NLS$THOUSANDS` and `NLS$DECIMAL` (the separators). **`setnls` changes them for the session**, so a
+Report and set the currency symbol, the thousands separator and the decimal
+separator — keys `NLS$CURRENCY`, `NLS$THOUSANDS` and `NLS$DECIMAL` from
+`syscom keys.h`. SD Core is English only; these three settings are all there
+is. **`setnls` changes them for the session**, so a
 program that alters them and then aborts leaves the session changed. Read the
 old value, set the new, and restore it on the way out.
+
+At the command prompt the `nls` verb does the same: `nls` alone shows all
+three, `nls currency` (or `thousands`, `decimal`) shows one, `nls currency USD`
+sets one for the session, and `nls default` puts back `$`, `,` and `.`.
 
 ## What is not here
 

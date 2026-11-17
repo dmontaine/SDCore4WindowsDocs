@@ -9,12 +9,12 @@ This page continues [Installing SD Core](01-installation.html).
 
 | Replaced | Kept, and not touched |
 |---|---|
-| the catalogue and compiled programs | your accounts and their passwords |
-| the BASIC source | the private catalogue |
+| the catalog and compiled programs | your accounts and their passwords |
+| the BASIC source | the private catalog |
 | the messages and include records | which Windows users are linked to which SD accounts |
 | the VOC templates and library routines | the commands each account may run |
 | the SDSYS `BP` programs | your print queue and held reports |
-| terminfo, the licence, the contributor list | everything under your own accounts, and `sd.conf` |
+| terminfo, the license, the contributor list | everything under your own accounts, and `sd.conf` |
 
 Anything SD created while it was running — your VOC included — is left exactly
 as it is.
@@ -52,7 +52,7 @@ Two limits are worth knowing before you rely on it.
 > (`restore.voc` puts it back). Anything else the update leaves alone, and a
 > record you marked `[locked]` is kept — a locked verb excepted.
 
-> **A record you have customised can be held back on purpose.** Put `[locked]`
+> **A record you have customized can be held back on purpose.** Put `[locked]`
 > in field 1 after the type code and the upgrade leaves that record alone,
 > naming it in a message so you know what was withheld — and therefore which
 > corrections this release made that you have not taken. Verbs are the

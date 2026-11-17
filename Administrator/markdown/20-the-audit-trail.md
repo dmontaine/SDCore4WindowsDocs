@@ -1,5 +1,5 @@
 Title: The Audit Trail
-Subtitle: What SD writes to its audit trail, who writes it, where it is kept, how it is rotated, and how to read it.
+Subtitle: What SD writes to its audit trail, who writes it, where it is kept, how it is rotated, and the full-screen page that reads it.
 
 SD writes **one line to the audit trail for every act that changes who may do what, or that crosses a
 boundary**: a sign-on, a refused request, an account created or changed, a gate turned on, a backup, a

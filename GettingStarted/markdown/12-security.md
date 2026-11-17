@@ -2,13 +2,13 @@ Title: Security
 Subtitle: Who you are, what that gets you, and what actually protects the database.
 
 The identity model in SD Core is not OpenQM's and not SD on Linux's. It is
-worth understanding before you test anything else, because several behaviours
+worth understanding before you test anything else, because several behaviors
 that look like bugs are consequences of it.
 
 ## What ships secured, before you change anything
 
 **A fresh install starts closed and stays closed until an administrator
-opens something.** Nothing below is a setting you have to remember to
+opens something remote.** Nothing below is a setting you have to remember to
 apply — it is what `create.account` and the installer already do:
 
 | | |
@@ -16,12 +16,16 @@ apply — it is what `create.account` and the installer already do:
 | Every SD account | a standard Windows account with no privileged token — see [Being a Windows administrator gets you nothing](#being-a-windows-administrator-gets-you-nothing) |
 | ssh | `ForceCommand`s straight into `sd`, no shell, no `sh`, no `OS.EXECUTE` — see [ssh access](08-ssh-access.html) |
 | the account's `sh-on` and `os-on` switches | off for every account `create.account` makes — `sh`, `OS.EXECUTE`, the two full-screen editors and any file outside the account's own directory are all refused until SDSYS grants them, account by account — see [Administrator commands](06-administrator-commands.html#how-you-grant-it) |
+| ssh and the API, per account | **off for a new account**; SDSYS gives each account the route it needs (`ssh`, `api`, `both`) — see [Managing accounts](05a-managing-accounts.html) |
+| Saving a change to a VOC, a program file or a dictionary (and compiling) | **off for a new account**, in three independent switches (`voc-on`, `bp-on`, `dict-on`) that SDSYS turns on account by account; reading is never stopped — see [Managing accounts](05a-managing-accounts.html) |
+| The `shared` account | the one door that is **open** in a new installation, on purpose: every account can read the data files of the `shared` account by file name, and none can write them — see [The shared account](#the-shared-account-is-open-to-read-by-design) |
 | The API | off (`APIPORT` unset in `sd.conf`) until an administrator turns it on — see [API access](09-api-access.html) |
+| SDSYS | no ssh route, ever; no API route from another computer until an administrator has opened that door for chosen addresses (`remote.sdsys api on`), and then its SD password stands between those addresses and the administrator — the one thing this page treats as non-negotiable rather than a default |
 | The console and Remote Desktop | denied to every ordinary account (`sdsshonly`) — see [Accounts](05-account-types.html) |
 
 **Only SDSYS administers SD.** No other account, whatever its Windows group
 membership and whether or not it is elevated, can create, change or delete
-accounts, grant `sh-on` or `os-on`, or catalogue globally.
+accounts, grant `sh-on` or `os-on`, or catalog globally.
 
 **An ssh session's reach is bounded by NTFS, not by SD.** Every file it
 touches, inside SD or through a granted `sh` or `OS.EXECUTE`, is opened under
@@ -41,6 +45,19 @@ and disabling its break key (`pterm break off`, so it cannot interrupt out
 to a TCL prompt). Neither is a keyword on `create.account` — both are done
 by hand, per account, when that account's whole purpose is one application
 and nothing else.
+
+## The shared account is open to read, by design
+
+**The `shared` account that the installer makes is the one place where the
+default is open rather than closed.** Every account, new or old, can open its
+data files by file name (`shared.read` is on unless SDSYS turns it off with
+`shared-read-off`), and none can write them until SDSYS gives it
+`shared-write-on`. Nobody but SDSYS can sign on to `shared` or change the
+structure of its files. So **anything placed in `shared` is readable by every
+account that has not had the right taken away: put nothing in it that is not
+meant for everyone.** An account with `sh-on` or `os-on` can also reach the
+files from the operating system. The verbs, programs and catalog of `shared`
+are never reached from another account. See [Accounts](05-account-types.html#the-shared-account).
 
 ## Signing in asks for no password
 
@@ -124,7 +141,7 @@ That is not a weakening. Every SD process opens the database directly, in your
 own process, under your own token. There is no data server standing between
 you and the files. So:
 
-> **While SD runs as the invoking user, account passwords organise access; they
+> **While SD runs as the invoking user, account passwords organize access; they
 > do not secure it.**
 
 A password gate inside SD is not a file security boundary. The old password
@@ -199,7 +216,7 @@ sealed:** `phantom` gives the new process a secret in its environment and seals 
 records with it, and the new process runs nothing from them unless the seal checks
 (*Processes and phantoms* in the User's guide).
 
-The global catalogue and the pcode library are locked the same way.
+The global catalog and the pcode library are locked the same way.
 
 > **Every install sets these, an upgrade included.** If the closing screen says
 > one was NOT locked, it names the path; run this from an elevated prompt with

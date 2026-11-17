@@ -6,7 +6,7 @@ selects records, sorts them, formats them into columns and totals them, and it
 does all of that from one line of typing.
 
 **Thirteen verbs on this page are the same program.** `list`, `sort`, `count` and
-the rest are one catalogued program reached through fifteen VOC records, each
+the rest are one cataloged program reached through fifteen VOC records, each
 carrying a number that says which verb was typed. Two of the fifteen —
 `select` and `sselect` — build a list instead of printing one and are covered in
 [SD TCL - Select Lists](22-sd-tcl-select-lists.html).
@@ -16,7 +16,7 @@ shown here in lower case. In the tables, *italics* mark something you supply and
 **bold** marks a word typed as it stands; braces mark an optional part.
 
 > **Every listing on this page was produced by running it**, on SD Core for
-> Windows W1.0-0. The file being queried is `voc`, because it is the one file
+> Windows. The file being queried is `voc`, because it is the one file
 > every account has and it is interesting enough to ask real questions of.
 
 ## The shape of a query
@@ -95,7 +95,7 @@ spellings in a row returned identical counts on the same data.
 
 Both spellings of *not equal* (`ne` and `<>`) returned **331** on the same query, and
 `<` and `lt` both returned **381**. (The words `before`, `after`, `equal`,
-`greater`, `less`, `matches`, `matching`, `not.matching` and `spoken` were removed in 1.2-0:
+`greater`, `less`, `matches`, `matching`, `not.matching` and `spoken` were removed in 2.0-0:
 in a query they are taken as record ids.)
 
 ### Joining clauses
@@ -391,7 +391,7 @@ options inside the text for page number, date and time.
 | **`calc`** | evaluate an I-type against the totals |
 | **`break.on`** *field* | start a new subtotal group when the field changes |
 | **`break.sup`** *field* | break on a field without printing it |
-| **`grand.total`** *"text"* | label the final total line (`caption` was a second name and was removed in 1.2-0) |
+| **`grand.total`** *"text"* | label the final total line (`caption` was a second name and was removed in 2.0-0) |
 
 `break.on` is what turns a flat listing into a report with subtotals; the field
 it breaks on almost always wants to be a sort key as well, or the groups come
@@ -404,7 +404,7 @@ last record before the break. It is empty on a field without `X`.
 A report sent to the default printer (`lptr`) closes a printer that was already
 active when the report began — a program's own `printer on`, say — so the report and
 the program's output are **two print jobs**. (`option query.merge.print`, which kept them
-as one, was removed in 1.2-0, as were `query.footer.pause` and `paginate.on.heading`.)
+as one, was removed in 2.0-0, as were `query.footer.pause` and `paginate.on.heading`.)
 
 ## Taking only some of the records
 
@@ -430,7 +430,7 @@ whole one.
 |---|---|
 | **`lptr`** {*n*} | to print unit *n*, 0 by default |
 | **`crt`** | to the screen, overriding a default of print |
-| **`no.page`** | do not pause at the end of each screen (`nopage` was a second spelling and was removed in 1.2-0) |
+| **`no.page`** | do not pause at the end of each screen (`nopage` was a second spelling and was removed in 2.0-0) |
 | **`file`** | to a file rather than a device |
 
 Printing, print units and `$hold` are in

@@ -15,7 +15,7 @@ in lower case. In the tables, *italics* mark something you supply and **bold**
 marks a word typed as it stands; braces mark an optional part.
 
 > **The listings on this page were produced by running them**, on SD Core for
-> Windows W1.0-0. The two exceptions are `phantom` and `pdebug`, and the reason
+> Windows. The two exceptions are `phantom` and `pdebug`, and the reason
 > is on the page: neither can be driven down a pipe, so both are described from
 > their source rather than shown.
 
@@ -57,6 +57,13 @@ and the address in hexadecimal.
 
 For a process that is **waiting for a lock**, `pstat` also shows when the wait
 began, as `list.readu detail` already did.
+
+**What `pstat` prints is another session's text, and it is made safe first** (since 28 October 2026).
+The command, the record it waits for, its program names and its account are shown with each control
+character, `del`, byte from 128 to 159 and mark character as `?`, so that a session cannot send a code to
+your terminal by what it types or locks. The text of `@pstat` (below) gets the same treatment, except that
+its marks are still shown as spaces. A long command or `@pstat` text used to be saved in the status record
+with the wrong length; that is fixed.
 
 ### The levels are additive
 
@@ -320,18 +327,21 @@ pdump n
 
 Writes a snapshot of session *n* to a file and carries on; nothing is stopped
 and nothing is lost. The file is `sddump.`*n* in the directory named by the
-`DUMPDIR` configuration parameter, or in SD's own system directory when
-`DUMPDIR` is empty, which is how it ships:
+`DUMPDIR` configuration parameter. The shipped `sd.conf` sets it to
+`C:\ProgramData\SD\sdsys\dumps`; if it is empty, the dump goes to SD's own system
+directory instead:
 
 ```
-Dumping process state as C:\ProgramData\SD\sdsys/sddump.27
+Dumping process state as C:\ProgramData\SD\sdsys\dumps/sddump.27
 ```
 
 It holds the `@`-variables, the current sentence and command, the call stack,
 open files and their locks, and named and unnamed common — which is to say **it
-holds application data**, and it is written where any SD user can read it.
-Treat a dump as you would the data of the program that produced it, and delete
-it when the question it was written to answer has been answered.
+holds application data**. The installer makes the `dumps` directory so that an
+SD user can add a dump but cannot list the directory, and a dump is readable by
+the user who wrote it, by SYSTEM and by the Administrators. Treat a dump as you
+would the data of the program that produced it, and delete it when the question
+it was written to answer has been answered.
 
 | refusal | when |
 |---|---|

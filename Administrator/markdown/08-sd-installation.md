@@ -40,7 +40,7 @@ The check runs before the wizard is drawn, so a refusal costs nothing. Remove
 the other server, or put the ssh configuration back the way Windows shipped it,
 and run the installer again.
 
-This is why SD can make promises about ssh behaviour at all: it configures the
+This is why SD can make promises about ssh behavior at all: it configures the
 server so that SD sessions land inside SD and cannot reach a command prompt,
 and it can only promise that about a server it installed and configured itself.
 
@@ -149,6 +149,44 @@ the daemon *decides on* is read from it. In particular the daemon, `sdwind`, whi
 as SYSTEM, takes the system directory from the `SDSYS=` line of `sd.conf`, not from the
 shared memory, and does not start without that line.
 
+**The audit trail** (`C:\ProgramData\SD\sdsys\audit`) lets the SD users group **add** to the end of the file and
+nothing else: an ordinary user cannot read it, overwrite a line, rename it or delete it. **A session sends each record
+to the SD service** (`sdsvc.exe`, which runs as LocalSystem) over the named pipe `\\.\pipe\sd-audit`, **and the
+service writes the line**. The `user=` and the `pid=` on the line are the ones Windows reports for the sending
+process, not anything in the record's text, so no one can make a line that names someone else; the text of a record
+comes after them, and the `uid=` is the SD user number the sender gave, which the service cannot check. If the
+service is not running a session appends to the file itself, and such a line's `user=` is the name the session gives.
+**One user cannot flood the trail.** The service takes at most 600 records from one Windows user in any 60 seconds
+and drops the rest; when that user's minute is over it writes one line saying how many were dropped. The figure is
+fixed when SD is built, not a setting. **The service rotates the file:** at one megabyte it renames it to
+`audit.yyyymmdd-hhmmss` and starts a new one with the same permissions, with no restart of SD. SD deletes nothing;
+pruning the old files is yours. [The Audit Trail](20-the-audit-trail.html) has the rest.
+
+### What this does not close
+
+The lock table, the file table and the user table are still in the shared memory and still writable by an SD user
+with a shell: such a person can release other people's locks, log other sessions out or fill the user table. That is
+damage and denial of service, not a way to a privilege. The gates are walls for an SD *session*; a person with a
+shell is trusted with the shared memory. Giving SD users no way to a shell, or only the forced-command ssh route, is
+how an installation that cannot accept that closes it.
+
+**The file `$ipc`.** `$ipc`, in the system directory, is the one SD file every user's process has to write, so a
+member of `sdusers` with a shell can write it as well. It holds working records and nothing a session is configured
+from: the start-up records of a phantom (its command, its `DATA` queue and its log file name), the messages waiting
+for a user, the phantom register that `status` shows, and the tables that `profiler`, `hsm` and `pstat` ask another
+session for. A phantom does not take its command, options, `DATA` lines or log file from it on trust. `phantom`
+seals the records with a secret that it makes for each phantom and gives only to the new process, in its
+environment, which the new process copies and overwrites at once. The phantom runs, stacks and sets nothing unless
+the seal on what it read checks; if it does not, the phantom ends at once, says so in its `como` log and to its
+parent, and writes `phantom refused` to the audit trail. SD does not run, stack or set anything from the other
+records; they are only shown. The conversation of the phantom debugger (`pdebug`) is not carried in `$ipc`: its
+messages are records of a directory file in a private directory below the profile of the person who runs `pdebug`
+(`AppData\Local\sd\pdebug`). SD finds the profile from the person's sign-in token (never from an environment
+variable) and uses the directory only when every directory from the profile down is a real directory that nobody
+else can write and the store itself is the person's alone. A `pdebug` and the phantom it debugs therefore reach each
+other only when both run as the same Windows user, which is how they are started in practice. `pdebug` says it
+cannot start (message 12953) when the store cannot be set up.
+
 ## Upgrading
 
 Installing a new release over an existing one replaces the shipped files and
@@ -156,11 +194,11 @@ preserves everything the site owns.
 
 | Replaced | Preserved |
 |---|---|
-| the catalogue and compiled programs | your accounts and their passwords |
-| the BASIC source | the private catalogue |
+| the catalog and compiled programs | your accounts and their passwords |
+| the BASIC source | the private catalog |
 | the messages and include records | which Windows users are linked to which SD accounts |
 | the VOC templates and library routines | your print queue and held reports |
-| terminfo, the licence, the contributor list | everything under your own accounts, and `sd.conf` |
+| terminfo, the license, the contributor list | everything under your own accounts, and `sd.conf` |
 
 **An upgrade asks nothing.** No tasks page is shown, on the principle that the
 machine already carries the answers and every setting has a verb that changes

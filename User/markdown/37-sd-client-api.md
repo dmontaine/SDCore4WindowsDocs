@@ -77,9 +77,10 @@ input has no business in a directory that goes on the PATH.
 | `SDConnect(host, port, user, pass, account)` | over the network, to port **4247** (the default when you name none) |
 | `SDConnectLocal(account)` | on the same machine. Sends no password and never did |
 
-> `SDConnectUDS` (Unix Domain Socket) appears in the header but is not
-> applicable on Windows. The Windows port supports local and TCP
-> connections only.
+> **`SDConnectUDS` (Unix Domain Socket) is not available, on either
+> port.** It sent its credential over the socket in a way that predates
+> SCRAM, and was removed here for the same reason the old cleartext API
+> login was: `SDConnect` and `SDConnectLocal` are the two routes.
 
 ### SDConnectLocal has a requirement the other does not
 
@@ -126,7 +127,11 @@ only if the account it entered has the `sh-on` and `os-on` switches (off for a n
 account); an administrator should weigh that before giving either to an account
 that also has the API route.
 
-**Threads** (from the 1.2 release; before that the library kept its state in plain globals and a program with more than one thread could not use it safely). The client library may be used from several threads of one process, as OpenQM's QMClient may, on these rules:
+**A session whose server has ended** — its `AUTOLOGOUT` period ran out, the administrator logged it out, the process was killed — does not hang the client: the next request on it comes back empty, `SDError()` says the pipe or connection failed, and `SDDisconnect()` cleans it up. A session can set its own limit by executing the `AUTOLOGOUT` command (`SDExecute("AUTOLOGOUT 10")`: ten minutes idle; the period is in minutes, 0 turns it off).
+
+**`MASTER.LOGIN`.** If the administrator has put a `MASTER.LOGIN` paragraph in the SDSYS VOC it is run when an API session first enters an account, before that account's own `LOGIN` paragraph, as it is for a terminal session; entering another account with `SDLogto` runs the new account's `LOGIN` only. A session can be recognized inside either paragraph by `@TTY`, which is `apisrvr`.
+
+**Threads** (from 15 Oct 2026; before that the library kept its state in plain globals and a program with more than one thread could not use it safely). The client library may be used from several threads of one process, as OpenQM's QMClient may, on these rules:
 
 - **The current session belongs to the thread.** `SDSetSession` and `SDGetSession` act on the calling thread's own selection, so two threads can work on two sessions at the same time. A thread that has not selected a session starts on session 0, which is the one the first connection of the process received; a thread given a session by another thread must `SDSetSession` it before use.
 - **A session must not be used by two threads at the same time.** The library does not serialise requests on one session. If more than one thread can reach it, take your own lock round each action, and treat an `SDExecute` and the `SDRespond` calls that answer it as one action.
@@ -169,14 +174,16 @@ A packet that declares anything else (below 6, negative, or over the limit) is n
 
 | Function | Returns | Description |
 |---|---|---|
-| `SDConnect(host, port, user, pass, account)` | Boolean | connect over TCP |
+| `SDConnect(host, port, user, pass, account)` | Boolean | connect over TCP. A connection that fails returns false and `SDError()` says why; the session number it was given is the current one afterwards, so **select the session you were using with `SDSetSession`** before going on |
 | `SDConnectLocal(account)` | Boolean | connect on the same machine |
 | `SDConnected()` | Boolean | is a session active |
 | `SDDisconnect()` | none | end the current session |
 | `SDDisconnectAll()` | none | end all sessions |
 | `SDGetSession()` | Integer | get the current session number |
 | `SDSetSession(session)` | Boolean | switch to a session |
-| `SDLogto(account)` | Boolean | switch to another account |
+| `SDLogto(account)` | Boolean | switch to another account: true if the server moved there, false (and `SDError()` says why) if not, in which case the session stays where it was |
+
+**Sessions.** One program can hold up to **1024** sessions at once, each with its own server process, number and account (it held four before 15 Oct 2026). The server's own user table (`USERPOOL`, 1023 by default) is the real ceiling. Open more than one with `SDConnect` or `SDConnectLocal`, one after another, noting `SDGetSession()` each time, and move between them with `SDSetSession`.
 
 ### File operations
 
@@ -192,6 +199,7 @@ A packet that declares anything else (below 6, negative, or over the limit) is n
 | `SDDelete(fileNo, id)` | none | delete a record |
 | `SDDeleteu(fileNo, id)` | none | delete with an update lock |
 | `SDRecordlock(fileNo, id, updateLock, wait)` | none | set a record lock |
+| `SDRecordlocked(fileNo, id)` | Integer | query the lock on a record, as `recordlocked()` does: **-3** another user holds a file lock, **-2** an update lock, **-1** a read lock; **0** not locked; **1** this session holds a read lock, **2** an update lock, **3** a file lock. A file number that is not open gives 0 and `SDError()` says so |
 | `SDRelease(fileNo, id)` | none | release a record lock |
 | `SDMarkMapping(fileNo, state)` | none | enable/disable mark mapping |
 
@@ -210,11 +218,12 @@ A packet that declares anything else (below 6, negative, or over the limit) is n
 | Function | Returns | Description |
 |---|---|---|
 | `SDField(str, delim, first, occurrences)` | String | extract a field from a delimited string |
-| `SDDcount(src, delim)` | Long | count delimiters |
+| `SDDcount(src, delim)` | Long | the number of delimited items: 1 more than the number of times `delim` occurs, counting non-overlapping occurrences from the left; 0 for a null string or a null delimiter. **The delimiter may be more than one character** (`a::b::c` by `::` is 3); before 15 Oct 2026 only its first character was used |
 | `SDChange(str, old, new, occurrences, start)` | String | replace substrings |
 | `SDMatch(src, template)` | Boolean | match a string against a pattern |
 | `SDMatchfield(src, template, component)` | String | extract a matched component |
 | `SDSubstr(...)` | String | substring (language-specific) |
+| `SDChecksum(data)` | Long | the number SD's own `checksum()` gives for the same string, worked out in the library **with no connection to SD**. A byte of 128 or more is taken as a signed character, as the server reads it. A check for accidental damage, not a hash for security (the message digests are the server's `digest()`); the null string is 0 |
 
 ### Command execution
 
@@ -223,8 +232,9 @@ A packet that declares anything else (below 6, negative, or over the limit) is n
 | `SDExecute(cmnd, err)` | String | execute a TCL command |
 | `SDRespond(response, err)` | String | respond to a prompt from `SDExecute` |
 | `SDEndCommand()` | none | end a multi-line command |
-| `SDCall(name, argcount, ...)` | none | call a catalogued subroutine (pass by reference) |
-| `SDCallx(name, argcount, ...)` | Integer | call a catalogued subroutine (pass by value) |
+| `SDCall(name, argcount, ...)` | none | call a cataloged subroutine; the arguments the subroutine changed are put back into yours |
+| `SDCallx(name, argcount, ...)` | none | the same call, but your arguments are **not** changed: read each one the subroutine changed with `SDGetArg(n)` afterwards |
+| `SDGetArg(argNo)` | String | argument *n* (1 to 20) of the last `SDCallx`; free it with `SDFree` |
 
 > `SDCall` and `SDCallx` are variadic: 0 to 20 arguments. Each binding
 > provides per-arity wrappers — `SDCall0` through `SDCall20`, and
@@ -243,7 +253,6 @@ A packet that declares anything else (below 6, negative, or over the limit) is n
 | `SDReadNext(listNo, err)` | String | read next select list id |
 | `SDReadList(listNo, err)` | String | read the whole list as a dynamic array |
 | `SDClearSelect(listNo)` | none | clear a select list |
-| `SDRelease(fileNo, id)` | none | release a read lock |
 | `SDIndices(fileNo, indexName)` | String | `indices()` on the server: with a null name the names of the file's alternate key indexes, with a name that index's details; the null string for an index the file has not |
 
 ### The server: revision, variables, SYSTEM(), TRANS() and transactions
@@ -291,15 +300,12 @@ Their numbers begin at 10001 and are not those of `SDOpen`, so a number of one k
 
 **The gates are the ones `openseq` has for any program.** A session whose server is restricted with `SDCLIENT` cannot open any file. An item of a directory file is an SD file and is opened through the VOC, as `openseq` opens it; a file flagged trusted is refused. **A bare pathname is a Windows file, and an account without the `os-on` switch reaches only its own directory by it**: a file elsewhere on the disk, a sibling account's file and a path that climbs out with `..` are all refused with *... is not a file this account may open* (message 12350), and nothing is made. (The API server asks the account's own switch itself: it is an internal program, which the kernel does not otherwise hold to the gate.)
 
-**Not run on Windows.** These functions and the requests behind them are carried from SD Core for Linux and compile; the Windows client library has not been run against a Windows server for any of them.
 
-### Session and package management
+### Packages
 
 | Function | Returns | Description |
 |---|---|---|
-| `SDEnterPackage(name)` | Boolean | enter a package context |
-| `SDExitPackage(name)` | Boolean | exit a package context |
-| `SDGetArg(argNo)` | String | get a command argument |
+| `SDEnterPackage(name)`, `SDExitPackage(name)` | Boolean | **not supported**: licensed packages are not part of SD and the server refuses both. The library still exports them, and the language headers do not declare them |
 
 ### Error handling
 
@@ -371,7 +377,7 @@ Per-arity `CFUNCTYPE` definitions are provided for `SDCall` and
 
 ### C# and .NET (P/Invoke)
 
-`syscom\sdclient.cs` (from the 1.2 release):
+`syscom\sdclient.cs`:
 
 ```csharp
 using static SDClient;

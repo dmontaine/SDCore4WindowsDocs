@@ -41,8 +41,8 @@ gets both ssh and the API, which is what every account is entitled to. See
 replacing the malformed-looking `TIER.OMIT.STANDARD` and
 `TIER.ADD.ADMINISTRATOR` VOC records) — that move was itself superseded five
 days later when tiers were removed altogether. There is no tier policy to
-customise any more; there is one vocabulary, and administration is SDSYS's
-alone. Nothing to migrate: if your tree never carried a customised
+customize any more; there is one vocabulary, and administration is SDSYS's
+alone. Nothing to migrate: if your tree never carried a customized
 `tier.policy`, this never touched you.
 
 ## Passwords: a minimum policy, and self-service
@@ -168,7 +168,7 @@ installer stops SD before an upgrade; an SD left running from the old version
 could not be stopped by the new one. See
 [SD Core for Windows has shared memory and semaphores of its own](08-sd-installation.html#sd-core-for-windows-has-shared-memory-and-semaphores-of-its-own).
 
-## Session and lock behaviour
+## Session and lock behavior
 
 **A session that dies without signing off is cleared automatically, within
 five minutes**, rather than needing `sd -cleanup` run by hand. The five-
@@ -240,7 +240,7 @@ configured; nobody has asked for one.
   until it is relinked against the current one.
 - **`SH` or `OS.EXECUTE` invoked from a program that logs in over the API**
   will not run in this release.
-- **A customised `tier.policy` file**, if you had one — there is nothing
+- **A customized `tier.policy` file**, if you had one — there is nothing
   left for it to configure.
 - **A silent uninstall that relied on the database prompt also clearing
   `sd.conf`** — the two are independent questions now, and a silent run

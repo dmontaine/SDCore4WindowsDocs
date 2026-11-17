@@ -26,6 +26,7 @@ press F11 there for full screen.
 |---|---|
 | The top row | The **menu bar**: File first, Help last, and the page's own menus between. At the right end, the page's name and who you are (`administrator`, or `name@account`). |
 | The middle | The page's **boxes**: lists, a form, a text pane. When a page has two or more boxes that can take the keyboard, the one that has it is marked. |
+| The `AI>` row | Only when the AI is on for your account: the line where you ask the AI (below). |
 | The last three rows | A **status line** (what just happened, or why a key is not in use now), a border, and the **row of keys**: the page's main keys and what they do. |
 
 On a terminal without color, nothing depends on color: the box that has the keyboard and the chosen row are shown in
@@ -44,34 +45,39 @@ reverse video.
 | **F5** | Read everything again and draw the page again. |
 | **Ctrl-L** | Draw the whole page again, as it is, without reading anything. |
 | **Tab**, **Back-tab** (Shift-Tab) | Never move between boxes. In a form or a dialog they go from field to field; in the IDE's editor they indent and outdent; on `tool.gates` they move between the matrix's columns. |
-| **Ctrl-O** | The output of the commands this visit to the page ran: each command, and what it printed or why it was refused, newest first (*View > Output*). `tool.jobs`, `tool.sessions` and `tool.test` show it in a pane of the page that Ctrl-O shows and hides; every other page shows it in a window over the page, where typing narrows it and Enter or Esc closes it. The status line still says the result of the last one. |
+| **Ctrl-O** | The output of the commands this visit to the page ran: each command, and what it printed or why it was refused, newest first (*View > Output*). `tool.jobs`, `tool.sessions` and `tool.test` show it in a pane of the page that Ctrl-O shows and hides; every other page shows it in a window over the page (since 9 November 2026), where typing narrows it and Enter or Esc closes it. The status line still says the result of the last one. |
 | **Ctrl-T** | The next color theme (*View > Theme*): blue, classic, mono, night, paper, in that order, skipping any your terminal cannot show. **SD keeps your choice**: every page, the IDE, SED, the debugger and SP.VIEW start in it from then on, in this account and in later sessions, until you choose another. Where you have not chosen one, the site's theme is used (`SCREENTHEME`, set by the administrator). |
 | **Ctrl-K** | The keys of this page, with what each does (*Help > Keys*). |
-| *View > Mouse* | Stop the terminal reporting the mouse to SD, and start it again. While SD has the mouse, a click goes to SD rather than to the terminal's own text selection; with the mouse off you can select and copy text as at the prompt. The choice holds for every page and the IDE until you change it or sign off. It has no key. **To paste text into the IDE or SED while SD has the mouse, hold Shift and right-click** (the terminal's own paste; in PuTTY, Shift-Insert also works); with the mouse off a plain right-click pastes. A pasted character above 127 is dropped and a paste is cut at 20,000 characters. |
+| *View > Mouse* | Stop the terminal reporting the mouse, and start it again (since 9 November 2026). While it reports the mouse, a click goes to SD and the terminal's own selection needs **Shift** held while you drag; with the mouse off you can select and copy text as at the prompt. The choice holds for every page and the IDE until you change it or sign off. It has no key. |
 | **Ctrl-Q** | Leave the page. |
 
-**These keys mean the same thing everywhere**: on every page, on the home screen, and in the IDE and SED. F5 draws
-the screen again there too; the IDE, SED and the debugger run a program with **F9**. **Everything a page can do is
-also on its menus**: a key is a short way to a menu entry, never the only way. The exceptions:
+**These keys mean the same thing everywhere** (since 8 November 2026): on every page, on the home
+screen, and in the IDE and SED. F5 draws the screen again there too; the IDE, SED and the debugger
+run a program with **F9**. **Everything a page can do is also on its menus**: a key is a short way
+to a menu entry, never the only way. The exceptions:
 
-- **The debugger**, in the full screen, has F1, F2, F5, Ctrl-L, Ctrl-T, Ctrl-K and Ctrl-Q as above; **Ctrl-Q stops
-  the program** being debugged, as F3 does, and Abort is on its Run menu. Its function keys F3 to F9 are its own (stop,
-  the program's screen, step, run). In line mode, which has no menu bar, F2 is still Abort.
-- **SP.VIEW** answers F1, F5, Ctrl-L, Ctrl-T, Ctrl-K and Ctrl-Q as above, and its own letters (shown on its key row);
-  it has no *Find an action*.
-- **`!CED()`**, the record editor a program calls, has no menu bar, and Esc goes up a level.
-- **The key tester `tool.keys`** has no menu bar, so that it can show you Esc and F10; **Ctrl-L clears its list of
-  keys** as well as drawing it again, and it takes no function key for itself.
+- **The debugger** has F1, F2, F5, Ctrl-L, Ctrl-T, Ctrl-K and Ctrl-Q as above (F2 since 9 November
+  2026; it aborted the program until then); **Ctrl-Q stops the program** being debugged, as F3 does,
+  and Abort is on its Run menu. Its function keys F3 to F9 are its own (stop, the program's screen,
+  step, run).
+- **SP.VIEW** answers F1, F5, Ctrl-L, Ctrl-T, Ctrl-K and Ctrl-Q as above, and its own letters (shown on
+  its key row); it has no *Find an action*.
+- **`!CED()`**, the record editor a program calls, has no menu bar: **F2 opens the AI** there when the AI
+  is on for the account, and Esc goes up a level.
+- **The key tester `tool.keys`** has no menu bar, so that it can show you Esc and F10; **Ctrl-L clears
+  its list of keys** as well as drawing it again, and it takes no function key for itself.
 - **The dialogs**, where Enter, Esc and Tab keep their usual meaning.
 
 **If your terminal does not send a key** - a terminal may keep a key for itself (Windows Terminal keeps F11 for full
 screen and Alt+Enter as well) or send nothing for it - every action such a key does is also on a menu: press F10 or
 Esc, or F2 and type part of its name. The key tester `tool.keys` shows what your terminal sends.
 
-**On the administrator pages a letter is often a command** (`l` logs out on `tool.sessions`), shown on the key row;
-it opens a box that asks first and runs nothing until you choose Run. **On such a page `/` is how you find a row by
-typing**: it asks for a text and goes to the next row that holds it, in any case, going round to the top. **A box
-opened by a key waits until you let go of the key**, so that holding the key down cannot answer it.
+
+**On the administrator pages a letter is often a command** (`s` suspends on `tool.accounts`, `l`
+logs out on `tool.sessions`), shown on the key row; it opens a box that asks first and runs nothing
+until you choose Run. **On such a page `/` is how you find a row by typing**: it asks for a text and
+goes to the next row that holds it, in any case, going round to the top (since 9 November 2026). **A box opened by a key waits until you let go of the key**, so that holding
+the key down cannot answer it.
 
 Inside a list, the arrow keys, Page Up, Page Down, Home and End move as you would expect; a letter usually jumps to the
 next row that begins with it, or narrows the list where the page says so.
@@ -83,8 +89,8 @@ key does, so the menus are also a way to learn the keys. An entry that cannot be
 chosen; its key is out of use too, and the status line says why when you press it.
 
 **The action menu** is the same idea for one box. **A right click on a box moves the keyboard to that box and opens its
-actions where you clicked**; Shift-F10 opens the actions of the box that already has the keyboard. The last entry is
-always *Find an action...*, which opens the F2 list.
+actions where you clicked**; Shift-F10 opens the actions of the box that already has the keyboard. The
+last entry is always *Find an action...*, which opens the F2 list.
 
 ## The mouse
 

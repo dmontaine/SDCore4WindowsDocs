@@ -9,7 +9,7 @@ in lower case. In the tables, *italics* mark something you supply and **bold**
 marks a word typed as it stands; braces mark an optional part.
 
 > **Every listing on this page was produced by running it**, on SD Core for
-> Windows W1.0-0, against a six-record file whose field 1 held five `V` and one
+> Windows, against a six-record file whose field 1 held five `V` and one
 > `K`.
 
 ## Create it, then build it
@@ -17,7 +17,7 @@ marks a word typed as it stands; braces mark an optional part.
 **That is the whole of this page's advice.** `create.index` defines an index and
 `build.index` fills it, and **the half that is easy to miss is the second one**.
 Run both, in that order; what each prints is shown in the next two sections.
-(`make.index`, which did both in one command, was removed in 1.2-0.)
+(`make.index`, which did both in one command, was removed in 2.0-0.)
 
 ## The four verbs
 
@@ -212,7 +212,7 @@ The second list holds `1001`, and `list stock name` after it lists that record.
 the internal form, as in the statement. The index name is looked up as typed, then in
 lower case, then in upper, and the file name the same. The file must be a
 dynamic (hashed) file and the index **built** — an index that has been created but
-not built selects nothing. An index that is not there is *Unrecognised index name*
+not built selects nothing. An index that is not there is *Unrecognized index name*
 and the name; a missing index name is *Index name required*; a file that is not
 dynamic is *Dynamic file required*.
 
@@ -274,15 +274,11 @@ Deleted index F1
 Deleted index F2
 ```
 
-`all` removes every index on the file. Naming them individually also works —
-with one catch:
-
-> **`delete.index` matches the index name exactly, and index names are held in
-> upper case.** `delete.index zzak f1` answers *"Unrecognised index name
-> (f1)"* — on a file where `list.index zzak f1` had just found the index and
-> printed it. **`list.index` folds case and `delete.index` does not**, so a name
-> that lists perfectly well may still refuse to delete. Use **`all`**, or type
-> the name exactly as `list.index` prints it.
+`all` removes every index on the file. Naming them individually works too, and
+**in either case**: index names are held in upper case, `list.index` prints them
+that way, and `delete.index zzak f1`, `delete.index zzak F1` and
+`delete.index zzak f1 f2` all do what they say (the answer is
+*Deleted index F1*, in upper case, whichever case you typed).
 
 Deleting the file removes its indexes with it.
 

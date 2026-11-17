@@ -1,21 +1,16 @@
 Title: SD Dictionaries - Conversions and Formatting
-Subtitle: Every conversion code SD recognises, and what each one does to a stored value.
+Subtitle: Every conversion code SD recognizes, and what each one does to a stored value.
 
 A dictionary record does two things: it says where to find the data
 (field 2), and it says how to display it (fields 3 and 5). Field 3 is
 the **conversion code** — a compact instruction that transforms a stored
 value into a display value. This page is every conversion code SD
-recognises; field 5, the format specification, is on the page that
+recognizes; field 5, the format specification, is on the page that
 continues it.
 
 SD folds case, so a conversion code may be typed in either case. In the
 tables, *italics* mark something you supply and **bold** marks a word
 typed as it stands; braces mark an optional part.
-
-> **Every conversion code on this page was read from the SD source on SD
-> Core for Windows W1.0-0.** The C engine in `op_oconv.c` and
-> `op_iconv.c` is the authority; the descriptions here follow what it
-> does, not what an upstream manual says it ought to do.
 
 ## Conversion codes — field 3
 
@@ -126,7 +121,7 @@ MCL       MCU       MCC       MCT
 |---|---|
 | `MCL` | convert to lower case |
 | `MCU` | convert to upper case |
-| `MCC` | capitalise each word |
+| `MCC` | capitalize each word |
 | `MCT` | title case — the first letter of every word: `hello there world` becomes `Hello There World` |
 
 ### Radix conversion — MX, MO
@@ -141,7 +136,7 @@ MX        MO
 | `MO` | decimal to octal |
 | `MCDX` | the same as `MX`, both ways; a second name kept for programs written for openQM |
 
-(`MCD`, `MCX` and `MCXD`, which were other second spellings of `MX`, were removed in 1.2-0: they are an invalid conversion code now, STATUS 2.)
+(`MCD`, `MCX` and `MCXD`, which were other second spellings of `MX`, were removed in 2.0-0: they are an invalid conversion code now, STATUS 2.)
 
 `MX0C` converts a hexadecimal string to characters. `MB0C` and `MO0C`
 do the same for binary and octal.

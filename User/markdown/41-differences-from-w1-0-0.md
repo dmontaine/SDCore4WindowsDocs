@@ -29,7 +29,7 @@ no.case`. A file with alternate key indexes needs the same treatment. See
 
 ## SD's own names are lower case, but every lookup still finds what you type
 
-**SD's vocabulary, dictionary field names, and catalogued program names are
+**SD's vocabulary, dictionary field names, and cataloged program names are
 now stored in lower case.** `MAP` lists `$cproc`, `!parser` and so on;
 `CATALOG` and `DELETE.CATALOG` report lower-case names; the fields in the
 dictionaries SD ships (`voc`, dictionaries themselves, `$map`, `accounts`,
@@ -48,8 +48,8 @@ item defined in a different case from how you typed it.
 matters when you call them.** A `CALL`, `SUBROUTINE`, `FUNCTION`, `PROGRAM`
 or `CLASS` name compiles to lower case, and a call made in any case —
 including from a program compiled by an earlier release — still finds it.
-`COMMON` block names are unchanged. Cataloguing a program you already
-catalogued under an earlier release renames its VOC entry to lower case
+`COMMON` block names are unchanged. Cataloging a program you already
+cataloged under an earlier release renames its VOC entry to lower case
 rather than adding a second entry beside it.
 
 **`SET.FILE`, `.S` and `CNAME` now store new VOC entries in lower case, and
@@ -57,7 +57,7 @@ treat a differently-cased match as the same entry** rather than silently
 creating a second one — `SET.FILE` reports the pointer name already exists,
 `.S` asks whether to overwrite, `CNAME` refuses the new name. `CNAME` also
 renames a lower-cased file's dictionary directory along with its data;
-catalogued program names stay upper case regardless.
+cataloged program names stay upper case regardless.
 
 **Four VOC entries and the `SYSCOM` include files were renamed to lower
 case**: `$ACC`, `$MAP`, `$RELEASE` and `SD.VOCLIB` are now `$acc`, `$map`,
@@ -173,7 +173,7 @@ an older client library cannot connect until it is relinked. See
   that differ only by case — refused outright now, and an existing file
   with such a pair is left unconverted until you resolve it by hand.
 - **A dictionary or program that depended on an upper-case-only field or
-  catalogue name existing as a *separate* entry from its lower-case
+  catalog name existing as a *separate* entry from its lower-case
   counterpart** — the two are the same entry now.
 - **A script or batch job answering prompts from a file or pipe**, if it was
   written to answer a question that no longer appears (the extra

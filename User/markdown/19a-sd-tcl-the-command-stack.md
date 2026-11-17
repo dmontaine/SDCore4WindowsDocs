@@ -163,7 +163,7 @@ new account's `login` starts is not itself discarded, because the `login` runs a
 have gone.
 
 **`reset all` is refused in an API session**, with *LOGTO RESET ALL is not available in a client
-session* (message 11392), before anything is changed: the API server is its own bottom level and
+session* (message 12397), before anything is changed: the API server is its own bottom level and
 has no prompt to return to. That refusal was written but not run, because a test session cannot
 host an API connection.
 
@@ -172,7 +172,7 @@ host an API connection.
 **There is no online help and `help` is not a verb.** The command processor
 still has internal verb 14 reserved for it and the routine is an empty stub —
 its body is commented out and it returns immediately. **No VOC record points at
-it**, in any account type, so the name is not even recognised. The F1 key at the
+it**, in any account type, so the name is not even recognized. The F1 key at the
 command prompt reaches the same empty routine and therefore does nothing. **This
 documentation is the help system.**
 
@@ -198,7 +198,7 @@ are administrator-only:
 
 **Everything on this page is in a standard account.** An account that does not
 have a verb does not have the VOC record for it — the name is simply not
-recognised rather than refused.
+recognized rather than refused.
 
 **The `OS` verb is the exception and is not documented here.** `sh`
 reaches the Windows shell and is gated by a per-account switch. It is in the **administrator documentation**,

@@ -119,7 +119,7 @@ moves back.
 holding **`LEEDS`** — the first value in order.
 
 > **These four take no `then` or `else` clause.** Writing one is a compile
-> error — *"Unrecognised statement"* — because the parser expects `setting` or
+> error — *"Unrecognized statement"* — because the parser expects `setting` or
 > `to` and finds a keyword it has no use for. To detect the end of the index,
 > read the select list they build: an empty one means there was nothing
 > further.
@@ -179,7 +179,7 @@ These reach into the index directly rather than letting SD maintain it. They
 exist for the case an ordinary index cannot express — an index whose key is
 computed by a program rather than taken from a field.
 
-**They are not the normal route and they will Let you corrupt an index.**
+**They are not the normal route and they will let you corrupt an index.**
 Writing an index entry that does not match the record it points at produces a
 `selectindex` that returns ids whose records do not have the value you asked
 for. Nothing detects that except `build.index`, which rebuilds from the data

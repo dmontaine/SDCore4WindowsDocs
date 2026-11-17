@@ -17,7 +17,9 @@ additions, changes and deletions — of features, of structure, of security and
 of commands. **These pages cover those changes.**
 
 If you have used OpenQM, or SD on Linux, much of SD Core will still be
-familiar: the same data model, the same query processor, the same BASIC.
+familiar: the same data model, the same query processor, the same BASIC. If you
+are bringing programs over from another MultiValue database, start with
+[Migrating to SD](15-migrating-to-sd.html).
 
 ## What "used to" means in these pages
 
@@ -32,7 +34,7 @@ are never confused.
 
 ## The pages
 
-**There are nineteen, and they are numbered.** Read them in numerical order the
+**There are twenty-two, and they are numbered.** Read them in numerical order the
 first time; after that they stand alone.
 
 **A number with a letter after it is the second half of a long page**, split so
@@ -42,8 +44,8 @@ so on. Nothing was renumbered when they were split.
 | | | |
 |---|---|---|
 | **00** | Start here | this page — what the set is and what it leaves out |
-| **00a** | [Copyright and licence](00a-copyright-and-licence.html) | The copyright and the licence for this set, in full and in one place |
-| **01** | [Installing SD Core](01-installation.html) | What the installer does, the two kinds of installation, and the choices it offers |
+| **00a** | [Copyright and license](00a-copyright-and-licence.html) | The copyright and the license for this set, in full and in one place |
+| **01** | [Installing SD Core](01-installation.html) | What the installer does, and the choices it offers |
 | **01a** | [Upgrading and uninstalling](01a-upgrading-and-uninstalling.html) | Installing a new release over an existing one, and taking SD off the machine |
 | **02** | **[Your first thirty minutes](02-first-run.html)** | **Start here if you just want it working** — install to a second user signing in, in eight steps |
 | **03** | [Running SD](03-running-sd.html) | The service, starting and stopping, and recovering from an unclean shutdown |
@@ -60,6 +62,9 @@ so on. Nothing was renumbered when they were split.
 | **12a** | [Security and the operating system](12a-security-and-the-operating-system.html) | Reaching the machine from inside SD, how privileged work is done, and the audit trail |
 | **13** | [Other hardening](13-hardening.html) | Auditing, the shell switches, and the rest |
 | **14** | [Not in SD Core](14-not-in-sd-core.html) | What has been removed, and what to use instead |
+| **15** | [Migrating to SD](15-migrating-to-sd.html) | Bringing programs and queries from another MultiValue database: where the compatibility words are set, and the words SD does not accept |
+| **15a** | [Option words](15a-migrating-option-words.html) | The words of the `option` command, one line each |
+| **15b** | [Mode words](15b-migrating-mode-words.html) | The names `$mode` accepts and the lines of a `$basic.options` record, one line each |
 
 ## The five things most likely to surprise you
 
@@ -73,8 +78,15 @@ or not, and not on a secret SD holds. See [Security](12-security.html).
 **2. Accounts SD creates cannot log in to Windows at this machine.** They are
 denied the physical console and Remote Desktop, deliberately. They reach SD
 **over ssh, or through an API client, or both** — chosen when the account is
-created, defaulting to neither if you say nothing (a new account starts with
-every door shut). **Multi-user access over
+created, defaulting to neither if you say nothing. **A new account has no ssh,
+no API, no shell and no `OS.EXECUTE`, and cannot save a change to a VOC, a
+program file or a dictionary, until SDSYS gives them.** SD is delivered with the
+tighter setting, and the administrator loosens it one account and one switch at a
+time: `ssh`, `api`, `both`, `sh-on`, `os-on`, `voc-on`, `bp-on` and `dict-on`, at
+`create.account` or later with `modify.account`. SDSYS has no ssh route, and its
+API door from another computer is shut until the administrator opens it
+(`remote.sdsys api on`); remote administration over ssh is the separate account
+SDRADMIN (`remote.sdsys on`), also shut as delivered. **Multi-user access over
 Remote Desktop is not supported** and is not a gap to be filled later. See
 [ssh access](08-ssh-access.html) and [API access](09-api-access.html).
 
@@ -93,7 +105,7 @@ against the old protocol will not connect. See [API access](09-api-access.html).
 
 ## What this release is
 
-**W1.1-3.** Windows only. There are no `#ifdef` branches keeping Linux alive in
+**W2.0-0.** Windows only, and English only. There are no `#ifdef` branches keeping Linux alive in
 this source — Linux SD is a separate project and this is not a build of it.
 
 **It is a hobby project with no release schedule.**
@@ -105,7 +117,7 @@ and the command processor is a separate set, and so is the administrator's.
 ## Where the source is
 
 **Both repositories are public, and everything in them is open source.** SD is
-GPL software — `config gpl` at an `sd` prompt displays the licence, and the
+GPL software — `config gpl` at an `sd` prompt displays the license, and the
 installed tree carries it as a file.
 
 | | |
@@ -137,7 +149,7 @@ differently from OpenQM and is not described here**, and **anything in these
 pages that turns out not to be true of the build you are running**. The second
 is as valuable as the first.
 
-**Quote the version as `W1.1-3`** — the string in the header bar of every
+**Quote the version as `W2.0-0`** — the string in the header bar of every
 page here, in the installer's file name, and in what `sd --version` reports.
-The bare `1.1-1` is the same release; the `W` says it is the Windows one, and
+The bare `2.0-0` is the same release; the `W` says it is the Windows one, and
 that is the part worth keeping in a report.

@@ -67,7 +67,7 @@ clear.file {dict|data} file
 `delete.file` removes the file and its VOC record. **`force` is needed if the
 file is not empty.** `clear.file` empties a file and keeps it, along with its
 dictionary, its indexes and its `creating.seqkey` counter (the next sequential id carries on; this is
-SD's behaviour, and `configure.file` *file* `next 1` starts it again).
+SD's behavior, and `configure.file` *file* `next 1` starts it again).
 
 ## Changing a file after it exists
 
@@ -90,12 +90,12 @@ for `immediate`. It changes nothing else, and without it nothing is shown.
 `no.case` / `case` and `resize` / `no.resize` are the pairs that turn a setting
 on and off. For a directory file, `binary` turns on mark mapping.
 
-**`next` *n*** sets the next record id that `write ... creating.seqkey` will give out in a
+**`next` *n*** sets the next record id that `write … creating.seqkey` will give out in a
 **hashed** file (see [SD Basic - File Handling](07-sd-basic-file-handling.html)); **`next query`** says
-what it is (*The next sequential record id is 103*, message 12356). A new file's counter is 1, `clear.file`
-keeps it (SD's behaviour), and rebuilding a file with a different group size carries the
-counter over. A file made by `copy` starts its own counter at 1; `write ... creating.seqkey` skips an id that
-already names a record. A directory file is refused: *NEXT applies to a hashed file only* (message 12355).
+what it is (*The next sequential record id is 103*). A new file's counter is 1, `clear.file` keeps it (SD's behavior), and rebuilding a file
+with a different group size carries the counter over. A file made by `copy` starts its own
+counter at 1; `write … creating.seqkey` skips an id that already names a record. A directory file is refused:
+*NEXT applies to a hashed file only*.
 
 ## Looking at a file
 
@@ -133,7 +133,10 @@ The Hot Spot Monitor. `display` is the default. It counts each program's
 opens, reads, writes and deletes as well as its calls and processor time, and
 the report has a column for each. **What a program asks for through the `open`
 of a name (its VOC lookup), or through `readv` and `writev`, which read and
-write the record themselves, is not counted against it.**
+write the record themselves, is not counted against it.** `hsm user n` shows
+another session's program names and file names, and since 28 October 2026 each
+control character, `del`, byte from 128 to 159 and mark character in them is shown as `?`,
+so that a session cannot send a code to your terminal by what it opens (as `pstat` does).
 
 ```
 profiler on {user n} {event ...}
@@ -149,6 +152,10 @@ are `call` (a subroutine), `open`, `read` (including `readu`, `readv` and
 `matread`), `write`, `delete`, `openseq`, `readseq`, `writeseq`, `execute` (the
 first 32 characters of the command) and `object` (a call of a class module's
 object). Name some after `on` to log only those; none means all of them.
+
+The names the display shows (files, subroutines, commands, programs) are made safe to
+print in the same way, since 28 October 2026: a control character, `del`, a byte from 128 to 159 or
+a mark character is shown as `?`.
 
 `display` is a list of the event types with a count of each. Type the **number** of
 a line to open it: the names the events were on (the file, the subroutine, the
@@ -254,7 +261,7 @@ cname {dict} file.name old.record.name to new.record.name
 ```
 
 A comma may be used instead of `to`. (`rename`, a second name for this verb, was
-removed in 1.2-0.) `@system.return.code` is `0` on success and `-1` if the arguments were
+removed in 2.0-0.) `@system.return.code` is `0` on success and `-1` if the arguments were
 wrong.
 
 **`cname` on a file renames the VOC record too**, which is the point — the
@@ -373,8 +380,8 @@ set.trigger file.name
 Set, remove, or display a file's trigger function. An empty string in quotes
 removes it; no argument at all displays it. **`all`** in place of the modes sets
 every one of them: pre- and post-write, pre- and post-delete, read, and pre- and
-post-clear. **The function must be catalogued** first — *Trigger function is not
-catalogued* otherwise.
+post-clear. **The function must be cataloged** first — *Trigger function is not
+cataloged* otherwise.
 
 ```
 set.trigger stock zztrig all
@@ -429,7 +436,7 @@ are set, in the same order as for a hashed file, with the same arguments, and a 
 operation with `@trigger.return.code` or change the data being written. **`writeseq`, `writeblk`, `oswrite` and `osdelete` do
 not call it**, so a query report sent to a file, or a compile listing, never does; that is openQM's limit too. **A change to the
 trigger takes effect when the file is next opened**, not for a program that has it open already (`set.trigger` itself needs the
-file to itself, as it does for a hashed file). If the header names a function that is not catalogued, the first operation that
+file to itself, as it does for a hashed file). If the header names a function that is not cataloged, the first operation that
 needs it stops with *Trigger function 'name' not loaded for the file*.
 
 ## Sizes and who is busy: `file.stat` and `fstat.user`

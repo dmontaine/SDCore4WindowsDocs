@@ -343,7 +343,7 @@ meets an active list selects *from that list* (an intersection): a command that
 means to replace the list must `clear.select` first.
 
 > **`chain` discards unnamed common.** (The option `chain.keep.common`, which
-> kept it, was removed in 1.2-0: pass what the next program needs in named common
+> kept it, was removed in 2.0-0: pass what the next program needs in named common
 > or in the data queue.)
 
 ## Waiting
@@ -407,8 +407,9 @@ error, because the space changes what it is.
 
 ## What is not here
 
-These existed in OpenQM or earlier SD releases and **are not in SD Core for
-Windows**. A program using one will not compile.
+These existed in OpenQM or earlier SD releases and **are not in SD Core**
+(checked directly in `bcomp`'s own statement table, shared source with SD
+Core for Linux). A program using one will not compile.
 
 | | |
 |---|---|
@@ -421,7 +422,7 @@ Windows**. A program using one will not compile.
 | `procread` · `procwrite` · `@pib` · `@sib` · `@pob` · `@sob` | the PROC interface |
 
 **`errmsg` is not in the compiler's statement table, and has not been since
-July 2024.** `errmsg 1000` is rejected with *"Unrecognised statement"*, the
+July 2024.** `errmsg 1000` is rejected with *"Unrecognized statement"*, the
 same message as for any word the compiler does not know (`foobarbaz 1000` gets
 it too). An earlier version of this page said the name was still in the table
 with nothing behind it. That was wrong: `BCOMP` removed the table entry on
@@ -431,7 +432,7 @@ from the comment.
 
 `procread` and `procwrite` are gone as well, with the PROC language they
 served, and so are the variables `@pib`, `@sib`, `@pob` and `@sob`. A program
-using one will not compile. (The 1.2-0 programme removed them; earlier versions
+using one will not compile. (The 2.0-0 programme removed them; earlier versions
 of this page said they compiled.)
 
 ## See also

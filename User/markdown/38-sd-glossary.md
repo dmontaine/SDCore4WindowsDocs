@@ -47,10 +47,10 @@ beside the installer.
 
 ## C
 
-**Catalogue** — the registry of compiled programs. A catalogued program
+**Catalog** — the registry of compiled programs. A cataloged program
 can be run by name from any account that can reach it. Private
-catalogue is per-account; local catalogue puts the VOC entry in the
-account's own VOC; global catalogue is system-wide and requires an
+catalog is per-account; local catalog puts the VOC entry in the
+account's own VOC; global catalog is system-wide and requires an
 administrator.
 
 **Common block** — a named memory area shared between subroutines.
@@ -157,7 +157,7 @@ TCL commands. Replaces the removed PROC language.
 
 **Programmer** — retired, 18 Sep 2026. Used to name the middle of three
 account tiers. Every account now has the full development set (compile,
-catalogue, edit, file creation, index management, bulk record editing,
+catalog, edit, file creation, index management, bulk record editing,
 process introspection) that this tier used to grant — see *Accounts* in
 the *Getting Started* set.
 
@@ -215,8 +215,9 @@ prompt and dispatches it.
 
 **Terminfo** — the terminal capability database. Defines what
 sequences a terminal sends for keys and what sequences to use for
-screen control. SD ships 51 definitions compiling to 83 terminal
-names. The terminfo compiler (`sdtic`) is not shipped with SD Core.
+screen control. SD ships 26 definitions compiling to 37 terminal
+names. The terminfo compiler (`sdtic.exe`) is shipped with SD Core, beside
+`sd.exe`; see [SD Terminfo](39-sd-terminfo.html).
 
 **Transaction** — a group of file updates that succeed or fail together.
 Declared with `start transaction` and committed with `commit` or

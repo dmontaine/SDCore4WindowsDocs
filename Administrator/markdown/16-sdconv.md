@@ -7,23 +7,16 @@ Subtitle: A tool for turning compiled program files between big-endian and littl
 
 `sdconv` was written to move SD files between computers that store numbers in
 opposite byte orders. SD Core for Windows runs on little-endian machines
-(x86-64) and is built and tested only on one. Nothing on this page can say
-whether a result would run on a big-endian machine, because there is none to run
-it on.
+(x86-64). Nothing on this page can say whether a result would run on a
+big-endian machine.
 
 > **Read this first: `sdconv` does not convert hashed files.** Given one it says
 > so, changes nothing and exits 1. It converts **compiled program files** only,
-> and only the header of each. *Run*, below. (A copy built before 19 October 2026
-> printed nothing and exited 0, which read as a successful conversion.) The
+> and only the header of each. The
 > routine that converts a hashed file's subfiles is in the source, but the
 > program does not call it, and this SD cannot open a big-endian hashed file, so
 > a converted file would be of no use here. Windows and Linux are both
 > little-endian.
-
-> **How this page was made.** Everything here was read from `sdconv.c` and run on
-> scratch copies under `C:\sdi_demo`, with the program as built from the `Dev`
-> branch of SD Core for Windows (banner `SDCONV W1.1-3`). Results are marked
-> *run* where the output is real. It was run from an ordinary prompt.
 
 ## The short version
 
@@ -40,7 +33,7 @@ it on.
 * **A hashed file is refused: a message, the file untouched, exit status 1.**
 * **A path that is neither a hashed file nor a program object is skipped with no
   message and the exit status is 0**, including a path that does not exist, a
-  folder, and a file it cannot write (*run* for each).
+  folder, and a file it cannot write.
 
 ## Where it is and who can run it
 
@@ -48,7 +41,7 @@ it on.
 program folder is on the system PATH (`append.sd.path`, in the remote access
 page of this set). It opens each file for read and write, so you need write
 access to it. A file it cannot open for writing is skipped without a word
-(*run*: a copy marked read-only was left as it was, exit 0). It takes no
+(a read-only copy is left as it was, exit 0). It takes no
 configuration file. Run it with SD stopped, or on files SD is not using: it makes
 no check for that.
 
@@ -69,7 +62,7 @@ Options may be joined in one word (`-BD`) and are not case sensitive. If both
 `-B` and `-L` appear, the last one wins. Several pathnames may follow. The
 program does not descend into a folder, and **a wildcard is not expanded by
 anything**: `sdconv -B bp.out\*` converted nothing and exited 0, from PowerShell
-and from `cmd` alike (*run*). Name the files, in PowerShell with
+and from `cmd` alike. Name the files, in PowerShell with
 `sdconv -B (Get-ChildItem bp.out).FullName`. With no pathname, or an option it
 does not know, it prints the usage text and exits 1.
 
@@ -98,19 +91,18 @@ that did nothing:
 
 The only failures it reports are *Cannot read name*, *Error converting name*, a
 seek or write error naming the file, and *Cannot allocate memory for name*, and
-only for a file it had already recognised as a program object.
+only for a file it had already recognized as a program object.
 
-## What it converts: compiled program files *(run)*
-
+## What it converts: compiled program files
 A compiled program is a plain file that begins with a one-byte marker, `0x64` for
 little-endian and `0x65` for big-endian. SD keeps them in:
 
 * the `.out` folder beside each program file (`bp.out` holds the compiled form of
   the programs in `bp`, in each account; `gpl.bp.out` and `pcode.out` are
   others), and
-* the global catalogue, `gcat`, a folder in the SDSYS folder
+* the global catalog, `gcat`, a folder in the SDSYS folder
   (`C:\ProgramData\SD\sdsys\gcat`). An account's own `cat` folder is the local
-  catalogue.
+  catalog.
 
 A file whose first byte is neither value, or that is shorter than the 165-byte
 header, is not touched.
@@ -131,8 +123,7 @@ tables and the constants are not touched. SD's own source says that floating
 point constants are the one thing in the code that needs swapping, and that SD
 does it when it loads them.
 
-## What it does not convert: hashed files *(run)*
-
+## What it does not convert: hashed files
 ```
 > sdconv -B C:\sdi_demo\zzcust
 C:\sdi_demo\zzcust is a hashed file: sdconv converts compiled programs only, nothing was changed

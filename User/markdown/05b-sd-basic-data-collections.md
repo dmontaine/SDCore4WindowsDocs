@@ -226,5 +226,6 @@ turned into JSON text.
 [SD Basic - JSON and Collection Files](05c-sd-basic-json-and-collection-files.html) ·
 [SD Basic - Dynamic Arrays](05-sd-basic-dynamic-arrays.html) ·
 [SD TCL - Data Collection Files](20a-sd-tcl-collection-files.html) ·
+[SD TCL - The CED Data Collection Editor](27b-sd-tcl-ced.html) ·
 [SD Basic - Debugging](17-sd-basic-debugging.html), for looking at a collection
 while a program runs.

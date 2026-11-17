@@ -1,11 +1,8 @@
 Title: Accounts
 Subtitle: Ordinary accounts, SDSYS, Suspended and Group — what each one may do, and how to make one.
 
-**Every ordinary account gets the same VOC.** SD Core used to divide accounts
-into three capability tiers — Standard, Programmer, Administrator — each with
-a different, smaller VOC. **The tiers are gone** (owner's ruling, 18 September
-2026: *"the only privileged account is SDSYS"*). An account you create today
-gets every verb there is, the same set SDSYS has for running applications and
+**Every ordinary account gets the same VOC.** There are no capability tiers:
+the only privileged account is SDSYS. An account you create gets every verb there is, the same set SDSYS has for running applications and
 building them. What it does **not** get is administration — that is not a
 verb an account can be given, it is a separate account.
 
@@ -22,25 +19,22 @@ files without a grant — means signing in to *Windows* as SDSYS and running
 account that ran this installer is an ordinary account like any other once
 setup finishes, and **elevating a session does not make it SDSYS**.
 
-> **This is a full reversal of how SD Core 1.0 worked**, where a Windows
-> administrator's own account was automatically an SD administrator. If you
-> read that in an older document or in W1.0 release notes, it no longer
-> holds. The reasoning is in the *Administrator* set's *Accounts and
-> security* chapter.
+The reasoning is in the *Administrator* set's *Accounts and security* chapter.
 
 **SDSYS's Windows sign-in password** is asked for once, during installation,
 in the window that appears after the wizard closes — that is what you type
 at the Windows login screen to reach it at all, and changing it afterward is
 an ordinary Windows administrative action, not an SD verb. SDSYS also has its
 own SD credential (`modify.password`, run from within an SDSYS session,
-changes its own), but that credential secures nothing remote: `remote.api`,
-`remote.ssh` and every other door out of SDSYS are refused outright, on
-purpose — see [Reaching the operating system](06-administrator-commands.html).
+changes its own). That credential secures nothing remote unless the
+administrator opens a door for it: `remote.api` and `remote.ssh` give SDSYS no
+route, and its API door from another computer (`remote.sdsys api on`) is shut as
+delivered — see [Reaching the operating system](06-administrator-commands.html).
 
 ## Creating an account
 
 ```
-create.account user <name> {ssh | api | both | none} {sh-on} {os-on} {no.query}
+create.account user <name> {ssh | api | both | none} {sh-on} {os-on} {voc-on} {bp-on} {dict-on} {files-on} {no.query}
 
 create.account group <name> {no.query}
 
@@ -52,17 +46,26 @@ account needs an elevated token, and only SDSYS carries the identity that
 makes an elevated session mean anything to SD — see
 [SDSYS is the only administrator](#sdsys-is-the-only-administrator) above.
 
-### The route keyword is optional now
+### A new account starts with every door shut
 
-**Say nothing and the account gets `none`: no ssh and no API.** (Until 25 October
-2026 it got `both`.) SD is delivered with every door shut, and you open each one
-for the accounts that need it: `ssh` for ssh only, `api` for the API only, `both`
-for both. An account with `none` is reached only with `logto`, from inside
-another session. **`sh-on` and `os-on` are separate words of the same
-command** (`create.account user fred ssh sh-on`), off unless named, and so are the
-three switches that let an account save a change to a VOC, a program file or a
-dictionary (`voc-on`, `bp-on`, `dict-on`); the Administrator set's *Accounts and
-Security* chapter has them all.
+**A new user account has no ssh, no API, no `sh` and no `OS.EXECUTE`, and it
+cannot save a change to a VOC, a program file or a dictionary,** until
+SDSYS turns each one on. SD is delivered with the tighter setting and the
+administrator loosens it, account by account, for the people who need it:
+
+| word | gives the account |
+|---|---|
+| `ssh` · `api` · `both` | the remote route(s). `none` is the default: an account with `none` is reached only with `logto`, from inside another session |
+| `files-on` | the files-only API route: an API login that can open, read, write and select from files and do nothing else (no commands, no subroutine calls, no `logto`). `api` gives the whole API and wins when an account has both |
+| `sh-on` | the `sh` verb |
+| `os-on` | `OS.EXECUTE`, `edit`, `micro`, the embedded Python, and files or directories of the operating system named by their path outside the account's own directory |
+| `voc-on` | saving a change to the account's VOC |
+| `bp-on` | saving a change to a program file (`bp`, `bp.out`, `*.bp`, `*.bp.out`), and compiling and cataloging. A new account needs it before it can save or compile its first program |
+| `dict-on` | saving a change to a dictionary (a file whose name ends `.dic`) |
+
+`sh-on`, `os-on` and the three edit switches are independent of each other
+and of the routes (`create.account user fred ssh sh-on`); the Administrator
+set's *Accounts and Security* chapter has them all.
 
 **`create.account user … ssh` and `… both` are refused when the machine has no
 ssh server**, with a warning saying why: the account would have no way to
@@ -103,13 +106,33 @@ configuration); reach the operating system through `sh` or `OS.EXECUTE`, or
 name a file outside its own directory; or save a change to a VOC, a program
 file or a dictionary — unless SDSYS has switched that on for it, account by
 account. See
-[Reaching the operating system](05a-managing-accounts.html#reaching-the-operating-system).
+[Managing accounts](05a-managing-accounts.html#remote-access-sh-and-osexecute-four-switches-all-off-for-a-new-account).
 
 > **None of this is a wall inside SD.** The VOC is the same for every
 > ordinary account; what actually stops one account reaching another's data
 > is the operating system's file permissions, the ssh confinement, and the
 > account's own `sh` and `OS.EXECUTE` switches — not the contents of a VOC.
 > See the *Administrator* set's *Accounts and security* chapter.
+
+## The `shared` account
+
+**One group account, named `shared`, exists on every installation.** The
+installer makes it; you do not create it, and nobody can create or delete an
+account of that name. **Its data files can be opened by every account by
+file name** — `open "inventory"` finds the file `shared` holds under that
+name, with no `logto` and no pointer in your VOC — unless your own account
+already has an entry of that name, which always wins.
+
+**Reading is on for every account; writing is off.** Two per-account
+switches, `shared-read-on` / `shared-read-off` and `shared-write-on` /
+`shared-write-off`, are SDSYS's to change. Without `shared-write-on`, an
+attempt to save, delete or clear a record in a shared file is refused, and
+changing the *structure* of a shared file (clearing it, configuring it,
+indexing it, deleting it) is SDSYS's alone, at a terminal on the machine.
+The verbs, programs and catalog of `shared` are not shared: only its data
+files and their dictionaries. **Nobody but SDSYS signs on to `shared`.**
+Because every account can read it, put nothing there that is not meant for
+everyone.
 
 ## Suspended — a state, not a tier
 

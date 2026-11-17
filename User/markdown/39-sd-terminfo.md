@@ -3,7 +3,7 @@ Subtitle: The terminfo database, the definitions that ship, and the compiler tha
 
 SD uses a terminfo database to know what byte sequences a terminal sends for
 each key, and what sequences to emit for screen control — cursor movement,
-clear, colour, bold, underline.
+clear, color, bold, underline.
 
 Most installations never touch it. The shipped definitions cover the
 terminals in ordinary use, and `windows` works with any Windows console, cmd,
@@ -46,7 +46,7 @@ A name that is not installed is refused and your current type is kept:
 
 ```
 :term vt320
-Unrecognised terminal name
+Unrecognized terminal name
 ```
 
 There is no `vt320` definition; `vt220` or `xterm` does the same job.
@@ -56,25 +56,31 @@ There is no `vt320` definition; `vt220` or `xterm` does the same job.
 ```
 term                    * report current type and page size
 term windows            * set for this session
-term 120,36             * set page size
-term default            * restore 140 x 42 (prints nothing; check with bare term)
+term 140,43             * set page size
+term default            * restore 140 x 43 (prints nothing; check with bare term)
 ```
 
 The page size is worked out at login in this order:
 
 1. the `LINES` and `COLUMNS` environment variables if they are numeric
 2. the terminfo entry's `lines` and `cols`
-3. otherwise 42 and 140
+3. otherwise 43 and 140
 
-A console or ssh session normally gets its real window size. 140 × 42
+A console or ssh session normally gets its real window size. 140 × 43
 is the fallback when nothing answers — a phantom or a piped script.
 
-## The page is 140 × 42
+## The page is 140 × 43
 
-SD's default is **140 columns by 42 lines**, not 80 × 24 (it was 120 by 36
-until 25 October 2026). A console window narrower than that makes ordinary
-reports look wrapped or truncated — which reads as a formatting bug and
-is not one.
+SD's default is **140 columns by 43 lines**, not 80 × 24 (it was 120 by 36
+until 25 October 2026, and 140 by 42 until 9 November 2026). A console window
+narrower than that makes ordinary reports look wrapped or truncated — which
+reads as a formatting bug and is not one. `term 120,36` gives the old size
+back for a session that wants it.
+
+The default is only a default. `term w,h` takes any width from 20 to 32767 and
+any depth from 10 to 32767, larger or smaller than 140 × 43, and nothing else
+clamps it. A real terminal still decides its own size, and `term default` puts
+the page back to 140 × 43 whatever the window.
 
 ## The terminfo source
 
@@ -86,7 +92,7 @@ definition.
 ## Ending one attribute: `eblink`, `edim`, `erev`, `ebold` and `eprot`
 
 SD turned blink, half intensity, reverse video and bold off with `sgr0`, which ends **every**
-attribute and the colours as well. A terminal entry can now give each its own capability:
+attribute and the colors as well. A terminal entry can now give each its own capability:
 
 | capability | ends | sent by |
 |---|---|---|
@@ -98,10 +104,10 @@ attribute and the colours as well. A terminal entry can now give each its own ca
 
 When the entry defines the capability, the function sends it; **when it does not, the function
 sends `sgr0` as before.** No entry that ships with SD defines any of the five, so nothing changes
-until you add them. SD's own programs that use `@(-14)` to put the colours back (the query
+until you add them. SD's own programs that use `@(-14)` to put the colors back (the query
 processor's styles, SED, the pick lists) therefore behave as they did on every stock terminal.
 Think before you give an entry an `erev` of its own: it ends reverse video and nothing else, where
-`sgr0` ended the colours too.
+`sgr0` ended the colors too.
 
 Put the additions in `terminfo.mods` in the SDSYS account directory, which the installer compiles
 after `terminfo.src` so that an upgrade does not lose them, and compile with `sdtic` as described

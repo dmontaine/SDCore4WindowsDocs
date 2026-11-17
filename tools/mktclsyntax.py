@@ -178,17 +178,14 @@ out.append('*Italics* mark something you supply, **bold** a word typed as it sta
 out.append('braces an optional part, and a vertical bar separates alternatives. SD')
 out.append('folds case, so any of this may be typed in either case.')
 out.append('')
-out.append('> **This page is generated, and it is checked for completeness rather')
-out.append('> than proof-read for it.** The roster is computed from SD\'s own VOC:')
-out.append('> every verb record in `newvoc`, plus the ones only `voc_template`')
-out.append('> has, which is **%d** verbs, and `tools/mktclsyntax.py` refuses to' % len(verbs))
-out.append('> write the page if any of them has no line. The shapes come from the')
+# 2 Nov 26: the wording of 2c559ce (30 Oct 26, "Remove development-process wording from the end-user documents"), which was made on the
+# card by hand and is now what this script writes, so a regenerated card does not bring the process wording back.
+out.append('> This page lists every verb SD ships (**%d** of them). The shapes come from the' % len(verbs))
 out.append('> subject documents, where each verb is described in full.')
 out.append('')
-out.append('**The "who" column is the VOC, not an opinion.** It is computed by')
-out.append('reading `newvoc` and `voc_template` directly, so it cannot drift from')
-out.append('what an account actually gets. **A verb your account does not have is')
-out.append('not refused — the name is simply not recognised.**')
+out.append('**The "who" column is the VOC, not an opinion.** It is taken from the')
+out.append('vocabulary SD installs, so it says what an account actually gets. **A verb your account does not have is')
+out.append('not refused — the name is simply not recognized.**')
 out.append('')
 out.append('| | | |')
 out.append('|---|---|---|')
@@ -201,12 +198,11 @@ out.append('| | syntax | who |')
 out.append('|---|---|---|')
 
 WHOMARK = {'ordinary': '', 'sdsys': 'S'}
+# 29 Sep 2026 - A shape's "|" (this OR that) is escaped for the table.  Left
+# bare it ended the cell: 37 rows rendered their alternatives as extra cells
+# and lost the "who" column, in the page and the bound PDF alike.
 for v in sorted(verbs):
-    # 29 Sep 26 - a shape's own "|" means "this or that", and a bare one ENDS the
-    # table cell: 38 rows rendered their alternatives as extra cells and lost the
-    # who column (found by the Linux port on its copy of this script).  Escaped.
-    out.append('| **`%s`** | %s | %s |'
-               % (v, shapes[v].replace('|', '\\|'), WHOMARK[verbs[v][2]]))
+    out.append('| **`%s`** | %s | %s |' % (v, shapes[v].replace('|', '\\|'), WHOMARK[verbs[v][2]]))
 
 out.append('')
 out.append('**Blank in the who column means every account has it**; `S` is SDSYS')

@@ -73,7 +73,7 @@ The answer shows **every value the AI proposes, in full**, with **Accept** and *
 
 ## Follow up: a question about the answer
 
-Every answer's box has a **Follow up** button, after the others, and it is never the default. It applies nothing - a proposed change, action, command or set of values is not taken - and **your next request from the same place carries that question and the AI's answer** with it, so you can ask *and the next line?* or *make it two decimals instead* without saying everything again. On the home screen and the pages the line says **AI follow-up>** while one is waiting; in the IDE and SED, the collection editor, the debugger and the dictionary form the status line says so.
+Every answer's box has a **Follow up** button, after the others, and it is never the default. It applies nothing - a proposed change, action, command or set of values is not taken - and **your next request from the same place carries that question and the AI's answer** with it, so you can ask *and the next line?* or *make it two decimals instead* without saying everything again. On the home screen and the pages the line says **AI follow-up>** while one is waiting; in the IDE, SED, the collection editor, the debugger and the dictionary form the status line says so.
 
 The next request's preview **shows the earlier question and answer in full**, before your request, and counts their size; Cancel is still the default. They go to the provider as the earlier turns of a conversation. Choosing Follow up again on that answer carries both exchanges, and so on up to **the last three**.
 
@@ -108,5 +108,5 @@ the line, the call stack and about fifty lines of the source round the stop, and
 
 ## See also
 
-The Administrator set's *The AI Helper* (for the administrator) ·
+*The AI Helper* in the Administrator documentation ·
 [SD TCL - The Terminal and the Session](29-sd-tcl-the-terminal-and-the-session.html).

@@ -1,5 +1,5 @@
 Title: Account Maintenance
-Subtitle: Emptying scratch files, refreshing a VOC, keeping local versions of records, configuration, the session's date, and deleting an account.
+Subtitle: Emptying scratch files, refreshing a VOC, keeping local versions of records, configuration, the system date, and deleting an account.
 
 This page continues [Accounts and Security](01-accounts-and-security.html).
 
@@ -118,8 +118,8 @@ restore.voc account id | restore.voc account all
 :list.voc.removed sales
 13 VOC record(s) that SD no longer ships:
 Name                          Went in   Use instead   sales
-margin                        1.2-0     left.margin   [would be removed]
-only                          1.2-0     id.only (written after the file name)   [kept: not the shipped record]
+margin                        2.0-0     left.margin   [would be removed]
+only                          2.0-0     id.only (written after the file name)   [kept: not the shipped record]
 ```
 
 `list.voc.removed` prints the list with the release each record went in and
@@ -144,7 +144,7 @@ To keep an edit of your own to a record SD still ships, mark it — see below.
 This has no equivalent in OpenQM or in SD on Linux. Nothing you know from
 another MultiValue system will tell you it exists.
 
-A site that has customised one of SD's own VOC records marks it by putting
+A site that has customized one of SD's own VOC records marks it by putting
 `[locked]` in **field 1, after the type code**. `update.accounts` then leaves
 that record alone.
 
@@ -174,7 +174,7 @@ silently.
 
 ### A verb is not protected by it
 
-**`[locked]` is honoured on every kind of VOC record except a verb.** A verb
+**`[locked]` is honored on every kind of VOC record except a verb.** A verb
 marked `[locked]` is updated anyway, and the account is told which ones:
 
 ```
@@ -188,7 +188,7 @@ a *number*, so a reassignment sends the verb to a different function with no
 sign that anything is wrong.
 
 **The way to get a verb that behaves differently is to add your own**, under a
-name SD does not ship, modelled on the system one. `update.accounts` walks the
+name SD does not ship, modeled on the system one. `update.accounts` walks the
 records SD ships, so a verb of your own is never visited and needs no marker.
 
 ### You are told what was withheld
@@ -282,17 +282,17 @@ change you want in every account is made to the file under `examples` and spread
 config                     report every setting
 config lptr                the same, to the default printer
 config param value         set one
-config gpl                 display the licence
+config gpl                 display the license
 config contrib             display the contributors
 ```
 
 ```
 :config
-Virtual Machine Version Number W1.1-3
+Virtual Machine Version Number W2.0-0
 APIPORT   4247
 CMDSTACK  99
 DEADLOCK  0
-DUMPDIR
+DUMPDIR   C:\ProgramData\SD\sdsys\dumps
 ERRLOG    50 kb
 ...
 NUMFILES  80
@@ -312,7 +312,7 @@ locks, how many open files is this machine set up for*.
 | | |
 |---|---|
 | *New parameter value required* | `config numlocks` with nothing after it. **The report form is `config` alone**; naming one parameter means *set it* |
-| *Not a recognised private configuration parameter name* | the name is not one that can be set per-session |
+| *Not a recognized private configuration parameter name* | the name is not one that can be set per-session |
 | *Invalid value for this parameter* | it is, and the value is not |
 
 **`config param value` sets a private, session-local value and not the
@@ -331,21 +331,24 @@ operating-system access.
 set.date date
 ```
 
-Sets the date **this session** reports, and nothing else. It does not change the
-computer's clock, and it does not touch any other session: SD keeps an offset
-from the real date inside the running process. The argument goes through SD's `D` conversion, so
-anything `iconv(…, 'D')` accepts will do, and anything it does not is refused:
+Sets the date **this session** sees — not the machine's clock. The argument
+goes through SD's `D` conversion, so anything `iconv(…, 'D')` accepts will do,
+and anything it does not is refused:
 
 | | |
 |---|---|
 | *Date required* | `set.date` with nothing after it |
 | *Invalid date format* | the argument is not a date SD can read |
 
-**There is no confirmation.** The change lasts until the session ends, and the
-next session starts from the real date. It is described here from source rather
-than shown running. Everything in the session that asks SD for the date, such as
-`date`, `time` and BASIC's `date()`, sees the adjusted one; file timestamps that
-Windows writes do not.
+**What it actually changes:** SD keeps an offset from the real date inside the
+one `sd` process that ran the command, and adds it wherever that process reports
+the date — `DATE()` and `TIMEDATE()` in BASIC, and so the `date` verb. Nothing
+else sees it: other sessions, other users, the operating system, file timestamps
+and scheduled jobs all keep the real date. The time of day is unchanged; only
+the day moves.
+
+**There is no confirmation, and it lasts until the session ends.** The next
+session starts from the real date.
 
 ## Deleting an account: `delete.account`
 

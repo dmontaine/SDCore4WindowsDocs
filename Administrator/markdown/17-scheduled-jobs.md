@@ -118,7 +118,7 @@ with its schedule, its command, when it runs next and how its last run ended.
 | **C** or Enter | changes the selected job's job or schedule (its name stays) |
 | **D** | deletes the selected job: you type its name in the box |
 | **R** | starts the selected job now; the page does not wait for it |
-| **/** | goes to the next row of the box you are in whose name holds a text you type (any case; it goes round to the top) |
+| **/** | goes to the next row of the box you are in whose name holds a text you type (any case; it goes round to the top), since 9 November 2026 |
 | **F5** | reads the list again (a run shows there when it has finished) |
 | **Ctrl-O** | shows what each command answered, newest first |
 
@@ -267,7 +267,8 @@ in Task Scheduler.
 
 ### When the login refuses
 
-A refused run writes `login refused account=`*account*` reason=`*why* to the audit trail:
+A refused run writes `login refused account=`*account*` reason=`*why* to the audit trail; an admitted one
+writes `login account=`*account*` command=`*command*:
 
 | Reason | Means |
 |---|---|

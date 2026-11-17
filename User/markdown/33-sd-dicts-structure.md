@@ -13,7 +13,7 @@ tables, *italics* mark something you supply and **bold** marks a word
 typed as it stands; braces mark an optional part.
 
 > **Every record on this page was read from the system dictionaries on SD
-> Core for Windows W1.0-0.** The `voc.dic` dictionary — the dictionary of
+> Core for Windows.** The `voc.dic` dictionary — the dictionary of
 > the VOC — is a stock file whose records illustrate every type.
 
 ## What a dictionary is
@@ -88,7 +88,7 @@ meaning:
 | `0` | the record id (`@ID`) |
 
 (`9998`, which read the item count, and `9999`, which read the length of the
-record in bytes, were removed in 1.2-0: they are ordinary field numbers now. Use
+record in bytes, were removed in 2.0-0: they are ordinary field numbers now. Use
 an I-type with `@ni` or `len(@record)` for those two.)
 
 A dictionary record with location `0` is how the record id appears in a
@@ -106,7 +106,7 @@ syntax:
 | *n*`L` | left-justified, *n* characters wide |
 | *n*`R` | right-justified, *n* characters wide |
 | *n*`T` | text — left-justified, wrapping at word boundaries |
-| *n*`C` | centred, *n* characters wide |
+| *n*`C` | centered, *n* characters wide |
 | *n*`L`*d* | left-justified with *d* decimal places (numeric) |
 | *n*`R`*d* | right-justified with *d* decimal places (numeric) |
 
@@ -164,7 +164,7 @@ use:
 | `@USERNO` | the user number of the session |
 | `@PATH` | the account path |
 
-It can call `SUBR()` to invoke a catalogued subroutine, use `TRANS()` to
+It can call `SUBR()` to invoke a cataloged subroutine, use `TRANS()` to
 read from another file, and use any BASIC function — `LEN()`, `FIELD()`,
 `RAISE()`, `OCONV()`, `ICONV()`, `COUNT()`, `SUM()`, `DATE()`, `TIME()`
 and the rest. It cannot run loops or call statements that take a
@@ -195,7 +195,7 @@ compile or run one. `compile.dict` refuses it with the message *C-type
 dictionary item NAME is not compiled: write it as an I-type* and makes no
 object code, and a query that uses it gets no value. Write the calculation
 as an I-type; when it needs more than an expression can say, the I-type can
-call a catalogued subroutine with `SUBR()` (see above).
+call a cataloged subroutine with `SUBR()` (see above).
 
 ## The A and S types are not read
 

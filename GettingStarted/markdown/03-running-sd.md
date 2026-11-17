@@ -85,7 +85,7 @@ where on Linux it would not.**
 **Earlier builds of this port refused to start on the next boot** and said
 *"Run sd -stop to clear it"*, so **the machine came up with SD unavailable to
 everybody** until somebody logged in and typed it by hand. There was no Linux
-behaviour to inherit here: on Linux the segment does not survive the reboot at
+behavior to inherit here: on Linux the segment does not survive the reboot at
 all.
 
 Nothing from before a restart can still be using that segment, so SD now
@@ -145,10 +145,6 @@ is any session with no terminal — a scheduled task, or a piped script. **Only
 an interactive `sd` with no command after it still asks**, and then only of
 an account that has no password yet.
 
-**Earlier builds of this port** reached the *"needs a password"* prompt and
-blocked for ever on a read that never got input, with nothing in any log
-because nothing had gone wrong from SD's side.
-
 ## Where things are
 
 | | |
@@ -170,7 +166,7 @@ directory minus two components, and only that depth puts `/` on
 The DLLs ship beside `sd.exe` deliberately — Windows searches the executable's
 own directory before `PATH`, which avoids Git for Windows's rival
 `msys-2.0.dll` being picked up. **That failure makes SD report "SD has not been
-started" while it is running**, which is worth recognising because it looks
+started" while it is running**, which is worth recognizing because it looks
 like nothing else.
 
 ## The Start Menu

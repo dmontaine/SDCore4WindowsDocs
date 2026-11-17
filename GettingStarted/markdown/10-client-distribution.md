@@ -32,10 +32,7 @@ The `*client` names are for new work and are what the installers put on `PATH`.
 `sd4windows\sdb_ai\sd64\gplsrc\sdclilib` is the single source of truth. The
 32-bit build points straight at it.
 
-**There is deliberately no second copy.** An earlier build of this port had a
-middle hop, and it let the 32-bit DLL go stale and **ship without SCRAM** —
-sending passwords in clear against a server that no longer accepted them. The
-hop was removed.
+**There is deliberately no second copy.**
 
 **If you are testing the 32-bit client, confirm which build you have.** A
 client that predates SCRAM is refused outright by this server, and the refusal
@@ -59,7 +56,7 @@ its executable, and **Windows searches an executable's own directory before
 `PATH`** — so no installer entry and no `PATH` change will ever update it. It
 has to be replaced by hand.
 
-**This is the most likely way to test an old client without realising it.**
+**This is the most likely way to test an old client without realizing it.**
 If an application cannot log in after an upgrade, check the date of the client
 DLL beside its executable before anything else.
 
@@ -88,7 +85,7 @@ take the same arguments and return the same things they always did.
 
 | | |
 |---|---|
-| `SDConnect()` | over the network, to port **4247** — not an ssh tunnel any more |
+| `SDConnect()` | over the network, to port **4247** |
 | `SDConnectLocal()` | on the same machine. **Sends no password and never did**, so SCRAM does not apply |
 
 BASIC programs reaching another SD server use the `!sdclient` class, which
@@ -125,21 +122,7 @@ The server installer places them under `C:\Program Files\SD`:
 > third-party crypto libraries. Any change to the client has to keep working in
 > a 32-bit process.
 
-## How the clients will be published
+## How the clients are published
 
-**THERE WILL BE A CLIENT INSTALLER OF ITS OWN, AND IT WILL CARRY MORE THAN THE
-DLLs.**
-
-| | |
-|---|---|
-| In it | the client DLLs, this documentation, and the related utilities |
-| Not in it | source code of any kind |
-| Where the source is | GitHub only — <https://github.com/dmontaine/sd4windows>. The installer creates a `docs` subdirectory and names the repository there |
-
-**That installer is not what W1.1-3 ships.** It is a change to the installer
-and it has not been made yet. What exists today is what the section above
-describes: the server installer builds and places all four DLLs, and there is
-no client-only package.
-
-**So if you need a client and cannot find one, ask rather than building from
-source** — the answer may be that a package is waiting.
+The server installer places all four DLLs, as the section above describes; there
+is no client-only package.

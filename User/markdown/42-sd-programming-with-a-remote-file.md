@@ -3,8 +3,6 @@ Subtitle: What a program can do with a file on another SD server, and what it is
 
 A file on another SD server is opened by a VOC entry of type `N`. A program opens it by the VOC name and uses it like a local file, with the differences on this page. **Whether you may is not the program's business:** the administrator of your machine defines the server and your account's place on it, the administrator of the other machine decides whether your remote login may change anything, and a program that is refused is told so in the ways below. Setting it all up is in the *Administrator* set, in the SDNet page; this page is for the person who writes the program.
 
-**On Windows this client has been compiled and its free checks pass; it has not yet been run against another server.** Nothing on this page was seen to happen on a Windows machine. The Linux version of the client was run in test sandboxes and on one installation talking to itself; those results are Linux's.
-
 ## Opening it
 
 ```
@@ -67,14 +65,14 @@ The other machine's text in message 12505 is cut at 100 characters and anything 
 
 **`GETLOCKS(f, user)`** (internal programs only) of a remote file is the **local view**, as in openQM: the locks of a remote file are held on the other machine and do not appear in this machine's lock table, in `LIST.READU` or in `GETLOCKS()`. It returns the one field of three numbers (`NUMLOCKS`, the number of record locks held on this machine, the peak) and **no lock line**, whatever the user number, and it asks the other machine nothing. To see who holds what on the other machine, look there (`LIST.READU`, which an administrator of that machine can run).
 
-## Administering a remote file
+## Administering a remote file (added 21 October 2026)
 
 These do on the other machine what they do on a local file, **for your remote login and in the account that login entered there**, so every switch that account has on that machine applies (a file named `voc`, `*.bp` or `*.dic` still needs `voc.edit`, `bp.edit` or `dict.edit` there). They need **three things**, the last on the other machine: a `write` definition here, the remote login in the other machine's write group, **and** in its administration group (`modify.account <account> files-admin-on`; it needs `files-on` and `files-write-on` first and is off for every account until the administrator of that machine gives it).
 
 | | |
 |---|---|
 | `WRITE rec TO f CREATING.SEQKEY id`, `WRITEU ...` | the other machine's **own counter for that file** gives the id and it comes back in `id`; the update lock on the new record is held there for `WRITEU` and given back for `WRITE`. A directory file is refused as it is locally (message 12353). Not inside `BEGIN TRANSACTION` (message 12515) |
-| `FCONTROL(f, key {, value})` | goes to the other machine with its key (`FC$SET.SEQ.KEY`, `FC$GET.SEQ.KEY`, `FC$VALID.ID`, `FC$MINMOD`) and returns what it returned; `STATUS()` is what it left there. Asking whether a name is a valid record id (key 6) changes nothing, every other key is a change |
+| `FCONTROL(f, key {, value})` | goes to the other machine with its key (`FC$SET.SEQ.KEY`, `FC$GET.SEQ.KEY`, `FC$VALID.ID`, `FC$SYNC`, `FC$CRLF`, `FC$MINMOD`) and returns what it returned; `STATUS()` is what it left there. Asking whether a name is a valid record id (key 6) changes nothing, every other key is a change |
 | `ANALYZE.FILE`, `CONFIGURE.FILE`, `CREATE.INDEX`, `BUILD.INDEX`, `DELETE.INDEX`, `DISABLE.INDEX` on the VOC name of a remote file | run **on the other machine**, as the remote login's Windows user; **what the verb printed there is printed here**, and the verb's return code is the one the other machine's verb ended with. The file is the one the pointer opened (you cannot name another), and the rest of the command is passed on as it stands |
 | `CREATE.FILE name ... SERVER srv {AS remote}` | makes the file on server *srv* (as *remote* there when `AS` is given) and, **only after that machine has confirmed it**, writes the `N` pointer *name* in your VOC: there is never a pointer to a file that is not there. `DICT`, `DATA`, `USING`, `PATHNAME`, a comment and `KEEPCASE` mean nothing for a remote file and are refused (message 12533) before anything is sent; a name already in your VOC is refused (12544) before anything is sent; `voc.edit` is needed because the pointer is a VOC entry |
 | `DELETE.FILE name` where *name* is an `N` pointer | asks, as a local delete does (`NO.QUERY` does not), deletes the file on the other machine and, in the same act, the pointer here. If that machine says the file is not there (someone removed it) the pointer would dangle, so the verb offers to remove it (`NO.QUERY` removes it). If that machine refuses, the pointer stays |
@@ -105,9 +103,19 @@ The `INDICES()` that every query asks of every file now gets the other machine's
 
 A process keeps the last 64 records it `READ` from remote files for **2 seconds**, and also the fact that the server did not have a record. A second `READ` of the same record from the same file variable in that time is answered from memory, so a `READ` can show a record up to 2 seconds old. A record over 32,768 bytes is not kept; `READV` is not cached; a handle that can write is not cached at all.
 
-## Ids and case
+## Ids, case and size
 
-Ids that differ only in case are two records in a directory file and one in a dynamic file, as on a local file, so a program that is moved from a local file to a remote one keeps the behaviour of the kind of file it is. An id holding one of the five mark bytes (251 to 255) is refused by a `WRITE`. These are the server's rules for the file it opens; the pointer adds only the 63-character limit above.
+These are the rules for a file opened by name and not through an `N` pointer:
+
+| | |
+|---|---|
+| a **dynamic** file | folds the case of ids: a record written as `AbC` is read as `abc` |
+| a **directory** file | keeps ids as given: a record written as `d1` is not found as `D1` |
+| a record written to a directory file | is **text**, one field to a line: the field mark becomes a line end, and it reads back as the same fields |
+| a record of 1 MB, and one of 20 MB | written and read back byte for byte; the server accepts a request of that size |
+| an id holding a **mark** byte (251 to 255, the five marks) | refused by a `WRITE`: `ON ERROR`, `STATUS()` 3000, nothing stored; an id holding byte 247 to 250 is an ordinary one and is written and read back |
+
+Ids that differ only in case are two records in a directory file and one in a dynamic file, as on a local file, so a program that is moved from a local file to a remote one keeps the behavior of the kind of file it is.
 
 ## A program that tells the refusals apart
 
@@ -122,10 +130,7 @@ Ids that differ only in case are two records in a directory file and one in a dy
       end case
    end
    close f
+end
 ```
 
-Try every change and lock with `ON ERROR` and print the branch and `STATUS()`: a refusal is then told from a success by what the program prints and by the other machine's file and audit trail, never by the absence of an error.
-
-## What has been run
-
-On Windows, the statements above are compiled and the free checks pass. The test of a stored login's access list was run against real Windows access lists. **Nothing on this page has been run against another server from a Windows machine**, so the table of what a refusal looks like is read from the source and from the Linux version, not seen.
+This is the shape to use: try every change and lock with `ON ERROR` and print the branch and `STATUS()`, so a refusal is told from a success by what the program prints and by the other machine's file and audit trail, never by the absence of an error.

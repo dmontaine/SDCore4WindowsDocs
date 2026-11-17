@@ -49,14 +49,11 @@ with `os-on`, the same switch that governs `OS.EXECUTE` - see the
 Administrator set's *Operating System Access* chapter for how that grant is
 made and read.
 
-**This gate is Windows-specific and does not carry over to SD Core for
-Linux.** Confirmed against their source, not assumed: Linux's Python
-integration runs embedded in-process, with no separate helper to fail to
-start and no permission check anywhere on the call path - it runs
-unconditionally for any account there, the same shape their own `SH`/
-`OS.EXECUTE` was left in once their equivalent gate was removed. A program
-that checks for `-12041` to decide whether it may proceed will behave
-correctly on Windows and never see that code at all on Linux.
+**SD Core for Linux has the same gate.** Its Python runs embedded in-process
+rather than in a helper, but it too needs the account's `os-on` switch and
+refuses a session without it (status 3035). The helper-related codes on
+this page, such as `-12041`, belong to the Windows helper process and are
+not seen on Linux.
 
 ## `$INCLUDE SDPYFUNC.H`
 
@@ -163,11 +160,11 @@ used; only the mechanism moved.
 
 | Code | Meaning |
 |---|---|
-| `-12001` | interpreter not initialised |
+| `-12001` | interpreter not initialized |
 | `-12002` | failed to create the dictionary object |
 | `-12003` | failed to link Python's built-ins into the running scope |
 | `-12004` | an exception was raised while running the code |
-| `-12005` | error reported while finalising the interpreter |
+| `-12005` | error reported while finalizing the interpreter |
 | `-12006` | could not open the script file (`PY_RUNFILE`) |
 | `-12007` | key not found in dictionary |
 | `-12008` | failed to convert a Python object to a string |

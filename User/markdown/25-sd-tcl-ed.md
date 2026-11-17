@@ -12,7 +12,7 @@ BASIC and runs inside SD, so it needs no operating-system permission either;
 [edit](26-sd-tcl-edit.html) and [micro](27-sd-tcl-micro.html) hand the record to a
 full-screen Windows program. Use one of those when you are sitting at a terminal
 and want to see the whole record at once. A record that is a data collection has
-an editor of its own, [ced](27b-sd-tcl-ced.html).
+an editor of its own, [the collection editor](27b-sd-tcl-ced.html), [ced](27b-sd-tcl-ced.html), also reached from the IDE (F12) or by `call !ced`.
 
 SD folds case, so a command may be typed in either case. Commands are shown here
 in lower case. In the tables, *italics* mark something you supply and **bold**
@@ -21,7 +21,7 @@ commands are shown in upper case**, which is how `ed`'s `HELP` prints them; it
 folds case too.
 
 > **Every listing on this page was produced by running it**, on SD Core for
-> Windows W1.0-0, against a scratch record in an account's `bp` file.
+> Windows, against a scratch record in an account's `bp` file.
 
 ## Starting it
 
@@ -50,7 +50,7 @@ bp zzed
 ```
 
 **`creating.seqkey` in the place of a record name** edits a new record under the
-file's next sequential id, the counter that `write ... creating.seqkey` uses:
+file's next sequential id, the counter that `write … creating.seqkey` uses:
 `ed bp creating.seqkey`. The id is taken when the edit begins and shown like any
 record id, so a record that is never filed leaves a gap in the sequence, and an id
 that a record already holds is skipped. A file that is not a hashed file, such as a
@@ -157,7 +157,7 @@ before the current line rather than after it.
 |---|---|
 | **`P`**n* | display *n* lines from the current line |
 | **`PL`**{**`-`**}*n* | *n* lines relative to the current line |
-| **`PP`**n* | *n* lines centred on the current line |
+| **`PP`**n* | *n* lines centered on the current line |
 | **`PB`** | the block |
 | **`L`** *string* | the next line **containing** *string* |
 | **`F`**{*col*} *string* | the next line with *string* **at** column *col*, default 1 |
@@ -315,7 +315,7 @@ overwrite, `FD`, a block action, `Record changed - OK to quit?`) is answered *no
 as Enter answers it, so the end of the input never deletes or overwrites a record.
 The start-line and end-line questions of `LOAD` and `UNLOAD` are different: Enter
 takes their default (the whole record), and the end of the input is not an Enter,
-so the command is cancelled and `UNLOAD` writes nothing. A script that wants its
+so the command is canceled and `UNLOAD` writes nothing. A script that wants its
 work kept ends with `FI` (or `SAVE`). An empty Enter at the `----:` prompt on a
 terminal is still an empty command and shows the next line. Before 19 October 2026
 such a session went on for as long as it was left, printing the prompt without end
@@ -349,7 +349,7 @@ FIle [[filename] record.id]
                 Write record and end edit
 ```
 
-### External commands: a catalogued subroutine as an ED command
+### External commands: a cataloged subroutine as an ED command
 
 **You can add commands to `ed`** (16 Oct 2026) by writing a subroutine and naming
 the commands it handles in the `$ed.options` record of the VOC. A line of that
@@ -359,7 +359,7 @@ record such as
 EXTERNAL zzedx1 WHERE DUMP UPCASE "'ADD 'A0X"
 ```
 
-says that the catalogued subroutine `zzedx1` handles the commands `WHERE`,
+says that the cataloged subroutine `zzedx1` handles the commands `WHERE`,
 `DUMP`, `UPCASE`, and any command that matches the template `'ADD 'A0X`.
 After the subroutine's name come one or more patterns, one after another, with
 no quotes needed; a pattern with a space in it is put in double quotes. A
@@ -387,11 +387,11 @@ Set `error` to true if the command fails: the editor says *External command
 `name` failed* and changes nothing. Otherwise it takes `info(3)` as the new
 data and `info(4)` to `info(6)` as the new positions, which it keeps inside the
 record (999 becomes the last line, -3 the top). `OOPS` undoes what the
-subroutine did. The subroutine must be catalogued where the user can reach it.
+subroutine did. The subroutine must be cataloged where the user can reach it.
 
 **What this does not do:** the editor does not check that the subroutine exists
 until a command that names it is typed; a missing one then stops the editor with
-the run time's usual message. An unrecognised option in `$ed.options` is
+the run time's usual message. An unrecognized option in `$ed.options` is
 ignored, as before.
 
 ### The command stack, and prestored sequences
@@ -429,7 +429,7 @@ bp zzed
 **Field 1 is a marker, not a command. it must begin with `E`** — `ED` is the
 usual thing to write — and `ed` refuses a record that does not with *"Record is
 not a prestored edit sequence"*. Nothing was run for it above, and the
-line numbers in error messages count it: an unrecognised command in **field 2**
+line numbers in error messages count it: an unrecognized command in **field 2**
 is reported as line 2.
 
 `PAUSE` inside a sequence stops it and `.XR` resumes, `.XK` abandons it;
@@ -441,7 +441,7 @@ is reported as line 2.
 >
 > ```
 > ----: .X bp zzs2
-> Error - Unrecognised command at line 2 of prestored commands
+> Error - Unrecognized command at line 2 of prestored commands
 > Did you mean to insert this text (Y/N)? N
 > ```
 >
@@ -462,4 +462,4 @@ verb, which every account does.
 
 [SD TCL - The edit Screen Editor](26-sd-tcl-edit.html) ·
 [SD TCL - The micro Screen Editor](27-sd-tcl-micro.html) ·
-[SD TCL - Programs and the Catalogue](24-sd-tcl-programs-and-the-catalogue.html).
+[SD TCL - Programs and the Catalog](24-sd-tcl-programs-and-the-catalogue.html).

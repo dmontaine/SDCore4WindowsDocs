@@ -42,15 +42,15 @@ system(key)
 
 | Key | | Value |
 |---|---|---|
-| `31` | licence number | `0` |
+| `31` | license number | `0` |
 | `42` | IP address | *empty* |
 | `91` | **is this Windows?** | `1` |
 | `1006` | Windows NT style? | **`0`** |
 | `1009` | endian — 0 little | `0` |
 | `1010` | platform name | `Windows` |
-| `1012` | SD version | `W1.1-3` |
+| `1012` | SD version | `W2.0-0` |
 | `1013` / `1014` | user limit, without / with the phantom pool | `20` / `20` |
-| `1015` | computer name | `Gitorli` (example) |
+| `1015` | computer name | `myhost` (example) |
 | `1017` | port number of a tcp connection | `0` |
 | `1028` | system id | `1028` |
 
@@ -120,9 +120,9 @@ such account.
 
 **A path is told only where the account could open it.** The account's own
 directory and the files in it always; anything else only to an account that has
-OS access (`os-on`), and to any other the answer is a null string (with
-`status()` 3035 from `vocpath()`). So a program cannot learn where another
-account lives, or which accounts there are, by asking.
+the OS access gate, and to any other the answer is a null string (with `status()`
+3035 from `vocpath()`). So a program cannot learn where another account lives, or
+which accounts there are, by asking.
 
 ### Unique values, and a few more
 
@@ -132,7 +132,7 @@ account lives, or which accounts there are, by asking.
 | `20` | print jobs passed to the spooler | a count for the whole system since SD started, all sessions together. openQM gives the job's reference; SD does not read the spooler's own job number back |
 | `19` | a unique value from the date and time | two five digit numbers, the day and the second; a second value in the same second, from **any** process, gets a letter on the end (`a`, `b` … `z`, `aa`). The time is the process's own, so two users in different time zones can get the same value |
 | `21` | a unique value from the date and a sequence | two five digit numbers, the day and a count that starts at 1 again each day |
-| `45` | the name of the running program | its catalogue name |
+| `45` | the name of the running program | its catalog name |
 | `1048` | a sequence number | unique across all sessions until SD restarts, then 1 again |
 | `1049` | is `hush` in effect? | `0` or `1` |
 | `1062` | has `signal()` been raised for this process? | `1` and **cleared by reading it**: `until system(1062)` is the loop of a phantom that waits to be told |
@@ -240,7 +240,7 @@ in.
 
 | | |
 |---|---|
-| `sysmsg(2831)` | `Unrecognised statement` |
+| `sysmsg(2831)` | `Unrecognized statement` |
 | `sysmsg(6711, 'ABC')` | `Unable to find source record ABC` |
 | `sysmsg(2201)` | `Account name '' is not in register` — an unfilled substitution comes back empty |
 | `sysmsg(99999)` | `[99999] Message not found` |

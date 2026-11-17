@@ -6,9 +6,7 @@ Subtitle: Every error a check reports, what -F or -Q does about it, the dump and
 > it is named in words.
 
 This is the second half of [sdfix, the File Check Tool](14-sdfix.html), which
-has the options and the rules for running it. The same convention is used:
-*run* means the damage was made on a scratch copy and the output is real,
-*source* means read from `sdfix.c` and not provoked.
+has the options and the rules for running it.
 
 ## What a check reports, and what `-F` does
 
@@ -17,26 +15,26 @@ repair is done without asking; under `-Q` each is offered with `Fix?`.
 
 | The check says | Meaning | The repair |
 |---|---|---|
-| `Invalid group size (n bytes)` | the header's group size is not a multiple of 1,024 or is out of range (*source*) | none; the check stops |
-| `Large record size is invalid (n)` | the size above which a record goes to its own blocks is outside the group (*source*) | resets it to the group size less the block header |
-| `Invalid split and/or merge loads (a, b)` | split load is not above merge load (*run*) | writes the defaults SD gives a new file, split 80 and merge 50, and says `Corrected by resetting to defaults (80, 50)` (*run*) |
-| `AKn subfile found but not expected` | an index file the header does not list (*run*) | deletes the file and says `Corrected by deleting affected AK index subfile` only if it went; otherwise `The AK index subfile could not be deleted` (*run* for an index in the file's own folder; *source* for one in a relocated index folder) |
-| `AKn subfile not found` | the header lists an index whose file is gone (*run*) | removes the index from the header: `Corrected by removing reference to missing AK index subfile` (*run*). **The file then has no index of that name.** Create and build it again |
-| `Cannot read AKn subfile header`, `AKn subfile has incorrect magic number` | a damaged index file (*run*, both) | deletes the file and removes the index from the header: `Corrected by deleting affected AK index subfile`, `AK must be recreated and rebuilt` (*run*). An index file that cannot be read at all (an empty one, say) is reported once, as `Cannot read AKn subfile header`, and repaired once (*run*), but the check that follows it also reports nodes it cannot find |
-| `Active group n found after released group(s)!` | a used group follows groups marked as released (*source*) | writes empty groups over the released ones |
-| `Group n has incorrect block type (t)` | (*source*) | sets the type to data |
-| `Record 'id' mis-hashed into group n. Should be in group m` | the record's id does not hash to the group it is in (*run*) | queues the group for dump and rebuild (below). Only `-F` queues; `-Q` reports only (*run*). At most 50 are reported: `Further hash errors will not be reported` |
-| `Error in large record. Group g, ... Record cannot be recovered.` | the chain of a large record is broken (*source*) | **deletes the record**; its header is cut out of the group |
-| `Apparent modulus a differs from recorded modulus b` | the groups actually in use do not match the header (*source*) | sets the header's modulus to the number of groups in use |
-| `Incorrect mod_value (a), expected b` | (*run*) | sets it: `Corrected by setting to 256` |
-| `Minimum modulus is invalid (n)` | (*run*) | sets it to 1 |
-| `Load error: Actual a, file header b` | the bytes in use differ from the header's count (*source*) | updates the header |
-| `Record count error: Actual a, file header (adjusted) b`, `Header record count has not been set` | (*run*) | updates the header |
-| `Overflow block x has non-zero used byte count` | a block on the free chain holds data (*source*) | clears it |
-| `Faulty next block pointer`, `Read error at ...` | the free chain is broken (*source*) | none; the walk of the free chain stops |
-| `Overflow block n (xaddr) unreferenced` | reachable from no group, large record or free chain (*source*) | puts it on the free chain |
-| `AK n node k unreferenced` | an index node reachable from nothing (*source*) | puts it on the index's free node chain |
-| `Non-existant node`, `Read error on node`, `Type t node ... also referenced from`, `Unexpected node type`, `Invalid forward pointer in free node` and the like | the index tree is damaged (*source*; the first and last were seen on a check of a file whose index file was empty) | **none**. Index trees are only reported on. Delete the index and build it again |
+| `Invalid group size (n bytes)` | the header's group size is not a multiple of 1,024 or is out of range | none; the check stops |
+| `Large record size is invalid (n)` | the size above which a record goes to its own blocks is outside the group | resets it to the group size less the block header |
+| `Invalid split and/or merge loads (a, b)` | split load is not above merge load | writes the defaults SD gives a new file, split 80 and merge 50, and says `Corrected by resetting to defaults (80, 50)` |
+| `AKn subfile found but not expected` | an index file the header does not list | deletes the file and says `Corrected by deleting affected AK index subfile` only if it went; otherwise `The AK index subfile could not be deleted` |
+| `AKn subfile not found` | the header lists an index whose file is gone | removes the index from the header: `Corrected by removing reference to missing AK index subfile`. **The file then has no index of that name.** Create and build it again |
+| `Cannot read AKn subfile header`, `AKn subfile has incorrect magic number` | a damaged index file | deletes the file and removes the index from the header: `Corrected by deleting affected AK index subfile`, `AK must be recreated and rebuilt`. An index file that cannot be read at all (an empty one, say) is reported once, as `Cannot read AKn subfile header`, and repaired once, but the check that follows it also reports nodes it cannot find |
+| `Active group n found after released group(s)!` | a used group follows groups marked as released | writes empty groups over the released ones |
+| `Group n has incorrect block type (t)` | | sets the type to data |
+| `Record 'id' mis-hashed into group n. Should be in group m` | the record's id does not hash to the group it is in | queues the group for dump and rebuild (below). Only `-F` queues; `-Q` reports only. At most 50 are reported: `Further hash errors will not be reported` |
+| `Error in large record. Group g, ... Record cannot be recovered.` | the chain of a large record is broken | **deletes the record**; its header is cut out of the group |
+| `Apparent modulus a differs from recorded modulus b` | the groups actually in use do not match the header | sets the header's modulus to the number of groups in use |
+| `Incorrect mod_value (a), expected b` | | sets it: `Corrected by setting to 256` |
+| `Minimum modulus is invalid (n)` | | sets it to 1 |
+| `Load error: Actual a, file header b` | the bytes in use differ from the header's count | updates the header |
+| `Record count error: Actual a, file header (adjusted) b`, `Header record count has not been set` | | updates the header |
+| `Overflow block x has non-zero used byte count` | a block on the free chain holds data | clears it |
+| `Faulty next block pointer`, `Read error at ...` | the free chain is broken | none; the walk of the free chain stops |
+| `Overflow block n (xaddr) unreferenced` | reachable from no group, large record or free chain | puts it on the free chain |
+| `AK n node k unreferenced` | an index node reachable from nothing | puts it on the index's free node chain |
+| `Non-existant node`, `Read error on node`, `Type t node ... also referenced from`, `Unexpected node type`, `Invalid forward pointer in free node` and the like | the index tree is damaged | **none**. Index trees are only reported on. Delete the index and build it again |
 
 The header's longest-id value is also reset to the real longest id under `-F`,
 without a message, because a value above SD's id limit would stop the file
@@ -47,8 +45,7 @@ what the scan found. If the scan is wrong because a group is damaged, the
 header is then wrong in step with it, and the next run is quiet about it. Look
 at what a check reports before you let `-F` act on it.
 
-## Dump and rebuild of mis-hashed groups *(run)*
-
+## Dump and rebuild of mis-hashed groups
 When `-F` has queued groups, the check ends with a question that **is asked
 even under `-F`**. The scratch file here had 305 records in 210 groups, and its
 header's mod value set to 1, so most records hashed to the wrong group; the
@@ -94,9 +91,9 @@ answer `n` to `Fix?`, left alone.
 This is a developer's debugging tool, and it can write anywhere in the file.
 **It is off unless the configuration file has `DEBUG` with bit 2 set** (`DEBUG=2`
 in the `[sd]` section). Without that, `sdfix -I` prints the usage text and does
-nothing. *Run.* To use it without changing `C:\ProgramData\SD\sd.conf`, copy that
+nothing. To use it without changing `C:\ProgramData\SD\sd.conf`, copy that
 file, add the line to the copy, and point `SD_CONFIG` at the copy for that one
-run (*run*; the file is read when the program starts).
+run (the file is read when the program starts).
 
 The prompt shows the selected subfile (`0?`). Commands (`?` lists them):
 `check`, `fix` (a check with `-F`'s unconditional repairs); `Gn` display group
@@ -118,48 +115,12 @@ number shows the window at that address; `rebuild n` dump and rebuild group *n*;
   length`, and any character that is not a hex digit is `Format error in W
   command`. The address must be hex digits followed at once by `=` (spaces before
   it are allowed): `W1G0=41`, `W10xyz=41` and `W10 =41` are format errors and
-  write nothing (*run*).
-* **If its input ends or fails, interactive mode ends** (*run*): `End of input`
+  write nothing.
+* **If its input ends or fails, interactive mode ends**: `End of input`
   and `Status: 0` when it ended, `Input error [n]` and `Status: 1` when reading
   failed.
 * `h` shows `Next seq id`, the counter used by `write ... creating.seqkey`, and
   warns if it is negative.
-
-## Faults in the tool, found while writing these pages and fixed
-
-They were in the program, not in the use of it. Each was *run* on the old build
-and again on the fixed one. They are listed so that an older copy of `sdfix` can
-be recognised; its banner is the same.
-
-1. **`-F` could not delete an index subfile that sits in the file's own
-   folder.** *AK0 subfile found but not expected* was followed by *Corrected by
-   deleting affected AK index subfile*, and the file `%2` was still there on the
-   next run. The same call is used for a damaged index file, which was therefore
-   taken out of the header and left on the disk. If an older copy was used, look
-   for a stray `%2` beside `%0` and `%1` and delete it by hand once you have
-   checked that it is not needed.
-2. **The repair for split and merge loads was rejected by the check that finds
-   it.** A file made with the defaults has split 80 and merge 50. The check wants
-   split above merge, and the repair wrote split 50 and merge 80: the next run
-   reported it again. It now writes 80 and 50 (*run* on the old build: the
-   header ended at 50 and 80 and the next check reported it again). A file whose
-   loads were set with `configure.file` *file* `split.load` *n* `merge.load` *n*
-   to anything the check accepts is not touched.
-3. **Input that ended looped for ever** at `Fix?` (and at the dump question) and
-   in interactive mode. The end of input is now taken as `n`; see the first page.
-4. **`W` in interactive mode read decimal and swapped bytes**, above.
-5. **`-R` with `-F` or `-Q` fixed nothing and said nothing.** It is now refused.
-6. **`sdfix` did not look for a file open in SD,** as `sdidx` does. It now does;
-   see the first page. **Its first version of that test never ran:** it asked
-   for SysV shared memory, which this runtime does not have, so every file looked
-   closed. And it compared the path **with its case**, so a path typed in
-   another case than SD had recorded was not recognised. It attaches SD's
-   shared memory and ignores case now (*run*: a session held a file open and
-   five spellings of its path were all refused).
-7. **Smaller faults seen on the old build** (*run*): an unreadable index file was
-   repaired twice, the exit status was the last file's, and a path of 252
-   characters was checked without a word instead of being refused (see the first
-   page).
 
 ## What it will not do
 

@@ -47,7 +47,7 @@ machine over ssh or through an API client**, and administration happens only
 as SDSYS, at the console.
 
 If you want multi-user Remote Desktop, you want Windows Server and RDP client
-access licences, and probably a commercial product built for it.
+access licenses, and probably a commercial product built for it.
 
 ## How it is done
 
@@ -79,7 +79,7 @@ straight into SD rather than at a Windows prompt.
 
 **That applies to everyone who can reach ssh at all** — the rule is about the
 route in, not about who took it. SDSYS is not among them: see
-[SDSYS has no remote door](#sdsys-has-no-remote-door) below.
+[SDSYS has no ssh door](#sdsys-has-no-ssh-door) below.
 
 ### The cost: scp and sftp stop working inbound
 
@@ -175,7 +175,7 @@ installation is served entirely by `ssh localhost`.**
 ## Per-account control
 
 An account is told at creation which routes it may use. **Say nothing and it
-gets `none`** (until 25 October 2026 it got `both`); name the ones it is to have:
+gets `none`**; name the ones it is to have:
 
 | | reaches SD by |
 |---|---|
@@ -220,20 +220,16 @@ process opens the database under the invoking user's own token, so everyone who
 uses SD needs file access to the tree and can read another account's directory
 from outside SD. See [Security](12-security.html).
 
-## SDSYS has no remote door
+## SDSYS has no ssh door
 
 **SDSYS cannot ssh in, from this machine or any other.** There is no
 exception for a loopback connection: SDSYS's Windows account is never added
 to `sdssh`, because nothing but `create.account` joins that group and SDSYS
 is not created that way. `AllowGroups` refuses the connection before
 authentication even starts — there is no session for `ForceCommand` to ever
-apply to. The same is true of the API; see [API access](09-api-access.html).
-
-> **This is a full reversal of SD Core 1.0 and early 1.1 builds**, where a
-> Windows administrator's SD account had both routes and could use them
-> locally — a loopback ssh or API connection was admitted, only a remote one
-> refused. If you read that in an older document, it no longer holds:
-> SDSYS has neither route, under any circumstance.
+apply to. The API has a rule of its own for SDSYS, shut as delivered and opened
+only by the administrator; see [API access](09-api-access.html). **Remote
+administration over ssh is the separate account SDRADMIN, never SDSYS.**
 
 **Nothing changes for ordinary accounts.** Every account `create.account`
 makes reaches ssh from wherever its own `sdssh` membership allows, whether

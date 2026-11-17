@@ -13,9 +13,11 @@ refused), and so must the program's own file. The temporary pointer reaches the 
 only. The editor is told which account the program belongs to, so its **Compile** (F8) and
 **Compile and catalog** (F9) do not run BASIC in SDSYS through the pointer: they run
 [run.in](19b-run-in.html) in that account, so the object goes into the account's own `bp.out`, a
-`$catalog` line in the source is not acted on, and the catalog is the account's. **Run** is refused
-in the editor (run it in its account), and so is **Debug** of such a program: `run.in` does not
-debug in another account on Windows, and says so (`debug is not a command run.in runs`).
+`$catalog` line in the source is not acted on, and the catalog is the account's. Its **Debug** (F7, and Debug from the first line) compiles the
+program for the debugger and runs the debugger in that account, the same way (`run.in … basic …
+debugging`, then `run.in … debug …`), and the breakpoints marked in the editor's gutter are handed to
+that debugger as they are for any program (F7 runs on to the first of them, and the lines that
+still have a breakpoint come back to the editor); **Run** is refused in the editor (run it in its account).
 
 **`C`** on the page compiles the program under the cursor the same way and shows what the compiler
 said in a box; the Built column follows. The page writes `master edit account=ZE1 kind=bp file=bp
@@ -24,9 +26,10 @@ for `C`; `run.in` writes its own `run.in begin` and `run.in end` lines for each 
 that `run.in` refuses (a command word that is not SD's own entry in that account, a file outside the
 account, a file with a trigger, a `$execute` line in the source) shows the refusal in the same box.
 
-**`B` is not built on Windows.** On Linux it debugs the program under the cursor in its account; here
-it says `B is not built on Windows: run.in does not debug in another account.  Debug the program in
-its own account`, and does nothing else.
+**`B`** on the page debugs the program under the cursor the same way: a compile that fails is shown
+as `C` shows it and nothing is debugged; otherwise the terminal goes to the debugger, and when it
+ends the page asks you to press Enter and comes back on the same program. The page writes `master
+debug account=ze1 file=bp id=prog`.
 
 ## A global change of every row shown: `G`, and `U` to put it back
 

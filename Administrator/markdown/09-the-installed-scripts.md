@@ -270,5 +270,6 @@ refused on a machine that already has an ssh server.
 
 ## Continued in
 
-[The Scripts SD Runs For Itself](09a-scripts-sd-runs-itself.html) — the
-scripts the installer, the verbs, the uninstaller and SD itself run.
+[The Scripts SD Runs For Itself](09a-scripts-sd-runs-itself.html) — what
+the service, the verbs and the installer invoke while running, rather than
+what an administrator runs by hand.

@@ -19,13 +19,8 @@ as typed  →  lower  →  upper
 A name that matches exactly still wins, so nothing that works today changes. A
 name that exists in **no** case is still reported as not found.
 
-This order is used everywhere: the parser, the query processor, `RUN`,
-the `LOGIN` paragraph lookup, and `SET.FILE`'s default `qfile` pointer.
-
-> **The change was additive, not a flip.** A `downcase` attempt was inserted
-> into a chain that already tried as-typed and then upper. On a tree whose ids
-> are all upper case the new attempt can never hit, so it changed no behaviour
-> and could not break anything.
+This order is used everywhere: the parser, the query processor, `run`,
+the `login` paragraph lookup, and `set.file`'s default `qfile` pointer.
 
 ## What is spelled in lower case now
 
@@ -58,9 +53,9 @@ regardless of casing.
 
 ## One correction worth reading
 
-**`LIST` and `CT` used to disagree about the same name.** `list voc $HOLD`
+**`list` and `ct` used to disagree about the same name.** `list voc $HOLD`
 answered *"'$HOLD' not found"* on the very record `ct voc $HOLD` had just shown
-you. `LIST`, `SORT`, `SELECT` and the rest of the query language now use the
+you. `list`, `sort`, `select` and the rest of the query language now use the
 same as-typed → lower → upper order as everything else.
 
 ## Account names

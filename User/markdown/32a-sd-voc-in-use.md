@@ -32,12 +32,12 @@ Types](32b-sd-voc-private-vocabulary-and-parser.html), which also describes
 `$voc.parser`, the record that hands a VOC record of a type SD does not know
 to a program of your own.
 
-### If neither has it, the catalogue is tried
+### If neither has it, the catalog is tried
 
-A name that is not in the VOC or the private vocabulary is looked for in the **private catalogue**
-of the account and then in the **global catalogue**, `gcat`. A hit is
+A name that is not in the VOC or the private vocabulary is looked for in the **private catalog**
+of the account and then in the **global catalog**, `gcat`. A hit is
 treated exactly as though the VOC had held `V` / `CA` / *name*. This is
-why a program you have catalogued can be run by typing its name with no
+why a program you have cataloged can be run by typing its name with no
 VOC record of its own.
 
 If neither has it, the command is refused by name.
@@ -112,7 +112,7 @@ follows from what you saved** rather than from anything you say.
 
 ### Listing the VOC by type
 
-SD has no ready-made `list` sentences. (Until 1.2-0 it shipped ten, `listf`,
+SD has no ready-made `list` sentences. (Until 2.0-0 it shipped ten, `listf`,
 `listfl`, `listfr`, `listk`, `listpa`, `listph`, `listq`, `listr`, `lists` and
 `listv`, as R-records into a file called `SD.VOCLIB`; both are gone.) The query
 processor does the same job with the `type` item of the VOC's dictionary:
@@ -165,8 +165,8 @@ entry actually contains without an editor.
 ## The VOC and account creation
 
 `create.account` copies the VOC from `NEWVOC` in the system directory —
-**384 records**, counted directly, and identical for every ordinary
-account. SDSYS's own VOC is copied from `voc_template` instead — **448
+**386 records**, counted directly, and identical for every ordinary
+account. SDSYS's own VOC is copied from `voc_template` instead — **451
 records** — which carries the administration verbs `NEWVOC` does not:
 `create.account`, `delete.account`, `modify.account`, `grant`, `revoke`,
 `list.grants`, and the rest of the set the *Administrator* documentation
@@ -175,7 +175,7 @@ covers.
 **What SDSYS alone can do is in the VOC, not in the verb.** An ordinary
 account does not have `create.account` because the VOC record for it is
 not there, not because a security subroutine refuses it. The name is
-simply not recognised. This is the design: what only SDSYS may do is
+simply not recognized. This is the design: what only SDSYS may do is
 withheld by giving or withholding the record, the same mechanism the old
 account tiers used before they were removed.
 
@@ -187,8 +187,12 @@ SD tries a name as typed, then lower, then upper. What it changes is what
 SD prints back: `CT VOC LIST` answers `VOC list`.
 
 The file-pointer entries — `bp`, `bp.out`, `gpl.bp`, `gpl.bp.out` — moved
-to lower case on 19 Aug 2026. `VOC`, `NEWVOC`, `ACCOUNTS`, `MESSAGES`,
-`SYSCOM` and `QFILE` are still upper case on disk and are next.
+to lower case on 19 Aug 2026. **The migration is complete, not partial**: an
+account's own `voc`, and the system directory's `newvoc`, `accounts`,
+`messages` and `syscom`, are all lower case on disk too, confirmed directly
+— there is nothing left in upper case to migrate. `qfile` was never a path
+of its own; it is a VOC pointer to `@SDSYS/$ipc`, the session IPC area, and
+has no on-disk name to fold.
 
 ## What is not here
 

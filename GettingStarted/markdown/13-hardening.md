@@ -1,39 +1,34 @@
 Title: Other hardening
-Subtitle: The catalogue and pcode locks, the logs, line endings, and the rest of the smaller changes.
+Subtitle: The catalog and pcode locks, the logs, line endings, and the rest of the smaller changes.
 
 Everything on this page is a change you may notice while testing, grouped by
 what it touches. The identity model and the file permissions are on
 [Security](12-security.html); this is the remainder.
 
-## The global catalogue
+## The global catalog
 
-**Adding to or removing from the system-wide catalogue now requires
-administrator rights, whichever way you ask for it.**
+**Adding to or removing from the system-wide catalog requires SDSYS,
+whichever way you ask for it.**
 
-**`catalog`** already required them for the spelled-out form,
-`catalog bp myprog global`. **It did not require them for the form most people
-use** — putting a `*`, `!`, `_` or `$` in front of the name. **`delete.catalog`**
-required nothing at all, by either route.
-
-This matters because the system-wide catalogue holds the programs SD runs for
-everybody, `$login` among them. **Replacing one ran your code in every session
-on the machine, administrators included; deleting one stopped everybody signing
+This matters because the system-wide catalog holds the programs SD runs for
+everybody, `$login` among them. **Replacing one runs your code in every session
+on the machine, administrators included; deleting one stops everybody signing
 in.**
 
-**Nothing changes for local and private cataloguing**, which is what
+**Nothing changes for local and private cataloging**, which is what
 programmers use day to day:
 
 ```
-catalog bp myprog          private catalogue, this account
+catalog bp myprog          private catalog, this account
 catalog bp myprog local    this account's VOC
 ```
 
 Both still work, in any account you are allowed to **`logto`** into. The only thing
-an ordinary user can no longer do is catalogue a program whose name starts with
+an ordinary user can no longer do is catalog a program whose name starts with
 `!`, `_` or `$` — those characters mean *system-wide*. Name it without
 one.
 
-**To catalogue system-wide you need to be SDSYS** — sign in to Windows as
+**To catalog system-wide you need to be SDSYS** — sign in to Windows as
 SDSYS and start `sd` elevated. There is no other route in to try instead.
 
 ## The pcode library
@@ -105,11 +100,13 @@ end.** The tunnel ends on this machine, so the process that connects genuinely
 is `sshd`. What the line distinguishes is a client running *on* this machine
 from one arriving through a tunnel; **it cannot name a remote person.**
 
-> **This matters beyond the log.** SD refuses an administrator an API session
-> from another computer, and it decides that from the address the connection
-> came from. A tunnelled connection arrives from `127.0.0.1` because it really
-> does start here, so **it is admitted**. If that matters to you, turn port
-> forwarding off in `sshd_config`; no check inside SD can see through a tunnel.
+> **This matters beyond the log.** SD admits an administrator's API session
+> from another computer only from an address the administrator listed, and it
+> decides that from the address the connection came from. A tunnelled
+> connection arrives from `127.0.0.1` because it really does start here, so it
+> is treated as this computer. If that matters to you, keep the door shut
+> (`remote.sdsys api off`) and turn port forwarding off in `sshd_config`; no
+> check inside SD can see through a tunnel.
 
 *"peer process not identified"* means the client had already gone by the time
 the connection was looked up. It is not an error and the connection proceeds
@@ -194,7 +191,7 @@ compiling to 83 terminal names** — the extra names are variants such as
 SDTerm's `sdterm` were removed: SD does not support those terminal programs.)
 
 **A name that is not installed is refused and your current type is kept** —
-*"Unrecognised terminal name"* — so a typo costs you nothing. **`term` with no
+*"Unrecognized terminal name"* — so a typo costs you nothing. **`term` with no
 argument reports the type actually in force**, which is how to check.
 
 Watch for near-misses all the same. There is no `vt320` definition; `vt220`
@@ -203,34 +200,32 @@ a definition that is not there.
 
 **Backspace works**, at the prompt and when you are asked for a password.
 
-### The page is 140 × 42, not 80 × 24
+### The page is 140 × 43, not 80 × 24
 
-**SD's default terminal size is 140 columns by 42 lines** (it was 120 by 36 until
-25 October 2026). **A console window narrower than that makes ordinary reports
+**SD's default terminal size is 140 columns by 43 lines.** **A console window narrower than that makes ordinary reports
 look wrapped or truncated**, which reads as a formatting bug and is not one. SD's
 own full-screen programs (`sed`, `ced`, `ide`, the home screen) want at least
-140 columns by 42 lines and refuse a smaller window.
+140 columns by 43 lines and refuse a smaller window.
 
 `term` reports the size in force, above the `Device` line:
 
 ```
 :term
 Page width: 140
-Page depth: 42
+Page depth: 43
 Device    : windows
 ```
 
 **The size is worked out at login**, in this order: the `LINES` and `COLUMNS`
 environment variables if they are numeric, otherwise the terminfo entry's
-`lines` and `cols`, **otherwise 42 and 140** — then raised to a minimum of
+`lines` and `cols`, **otherwise 43 and 140** — then raised to a minimum of
 10 × 20 if smaller. So a console or ssh session normally gets its real window
-size and 140 × 42 is the fallback when nothing answers, which is the case for a
+size and 140 × 43 is the fallback when nothing answers, which is the case for a
 phantom or a piped script.
 
 > **`term default` restores it, and it prints nothing when it does.** It sets
-> the same 140 × 42 the login path falls back to and returns silently, so run a
-> bare `term` after it to see the result. `term 120,36` sets the old default by
-> hand.
+> the same 140 × 43 the login path falls back to and returns silently, so run a
+> bare `term` after it to see the result.
 >
 > **If you have notes from an earlier build, this is one of the things that
 > changed**: `term default` used to set 20 × 24 — the *minimum* width and a

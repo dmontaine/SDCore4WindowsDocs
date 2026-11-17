@@ -33,7 +33,7 @@ They are listed so that a name in a log or an error message can be looked up.
 | `secure-audit.ps1` | creates the audit trail and makes it append-only |
 | `secure-cred.ps1` | locks the credential store to SYSTEM and Administrators |
 | `secure-dumps.ps1` | makes the process-dump directory write-only to SD users, so a dump can be added and nobody else's can be read |
-| `secure-gcat.ps1` | locks the global catalogue, and separately the compiled objects it is loaded from |
+| `secure-gcat.ps1` | locks the global catalog, and separately the compiled objects it is loaded from |
 | `secure-log.ps1` | creates a log only administrators can see or write |
 | `secure-osusers.ps1` | locks a permission list so only an administrator can change who is on it. The installer calls it twice, for `batch.jobs` and its dictionary (it called it for `os.users` as well until that file was retired) |
 | `secure-pcode.ps1` | locks the pcode library, which is the interpreter every session runs |

@@ -12,12 +12,15 @@ SD opens its API socket, and whether `sd` runs from any directory.
 | `remote.api` | decides whether SD opens its API socket, and who may reach it |
 | `append.sd.path` | puts SD's program directory on the Windows system PATH, or takes it off |
 
-> **None of these gives SDSYS remote access, and no setting does.** Opening
+> **None of these gives SDSYS remote access, and no setting of these four verbs does.** Opening
 > ssh or the API to other computers opens it for ordinary accounts. **SDSYS
-> has neither route, from anywhere, under any setting these four verbs
-> control** — it is never joined to `sdssh` or `sdapi`, and it carries no SD
-> credential to authenticate an API session with, so there is no local/remote
-> distinction to make: opening a route here does not touch SDSYS at all.
+> has neither route under any setting these four verbs
+> control** — it is never joined to `sdssh` or `sdapi`, so opening a route
+> here does not touch SDSYS at all. The administrator's own remote doors are
+> separate and shut as delivered: `remote.sdsys on` opens remote administration
+> for the account SDRADMIN over ssh ([Remote Administration over ssh](22-remote-administration.html)),
+> and `remote.sdsys api on` opens SDSYS's API login for chosen addresses
+> ([Remote Administration through the API](22a-remote-administration-through-the-api.html)).
 > Administration needs a session Windows can show a consent prompt on, which
 > means the console, or a remote desktop or remote-control product installed
 > as a service. The operating system access page covers this in full.
@@ -244,8 +247,8 @@ filesystem path. `append.sd.path` cannot be read as either.
 tool.remote
 ```
 
-A full-screen page in SDSYS's VOC only (a window of 140 columns by 43 lines or more) of five views,
-chosen with the keys `1` to `5`:
+A full-screen page in SDSYS's VOC only (a window of 140 columns by 43 lines or more) of six views,
+chosen with the keys `1` to `6`:
 
 | View | What it shows and does |
 |---|---|
@@ -254,14 +257,15 @@ chosen with the keys `1` to `5`:
 | `3` servers | the SDNet servers of the `netservers` file: name, address, remote account and mode, the pin shortened, the local accounts that may use it. `X` deletes the one under the cursor (`delete.server`, which does not ask itself, so the box is the question). `N` asks every field, checks them the way `set.server` does and gives **the terminal to the verb**, whose `connect` step shows the key the server presents and asks whether to trust it |
 | `4` connected | every session now by the door it came through: the user number, the kind (user, api, sdnet, phantom), the login user, the account and where it came from |
 | `5` TLS | this machine's TLS identity as `settings.report` gives it: the certificate fields and the public-key hash another SD server pins. Never the private key |
+| `6` remote administration | what `remote.sdsys` says with no keyword: the walls that remote administration for SDRADMIN stands behind, one line each (shut as delivered). `O` opens it (its box wants the word `open` typed) and gives **the terminal to the verb**, because the first opening makes the account and asks its Windows password twice; `F` shuts it. See Remote Administration over ssh |
 
 **`A` can end your own session.** Any move between `on`, `local` and `off` moves the listener, which SD
 opens only when it starts, so `A`'s form asks whether to restart SD now (`later` is the default), and a
 restart ends every SD session, this page's too. Answered `later`, the setting waits for the next start of SD.
 
-`remote.ssh` and `delete.server` run through the routine all the toolkit pages use, each only after a
+`remote.api`, `remote.ssh`, `delete.server` and `remote.sdsys off` run through the routine all the toolkit pages use, each only after a
 box that shows the command and what it does was answered Run (**Cancel is what Enter chooses**);
-`remote.api` and `set.server` are run by the verb itself on the terminal, after the same box. The verbs
+`set.server` and `remote.sdsys on` are run by the verb itself on the terminal, after the same box. The verbs
 ask for the administrator again and write their own audit lines; the page writes nothing. `F5` reads
 everything again, `F1` explains the page and `Ctrl-Q` leaves. Opening the page writes the audit line
 `tool start app=tool.remote`.
@@ -278,7 +282,7 @@ values recur and mean different things:
 | status -1 | the helper could not be run at all |
 
 `remote.api` adds status 2, which means `sd.conf` could not be read — missing,
-unreadable, or carrying no `APIPORT` line to recognise.
+unreadable, or carrying no `APIPORT` line to recognize.
 
 **For a BASIC program that runs one of them**: `remote.api` and `remote.ssh`
 set `@SYSTEM.RETURN.CODE` to 0 when the change was made and to a negative number

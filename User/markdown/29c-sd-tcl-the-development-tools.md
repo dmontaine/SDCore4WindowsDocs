@@ -14,7 +14,7 @@ access: every change they make is a command you could have typed, run for you af
 exact command. A gate that is off for your account is met as the command's own refusal; the page shows
 the gates you hold, and never tries an operation to find out.
 
-**In a window bigger than 140 by 43 the pages use the whole window**: the lists show
+**In a window bigger than 140 by 43 the pages use the whole window** (since 28 October 2026): the lists show
 more rows, the boxes are wider, a long explanation is wrapped at the width of its box instead of being cut,
 and a page follows the window when it is resized, also while a question or a menu is open. At 140 by 43 each
 page looks exactly as it did. 140 by 43 is still the smallest window: if the window is made smaller while a
@@ -22,7 +22,7 @@ page is up, the page holds the keyboard behind a warning that gives both sizes, 
 again (Ctrl-Q, then y, leaves). The administrator's pages and the home screen do the same.
 
 The keys, menus, boxes and pick lists that all these pages share - F1, F2, Esc, F6, the right-click
-menu, the confirm box - are described once in
+menu, the confirm box, the AI line - are described once in
 [Using the Full-Screen Pages](29d-sd-tcl-using-the-full-screen-pages.html); each section below adds only
 what is particular to its page.
 
@@ -36,13 +36,14 @@ the page.
 The home screen has a tile for each of them, in the group *Develop*.
 
 **On a page with more than one box the keyboard can be in** (the query page, the bulk change page and the
-test page here; on the administrator's side the sessions and menus pages), the box that has it
-is marked **`[*]`** in its top right corner and the others **`[-]`**, as the IDE marks its panes. **F6** moves
-the keyboard and the marks to the next box and **Shift-F6** back, round and round (the same keys on every page
-and in the IDE; Tab does not move between boxes). On the test page F6 goes
+test page here; on the administrator's side the sessions, menus, AI and viewer pages), the box that has it
+is marked **`[*]`** in its top right corner and the others **`[-]`**, as the IDE marks its panes (since 1
+November 2026). **F6** moves the keyboard and the marks to the next box and **Shift-F6** back, round and
+round, with the AI line as the stop after the last box when the AI is on for your account (since 8 November
+2026, the same keys on every page and in the IDE; Tab no longer moves between boxes). On the test page F6 goes
 from the list to what the test under the cursor printed, and back. A box the keyboard never goes to has no mark.
 
-**Every page has a menu bar on its top row**, made from the page's own key table, so
+**Every page has a menu bar on its top row** (since 29 October 2026), made from the page's own key table, so
 the bar, the key row at the foot and the keys cannot disagree. **F10**, **Alt and the letter** marked in a
 title, or a **click** on a title opens a menu; **Esc** opens the first menu that does not begin with Quit
 (so Esc and Enter never leave a page by accident; F10 opens *File*) when the page has nothing of its
@@ -52,13 +53,13 @@ entry is shown dimmed when the page cannot do it now, and **Quit is the last ent
 other entries**. Choosing an entry does exactly what its key does, through
 the page's own checks and boxes: the bar adds no access and runs no command by itself.
 
-**F2 finds an action by its name**. It opens a list of every entry of the page's
+**F2 finds an action by its name** (since 3 November 2026). It opens a list of every entry of the page's
 menus, written *Menu > Entry* with its key beside it (*Query > Run the query   R*). Type part of a name to
 narrow the list, Up and Down move, Enter chooses, Esc leaves. An entry the page cannot do now says *(not
 now)*; choosing it shows why in a box and does nothing. Choosing any other entry does what its key does,
 exactly as the menu bar's entry would.
 
-**A right click on a box opens that box's menu**, at the pointer. If the box did not
+**A right click on a box opens that box's menu** (since 3 November 2026), at the pointer. If the box did not
 have the keyboard, the right click first gives it the keyboard, as a click does (its mark becomes `[*]`), and
 then opens its menu. A right click outside the boxes, and **Shift-F10** from the keyboard (in the middle of the
 screen), open the menu of the box marked `[*]`. The menu lists that box's actions with their keys, dimmed when
@@ -120,7 +121,7 @@ what the verb says is what the status line shows.
 digits, dot, dash and underscore. A file whose name has anything else (a capital, an `&`, a `$`) is listed and
 described, and the page says which verb to type at the prompt for it instead.
 
-**A VOC keyword is not a file name**. A name that the VOC holds as a keyword,
+**A VOC keyword is not a file name** (since 28 October 2026). A name that the VOC holds as a keyword,
 `all` for one, is refused as the name of a file to make, clear, delete or report on, with the words *... is a
 keyword of the VOC, which a command would read as that keyword and not as a name: this page does not give it
 to a command*. The verb would read the word as the keyword, not as your file (`delete voc all` empties the
@@ -158,7 +159,7 @@ the **gates your session holds**, as `tool.files` does.
 | key | does |
 |---|---|
 | Up, Down, PgUp, PgDn, Home, End | move the cursor |
-| **E** | edit the entry in the [IDE](24-sd-tcl-programs-and-the-catalogue.html) (`ide voc name`): the terminal is handed to the IDE, and leaving it brings the page back at the same entry |
+| **E** | edit the entry in the [IDE](24-sd-tcl-programs-and-the-catalogue.html) (`ide voc name`; since 28 October 2026 it was SED): the terminal is handed to the IDE, and leaving it brings the page back at the same entry |
 | **D** | delete the entry (`delete voc name`) after a box that shows the command, with the id typed |
 | **T** | choose the type shown: all, verbs, files, pointers, paragraphs and sentences, other |
 | **S** | choose the state shown: all, only the entries that differ from the shipped VOC, only broken pointers |
@@ -176,7 +177,7 @@ it was (the IDE says why, in a box). A VOC pointer made by an ordinary command s
 **An id the page does not give to a command.** As in `tool.files`, only ids of letters a-z, digits, dot,
 dash and underscore are put into a command. A VOC id may have much else (a capital, `$`, `%`, `&`); such an
 entry is listed and shown, and the page says which command to type for it instead. **Delete does not offer a
-keyword either**: an entry of type K, `all` for one, is refused with the page's
+keyword either** (since 28 October 2026): an entry of type K, `all` for one, is refused with the page's
 words, because `delete voc all` would not delete that entry but ask to empty the VOC. Type the command at the
 prompt if you mean it.
 

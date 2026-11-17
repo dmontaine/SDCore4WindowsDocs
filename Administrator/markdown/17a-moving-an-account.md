@@ -77,7 +77,7 @@ section per account, `[account` *name*`]`, with its `type`, its operating-system
 its routes (`route.ssh`, `route.api`, `route.files`, `route.files.write`, `route.files.admin`), its
 switches (`os.sh`, `os.execute`, `edit.voc`, `edit.bp`, `edit.dict`, `shared.read`,
 `shared.write`, `net`, `recovery`), `description`, `suspended`, `source.path`, the counts
-(`files`, `bytes`, `dirs`) and a `gcat:` line for each globally catalogued program that belongs
+(`files`, `bytes`, `dirs`) and a `gcat:` line for each globally cataloged program that belongs
 to it. A group account's section has `members:` in place of the switches.
 
 | In the manifest | On an account **SD has to create** | On an account that **already exists** |

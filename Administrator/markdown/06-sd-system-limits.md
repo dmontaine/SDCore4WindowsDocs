@@ -15,8 +15,9 @@ which parameter controls it.
 > outside the administrator set. Where a page in another set is worth naming,
 > it is named in words.
 
-> Every figure here was read from the sources that define it, or from a running
-> W1.0-0 system, and not from documentation of another product.
+> Every figure here was read from the sources that define it, or counted
+> directly from this tree's own shipped directories, not from documentation
+> of another product.
 
 ## Data
 
@@ -81,7 +82,7 @@ starts and cannot be changed in a running system.
 | | | |
 |---|---|---|
 | Subroutine call depth | **10,000** | `MAXCALL`, range 10 to 1,000,000 |
-| Catalogued name length | **63** characters | compiled |
+| Cataloged name length | **63** characters | compiled |
 | Matrix dimensions | **two** | compiled |
 | Compiled programs held in memory | no limit by default | `OBJECTS` |
 | Memory those programs may occupy | no limit by default | `OBJMEM`, in KB |
@@ -100,9 +101,9 @@ lists can be saved. `save.list` writes to a file and is limited only by space.
 
 | | | |
 |---|---|---|
-| Terminal definitions shipped | **63** source definitions | — |
-| Terminal names they compile to | **100** | — |
-| Default page size | **140 × 42** (120 × 36 before 25 October 2026) | — |
+| Terminal definitions shipped | **26** source definitions | — |
+| Terminal names they compile to | **37** | — |
+| Default page size | **140 × 43** | — |
 | Minimum page size | 10 lines × 20 columns | compiled |
 | Default printer page | **80 × 66** | `LPTRWIDE`, `LPTRHIGH` |
 
@@ -111,7 +112,7 @@ their base name.
 
 ## What an account gets
 
-**There is no longer a tier to give three different answers for.** Every
+**There is no tier to give three different answers for.** Every
 ordinary account gets the whole of `newvoc`; SDSYS gets that plus the
 records that exist only in `voc_template`.
 

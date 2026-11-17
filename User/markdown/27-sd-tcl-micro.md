@@ -24,7 +24,7 @@ marks a word typed as it stands; braces mark an optional part.
 
 > **The keys below are micro's own**, read from the default bindings and the
 > help text inside the executable SD installs — **micro 2.0.15**. The SD half of
-> the page describes SD Core for Windows W1.1-3.
+> the page describes SD Core for Windows.
 
 ## Both editors are installed with SD
 
@@ -99,7 +99,7 @@ accepts.
 reason is worth knowing: micro decides which language a file is by matching its
 *name*, and a record called `MY.REPORT` tells it nothing. So SD names the
 working copy `*record*.editing.sdbasic`, and that suffix is what micro
-recognises. A record edited out of any other file is plain text.
+recognizes. A record edited out of any other file is plain text.
 
 ## What SD does around the editor
 
@@ -110,13 +110,22 @@ the same for both, and they are set out on
 
 In short: the record is copied into `$hold`, micro is run on the copy, and on
 the way out SD asks whether to save it and — for a `bp` record — whether to
-compile and catalogue it. Both verbs need `OS.EXECUTE` permission and a real
+compile and catalog it. Both verbs need `OS.EXECUTE` permission and a real
 terminal, and refuse a session driven down a pipe:
 
 ```
 :micro bp zzed
 micro needs a terminal to draw on, and this session has none.
 ed, the line editor, works anywhere.
+```
+
+Both usage errors name the verb you typed:
+
+```
+:micro
+No file name specified.  Usage: micro {dict} <file> <record>
+:micro bp
+No record name specified.  Usage: micro {dict} <file> <record>
 ```
 
 ## Marks, and how to type one
@@ -149,4 +158,4 @@ Screen Editor](26-sd-tcl-edit.html#one-gate-and-it-is-separate-from-the-verb);
 
 [SD TCL - The edit Screen Editor](26-sd-tcl-edit.html) ·
 [SD TCL - The ed Line Editor](25-sd-tcl-ed.html) ·
-[SD TCL - Programs and the Catalogue](24-sd-tcl-programs-and-the-catalogue.html).
+[SD TCL - Programs and the Catalog](24-sd-tcl-programs-and-the-catalogue.html).

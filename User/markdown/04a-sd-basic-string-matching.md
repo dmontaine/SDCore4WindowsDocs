@@ -13,7 +13,7 @@ convert(from.characters, to.characters, string)
 convert from.characters to to.characters in variable
 ```
 
-(`swap()` was a second name for `change()` and was removed in 1.2-0.)
+(`swap()` was a second name for `change()` and was removed in 2.0-0.)
 
 The fourth and fifth arguments are frequently misread:
 
@@ -42,7 +42,7 @@ same position of *to.characters*.
 > **A character with no opposite number is removed, not left alone.** If the
 > two lists are not the same length, every character in the excess of
 > *from.characters* is deleted from the string. This is the documented Pick
-> behaviour and it is almost never what someone writing
+> behavior and it is almost never what someone writing
 > `convert(',', '', text)` expects to happen to the rest of their data —
 > though it is exactly what they want when deleting is the intent.
 
@@ -225,7 +225,7 @@ squote(expr)
 | `quote()` | wrap in double quotes — `"a"` |
 | `squote()` | wrap in single quotes — `'a'` |
 
-(`dquote()` and `dquotes()` were second names for `quote()` and `quotes()` and were removed in 1.2-0.)
+(`dquote()` and `dquotes()` were second names for `quote()` and `quotes()` and were removed in 2.0-0.)
 
 For CSV output do not build quoting by hand: `csvdq()` and the CSV statements
 handle embedded quotes and separators to RFC 4180, and are covered in
@@ -306,6 +306,26 @@ operation to every element of a dynamic array:
 
 The full family, and the rules for how they pair elements when given two
 arrays, is in [SD Basic - Dynamic Arrays](05-sd-basic-dynamic-arrays.html).
+
+## Regular expressions: `regex`
+
+```
+regex(string, pattern)
+```
+
+Answers 1 when *pattern* matches anywhere in *string*, and 0 when it does not. The pattern
+is a POSIX **extended** regular expression: `.` `*` `+` `?` `|`, groups `( )`, counts
+`{n,m}`, classes such as `[0-9]` and `[[:alpha:]]`, and `^` and `$` to tie the match to the
+start and the end. It is not Perl's dialect: write `[0-9]` where Perl would write `\d`.
+A pattern that begins `(?i)` ignores case.
+
+```
+if regex(code, '^[A-Z]{2}[0-9]{4}$') then crt 'a valid code'
+if regex(name, '(?i)^mac') then crt 'starts with mac, Mac or MAC'
+```
+
+**A pattern that is not a valid regular expression stops the program** with a run-time
+error that says what is wrong with it; it is not taken as "no match".
 
 ## What is not here
 

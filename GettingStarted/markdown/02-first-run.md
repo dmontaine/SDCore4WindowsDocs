@@ -56,8 +56,8 @@ term
 [Other hardening](13-hardening.html#the-terminal). An account created before
 the `WINDOWS` definition shipped keeps its old setting until **`update.accounts`**.
 
-**`term` also reports the page size, and SD's default is 140 × 42 — not
-80 × 24** (it was 120 × 36 until 25 October 2026). **A console window narrower
+**`term` also reports the page size, and SD's default is 140 × 43 — not
+80 × 24.** **A console window narrower
 than that makes ordinary reports look wrapped or truncated** and the report is
 not at fault. SD's own full-screen programs (`sed`, `ced`, `ide`, the home
 screen) want a window of at least 140 columns by 43 lines, **which is the size
@@ -65,9 +65,9 @@ SD's own window starts at**: SD always runs in a window of its own, whether
 from the Start Menu or typed at a prompt (see *Running SD*). For full screen,
 press **Alt+Enter** (in SD's window F11 goes to SD). If a report still looks
 cramped, widen the window, or
-set it for the session with `term default` — which puts the 140 × 42 back and
+set it for the session with `term default` — which puts the 140 × 43 back and
 prints nothing while doing it, so check with a bare `term` afterwards.
-`term 140,42` is the same thing typed out. See
+`term 140,43` is the same thing typed out. See
 [Other hardening](13-hardening.html#the-terminal).
 
 ## 4. Make a file and put something in it
@@ -129,27 +129,31 @@ route into SDSYS from any other account, however elevated** — SDSYS's own
 Windows sign-in is the only way in. See
 [Accounts](05-account-types.html#sdsys-is-the-only-administrator).
 
-**IF YOU ARE OVER ssh, THIS WILL NOT WORK AT ALL.** SDSYS has no ssh access,
-local or remote. Sign in at the machine itself, or through a remote desktop
-or remote-control product installed as a service.
+**IF YOU ARE OVER ssh, THIS WILL NOT WORK THE FIRST TIME.** SDSYS itself has no
+ssh access, local or remote. Sign in at the machine itself, or through a remote
+desktop or remote-control product installed as a service. Once you are in, the
+administrator can open remote administration for the separate account SDRADMIN
+with `remote.sdsys on` (the Administrator documents, "Remote Administration over
+ssh", say how, and what it risks) and then sign in as SDRADMIN over ssh.
 
 ## 6. Create an account for somebody else
 
 ```
-create.account user jane both
+create.account user jane ssh
 ```
 
 Two things about that line, and each has caught people out:
 
 | | |
 |---|---|
-| `both` | the routes Jane may use: ssh and the API. Say nothing and she gets neither (`none`); name `ssh` or `api` to give her one. She also has no shell and no `OS.EXECUTE` until you add `sh-on` / `os-on`. See [Accounts](05-account-types.html) |
+| the `ssh` word | **every new account starts with no ssh, no API, no shell and no `OS.EXECUTE`** — yours too, the account the installer made for you, unless you ticked the installer's box that opens every gate for it. `ssh` gives Jane the ssh route she needs in step 7; add `api`, `sh-on` or `os-on` for the others (`create.account user jane ssh sh-on`), or turn any of them on later with `modify.account`. The same goes for saving a change to a VOC, a program file or a dictionary: `voc-on`, `bp-on` and `dict-on` allow it, one each, and until then the account can read them but not change them or compile programs. See [Accounts](05-account-types.html) |
 | it needs SDSYS | creating a Windows account cannot be done from any other identity |
 
 You will be prompted for Jane's password, masked. **Refusing the prompt
 creates nothing at all** — a user account cannot exist without a password.
 
-**The password is for the API.** Console and ssh logins ask for nothing.
+**The password is the one Jane signs in with** over ssh, and over the API if she is
+given that route.
 **Every account gets the same VOC** — there is no `programmer`/`standard`
 choice to make any more.
 

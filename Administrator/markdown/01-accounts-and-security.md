@@ -17,13 +17,20 @@ SD folds case, so a command may be typed in either case. Commands are shown
 here in lower case. In the tables, *italics* mark something you supply and
 **bold** marks a word typed as it stands; braces mark an optional part.
 
+> **Anything you put in the `shared` account can be read by every account,**
+> by file name, with no `logto` and no pointer, **unless you type
+> `shared-read-off` for an account.** The installer makes the `shared` account;
+> every account, new or old, starts with the right to read its files, and
+> without the right to write them. This is the one right here that is on until
+> you take it away. See *The shared account*, below, and
+> [The shared account](13-the-shared-account.html).
+
 ## Read this before anything else: being SDSYS is the whole of it
 
-**Having the verb is not having the right to use it — but there is only one
-gate now, not two.** SD Core used to check a VOC tier and elevation
-separately; the tier is gone. Every verb on this page is refused outright
-to any session that is not actually SDSYS, whether or not that session is
-elevated:
+**Having the verb is not having the right to use it — and there is exactly
+one gate, one route in, and nothing that widens it.** Every verb on this
+page is refused outright to any session that is not actually SDSYS, whether
+or not that session is elevated:
 
 ```
 :list.grants don
@@ -47,12 +54,32 @@ as SDSYS and running it elevated.** The three verbs on this page that do
 each of them acts only on the account you are already standing in or on
 your own session.
 
+**SDSYS may be signed on in more than one place, and when it is you can see it.**
+Nothing stops a second console window or a second sign-in of the `sdsys` user from
+starting SD, and one reason to want that is recovery: a session that is stuck at a
+page can be ended by `logout` from another. A limit of one would lock the
+administrator out until `sd -cleanup`. So the second session is made visible,
+three ways:
+
+| where | what it shows |
+|---|---|
+| the audit trail | one line, `sdsys second session others=<n>`, written by a session of SDSYS that signs on while *n* other sessions of SDSYS are on a terminal (after the `login account=sdsys` line it writes as always) |
+| `tool.sessions` | each of those rows says `sdsys x<n>` in its State column, the counts line says `SDSYS in <n> places`, and the box under the list says so for the row under the cursor |
+| the home screen | the Sessions and locks tile says `<m> signed, <n> sdsys` in place of `<m> signed on` |
+
+What counts is a session of the account `sdsys` that is **on a terminal**: a
+phantom, an API or SDNet process, a session being logged out, and a session with
+no terminal (a piped `sd 'command'`, `sd -internal`, a program started from a
+script) are not counted and write no line, because they are not a second person
+at the machine. Seeing the second session is not the same as stopping it; the
+audit line and the page are how you notice one you did not expect.
+
 ## Making an account: `create.account`
 
 ```
 create.account user <name> {ssh | api | both | none} {sh-on} {os-on} {voc-on} {bp-on} {dict-on}
-                           {net-on} {files-on} {files-write-on} {files-admin-on} {ai-on} {shared-read-off} {shared-write-on}
-                           {start-menu | start-terminal} {pins-on} {xfer-on} {no.query}
+                           {shared-read-off} {shared-write-on} {net-on} {files-on} {files-write-on} {files-admin-on} {ai-on}
+                           {start-menu | start-terminal} {pins-on} {recovery-on} {xfer-on} {no.query}
 
 create.account group <name> {start-menu | start-terminal} {pins-on} {no.query}
 
@@ -89,9 +116,7 @@ otherwise: `shared-read-off` takes away the right to read its files and
 defaults, `shared-read-on` and `shared-write-off`, are for `modify.account`
 only.) **This is the setting SD is delivered with, on purpose: it is the
 tighter one, and you loosen it for the accounts that need it, one at a time** —
-the same words change an account later in `modify.account`, below. (Before 25
-October 2026 a new account was given both remote routes and the person's shell
-came from a file, `os.users`; neither is so now.) When it has made the account
+the same words change an account later in `modify.account`, below. When it has made the account
 SD says where it stands:
 
 ```
@@ -103,8 +128,19 @@ Account fred has files no
 Account fred has shared.read yes, shared.write no
 ```
 
-(Three more lines, for `files-write`, `files-admin` and `ai`, follow the `files`
+(More lines, for `files-write`, `files-admin`, `ai`, the recovery copy
+(`Account fred keeps a recovery copy of unsaved editor text: no`) and file transfer
+(`Account fred may move files over its ssh login (receive / send): no`), follow the `files`
 line; the remote-route line is the one for the words you gave.)
+
+**One more word, for a user account only: `recovery-on`** makes the account's `ide` keep a recovery copy of
+text that was not saved (*The recovery copy*, below). It is off when the word is left out, a group or `other`
+account is refused it before anything is made, and `recovery-off` is for `modify.account` only. The verb says
+it back in a line, `Account fred keeps a recovery copy of unsaved editor text: yes` (`no` when the word was left out).
+
+**And one that opens a door, for a user account only: `xfer-on`** lets the account's person move plain-text
+files in and out with an sftp client (*File transfer*, below). It is off when the word is left out, a group or
+`other` account is refused it before anything is made, and `xfer-off` is for `modify.account` only.
 
 **A group account and an `other` account have no Windows user of their own,
 so `sh-on` and `os-on` are refused for them** — "is a group account and has
@@ -116,6 +152,20 @@ person, and a group account is not one.
 > never an argument anywhere in SD. **`create.account user` therefore
 > cannot be driven from a script**, and a group account, which has no
 > password, can.
+
+**An account is never left without a password.** If SD cannot set the new
+user's password and you answer `n` at "Retry", it removes the Windows user it
+has just made and says "An account must have a
+password. Nothing was created." This applies to a user SD
+creates; it does not touch an existing Windows user, which `create.account`
+still refuses.
+
+**It warns when a route has nothing behind it.** An account given the ssh
+or the API route is checked: if this computer has no ssh server installed,
+or the API listener is off (`remote.api on` turns it on), `create.account`
+says so after the route line. The warning does not stop anything: the
+account is made and the route works the day the server or listener is
+turned on.
 
 **Every account gets the same VOC**, the whole of `newvoc` — there is no
 tier to choose at creation. What differs from one account to the next is what
@@ -160,12 +210,8 @@ stays inside SD.
 | **`sh-on`** · `sh-off` | the `sh` verb (see [Operating System Access](03-operating-system-access.html)) |
 | **`os-on`** · `os-off` | `OS.EXECUTE` in a BASIC program, the screen editors `edit` and `micro`, the embedded Python, **and reaching an operating-system file or directory by its path outside the account's own directory** |
 
-**This changed on 25 October 2026.** The grant used to be a record in the file
-`os.users`, keyed by the Windows login name, so it followed a person into every
-account they entered; it is now two fields of the account's own record, so it
-follows the account, and `os.users` is no longer read. And the limit on paths
-used to bind only a session that arrived over the network: **a person at the
-console is held to it now too.**
+The grant is two fields of the account's own record, so it follows the account, and a person at the
+console is held to the limit on paths as well as a session that arrived over the network.
 
 That last clause of the table is the one that is easy to miss. Without
 `os-on` an account can still open every file it reaches **through its VOC** —
@@ -207,7 +253,7 @@ is not turned back on by the next install. The file stays on disk, unread.
 ### The third switch: `sd-on`, other SD accounts' directories
 
 `os-on` is wide: it reaches any path. `sd-on` is the narrow version, for an
-account that has to read or write the **data** of a neighbouring SD account
+account that has to read or write the **data** of a neighboring SD account
 (a shared reports folder, a hand-over directory) without being given the
 whole machine. It is **off for a new account**, and `modify.account` *name*
 `sd-on` / `sd-off` turns it on and off. It may be set on a group account
@@ -251,7 +297,7 @@ by the name that was typed, so a Q-pointer to somebody's VOC is caught:
 |---|---|
 | **a VOC** | a file called `voc` |
 | **a dictionary** | any file whose name ends in `.dic`. `voc.dic` is the dictionary of the VOC, so it is a dictionary, not the VOC |
-| **a program file** | `bp`, `bp.out` (the object code), or any name ending in `.bp` or `.bp.out`; the private catalogue directory (`cat`, or whatever `$private.catalog` names) counts as one |
+| **a program file** | `bp`, `bp.out` (the object code), or any name ending in `.bp` or `.bp.out`; the private catalog directory (`cat`, or whatever `$private.catalog` names) counts as one |
 
 Capitals do not matter.
 
@@ -307,19 +353,18 @@ file being written, so a private vocabulary called `zzpv` is an ordinary data
 file, and an account with all three edit switches off could add and replace
 commands in it once you had pointed `$private.voc` at it. Keep such a file where
 only the people you mean can write it. The two records themselves are VOC
-records, so writing one needs `voc-on`. (Linux ran this on 18 October 2026; it
-has not been run on Windows. See the User set's page on the private vocabulary
-and parser.)
+records, so writing one needs `voc-on`. (See the User set's page on the private
+vocabulary and parser.)
 
-**Internal programs run only from the global catalogue.** The gates on files
+**Internal programs run only from the global catalog.** The gates on files
 and on operating-system paths do not apply to a program compiled in *internal
 mode*, which SD's own commands are. That mark is a bit in the program's own
 object file, and SD used to believe it wherever the object came from, so a
 user who could put an object file where SD would run it could set the bit and
-skip every gate. SD now honours the bit only for an object from the global
-catalogue, which only SDSYS can write, or for the administrator; for any other
+skip every gate. SD now honors the bit only for an object from the global
+catalog, which only SDSYS can write, or for the administrator; for any other
 object the bit is cleared when the object is loaded. SD's own commands are all
-in the global catalogue and are unaffected; a program that SDSYS compiled in
+in the global catalog and are unaffected; a program that SDSYS compiled in
 internal mode into a user's account runs there as an ordinary program.
 
 **SDSYS is never refused.** `modify.account` refuses SDSYS as a target, so
@@ -384,7 +429,7 @@ On an ordinary account with both `os-on` and API access, a remote API
 connection makes the operating system report the session as
 `nt authority\system`.
 
-This is accepted behaviour rather than a defect, and it follows from the
+This is accepted behavior rather than a defect, and it follows from the
 way SD's listener creates a session — it is unrelated to the account's own
 identity, which is why it is stated here rather than assumed. It is stated
 here because it is not something a reader should have to discover: `os-on`
@@ -473,7 +518,7 @@ signing in, `logto`, and the API.
 | **`os-on`** \| **`os-off`** | `OS.EXECUTE`, the screen editors, the embedded Python, and operating-system paths outside the account's own directory (see above) |
 | **`sd-on`** \| **`sd-off`** | may reach files under the directory of an account the person could `logto` (also allowed on a group account) |
 | **`voc-on`** \| **`voc-off`** | may save a change to a VOC (see *The edit switches*) |
-| **`bp-on`** \| **`bp-off`** | may save a change to a program file (source or object code), and compile and catalogue |
+| **`bp-on`** \| **`bp-off`** | may save a change to a program file (source or object code), and compile and catalog |
 | **`dict-on`** \| **`dict-off`** | may save a change to a dictionary |
 | **`start-menu`** \| **`start-terminal`** \| **`start-default`** | where a session on a terminal starts: the home screen, the command prompt, or the system default (see *Where a session starts*) |
 | **`pins-on`** \| **`pins-off`** | may add its own programs to the home screen (see *What the home screen shows*) |
@@ -642,8 +687,47 @@ audited by the verb as if you had typed it.
   `pins-off` and the three start words are managed on the menu management page
   (`tool.menus`, below).
 
-*Not run on a Windows console yet.* The page is Linux's, carried here and
-compiled; it needs a window of at least 140 columns by 43 lines.
+The page needs a window of at least 140 columns by 43 lines.
+
+### The recovery copy: `recovery-on` and `recovery-off`
+
+```
+modify.account account recovery-on | recovery-off
+create.account user <name> recovery-on
+:modify.account fred recovery-on
+Account fred keeps a recovery copy of unsaved editor text: yes
+```
+
+With `recovery-on` the `ide` of that account copies the text of every record it has changed and not
+saved: after a second without typing, before it hands the screen to a program, and when the session
+ends. A hung-up terminal, a lost connection or an abort then does not lose the text. **The copy sits in
+the person's own Windows profile**, in `AppData\Local\.local\state\sd\recovery\<account>\` (the profile the
+person's sign-in token names, never an environment variable), one file per record, readable only by
+the person, SYSTEM and the Administrators, **outside every account**; it is deleted when the person saves, closes or quits normally, and the
+next time the record is opened the `ide` asks whether to use the copy, delete it, or leave the record
+unopened (which keeps it). The record itself is never changed until the person saves. `sed` keeps
+no copies.
+
+* **Off as delivered.** `create.account` and an existing account have it off until you say so. `recovery-off`
+  is the word for `modify.account` only (as `pins-off` is); `create.account` takes `recovery-on` alone, and
+  the audit line of a `create.account` that used it ends `gates=` with `recovery-on` among the words.
+* **User accounts only, as the verbs have it.** `recovery-on` for a group or other account is refused
+  ("... is not a user account, and a recovery copy is kept only in a user account, for its own person; nothing
+  was changed"). The administrator is not given a copy either, by the same rule.
+* **Where, and when there are none.** The copies are made only when the person's profile directory and every
+  directory below it down to the account's own are real directories (no junction or link) that nobody else can
+  change, and every directory **above** the profile cannot be renamed or replaced by an ordinary user. A profile
+  that does not pass therefore gets no copies, and the `ide` says the copy could not be written; the text is still in
+  the editor. A session that runs as a service account (LocalSystem, LocalService, NetworkService) has no profile and gets none.
+* **You cannot read the copies, by design.** The directories and the files can be read only by the person, SYSTEM
+  and the Administrators. `recovery-off` stops new copies; copies already made stay and are still
+  offered to the person.
+* **When it reaches a session.** `recovery-off` stops new copies at once. A running `ide` learned at its start
+  whether to keep copies, so `recovery-on` reaches it the next time the person starts the `ide`.
+* **The copies are not part of the account.** `backup.account` archives do not contain them (they are in the
+  person's profile, not in the account), so a text that was not saved never ends up in a backup that
+  the administrator can read; the person's own backup of their profile does contain them. `restore.account`
+  puts the account back with the switch it had.
 
 ### File transfer: `xfer-on` and `xfer-off`
 
@@ -799,8 +883,78 @@ modify.account account pins-off   they may not (the delivered state)
   changed`) and is audited as `set.tile off tile=ide account=fred`; `modify.account`
   says `Account fred may add its own programs to the home screen: yes`.
 
-*Not run on a Windows console yet.* The home screen and its pages are Linux's, carried
-here and compiled.
+### The shared account: `shared-read-on`, `shared-read-off`, `shared-write-on` and `shared-write-off`
+
+The installer makes one group account, named `shared`, and **the files in it can be
+opened by every account by file name** — `open "inventory"` in any account finds
+the file `shared` holds under that name, with no `logto` and no pointer in the
+account's own VOC. Two per-account switches, in fields 13 and 14 of the register
+record, decide who may. The full description, with the order of the checks and the
+cautions, is its own page: [The shared account](13-the-shared-account.html).
+
+| switch | delivered | words | what it allows |
+|---|---|---|---|
+| `shared.read` | **on, for every account** | `shared-read-off` / `shared-read-on` | opening the files of `shared` by name, and reading them |
+| `shared.write` | off | `shared-write-on` / `shared-write-off` | saving, deleting and clearing records in them (a dictionary needs `dict-on` as well) |
+
+**`shared.read` is the one switch in SD whose blank means ON.** It is only off when
+the field says `no`: `shared-read-off` writes `no`, and `shared-read-on` writes
+`yes`. A blank field — a new group or other account, and every account that
+existed before the switch did — reads as on, so **nothing is withdrawn from an
+existing account, and nothing needs to be run at an upgrade.** `shared.write` is
+the other way: only `yes` is on. **Anything you place in `shared` can be read by
+every account you have not taken the right from**, so put nothing there that is not
+meant for everyone, and take the right from the accounts that should not have it
+before you fill the account.
+
+```
+:modify.account fred shared-read-off
+Account fred has shared.read no, shared.write no
+:modify.account fred shared-write-on
+Account fred has shared.read no, shared.write yes
+```
+
+`modify.account` *name* `shared-read-on` / `shared-read-off` / `shared-write-on` /
+`shared-write-off` change one switch each and say where the account now stands,
+both switches in one line. `create.account user` takes `shared-read-off` and
+`shared-write-on` (the other two would only restate the delivered state). Asking
+for what is already so changes nothing and says so.
+Each change is written to the audit trail (`modify.account shared-read-off
+account=fred`). A switch may be set on a group or other account, as `net-on` may;
+**SDSYS is never a target**.
+
+**It belongs to the account the person is in, like `net-on`:** it is read at
+sign-on, again at `logto` into another account, and given back when `logto`
+returns, and the API server reads it at every entry. `shared.read` is read when a
+file is *opened*, so a file already open stays usable after you withdraw it,
+until the person's next entry; `shared.write` is tested at every write.
+
+**How SDSYS puts files in `shared`.** Sign in to Windows as SDSYS, `logto shared`, and make
+files as in any account: `create.file`, `copy`, programs that write. The account's
+directory, `C:\ProgramData\SD\group_accounts\shared`, gives SYSTEM and Administrators full
+control and the group `sdusers` Modify, so every SD user's own process can read the
+files through the kernel, and write them when it has `shared.write`. **Only SDSYS
+enters `shared`**: its Windows group is `sdg_shared`, which has no members, so
+`logto shared` and a Q-pointer to it are refused to everybody else. That is what
+makes taking `shared.read` away a real wall for an account that has neither `sh` nor `os`.
+
+**A maintainer who is not SDSYS** is made of two things: membership of the group,
+`modify.account shared add` *name* (the Windows user can then `logto shared`),
+and `shared-write-on` **on the account named `shared`**,
+which lets those members write records there. Neither lets a maintainer change the
+*structure* of a file — see the page for that. The switches on the account `shared`
+decide what its members can do inside it; a blank means write off.
+
+**What it does not do.** The verbs, sentences and programs of `shared` are not
+shared; only data files and their dictionaries are. The administrator's own `open`
+does not follow `shared` (reach it with `logto shared`). `shared` is not copied to
+other servers. The name is reserved: `create.account` refuses it, and
+`delete.account shared` is refused.
+
+**Upgrading.** The installer makes `shared` when it is run, and keeps it when the
+accounts are kept. **It stops before it changes anything if an account named
+`shared` already exists that is not its own**, and names the register record: rename
+that account by hand and run the installer again.
 
 ### The NET switch: `net-on` and `net-off`
 
@@ -835,7 +989,7 @@ the list says which servers it may use. The same switch guards the API's request
 
 There are **two API routes, and the second is narrower.** `api` (the Windows
 group `sdapi`) lets a person do everything the API offers: execute commands, call
-catalogued subroutines, enter other accounts with `logto`, read and write
+cataloged subroutines, enter other accounts with `logto`, read and write
 sequential files, and work with files. **`files-on` (the Windows group `sdfiles`)
 lets a person log in over the API and do files and nothing else.** It exists so
 that a login kept for SDNet (see [SDNet](12a-sdnet.html)) never needs `sdapi`: the
@@ -914,7 +1068,7 @@ number this release has never heard of.
 
 | refused | request |
 |---|---|
-| 20 | call a catalogued subroutine |
+| 20 | call a cataloged subroutine |
 | 21, 22, 23 | execute a command; respond to its prompt; end it |
 | 24, 25 | the other logins |
 | 27, 28 | enter and exit a licensed package (not supported by any route) |
@@ -972,9 +1126,6 @@ API listener must be on (`remote.api`). **`sdfiles` alone is a read-only route.*
 login; withdraw it with `files-off`. `sdapi` is never touched by `files-on` or
 `files-off`.
 
-**Not run on Windows yet.** The route is carried from SD Core for Linux and compiled;
-no files-only login has been made against a real Windows installation.
-
 ### The AI: `ai-on` and `ai-off`
 
 An account may send text to the AI provider you have chosen (the `ai` verb and the AI line of
@@ -1011,7 +1162,7 @@ than ignored:**
 A password is never given on the command line; modify.password prompts for it
 ```
 
-**That refusal is the point of the verb's design.** The older behaviour set
+**That refusal is the point of the verb's design.** The older behavior set
 the password from the prompt and threw the extra word away without a word,
 so every visible sign said it had worked — while the password had already
 reached SD's command stack, and a shell's history and process list if the

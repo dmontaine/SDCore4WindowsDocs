@@ -12,8 +12,8 @@ writes to.
 SD folds case, so a command may be typed in either case. Commands are shown
 here in lower case.
 
-> Every listing on this page was produced by running it, on SD Core for Windows,
-> from an SDSYS session.
+> The sample output below is illustrative; the values on your system will
+> differ where your configuration does.
 
 ## The file
 
@@ -39,10 +39,10 @@ Lines beginning `#` are comments. The shipped file is heavily commented and
 those comments record why each value was chosen. Read them before changing
 anything.
 
-### A name SD does not recognise stops it starting
+### A name SD does not recognize stops it starting
 
-An unrecognised parameter is not ignored. The parser abandons the file with
-`Unrecognised configuration parameter`, and SD does not start.
+An unrecognized parameter is not ignored. The parser abandons the file with
+`Unrecognized configuration parameter`, and SD does not start.
 
 That is why a name SD has dropped has to be taken out of the file. On 27 October
 2026 eleven parameters were removed (`APILOGIN`, `CODEPAGE`, `CREATUSR`,
@@ -95,7 +95,7 @@ characters before it is matched; no parameter name is longer than eight, so
 that only shows up if you pass something which is not a parameter.
 
 Two further forms exist. `config lptr` reports the settings of the default
-printer, and `config gpl` and `config contrib` display the licence and the list
+printer, and `config gpl` and `config contrib` display the license and the list
 of contributors.
 
 ## Changing a parameter
@@ -117,7 +117,8 @@ other session, and it is gone when the session ends.
 The 23 are `DUMPDIR`, `FLTDIFF`, `FSYNC`, `GRPSIZE`, `INTPREC`,
 `LPTRHIGH`, `LPTRWIDE`, `MAXCALL`, `MUSTLOCK`, `OBJECTS`, `OBJMEM`, `RECCACHE`,
 `SAFEDIR`, `SDCLIENT`, `SH`, `SH1`, `SORTMEM`, `SORTMRG`, `SORTWORK`,
-`SPOOLER`, `TEMPDIR`, `TERMINFO` and `YEARBASE`.
+`SPOOLER`, `TEMPDIR`, `TERMINFO` and `YEARBASE`. (The list predates `MAXRLOCK`, `PWDELAY`,
+`NETWAIT` and `NETREPLY`, which can be changed for the session in the same way.)
 
 Everything else takes effect only when SD is next started. That includes every
 limit which sizes the shared memory segment and every setting the API listener
@@ -169,7 +170,7 @@ A row marked `*` is one where the file and the running SD disagree. The box at t
 parameter whether the sessions started now will read the file's value (`session`) or SD keeps the old
 one until it is restarted (`restart`). **A name in the file that SD does not know is listed at the end
 as `unknown`, and the top of the page names it: SD does not start with it, and no new session starts
-while the file holds it** (the section *A name SD does not recognise stops it starting* above). `D`
+while the file holds it** (the section *A name SD does not recognize stops it starting* above). `D`
 shows only the rows where the file and SD disagree, and `S` only the parameters the file sets. The last
 column, `Change`, says `e` for a parameter the page can change (press `E`) and `by hand` for every
 other.
@@ -344,7 +345,7 @@ useful that would be; such a parameter joins the list when SD itself checks it.
 
 | Parameter | Default on a new install | Effect |
 |---|---|---|
-| `SDSYS` | `C:\ProgramData\SD\sdsys` | The system account. SD does not start if the global catalogue is not found beneath it |
+| `SDSYS` | `C:\ProgramData\SD\sdsys` | The system account. SD does not start if the global catalog is not found beneath it |
 | `USRDIR` | `C:\ProgramData\SD\user_accounts` | Where `create.account` puts a user account |
 | `GRPDIR` | `C:\ProgramData\SD\group_accounts` | Where `create.account` puts a group account |
 | `DUMPDIR` | `C:\ProgramData\SD\sdsys\dumps` | Where process dumps are written |
@@ -373,7 +374,7 @@ server's runtime addresses them. `C:\WINDOWS\TEMP` and
 
 Unset is the strict value for `NETDIRS`. With nothing there, an API session can
 open files in the account it is standing in and nothing else. It never grants
-the credential store, the global catalogue, `os.users` or the account register,
+the credential store, the global catalog, `os.users` or the account register,
 and naming those has no effect. A directory listed here is reachable by every
 API session in every account, so it is a decision about the machine rather than
 about one account.
@@ -444,6 +445,12 @@ None of them can be changed from `tool.config` or `set.config`; edit
 line that still has it stops SD from starting, with a message that says to remove
 the line.
 
+## The screen
+
+| Parameter | Default | Effect |
+|---|---|---|
+| `SCREENTHEME` | unset (`mono`); `paper` in the shipped `sd.conf` | The color theme that a program using the `SCREEN` statement gets when it does not choose one: `paper`, `night`, `mono`, `classic` or `blue`. `paper` is black and dark blue text on light gray, with the menu bar and menus the other way round (light gray on black); `night` is white and yellow text on black, its menus black on light gray; `mono` uses only reverse video, underline and bold and reads on any terminal. The shipped `sd.conf` says `SCREENTHEME=paper`, so the toolkit pages and any program that opens a screen show paper on a color terminal on a fresh install; the IDE, SED and the debugger follow it too (the IDE falls back to paper for a name that is not a theme). A terminal with no color (a phantom, a pipe) is `mono` whatever the line says, and so is a name that is not a theme, without an error. A program that asks for a theme gets that one. A program reads the value with `config('SCREENTHEME')`. **A person's own choice wins for that person**: Ctrl-T or View > Theme on any full-screen program keeps the theme chosen as the record `theme.`*login name* of the file `&menus&` in the account they are in, and every full-screen program starts in it from then on; `SCREENTHEME` is what a person who has never chosen sees. To give someone the site's theme again, delete that record |
+
 ## The shell
 
 | Parameter | Default | Effect |
@@ -458,10 +465,12 @@ SH        C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -
 SH1       C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -Command
 ```
 
-The difference between them matters. `SH1` carries `-NonInteractive` and `SH`
-does not, so a bare `sh` in a phantom or a scheduled job hands control to a
-shell with nobody at the keyboard. Operating system access has its own page in
-this set.
+**Both run at the account's own Windows permissions, and only for an account
+that has the `sh-on` switch** (see *Accounts and Security*, "The
+operating-system switches: `sh-on` and `os-on`"). The difference between them
+matters: `SH1` carries `-NonInteractive` and `SH` does not, so a bare `sh` in a
+phantom or a scheduled job hands control to a shell with nobody at the keyboard.
+Operating system access has its own page in this set.
 
 ## `NETFILES` and SDNet
 
@@ -493,6 +502,6 @@ F-pointer in the VOC, where the operating-system access switches apply to it. A
 Q-pointer whose fourth field names another system is refused with status 3003 and is
 not opened as a local file.
 
-There is no licence parameter and no licence verb. SD Core for Windows is
+There is no license parameter and no license verb. SD Core for Windows is
 GPL v3 and is not licensed per site or per user; `config gpl` displays the
-licence text.
+license text.

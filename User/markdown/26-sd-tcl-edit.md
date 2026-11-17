@@ -10,7 +10,7 @@ ships with Windows. It has a menu bar, the shortcuts everyone already knows,
 and nothing else to learn. **That is the point of it**: if you want to fix a
 line in a record and get on with your day, this is the one.
 
-(`nano`, a second name for `edit`, was removed in 1.2-0.)
+(`nano`, a second name for `edit`, was removed in 2.0-0.)
 
 It has no syntax highlighting and no command language. For SD BASIC source —
 or for anything where you want highlighting, split windows, or a command bar —

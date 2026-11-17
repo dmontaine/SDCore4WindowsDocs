@@ -80,13 +80,13 @@ arguments that stops a listed name being turned into something else.
 `S`. Anything else — a verb, a file pointer — is refused by name:
 
 ```
-MY.REPORT has to be a paragraph or a sentence in this account to be run
+my.report has to be a paragraph or a sentence in this account to be run
 from the command line, and it is neither.
 ```
 
 ## Setting one up
 
-Four steps, and only the third needs an administrator.
+Four steps, and the first and third need an administrator for a new account.
 
 **1. Write the work as a paragraph** in the account that will run it. A `PA`
 record in that account's VOC, with the commands on the lines after the type:
@@ -94,6 +94,11 @@ record in that account's VOC, with the commands on the lines after the type:
 ```
 :ed voc my.report
 ```
+
+Saving a record of the VOC needs the account to hold `voc-on`, which a new
+account does not have. SDSYS gives it with `modify.account` *name* `voc-on`
+(see [Managing accounts](05a-managing-accounts.html)); accounts that existed
+at an upgrade have it already.
 
 **2. Check it runs when you type it**, in that account, before putting it on a
 timer.
@@ -153,7 +158,7 @@ The message on the screen for the third of those names both the command and
 the account, and says where an administrator grants it:
 
 ```
-MY.REPORT is not a command that account FRED may run from the command line.
+my.report is not a command that account fred may run from the command line.
 
 An administrator grants it by adding the name to the account's record in
 the SD system file batch.jobs, which only an administrator can change.
@@ -161,3 +166,41 @@ the SD system file batch.jobs, which only an administrator can change.
 
 **A refusal is not a hang.** `sd <command>` no longer walks into a password
 prompt it cannot answer — see [Running SD](03-running-sd.html#the-command-line).
+
+## The administrator's own jobs
+
+**Work that has to reach every account runs as the administrator, and
+only as one of two fixed jobs.** An account's own job runs with that
+account's rights; the administrator's jobs are for what no single account
+may do:
+
+| Job | Runs |
+|---|---|
+| `backup-all` | `backup.account all` |
+| `update-accounts` | `update.accounts all` |
+
+**Nothing is scheduled as delivered.** Each job is a Windows Task Scheduler task
+that only the job helper, run by the SDSYS session, can set; the `sdsys` user may
+not use `schtasks` for it. At each run the task starts `sd` with the job's command,
+and SD makes it the administrator only when the run is that task's and the
+definition names exactly that command. Every line the run writes to the audit
+trail ends `job=`*name*. A run missed while the machine was off is not made up;
+times are the machine's.
+
+**A schedule is one of five shapes:** `every 5`, `10`, `15`, `20` or
+`30 minutes`; `hourly`; `daily` *hh:mm*; `weekly` `mon`..`sun` *hh:mm*;
+`monthly` *1..28* *hh:mm*.
+
+SDSYS sets them up with `set.job` at the prompt, or in the **Jobs** view
+of `tool.jobs` (**J**):
+
+```
+:set.job add nightly backup-all daily 02:30
+sd-jobs: job nightly created
+sd-jobs: job nightly is scheduled: daily 02:30
+```
+
+`set.job` alone lists the jobs with their next and last runs;
+`set.job change`, `delete` and `run` do the rest. Everything else — the
+page's keys, what a damaged job is, how a run is recognized, where the
+definition is kept — is in the Administrator set's *Scheduled jobs*.

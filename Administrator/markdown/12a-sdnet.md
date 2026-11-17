@@ -94,8 +94,11 @@ gates they ask are described below. Commands are shown here in lower case.
 - **`NETFILES`** in `sd.conf` is not what this uses. Opening a remote file through an
   `N` pointer does not read it. The one thing that does is the API server's old request
   29, "open an SDNet file": it needs bit 2 of `NETFILES` and the same account rules as
-  `logto` and the account's NET switch, and a files-only login can never make it (see
-  [SD Admin Configuration](07-sd-admin-configuration.html)). What you can set in
+  `logto` and the account's NET switch, and a files-only login can never make it. It also refuses a
+  VOC pointer that leads out of the account unless the account holds `os-on` (status 3035,
+  audit line `api refused request=29 reason=os gate off ...`) (see
+  [SD Admin Configuration](07-sd-admin-configuration.html)
+  and the VOC pointers section of [Accounts and Security](01-accounts-and-security.html)). What you can set in
   `sd.conf` for SDNet is the two waits, `NETWAIT` and `NETREPLY` (below).
 
 ## The security model
@@ -109,7 +112,7 @@ handshake, and sends nothing. Every other connection goes to a defined server.)
 Two things must then both be true before an account can use one: it has the NET
 switch (off by default), and it is named in that server's *accounts* list (empty
 by default). Neither is a
-judgement that nobody should have the capability; each is a decision about who
+judgment that nobody should have the capability; each is a decision about who
 decides, and it is yours.
 
 **The file holds no secret, and must never hold one.** A definition is a name, an
@@ -633,7 +636,7 @@ what the target is willing to let that login do.
   account.**
 - **`files-write-on` needs `files-on` first.** The group alone gives nothing (the login
   route is `sdfiles`), so for a person who is not in `sdfiles` it is refused: "Account
-  *name* does not have FILES access, so it cannot be given FILES-WRITE: use files-on
+  *name* does not have files access, so it cannot be given files-write: use files-on
   first" (message 12528). `create.account user` *name* `files-write-on` without `files-on`
   is refused the same way before anything is made. A group or other account is refused
   as for `files-on`.
@@ -758,9 +761,6 @@ of the API, and they are the only door a files-only login has to them.
   `SETLEFT`, `SETRIGHT`, `SELECTLEFT`, `SELECTRIGHT`) are not in this list and have no gate of
   their own: a login that is in `sdfiles` may use them on any file it can open, because they change
   nothing.
-- **Not run on Windows yet.** The group, the requests and the verbs are carried from SD Core for
-  Linux and compile; no administration request has been made against a real Windows installation.
-
 **The remote user must be a real account on that server.** It is still a Windows user,
 a member of `sdusers`, with an SD account of its own, and every gate that account has
 there applies to it. What `files-on` replaces is the need for `sdapi`, not for the
@@ -852,9 +852,14 @@ same record from the same file variable in that time is answered from memory. Th
 can show a record up to 2 seconds old: a program that waits for another user's change to a remote
 record sees it up to 2 seconds late. A record over 32,768 bytes is not kept, `READV` is not cached,
 and the entries of a file go when it is closed, when it is `SELECT`ed again, and at `LOGTO`. Ids
-are kept as given, so `READ`s of `JACK` and `jack` are two entries.
+are kept as given, so `READ`s of `JACK` and `jack` are two entries. The cache roughly halves
+the requests of a `SORT`; it does little for a `LIST` that reads every record once.
 
 **What is not here yet:** saved lists on the remote side.
+
+`COUNT`, `LIST`, `LIST DICT` and `SORT` work on a remote file, as does the opening of its
+dictionary. A read-only definition refuses a write, and a definition whose pin the stored
+login was not made for is refused before anything is sent.
 
 ### Which remote files work
 
@@ -889,7 +894,7 @@ opened again.
 | `DELETE`, `DELETEU` | one request; a record that is not there is not an error |
 | `CLEARFILE` | one request; a big file can take minutes, and the connection is only called lost after five |
 | `READU`, `READL`, `MATREADU/L`, `READVU/L` | the lock, then the read; a busy record takes the `LOCKED` branch (`STATUS()` is the holder) or, without a `LOCKED` clause, the statement tries again every quarter of a second until the lock is free |
-| `RECORDLOCKU`, `RECORDLOCKL` | the lock, with the same busy behaviour |
+| `RECORDLOCKU`, `RECORDLOCKL` | the lock, with the same busy behavior |
 | `FILELOCK` | one request for the **whole file's** lock; a busy file (another user's file lock, or another user's lock on any record of the file) takes the `LOCKED` clause and `STATUS()` is the holder's user number on that server; with no `LOCKED` clause the statement asks again every quarter of a second. **Only for a server defined `write` and a login in the other server's `sdfileswrite` group** |
 | `FILEUNLOCK` | one request; `STATUS()` afterwards is 0 (it was this session's and is free now), 3011 (another user's, still held) or 3012 (nobody held it), as for a local file. Same conditions as `FILELOCK`. It is never stopped by the definition being set back to `read`: giving a lock back changes no data |
 | `RELEASE` | the record form, the file form (which also gives the file lock back) and plain `RELEASE` (every lock this process holds on a write-mode server) |
@@ -954,7 +959,7 @@ the other sequential-file statements (message 12516). `CONFIGURE.FILE`, `ANALYZE
 `CREATE.INDEX` and the other index verbs, creating or deleting a remote file and
 `WRITE ... CREATING.SEQKEY` work for a login that also has the administration group ("The
 administration group", above), and are refused with nothing sent for a `read` definition.
-`MUSTLOCK` is honoured as for a local file: a write
+`MUSTLOCK` is honored as for a local file: a write
 without the lock held is refused with `STATUS()` 3023 (for a login without the write group see
 `RECORDLOCKED()` above).
 
@@ -1084,20 +1089,6 @@ the login), the third to fifth the administrator giving the route and the two gr
 an administration act (written before the verb runs, so a killed command is on the trail), and the
 last a login of a person who is in neither `sdapi` nor `sdfiles`. All of them are written on the
 server being reached. The `admin=` word is new in this release.
-
-## What has and has not been run
-
-On Windows the code for all of this is carried from SD Core for Linux and compiled, and the free
-checks (the guards that read the source) pass. The one new piece of Windows code, the test of the
-access list that stands in for the file modes (`SD_FILE_PRIVATE`), was run against real access
-lists: a file and folder of the person's own pass, and an Everyone entry, a `sdusers` entry, a
-junction, the wrong kind of object, a path that is not there and a foreign owner each fail.
-**Nothing of SDNet has been run from end to end on Windows yet**: no `set.netlogin` against a
-server, no remote file opened, no write group changed on a real machine, no connection between
-two machines. The figure `settings.report` prints as `public key sha256:` has not been compared
-with the one `set.server ... connect` shows for the same server. The installer step that makes
-`sd-net` and the groups (now three, with `sdfilesadmin`) has been compiled, not run. Until these are run, treat every
-statement on this page about what the code does as read from the source and not seen.
 
 ## See also
 

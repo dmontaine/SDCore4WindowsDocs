@@ -1,5 +1,5 @@
 Title: SD TCL - The Terminal and the Session
-Subtitle: Screen size, terminal behaviour, silence, the inactivity timer, and writing to the error log.
+Subtitle: Screen size, terminal behavior, silence, the inactivity timer, and writing to the error log.
 
 Two different things are called the terminal. **`term` is the page** — how wide
 and how deep SD thinks your screen is, which decides where output wraps and when
@@ -43,25 +43,24 @@ Page depth: 9999
 
 The depth stayed at 9999 because only the width was given.
 
-### The page is the terminal's own size, and SD's default is 140 × 42
+### The page is the terminal's own size, and SD's default is 140 × 43
 
 **SD asks the terminal how big it is.** When a session starts on a terminal, and
 again each time the window is resized, SD reads the size of the window and makes
 it the page: `@crtwide` and `@crthigh` follow it, and so does `term`. A program
 that draws a screen — the SCREEN statement — sees an 80 × 24 window as 80 × 24.
-(**SD's own full-screen programs are the exception: SED, the IDE and CED are
-laid out for 140 × 42 or more**, SD's default size, and refuse a window smaller
-than that; the debugger's full-screen display says so and is line by line
-instead. If the window is made smaller while one of them runs, it shows the
+(**SD's own full-screen programs are the exception: SED, the IDE, CED and the
+full-screen pages are laid out for 140 × 43 or more**, SD's default size; they
+refuse a window smaller than that, and the debugger's
+full-screen display says so and is line by line instead. If the window is made smaller while one of them runs, it shows the
 upper left corner and stops taking keys while the cursor is off the screen — see
 the SED page. A `screen open` program of your own asks for the size it needs
 with `minsize`, and SD asks nothing more of it.)
 
-**SD's default is 140 columns by 42 lines, not 80 × 24** (it was 120 by 36
-until 25 October 2026 in this release, 18 October in SD Core for Linux). It is
-what a session gets when there is no terminal to ask — a phantom, a piped
-script, a service — and a report that looks wrapped or truncated on a narrow
-window is usually the window, not the report.
+**SD's default is 140 columns by 43 lines, not 80 × 24** (it was 120 by 36
+until 25 October 2026, and 140 by 42 until 9 November 2026). It is what a session gets when there is no terminal to
+ask — a phantom, a piped script, a service — and a report that looks wrapped or
+truncated on a narrow window is usually the window, not the report.
 
 **Where the number comes from**, in order, when a session starts:
 
@@ -70,7 +69,7 @@ window is usually the window, not the report.
 | 1 | **the terminal's own window size**, as the terminal reports it |
 | 2 | when there is no terminal to ask: the `LINES` and `COLUMNS` environment variables, if they are numeric |
 | 3 | otherwise the terminfo entry's `lines` and `cols` |
-| 4 | **otherwise 42 and 140** |
+| 4 | **otherwise 43 and 140** |
 
 and whatever comes out is then raised to the minimum of 10 lines by 20 columns
 if it is smaller. **`term` with a size typed by hand sets the page from then on,
@@ -78,8 +77,8 @@ until the next time the window is resized**, and it is taken as typed: any width
 from 20 to 32767 and any depth from 10 to 32767, larger or smaller than the
 default, with no other ceiling.
 
-> **`term default` puts the 140 × 42 pair back, and it prints nothing when it
-> does.** The verb sets the same 140 × 42 that is the fallback, whatever size
+> **`term default` puts the 140 × 43 pair back, and it prints nothing when it
+> does.** The verb sets the same 140 × 43 that is the fallback, whatever size
 > the window is, then returns without a message — so the way to see that it
 > worked is a bare `term` after it, not the command itself:
 >
@@ -87,7 +86,7 @@ default, with no other ceiling.
 > :term default
 > :term
 > Page width: 140
-> Page depth: 42
+> Page depth: 43
 > ```
 >
 > `term 120,36` does the same thing by hand and is worth knowing for the cases
@@ -121,7 +120,7 @@ xterm
 
 (The list is cut short here: it is 37 names in rows of six, and the count depends
 on the release. The Data General, MDC Prism, Prime and Televideo 910 definitions that
-were once on it were removed in 1.2-0.) **A type that is not on it has no definition of its own**, and SD
+were once on it were removed in 2.0-0.) **A type that is not on it has no definition of its own**, and SD
 substitutes one for it.
 
 ### What a key does: `tool.keys`
@@ -134,38 +133,39 @@ A full-screen diagnostic for the terminal and the keyboard, for anyone: it chang
 nothing and reads nothing private (it shows the terminal type, the window and the
 locale, which the session already knows). It needs a window of at least **140
 columns by 43 lines** and says so, with the size it found, if the window is
-smaller. Use it when a function key does nothing, an arrow prints `^[[A`, color
+smaller (or bigger than 500 by 300, which it also refuses before it draws). Use it when a function key does nothing, an arrow prints `^[[A`, color
 looks wrong or the mouse does not answer.
 
 | box | what it shows |
 |---|---|
-| **Terminal** | the terminal type SD is using (`TERM (SD)`, what `term` sets) and the one in the environment (`TERM (env)`), the window and the layout, the locale and whether the borders are line characters (UTF-8) or `+ - \|`, whether the terminal can show colour, the theme, how many mouse events have arrived, how keys are being read, and how many of the keys in the grid have been seen |
-| **Last keys** | the 25 newest keys, newest first. **Names** (the start): the name the screen library reports for the key — `up`, `f5`, `ctrl-g`, `alt-s`, `mouse`, or the character itself with its code. **Raw** (Ctrl-R): the bytes the terminal sent, in hex, with the characters beside them |
-| **Keys seen** | the arrows, the twelve function keys, the control keys, an Alt-letter, a printable character and the mouse; a key is ticked once it has been pressed |
+| **Terminal** | the terminal type SD is using (`TERM (SD)`, what `term` sets) and the one in the environment (`TERM (env)`), the window and the layout, the locale and whether the borders are line characters (UTF-8) or `+ - \|`, whether the terminal can show color, the theme, how many mouse events have arrived, how keys are being read, and how many of the 52 keys in the grid have been seen |
+| **Last keys** | the 25 newest keys, newest first. **Names** (the start): the name the screen library reports for the key — `up`, `f5`, `ctrl-g`, `alt-s`, `mouse`, or the character itself with its code. **Raw** (Ctrl-R): the bytes the terminal sent, the first eight, in hex, with the characters beside them |
+| **Keys seen** | the arrows, home, end, paging, insert, delete, backspace, tab, back-tab, Enter, Esc, the twelve function keys, the control keys, an Alt-letter, a printable character and the mouse; a key is ticked, and drawn bold, once it has been pressed |
 | **Mouse** | the last mouse event (press, release, drag, wheel), where it was, and the counts |
 | **Box drawing** and **Styles** | the borders the library draws with, and the library's sixteen styles each drawn in itself, so the theme in force can be seen on this terminal |
 
-Every key is shown **before** the program acts on it. The program uses four:
-**Ctrl-L** clears what has been seen, **Ctrl-R** switches between names and raw
-bytes, **Ctrl-T** changes the theme (mono, classic, blue; a terminal that cannot
-show colour keeps mono and says so) and **Ctrl-Q** leaves, so a key that ends the
-program can only be tested by leaving.
+Every key is shown **before** the program acts on it. The program uses five:
+**Ctrl-L** clears what has been seen (it uses no function key, so every function key can be tested), **Ctrl-R** switches between names and raw
+bytes, **Ctrl-T** takes the next theme and keeps it for you, as on every page (a terminal that cannot
+show color keeps mono and says so), **Ctrl-K** lists these keys and **Ctrl-Q** leaves, so a key that ends the
+program can only be tested by leaving. `tool.keys` has no menu bar, so that Esc and F10 can be
+tested here like any other key.
 
-**A key that makes the terminal beep and shows nothing in names mode is one the
-terminal type does not name.** SD decodes keys with the terminfo entry for the
-type in force, so an F-key or an End key the entry does not list is dropped, and
-the rest of its bytes may show up as stray characters. Press **Ctrl-R**, then press
-the key again: the bytes it sent are shown, which is what a terminfo entry needs.
-An Alt-letter shows as `alt-x` on a terminal that sends Alt+x as Esc and x.
+**A key that makes the terminal beep and shows nothing in names mode is one SD
+has no name for.** SD understands the usual keys of every terminal in both
+cursor-key modes (the arrows, Home, End, Insert, Delete, Page Up and Down,
+Shift-Tab, F1 to F12, and the Ctrl, Shift and Alt forms of them such as
+`ctrl-left` and `ctrl-pgup`), then adds those of the terminfo entry for the type
+in force. A control sequence it has no name for is ignored whole: it is no longer
+typed into your text. A byte of 128 or more is never a key. Press **Ctrl-R**,
+then press the key again: the bytes it sent are shown, which is what a terminfo
+entry needs. An Alt-letter shows as `alt-x` on a terminal that sends Alt+x as Esc
+and x. Pasted text arrives as one `paste` key, however long it is.
 
 Make the window smaller while it runs and the cursor lock takes the keyboard
 with the message that the window is too small; make it larger again and the
 screen comes back. Ctrl-Q, then `y`, leaves from the lock. If the input ends (a
 piped session) the program ends.
-
-*Not run on a Windows console yet.* The page is SD Core for Linux's, carried here
-and compiled; which keys the Windows terminal type gives names to is exactly what
-it is for.
 
 ### What this account may do: `tool.gates`
 
@@ -176,8 +176,8 @@ tool.gates
 A full-screen page, for anyone, that answers "why can I not do that?" — it shows every
 **gate** the system has, the switches the administrator turns on or off for an account
 (`sh`, `os`, `sd`, `voc`, `bp`, `dict`, `net`, the shared account's read and write, and the
-routes `ssh`, `api`, `files`, `files-write` and `files-admin`), each **ON** or **off for
-this session**. It needs a window of at least **140 columns by 43 lines**. (For the
+routes `ssh`, `api`, `files`, `files-write`, `files-admin` and `ai`), each **ON** or **off
+for this session**. It needs a window of at least **140 columns by 43 lines**. (For the
 administrator the same verb is the gate matrix of every account; this is the page every
 other account gets.)
 
@@ -198,9 +198,6 @@ again; **F1**, `?` or a click on the `[?]` explains the page; **Ctrl-Q** leaves.
   group by your **login name**, read from the system each time (F5 shows a change).
 * **Every account starts with every gate off, except the right to read the shared
   account.** A gate that is `plan` (raw sockets) is not built yet.
-
-*Not run on a Windows console yet.* The page is SD Core for Linux's, carried here and
-compiled.
 
 ## The wire: `pterm`
 
@@ -225,7 +222,7 @@ gone quiet — it takes a keyword and `display` is one of them. The full set:
 | **`pterm newline cr`** \| **`lf`** \| **`crlf`** | the output line ending |
 | **`pterm return cr`** \| **`lf`** | the input line ending |
 | **`pterm binary on`** \| **`off`** | pass bytes through untranslated |
-| **`pterm telnet on`** \| **`off`** | recognise `TN_IAC` |
+| **`pterm telnet on`** \| **`off`** | recognize `TN_IAC` |
 | **`pterm reset`** *string* | the terminal reset string |
 | **`pterm prompt`** `":"` `"::"` | change the command prompt and the continuation prompt |
 
@@ -285,7 +282,7 @@ clear.prompts
 command left behind. Neither prints anything.
 
 (The run-together spellings `clearinput` and `clearprompts` were second names
-for the same verbs and were removed in 1.2-0.)
+for the same verbs and were removed in 2.0-0.)
 
 > **Neither can be demonstrated down a pipe, and `clear.input` should not be
 > sent down one at all.** In a piped session the input stream *is* the script,
@@ -315,6 +312,17 @@ is normal.
 executes `autologout 10` (`SDExecute("AUTOLOGOUT 10")`) has its server session ended after
 ten minutes in which it sent nothing, and its next request fails at once
 (see [SD Client API](37-sd-client-api.html)). The setting belongs to the one session that gave it.
+
+**It works in the full-screen programs too** (since 28 October 2026). The screen library, `ide`, the
+home screen and every tool page wait for a key one second at a time, and each of those waits used to
+start the timer again, so a session left in one of them was never logged out. SD now adds up the time
+spent waiting across such short waits: only a key actually typed (or the break key) starts the period
+again, and the logout is the same as at the prompt. A page left open without typing, `tool.sessions`
+included, is therefore logged out like any other session. A program that waits for a key with no time
+limit behaves as before, and a timed wait exactly as long as the `autologout` period still ends with a
+plain timeout. **A program that polls the keyboard with very short timed `keyin`s and does work between
+them counts as waiting**, because the polls add up with nothing typed: `autologout` can end it, and
+only a key resets the count.
 
 ## The command echo: `echo`
 
@@ -436,7 +444,7 @@ Decimal separator   : '.'
 Naming one of the three shows just that one. Naming one and a value sets it, and
 **`nls default`** puts all three back to `$`, `,` and `.`. A setting lasts for the
 session: the next session starts from the defaults. Anything other than the three
-names is refused, *"x is not a recognised NLS key"*.
+names is refused, *"x is not a recognized NLS key"*.
 
 These are the same three values that **`getnls`** and **`setnls`** read and set
 from SD BASIC (see [Data Conversion](06-sd-basic-data-conversion.html)). SD Core
@@ -504,6 +512,15 @@ a message does not need to say who wrote it. The log is
 `C:\ProgramData\SD\sdsys\errlog`, shared by every session, which makes `logmsg`
 the right way for a phantom or a scheduled job to report something a person will
 read later — there is no terminal to print to and no transcript kept.
+
+## Reading the documentation
+
+The documentation PDFs the administrator has installed are files in the `pdf`
+directory of the shared account (`C:\ProgramData\SD\group_accounts\shared\pdf`), which every
+SD user may read. To read one, copy it to your own computer (for example with `scp`)
+and open it there; at the machine itself, open it with any PDF reader. SD does not
+start a reader for you. When a help box (F1, `?` or a `[?]` button) has more in the
+documentation, its last line names the PDF.
 
 ## See also
 

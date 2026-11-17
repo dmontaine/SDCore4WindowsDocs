@@ -213,7 +213,7 @@ def get_title(html_path):
     with open(html_path, 'r', encoding='utf-8') as f:
         content = f.read()
     # Try <title> tag first
-    m = re.search(r'<title>(.+?) - SD Core for Windows</title>', content)
+    m = re.search(r'<title>(.+?) - ' + re.escape(PRODUCT) + r'</title>', content)
     if m:
         return m.group(1)
     # Fallback: tp-title
@@ -496,7 +496,7 @@ def create_master_index():
 <div class="page">
 <main class="master-index">
 <h1>Documentation</h1>
-<p class="mi-subtitle">The {PRODUCT} documentation is organised into three sets, each aimed at a different audience. Each page is a self-contained HTML file.</p>
+<p class="mi-subtitle">The {PRODUCT} documentation is organized into {len(SETS)} sets, each aimed at a different audience. Each page is a self-contained HTML file.</p>
 <div class="mi-sets">
 {sets_html}
 </div>

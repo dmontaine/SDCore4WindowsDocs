@@ -3,12 +3,12 @@ Subtitle: Reaching the machine from inside SD, how privileged work is done, and 
 
 This page continues [Security](12-security.html).
 
-## Reaching the operating system from inside SD
+## The shell and operating-system access are per-account switches
 
-**There are three ways out of SD onto the machine, and each is a switch of the
-account.** (Until 25 October 2026 they were a list of people in a file,
-`os.users`; the switches are now fields of the account's own record, and the
-file is no longer read.)
+**SD is delivered with the ways out of SD shut, and the administrator opens
+them one account at a time.** A new user account has none of these until
+SDSYS turns it on (`modify.account` *name* `sh-on` / `os-on`). There are three
+ways out of SD onto the machine, and each is a switch of the account:
 
 | | What it is | Governed by |
 |---|---|---|
@@ -38,13 +38,13 @@ all; it is checked against the account's switches exactly like an unelevated
 one. See [Accounts](05-account-types.html#sdsys-is-the-only-administrator).
 
 **3. An API session is checked the same way as any other, by the account it
-entered — and SDSYS has no API session to be checked.** An ordinary account
+entered — and an SDSYS session, which exists only when the administrator has opened that door, is the administrator's own.** An ordinary account
 with `sh-on` gets `sh` over the API exactly as it would anywhere else, which
 is the real risk `sh-on` or `os-on` plus API access creates — the
 *Administrator* set's *Accounts and Security* chapter has the detail.
-**SDSYS itself never reaches this path**: it carries no SD credential to
-authenticate an API connection with by design, and the API is refused to it
-outright regardless — see [API access](09-api-access.html).
+**SDSYS reaches the API from another computer only through the door the
+administrator opens with `remote.sdsys api on`**, shut as delivered — see
+[API access](09-api-access.html).
 
 **4. Nothing in SD limits what you then do.** Once a switch is on, SD is not
 standing between that person and the machine — **the boundary from that point
@@ -84,8 +84,8 @@ unprotected.
 ## The audit trail
 
 `C:\ProgramData\SD\sdsys\audit` records **every login, every refused login,
-every `logto`, every refused `logto`, and every `grant` and `revoke`**, with
-date, time and the Windows user it belonged to. **It also records what an
+every `logto`, every refused `logto`, and every `modify.account add`/`delete`**,
+with date, time and the Windows user it belonged to. **It also records what an
 administrator does to accounts and to remote access**: `create.account`,
 `delete.account` and `restore.account` (a completed one only), the
 `modify.account` changes that add or remove a group member, suspend, unsuspend,
@@ -99,15 +99,36 @@ names the account it concerns.
 2026-10-06 21:04:31 user=sdsys uid=1 pid=4120 remote.api local
 ```
 
-Every word before the first `=` is lower case. What follows an `=` is as it
-was: an account name keeps its case, and so does the text of a reason. A
-file that was started before this was the rule holds both spellings, so search
-it without regard to case.
+Every word before the first `=` is lower case, the event names included
+(`login`, `logto`, `logto refused`, `api refused`, `elevation granted`,
+`modify.account route api`). What follows an `=` is data and keeps its case:
+the account name as it is registered, a `reason=` text, and what a caller
+typed in `command=`. A file that was started before this was the rule holds
+both spellings, so search it without regard to case.
+
+**An account's gates are on the trail whenever they are given.** `modify.account`
+writes one line for each word it carries out (`modify.account sh-on account=fred`;
+several words in one command give several lines), and `create.account` records
+the gates it granted at creation as well:
+
+```
+2026-10-19 15:35:26 user=sdsys uid=1 pid=8326 create.account account=witm1 type=user gates=sh-on,os-on,files-on,files-write-on
+2026-10-19 15:35:27 user=sdsys uid=2 pid=8614 create.account account=witm2 type=user gates=none
+```
+
+`gates=` lists, in lower case, every access the new account was given, always
+in this order whatever order the words were typed: `ssh`, `api`, `sh-on`,
+`os-on`, `voc-on`, `bp-on`, `dict-on`, `net-on`, `files-on`, `files-write-on`,
+`files-admin-on`, `ai-on`, `shared-read-off`, `shared-write-on`, `pins-on`,
+`recovery-on`, `xfer-on`. It says `none` when there is none. The line is
+written only after the account has been made: a creation that is refused (an
+empty password, say) leaves no line.
 
 **The refusals are the interesting half.** An entry saying somebody who is
 not an administrator asked for SDSYS by name, or asked for an account they have
 not been granted, is the thing worth seeing. **Failed API logins are recorded
-too, with the reason.**
+too, with the reason** — and **before** the three-second wait SD adds to slow
+down guessing, so a program that hangs up during the wait is recorded as well.
 
 **This is not the error log and does not behave like it.** The error log throws
 away its oldest half when it fills; the audit file is **renamed with the date

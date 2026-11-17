@@ -330,10 +330,12 @@ def main():
         printed(full, displayHeaderFooter=False)
         pages = page_texts(full)
         labels, found = labels_for(pages, heads, title)
-        sys.stdout.write('mkfooterpdf: %d pages; %d of the page\'s %d headings found in the printed text, in order\n'
+        sys.stdout.write('mkfooterpdf: %d pages, %d of %d headings found in the printed text, in order\n'
                          % (len(pages), found, len(heads)))
-        if found == 0:
-            sys.stderr.write('mkfooterpdf: no heading was found in the printed text, so every footer would name the title only\n')
+        if found != len(heads):
+            # a heading not found leaves every page after it under the one before (and none found labels every page with the title)
+            sys.stderr.write('mkfooterpdf: heading %d (%r) was not found in the printed text; the footers would be wrong\n'
+                             % (found + 1, heads[found][1]))
             return 1
 
         runs = []
@@ -380,8 +382,8 @@ def main():
         if not any(args.date in ln for ln in out_pages[idx]):
             sys.stderr.write('mkfooterpdf: page %d of the result has no footer with the date %r\n' % (idx + 1, args.date))
             return 1
-    sys.stdout.write('mkfooterpdf: wrote %s (%d pages; the footer with the date read back on the first and last page)\n'
-                     % (pdf_path, n_out))
+    sys.stdout.write('mkfooterpdf: wrote %s (%d pages; the date %r read back from pages 1 and %d)\n'
+                     % (pdf_path, n_out, args.date, n_out))
     return 0
 
 

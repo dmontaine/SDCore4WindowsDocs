@@ -96,7 +96,7 @@ The line between the boxes counts the results of the session and shows the **bp-
 | **A** | run every test shown, one after another, in the order shown, after a box that gives the number and the first commands (Cancel is what Enter chooses); **Esc** stops after the test that is running |
 | **F** | run again the tests that failed (an abort counts as a fail), after the same box |
 | **B** | compile a test that has no object code: `basic FILE ID`, after a box that shows the command (Cancel is what Enter chooses) |
-| **Enter**, F6 or Shift-F6 | show what the test printed in the lower box, which then has the keyboard (`[*]`), scrolling with Up, Down, PgUp, PgDn, Home and End; **Esc**, F6 or Shift-F6 comes back to the list |
+| **Enter**, F6 or Shift-F6 | show what the test printed in the lower box, which then has the keyboard (`[*]`), scrolling with Up, Down, PgUp, PgDn, Home and End; **Esc**, F6 or Shift-F6 comes back to the list (F6 by way of the AI line when the AI is on for your account) |
 | **/** | show only the tests whose name or program file holds some text; **Esc** clears it |
 | F5 | read the program files again (the results are kept) |
 | F1, **?**, a click on **[?]** | help |

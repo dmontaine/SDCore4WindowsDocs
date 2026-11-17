@@ -56,13 +56,15 @@ sddecrypt(data, key, encoding)
 
 Three arguments. The encoding is `201` for hex or `202` for base64.
 
-**A passphrase is not a key.**
+**A passphrase is not a key, but an ordinary program can make one.**
 `sdencrypt('The quick brown fox', 'secretkey', 202)` returns **nothing** and
 sets `status()` to **10204**, a key length error. The key has to
-be an encoded 256-bit key, and an ordinary program makes one with
-`sdkey(passphrase, salt)` or `sdrandkey()`. See
-[SD Basic - Encrypting Data](06a-sd-basic-encryption.html), which also covers the
-`XE` conversion and the key ring.
+be an encoded 256-bit key. Make it with `sdkey(passphrase, salt)`, where the salt
+comes from `sdsalt()` and is kept with the data, or take a random one from
+`sdrandkey()`; both are in every account, and
+[SD Basic - Encryption](06a-sd-basic-encryption.html) has the worked example.
+Until 18 October 2026 this page said the opposite, and that there was no way in:
+that stopped being true when `sdsalt()`, `sdkey()` and `sdrandkey()` were added.
 
 ## UMASK()
 
@@ -89,8 +91,8 @@ and pass it back.
 
 | | Value |
 |---|---|
-| `@who` | `don` — **lower case** |
-| `@logname` | `don` — as you signed in |
+| `@who` | `don` — the account the session is in, **always lower case** |
+| `@logname` | `don` — the operating-system user who signed on |
 | `@path` | `/cygdrive/c/ProgramData/SD/user_accounts/don` |
 | `@sdsys` | `C:\ProgramData\SD\sdsys` |
 | `@userno` | `67`, the same as `system(18)` |
@@ -99,9 +101,9 @@ and pass it back.
 | `@user.return.code` | `0` |
 | `@crtwide` / `@crthigh` | `200` / `9999` — whatever `TERM` last set |
 
-**`@who` is the account name in lower case**, as on SD Core for Linux; before
-this release it was upper case (`DON`). `@logname` keeps the case you signed in
-with, so compare the two with `downcase()` on both sides.
+**`@who` is always lower case**, so compare it with a lower-case literal
+(`if @who = 'sdsys'`) and no `upcase()`. It changes when the session moves to
+another account with `LOGTO`; `@logname` does not.
 
 `set.exit.status` sets what SD returns to the operating system when the session
 ends.
@@ -115,23 +117,13 @@ os.execute command {capturing variable | silent}
 `capturing` puts the command's output in the variable; `silent` throws it
 away, so nothing of it reaches the terminal.
 
-**It is gated per account, and a refusal aborts the program rather than
-setting a status.** In an ordinary account:
-
-```
-don is not permitted to use OS.EXECUTE at line 10 of .../BP.OUT/ZZMATH
-```
-
-The program stops there. There is no `else`, no `on error` and no status to
-test, so **a program that may run in an account without the right must not
-reach the statement at all**.
-
-Permission is the account's own `os-on` switch, kept in the account's record in
-the register — not a VOC entry and not a Windows privilege. (It used to be field
-2 of a record in the system `os.users` file, keyed to the person; that file is no
-longer read.) An administrator's session passes regardless. Ask your
-administrator to turn `os-on` on for the account; there is nothing a program can
-do about it.
+**It needs the account's `os-on` switch**, which SDSYS turns on and a new
+account does not have. Without it the statement stops the program with
+"*name* is not permitted to use OS.EXECUTE" before the command is touched.
+With it, `OS.EXECUTE` executes with the Windows permissions the session runs
+with. A subroutine your program calls is held to the same rule.
+See the *Administrator* set's *Accounts and Security* chapter, "The
+operating-system switches: `sh-on` and `os-on`".
 
 ## LOGMSG
 
@@ -164,7 +156,7 @@ WARNING: KERNEL is not assigned a value
 ```
 
 A name the compiler does not know as a function is read as a **matrix
-reference**, so the error is about a `dim` statement you never wrote, at a line
+reference**, so the complaint is about a `dim` statement you never wrote, at a line
 number nowhere near the call. **If a function you are sure exists produces
 that, it exists and this account may not call it.** A call with three arguments
 gives a different but equally misleading answer — `sdext(101, 'pw', 'salt')`
@@ -178,8 +170,8 @@ put in front of it. They are reachable only from a program compiled
 with `$internal`, which additionally requires an administrator in the `SDSYS`
 account.
 
-**`ospath()` is not on that list any more** (12 Nov 2026). Any program may call it,
-with the openQM keys, and the account's OS access decides what it may look at:
+**`ospath()` is not on that list any more.** Any program may call it, with the
+openQM keys, and the account's OS access gate decides what it may look at:
 
 ```
 ospath(path, key {, qualifier})
@@ -211,9 +203,8 @@ shared account to anyone but SDSYS. An unknown key answers false with `status()`
 read and ignored. An internal program's own `ospath()`, with its different numbers, is unchanged.
 
 **And some statements are restricted the same way.** These 34 are
-*"Unrecognised statement"* to a program that is not compiled `$internal` (they
-are the compiler's own `restricted.statements` list; each was compiled once in
-a plain program on Linux to check):
+*"Unrecognized statement"* to a program that is not compiled `$internal` by an
+administrator (each was compiled once in a plain program to check):
 `add`, `akclear`, `akdelete`, `akenable`, `akread`, `akrelease`, `akwrite`,
 `callv`, `configure.file`, `create.ak`, `delete.ak`, `delete.common`,
 `keyboard.input`, `modify`, `quit`, `release.lock`, `remove.token`,
@@ -225,7 +216,7 @@ left out `set.status`; it is the compiler's own `restricted.statements` list
 that counts, and the *Administrator* set's *SD Basic - Restricted Commands*
 page carries the same names.
 
-**`errmsg` is not a statement at all.** It compiles to *"Unrecognised
+**`errmsg` is not a statement at all.** It compiles to *"Unrecognized
 statement"* for everybody, as any word the compiler does not know does. It was
 removed from the compiler's statement table in July 2024. An earlier version of
 this page said the name was left behind in the table; only a comment beside the

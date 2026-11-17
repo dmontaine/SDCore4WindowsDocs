@@ -2,15 +2,15 @@ Title: Differences from W1.0-0
 Subtitle: What changed for someone who already knows SD Core for Windows, grouped by theme rather than by date.
 
 This page is for somebody who used **W1.0-0** and is looking at **W1.1-3**.
-Everything else in this set already describes the current behaviour on its
+Everything else in this set already describes the current behavior on its
 own terms; this page exists only to say what is *different*, and to flag
 what might stop working after an upgrade.
 
 The day-by-day version of everything below — every fix, in the order it was
 made — ships on the machine at `C:\ProgramData\SD\sdsys\changelog` (or
-`config gpl` from an `sd` prompt for the licence, `LIST.VOCLIB` is not it;
+`config gpl` from an `sd` prompt for the license, `LIST.VOCLIB` is not it;
 the changelog is a plain text file in the SDSYS account's install tree).
-This page is the same material, reorganised.
+This page is the same material, reorganized.
 
 ## Accounts: the tiers are gone
 
@@ -174,7 +174,7 @@ or `JACK` but never both; writing one when the other exists updates the same
 record. This is how the system files always behaved; it now holds for every
 file, including your own. `CREATE.FILE ... CASE` is no longer accepted.
 
-**SD's own vocabulary, dictionaries, catalogued program names and several
+**SD's own vocabulary, dictionaries, cataloged program names and several
 VOC pointers are named in lower case** — but every lookup tries what you
 typed first, then lower case, then upper case, so nothing you already type
 stops working. This has its own page, with the exceptions and the upgrade

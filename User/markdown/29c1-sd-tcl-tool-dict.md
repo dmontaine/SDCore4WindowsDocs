@@ -43,7 +43,7 @@ and whether it has been compiled, and the record as it is stored.
 |---|---|
 | Up, Down, PgUp, PgDn, Home, End | move the cursor |
 | **N** | make an item: asks the id, then hands the terminal to the [IDE](24-sd-tcl-programs-and-the-catalogue.html) on a new item, shown as the dictionary form |
-| **E** | edit the item in the [IDE](24-sd-tcl-programs-and-the-catalogue.html) (`ide dict file item`): the terminal is handed to the IDE, and leaving it brings the page back at the same item |
+| **E** | edit the item in the [IDE](24-sd-tcl-programs-and-the-catalogue.html) (`ide dict file item`; since 28 October 2026 it was SED): the terminal is handed to the IDE, and leaving it brings the page back at the same item |
 | **D** | delete the item (`delete dict file item`) after a box, with the item's id typed |
 | **C** | compile an I item (`compile.dict file item`) after a box |
 | **T** | try the item on a record of the file: asks the record's id and shows the value the query processor would compute for it, and the same value as a query prints it |
@@ -86,7 +86,7 @@ finds nothing, and the box under the list says so.
 | **B** | build the index under the cursor again from the records (`build.index file index`) |
 | **D** | delete it (`delete.index file index`) after a box, with its name typed |
 | **L** | list it in full (`list.index file index detail`): the terminal is handed to the verb, which prints its report; Enter brings the page back |
-| **I**, F6 or Esc | back to the items pane |
+| **I**, F6 or Esc | back to the items pane (F6 goes to the AI line first when the AI is on for your account) |
 
 N runs both verbs after one box, because an index that is defined and not built is a trap;
 B builds one that is left over. Building and deleting need the file to themselves: if another session has the

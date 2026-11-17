@@ -14,7 +14,7 @@ in lower case. In the tables, *italics* mark something you supply and **bold**
 marks a word typed as it stands; braces mark an optional part.
 
 > **Every listing on this page was produced by running it**, on SD Core for
-> Windows W1.0-0. The lock listings come from a program that took the locks
+> Windows. The lock listings come from a program that took the locks
 > first and then ran the verb against itself, because a lock nobody holds is not
 > something a listing can show.
 
@@ -72,17 +72,19 @@ listu detail {no.page} {lptr {n}}
 `detail` adds a line above the report: the interactive users, the API sessions,
 the phantoms that count as licensed, the other phantoms, and the most users
 there have been at once since SD started. `system(1056)` gives the same five
-numbers. **SD has no licence count**, so the third number is whatever the system
+numbers. **SD has no license count**, so the third number is whatever the system
 marks as chargeable.
 
 **`Origin` is blank for a local session and that is not a fault.** It reports
 an address or a device name, and a console or piped session has neither. It
 reads `Phantom` for a phantom and an IP address for a network client.
 
-`SDNet` is also among the values it can print, and you will not see it: it
-names the old SDNet session, which was removed. The new SDNet client
-([SDNet](12a-sdnet.html)) reaches the other server by an ordinary API login, which
-that server lists as an API session.
+`SDNet` is also among the values it can print, and you will not normally see
+it. The mark behind it is set in only one place, the API server's request 29,
+"open an SDNet file", which is refused unless `NETFILES` has bit 2 set (see
+*Configuration*). The SDNet described in this set ([SDNet](12a-sdnet.html)),
+where a program opens a file on another SD server, does not use request 29, so a
+session that comes from it shows an address like any other API session.
 
 **`(logout pending)`** after the name means somebody has asked that session to
 end and it has not gone. See below.
@@ -117,24 +119,19 @@ account. It leaves your own session alone.
 `logout` **signals** a process. **If the process has already gone** — killed from
 outside SD, or lost with a terminal — there is nothing to signal, and `logout`
 finds that out first: it **clears the entry and releases every file, record,
-group and task lock the session still held**, and says so:
+group and task lock the session still held**, and says so (then the text of
+message 10167, *User n was not running, so there was nothing to log out*):
 
 ```
-User 43 was not running, so there was nothing to log out.
-...
+LOGOUT reaped user 43 (pid 1799435, don) - process was gone.
 ```
 
-(message 10167, whose text goes on to say that the slot has been reclaimed and
-every lock released, and that you can now try again to reach a file that would
-not open). **The entry matters because it holds a slot and an exclusive-access
+For a session killed from outside while it held a record lock,
+`logout 43` prints the line above, and afterwards `listu` does not list the user
+and `list.readu` does not show the lock. The entry matters because **it holds a slot and an exclusive-access
 claim**: `NUMUSERS` counts it, and any verb that wants a file to itself —
 `build.index` is the usual one — is refused while it is there. So **the way to
-clear a dead session is `logout` *n*.** (Before September 2026 a `logout` of a
-dead session left the entry standing with **`(logout pending)`** beside it for
-ever, and recovery was `sd -cleanup`, run elevated, and a restart of the SD
-service if that did not take it; the program changed in W1.1 and this page did
-not until 25 October 2026. The new behaviour is read from the source and the
-changelog; the sentence above has not been run on this page's build.)
+clear a dead session is `logout` *n*.**
 
 A session that is **alive and does not answer the signal** is the other case,
 and it keeps its entry with **`(logout pending)`** beside it; asking again
@@ -441,7 +438,13 @@ not have the verb, and the page is refused before it reads anything to anyone wh
 the administrator). It needs a window of 140 columns by 43 lines. The top list is every
 session — user number, process, when it signed on, its kind (user, phantom, API or
 SDNet), the login user, the account it is in, where it came from, and whether it is yours
-(a star) or a logout is pending. The lower list is every lock — the user, the file number
+(a star) or a logout is pending. **When SDSYS is signed on in more than one place on a
+terminal, each of those rows also says `sdsys x<n>`, the counts line says `SDSYS in <n>
+places`, and the audit trail has a line `sdsys second session others=<n>` for each one that
+signed on while another was there** (see *Being SDSYS* in *Accounts and Security*). **Ctrl-O
+opens an output pane** (six rows, between the row box and the foot) that keeps the commands the
+page ran, with what each answered, newest first; Ctrl-PgUp and Ctrl-PgDn scroll it and Esc puts
+it away. It is kept in memory for this run of the page only. The lower list is every lock — the user, the file number
 and path, the type (`FX` and `SX` lock a whole file, `RU` is read and update, `RL` is read,
 `WAIT` is a session waiting for a lock), the record id, since when, and whether a session
 with that user number is still signed on. Under the sessions the page says whether logins
@@ -482,8 +485,7 @@ and shows them so; the page sends the id in lower case, which the verb folds.
 ordinary account's own work. An ordinary account has no such page: its own sessions are
 `!listu` from a program.
 
-*Not run on a Windows console yet.* The page is SD Core for Linux's, carried here and
-compiled; it asks the same `logout`, `unlock` and `inhibit.login` as the prompt does, so
+It asks the same `logout`, `unlock` and `inhibit.login` as the prompt does, so
 the privilege rules of each (elevated, SDSYS) apply to it unchanged.
 
 ## Who has these verbs

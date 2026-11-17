@@ -1,10 +1,6 @@
 Title: API access
 Subtitle: The client API, the port it answers on, the login that replaced the old one, and what a remote session may reach.
 
-The client API is the reason this port exists. SD Core for Windows is built to
-be used as a back end data store reached through the API, and that is the
-tie-breaker on most other design questions here.
-
 **The API is a normal way for any account to use SD.** A person running a
 custom GUI program that talks to SD needs API access and may need nothing
 else — no ssh, no terminal. An account with `api` access is an ordinary
@@ -13,18 +9,33 @@ have:
 
 ```
 create.account user jane api
+modify.account jane api
 ```
+
+**An account has it only if SDSYS gave it — a new account has none, and `api`
+(or `both`) gives it.**
 
 Your application code does not change. `SDConnect()` and `SDConnectLocal()`
 take the same arguments and return the same things. **What changed is
 underneath: the login protocol, the encryption of the connection, the port, the
 identity a session runs as, and what it is allowed to open.**
 
-> **SDSYS is the one exception, and it has no API access at all.** It
-> carries no SD credential to authenticate an API connection with, by
-> design — see [Reaching the port is not getting in](#reaching-the-port-is-not-getting-in)
-> below. Every other account's access route (`ssh`/`api`/`both`/`none`) is
-> just a setting, chosen at creation or changed with `modify.account`.
+> **SDSYS is the one exception: from another computer it has no API access
+> until the administrator opens that door**, and then only from the addresses
+> named — see [Reaching the port is not getting in](#reaching-the-port-is-not-getting-in)
+> below. **Every other account has no API access until SDSYS gives it** —
+> `modify.account` *name* `api` (or `both`), or `api` at `create.account` — and
+> an account that has not been given it is refused at the door.
+
+**There is a second, narrower route for a client that only needs files.** An
+account SDSYS gave `files-on` (and not `api`) can log in over the API but is
+held to files: opening, closing, reading, writing, deleting, selecting, locking,
+indices and file information. A request to call a subroutine, execute a
+command, enter another account (`logto`), read a variable or use a sequential
+file is refused with *"This login is for files only: request n is not
+allowed"*, and the connection stays open. An account with `api` has the whole
+API whether or not it also has `files-on`. This is the route SDNet's logins are
+meant to use.
 
 ## The login is SCRAM-SHA-256, and the old one is gone
 
@@ -162,22 +173,17 @@ A caller must clear two gates, in this order:
    give it API access. `create.account user fred api` or `... both` does that;
    `ssh` or `none` does not.
 
-**SDSYS clears neither gate, ever, from any address including this
-machine's own loopback.** It has no SD credential to complete a SCRAM
-exchange with — its identity comes from Windows at the console, by design,
-not from anything SD stores — and it is never joined to `sdapi`, because
-only `create.account` does that and SDSYS is not created that way. There is
-no keyword that changes this and nothing to configure: it is not a rule the
-API enforces about *where* SDSYS connects from, it is that SDSYS has no way
-to authenticate over the API at all.
-
-> **This is a full reversal of SD Core 1.0 and early 1.1 builds**, where an
-> administrator's account had API access that worked locally and was
-> refused only from another machine — *"An administrator may not sign in to
-> this machine from another one."* If you read that wording in an older
-> document, it no longer applies: there is no local exception any more.
-> Administering SD, and reaching the API, are unrelated to each other now —
-> see [Accounts](05-account-types.html#sdsys-is-the-only-administrator).
+**SDSYS is admitted from another computer only through a door the
+administrator opens.** It is never joined to `sdapi`, because only
+`create.account` does that and SDSYS is not created that way, so the ordinary
+route is closed to it. Signed in to Windows as SDSYS, the administrator can open
+a separate door for chosen addresses with `remote.sdsys api on` *address*, and
+shut it again with `remote.sdsys api off`; as delivered it is shut. A session
+that comes through it must still complete the SCRAM exchange with SDSYS's own
+SD password, the one SD asked SDSYS to set the first time it signed in. The
+Administrator Guide's chapter *Remote Administration through the API* says what
+opening the door means for security. See
+[Accounts](05-account-types.html#sdsys-is-the-only-administrator).
 
 **Failed API logins are written to the audit trail**, with the reason and
 the address they came from. The line is written **before** the wait (`PWDELAY`,
@@ -187,16 +193,10 @@ program that hangs up during the wait is recorded as well. See
 
 ## A session is confined to its own account
 
-**UNTIL 21 Aug 2026 A CLIENT CONNECTING OVER THE API COULD OPEN ANY FILE ON
-THIS MACHINE — INCLUDING THE FILE SD KEEPS PASSWORDS IN.** Holding one
-ordinary account's password was enough, and no administration command was
-needed. **If you have used a build older than that, treat the passwords of
-every account as having been reachable.**
-
 | | |
 |---|---|
-| **Still allowed** | everything inside its own account, and the shipped SDSYS files every account needs — messages, `syscom`, the dictionaries. Ordinary programs are unaffected |
-| **No longer allowed** | opening, renaming, deleting or listing anything else |
+| **Allowed** | everything inside its own account, and the shipped SDSYS files every account needs — messages, `syscom`, the dictionaries. Ordinary programs are unaffected |
+| **Not allowed** | opening, renaming, deleting or listing anything else |
 
 **A refused `OPEN` takes the `ELSE` branch and `STATUS()` is 3035**, which
 means *not permitted* rather than *not found*. That distinction matters when
@@ -222,7 +222,7 @@ Name the directory in the **`NETDIRS`** setting in `C:\ProgramData\SD\sd.conf`,
 separating several with a semicolon. Nothing else needs changing.
 `config('NETDIRS')` prints what is in force.
 
-**THE PASSWORD FILE, THE PROGRAM CATALOGUE AND THE ACCOUNT REGISTER ARE NEVER
+**THE PASSWORD FILE, THE PROGRAM CATALOG AND THE ACCOUNT REGISTER ARE NEVER
 REACHABLE from an API session, and cannot be added to `NETDIRS`.**
 
 ## An API session runs as you

@@ -5,22 +5,19 @@ Subtitle: The `sh` verb, and the per-account switch that decides who may use it.
 the same verb, was removed on 28 October 2026: write `sh command`.) **Each
 account has its own switch for it, `sh-on`, and a new account does not have
 it** — SDSYS turns it on, account by account, with `modify.account`. Without it
-the verb refuses. (Before 25 October 2026 the
-permission was a record in a file, `os.users`, keyed to the person; it is now a
-field of the account, and `os.users` is no longer read.)
+the verb refuses.
 
 > **This document is separate so that it can be withheld.** It links to
 > nothing outside the administrator set. Where a user-set page is worth naming,
 > it is named in words.
 
+**The switch is a wall for an SD *session*.** A person who already has a Windows
+shell on the machine does not need it; what such a person can and cannot do to
+SD is in [SD installation](08-sd-installation.html), *What this does not
+close*.
+
 SD folds case, so a command may be typed in either case. Commands are shown here
 in lower case.
-
-> **The listings of `echo` and of the nesting refusal were produced by running
-> them**, on SD Core for Windows W1.0-0, from an unelevated session in an
-> account that was on the list. **The rest of this page was rewritten from the
-> source when the per-account switch was carried from SD Core for Linux, and has
-> not been run on a Windows installation since.**
 
 ## The verb
 
@@ -36,29 +33,17 @@ hello-from-the-shell
 ```
 
 **A bare `sh`, with nothing after it, starts an interactive shell** (Windows
-PowerShell; the filter below is for a typed command, and until 7 November 2026
-it refused an empty one too, with the same "Error 2"). `exit` brings you back
+PowerShell; the filter below is for a typed command). `exit` brings you back
 to the SD prompt. It needs the account's `sh-on` switch like any other `sh`: an
 account without it is refused first, with "<name> is not permitted to use the
-operating system shell". (Until 25 October 2026 a bare `sh` from an account on
-the `os.users` list handed control to an interactive PowerShell; from then until
-7 November it was refused.)
+operating system shell".
 
 ## The shell you get is Windows PowerShell 5.1
 
 Not `pwsh`, and the difference bites:
 
-```
-:sh echo delta && echo epsilon
-At line:1 char:12
-+ echo delta && echo epsilon
-+            ~~
-The token '&&' is not a valid statement separator in this version.
-```
-
-(That listing is from the W1.0-0 run, when `&&` still reached the shell; since
-25 October 2026 SD refuses the command before PowerShell sees it, see the next
-section.) **`&&` and `||` do not exist in that PowerShell.** Nor do the ternary,
+**`&&` and `||` do not exist in that PowerShell**, and SD refuses a command that
+holds one before PowerShell sees it (see the next section). Nor do the ternary,
 null-coalescing or null-conditional operators. Chain with `;` in a script, and
 test with `if ($?) { … }`.
 
@@ -83,12 +68,6 @@ obvious thing: write the work into a script file and run the script
 (`sh powershell -File .\nightly.ps1`, or `sh .\nightly.cmd`). The script's own
 contents are not filtered. This is why `sh-on` is a decision to give a person a
 shell on the machine, not a decision to give them a restricted one.
-
-**This is stricter than SD Core for Windows used to be.** Until 25 October
-2026 an account that was on the `os.users` list had pipes, redirection and
-chaining at the prompt (a ruling of 17 August 2026), and only a session that was
-not on the list met the filter. The filter is now the same for everyone, as in
-SD Core for Linux.
 
 ## SD refuses to nest
 
@@ -137,7 +116,7 @@ is not allowed it in another that does not have the switch, and the reverse.
 | anybody else | refused, and the command is never looked at |
 
 ```
-don is not permitted to use the operating system shell
+fred is not permitted to use the operating system shell
 ```
 
 is message 10053, and it names the person who signed in (`@logname`), not the
@@ -174,8 +153,9 @@ sign-in and `logto` do, so an account with `sh-on` has the shell over the API
 and an account without it is refused there too. **That is what makes `sh-on`
 on an account that also has the API route a shell behind its credential from
 wherever the API port is reachable** — see *What `os-on` actually costs* in
-[Accounts and Security](01-accounts-and-security.html). SDSYS has no API
-route at all. See also
+[Accounts and Security](01-accounts-and-security.html). SDSYS reaches the API
+from another computer only through the door `remote.sdsys api on` opens
+([Remote Administration through the API](22a-remote-administration-through-the-api.html)). See also
 [Remote Access and the Machine](05-remote-access-and-the-machine.html).
 
 ## Who has these verbs
@@ -210,8 +190,10 @@ ssh connection that arrives looking local.** That does not apply to SDSYS:
 `sshd_config`'s `AllowGroups` never includes the `sdsys` Windows account, so
 there is no ssh session for SDSYS to exist in the first place, tunnelled or
 not — the refusal is at the door, before authentication, not a check on
-where the connection appears to originate. The API is refused the same
-way, for the same account, separately. See
+where the connection appears to originate. The API has its own rule for the
+same account, separately: it is shut to SDSYS from another computer unless the
+administrator opens it for chosen addresses with `remote.sdsys api on`
+([Remote Administration through the API](22a-remote-administration-through-the-api.html)). See
 [Remote access and the machine](05-remote-access-and-the-machine.html).
 
 **An ordinary account's own `sh-on` or `os-on` is a different question and
@@ -268,6 +250,7 @@ is written to the audit trail.
 
 ```
 docs.install directory
+load.help
 ```
 
 **SD starts no program for an account whose `os-on` and `sh-on` are off: there is no
@@ -306,6 +289,17 @@ the installer, the document that lists what changed in the release as
 `sd-core-for-windows-<version>-changes.pdf`, `.html` and `.md`. The installer copies
 each of them into the same `pdf` directory. A file that is a link, or whose name has
 a capital or another character, is not copied, and the log says so.
+
+### The context help: `load.help`
+
+The `[?]` button on the administrator's pages shows help kept in the file `context.help`
+of the shared account, one record to a setting. The installer fills it from the text under
+`helptext` in the SD system directory; `load.help` does the same by hand, after that text
+changes (it enters the shared account, writes the records that differ, and returns to the
+account it began in). **It replaces the shipped records and keeps any you added** under
+another id (the count says how many). Reading the help is not gated: the text is the
+product's own documentation of its screens, so an account whose `shared.read` you withdrew
+still gets it, and SDSYS, whose own `OPEN` does not follow `shared`, does too.
 
 ## See also
 

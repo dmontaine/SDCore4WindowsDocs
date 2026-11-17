@@ -129,7 +129,7 @@ ttyset saved
 | 7 | the erase key: 0 as at the start, 1 to 255 a character, 256 none | `erase` |
 | 8 | are control characters discarded by `input`? | `ctrl.filter` |
 | 9, 10 | Telnet binary mode, in and out | `binary` |
-| 11 | Telnet negotiation recognised? | `telnet` |
+| 11 | Telnet negotiation recognized? | `telnet` |
 
 **Fields 1 to 5 are openQM's; 6 to 11 are SD's own**, so that a program that
 saves everything and puts it back changes nothing. A field that is null is
@@ -170,7 +170,7 @@ returns as soon as that many characters arrive, without waiting for Enter.
 | **raw** | read exactly *length* characters just as they arrive: a newline or an erase key is data, nothing is echoed; `input` only, and the length is required |
 | **panning** | scroll a field wider than the space it is shown in |
 | **upcase** | fold what is typed to upper case |
-| **waiting** *n* | give up after *n* seconds and take the `else` branch (`for` and `timeout`, which meant the same, were removed in 1.2-0) |
+| **waiting** *n* | give up after *n* seconds and take the `else` branch (`for` and `timeout`, which meant the same, were removed in 2.0-0) |
 
 ### A fill for the field
 
@@ -232,7 +232,7 @@ data expression
 | | |
 |---|---|
 | `inputerr` | show a message on the status line without disturbing the screen |
-| `clearinput` | discard anything typed ahead (`inputclear` was a second name and was removed in 1.2-0) |
+| `clearinput` | discard anything typed ahead (`inputclear` was a second name and was removed in 2.0-0) |
 | `data` | **stack** a value for the next `input` to consume |
 | `cleardata` | discard what `data` stacked |
 

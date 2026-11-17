@@ -25,9 +25,9 @@ that carries these marks, and the angle-bracket forms (`a<f,v>`), `ins` and
 
 ## What SD is
 
-SD Core for Windows is a version of SD, with elements found in the main
-SD version and in ScarletDME. ScarletDME was a fork of the original GPL
-release of OpenQM 2.6.6.
+SD Core for Windows is built from upstream `sdb64`, a MultiValue database
+with elements found in the main SD version and in ScarletDME. ScarletDME
+was a fork of the original GPL release of OpenQM 2.6.6.
 
 **That lineage matters when you go looking for documentation.** Not all
 the features of the *commercial* OpenQM 2.6.6 were in the GPL release,
@@ -36,16 +36,16 @@ OpenQM 2.6.6 documents can be used as a reference, but SD Core has
 additions, changes and deletions — of features, of structure, of
 security and of commands. This documentation set covers those changes.
 
-If you have used OpenQM, or SD on Linux, much of SD Core will still be
+If you have used OpenQM, or upstream `sdb64`, much of SD Core will still be
 familiar: the same data model, the same query processor, the same
 BASIC.
 
-**SD Core for Windows is Windows only.** There are no `#ifdef` branches
-keeping Linux alive in this source — Linux SD is a separate project and
-this is not a build of it.
+**SD Core for Windows is Windows only.** SD Core for Linux is a separate
+product, built to behave the same way for the people who use it, and this
+is not a build of it.
 
-SD Core is free software under the GNU General Public Licence v3. `config gpl`
-displays the licence and `config contrib` the list of contributors. The
+SD Core is free software under the GNU General Public License v3. `config gpl`
+displays the license and `config contrib` the list of contributors. The
 installer carries compiled binaries; the source is a separate download.
 
 ## The four components
@@ -91,9 +91,11 @@ ed customers 1001
 to insert, type your lines, a full stop on its own line to stop
 inserting, then `fi` to file and exit.
 
-Every account can also use `edit` (Microsoft Edit, a full-screen
-editor) or `micro` (a full-screen editor with syntax highlighting).
-Both need `OS.EXECUTE` permission — see the administrator documentation.
+`sed` is a full-screen editor that runs inside SD, with drop-down menus and
+color for SD BASIC that you turn on when you want it; any account may use it.
+An account can also use `edit` (Microsoft Edit, a full-screen editor) or
+`micro` (a full-screen editor with syntax highlighting) once the administrator
+has given it the `os-on` switch; a new account does not have it.
 
 ```
 list customers
@@ -114,6 +116,9 @@ etc.) — the folder is on disk at:
 ```
 C:\ProgramData\SD\user_accounts\<account>\bp
 ```
+
+A new account must be given `bp-on` by SDSYS before it can save a program in
+`bp` or compile it, and `os-on` as well before it can use `edit` or `micro`.
 
 Compile and catalog it from inside SD:
 
@@ -144,19 +149,19 @@ SDSYS itself has no ssh route to arrive over.
 
 ## What is not in SD Core
 
-The following were in OpenQM, in ScarletDME, or in SD on Linux, and
+The following were in OpenQM, in ScarletDME, or in upstream `sdb64`, and
 are not in SD Core for Windows:
 
 | Gone | Why |
 |---|---|
-| QMNet (remote files) | Removed; the API is the supported way to reach another SD server |
+| The old SDNet (`server;file` in a VOC entry) | Removed in September 2026, and a name with a semicolon in it stays unresolved. A new SDNet replaces it: it is off until the administrator turns it on, and it opens a file on another SD server through an `N` entry in the VOC (the *Administrator* set's *SDNet* page describes it). The API is the other way to reach another SD server |
 | Embedded Python (a Python interpreter loaded into `sd.exe` itself) | Gone permanently - `sd.exe`'s MSYS2 runtime cannot safely share a process with Python. Calling Python **from** a BASIC program is not gone: it runs as a separate helper process instead - see *SD BASIC - Python Integration* |
 | `sdlnxd` daemon | Linux-only; the Windows service replaces it |
 | `ENCRYPT.FIELD` verb | Removed; `sdencrypt()` and `sddecrypt()` in SDBasic are the supported route |
-| `update.record`, `modify` editors | Gone; use `sed`, `edit`, `micro` or `ed`. (`sed` was gone too, and is back since 25 October 2026) |
+| `update.record`, `modify` editors | Gone; use `sed`, `edit`, `micro` or `ed` |
 | PROC language | Removed; use paragraphs instead |
-| `SET.LANGUAGE`, `LOAD.LANGUAGE` | Removed; SD Core is English only |
-| Silent install | Refused deliberately; the installer asks questions that cannot be defaulted |
+| `SET.LANGUAGE`, `LOAD.LANGUAGE` | Removed; SD Core is English only (NLS, for currency and separators, is kept) |
+| Unattended install | Not supported; the installer asks questions and sets passwords that cannot be scripted around |
 | Multi-user Remote Desktop | Not supported; accounts SD creates are denied the console and RDP |
 
 ## Document conventions

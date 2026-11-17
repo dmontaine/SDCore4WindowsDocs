@@ -80,7 +80,7 @@ What you see depends on what the machine already has:
 | Server present, firewall shut | *Let other computers connect* | unticked |
 | Server present, firewall open | *Let other computers connect* | **ticked** |
 
-The second box is a child of the first, so Windows greys it out until the
+The second box is a child of the first, so Windows grays it out until the
 parent is ticked. You cannot ask for remote ssh access without an ssh server.
 
 The last row matters on a machine that already uses ssh: the box shows the
@@ -467,6 +467,17 @@ Every reason, warning and caveat that used to appear on them is here.
 - **If the installer installed Python, restart Windows** before using the
   `PY_` functions, so that SD Core's service and every session see Python on
   the PATH.
+- **SDSYS's remote doors are not asked about: they are installed shut.** SDSYS
+  itself never signs in over ssh. Two features open the administrator's remote
+  doors after the install, at the SD prompt, signed in to Windows as SDSYS:
+  `remote.sdsys on` opens remote administration for the separate account
+  SDRADMIN over ssh, and `remote.sdsys api on` *address* opens SDSYS's API login
+  for chosen addresses. An upgrade that keeps the configuration leaves each as it
+  was (open stays open, shut stays shut). **Once a door is open, that password
+  alone stands between those addresses and the administrator**, so choose a
+  strong one and shut the door (`remote.sdsys off`, `remote.sdsys api off`)
+  when it is not needed. See the Administrator set's *Remote administration
+  over ssh* and *Remote administration through the API*.
 - **Giving somebody else access.** At the machine itself, sign in to Windows
   as SDSYS and type `sd`, elevated, then `create.account user <name> ssh`.
   Windows asks you to confirm at the UAC prompt: do it at the machine,
@@ -496,7 +507,7 @@ PowerShell prompt. This is what each failure means until it is put right:
 | The account directories were NOT locked | Any SD Core user can read and rewrite any other account's files outside SD Core |
 | The shell permission list was NOT locked | Any SD Core user can add themselves to it and obtain a command shell |
 | The batch command list was NOT locked | Any SD Core user can add commands to their own record and run them from the command line |
-| The global catalogue was NOT locked | Any SD Core user can replace the programs SD Core runs for every session |
+| The global catalog was NOT locked | Any SD Core user can replace the programs SD Core runs for every session |
 | The pcode library was NOT locked | Any SD Core user can replace the interpreter every session runs |
 | An SD Core system directory was NOT locked | Any SD Core user can rewrite the account register, the system programs SDSYS runs, or the configuration SD Core reads at start-up |
 | The credential store was NOT locked | Any SD Core user can overwrite another account's stored password and then sign in as them |

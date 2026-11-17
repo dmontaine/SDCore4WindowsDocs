@@ -119,7 +119,7 @@ dparse.csv line, delimiter, variable1, variable2, ...
 
 **`csvdq()` is a de-quoter, not a quoter. the name reads the other way.**
 It takes one CSV line and returns its fields separated by **field marks**,
-honouring the quoting:
+honoring the quoting:
 
 | Call | Result |
 |---|---|
@@ -194,8 +194,7 @@ and `dparse.csv` are not affected.
 
 > **A file whose separator is a semicolon is still called CSV by the program
 > that produced it.** Look at a line before assuming the separator, and take it
-> from configuration rather than hard-coding it — the same export from the same
-> system can change separator when the machine's settings change.
+> from configuration rather than hard-coding it.
 
 ## A whole CSV text: `csvparse()`, `csvbuild()` and `csvopen()`
 
@@ -276,7 +275,7 @@ Nothing in the CSV group has been removed from this port. The whole group is
 names appears in its by-type list, so the old help is no guide to them, and the
 three functions of the section on whole texts are SD's own.
 
-Two behaviours were fixed in this port and are worth knowing if you are moving
+Two behaviors were fixed in this port and are worth knowing if you are moving
 files across from the Linux original:
 
 | | |

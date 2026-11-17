@@ -14,11 +14,11 @@ An AI agent (Claude Code, or any tool that reads files) that is asked to write S
 
 ## Where the facts come from
 
-The pack is not typed. Its lists are computed from SD itself: a verb is a VOC record of type `V`, a message is a file, a statement is a name in the compiler's tables, a setting is a branch of the configuration reader. Meaning that no program can state (what a query keyword does) is quoted from this documentation by heading. Each chunk names the file and line it came from, and a check fails when the pack and SD disagree.
+The pack is not typed. Its lists are computed from SD itself: a verb is a VOC record of type `V`, a message is a file, a statement is a name in the compiler's tables, a setting is a branch of the configuration reader. Meaning that no program can state (what a query keyword does) is quoted from this documentation by heading. Each chunk names the file and line it came from.
 
 ## The rule that does not bend
 
-The gates (ssh, API, `sh`, `os.execute`, saving to a VOC, a program file or a dictionary, files on another server, the shared account) are off for a new account and are switched on only by SDSYS. The guide states them so that an agent stops at them. It shows the refusal each one gives in an ordinary account, and it teaches no way round any. When one stops an agent, the instruction in the guide is to say which gate it was and to stop; whether to switch it on is for the person who owns the machine.
+The gates (ssh, API, `sh`, `os.execute`, saving to a VOC, a program file or a dictionary, files on another server, the shared account) are off for a new account and are switched on only by SDSYS. The guide states them so that an agent stops at them. It shows the refusal each one gives, run in an ordinary account, and it teaches no way round any. When one stops an agent, the instruction in the guide is to say which gate it was and to stop; whether to switch it on is for the person who owns the machine.
 
 ## What it does not do
 

@@ -49,7 +49,7 @@ for example `SD-ace-sduser-20261001-144419.zip`.
   for that one backup only; nothing is remembered.
 * The zip holds each account's files and what is needed to make the account
   again: its type, routes, description, groups, its `sh`, `os`, edit-switch,
-  `net`, shared-account and files-route settings, and its globally catalogued
+  `net`, shared-account and files-route settings, and its globally cataloged
   programs. (`restore.account` gives the switches back only to an account it has
   to create; an account that already exists keeps its own. `sd-on` is not
   carried.)
@@ -101,8 +101,8 @@ Puts accounts back from a backup.
 * **An account that does not exist is made first**, from the type, routes,
   description and groups in the backup, and asks for a new password, because a
   password is never in the zip.
-* **Globally catalogued programs are catalogued again** from the restored object
-  files. A name that is already catalogued in the global catalogue as a different
+* **Globally cataloged programs are cataloged again** from the restored object
+  files. A name that is already cataloged in the global catalog as a different
   program is left alone and listed.
 * A VOC entry that holds the account's old path is rewritten to the new one. A
   pointer to somewhere outside the account is listed, not followed.
@@ -154,7 +154,7 @@ settings.report {folder}
 
 Writes a text report of the system's settings for you to keep. **Nothing reads it
 back**: it is a record for an administrator, not something that can be restored.
-It also lists any globally catalogued program that no longer matches an
+It also lists any globally cataloged program that no longer matches an
 account's object file, which is why such a program is missing from a backup.
 
 ## See also

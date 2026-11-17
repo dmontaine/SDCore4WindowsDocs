@@ -245,24 +245,21 @@ element, while its own example uses that form to read the keys back. SD follows
 the example.
 
 **Equal keys.** Keys that compare as equal come out newest first, and with
-`srt$unique` the duplicate that arrived first is the one kept. That is meant to hold
+`srt$unique` the duplicate that arrived first is the one kept. That holds
 whether the sort stays in memory or is large enough to spill to work files (the
-`SORTMEM` setting), and however many files `SORTMRG` merges at once. Before the
-change of 25 Oct 2026 a sort that spilled could give equal keys in another order and
-keep a later duplicate, and the order depended on `SORTMEM` and `SORTMRG`. **This
-change is in SD Core for Windows's source and has not been run on a Windows install
-yet.** The one exception is a right justified key that holds numbers and text
-together: the comparison of a number with text is not consistent, so there the order
-depends on how the sort was cut into runs. Do not rely on the order of equal keys
-beyond that; the order of *different* keys is the same either way.
-
-Since 23 October 2026 many equal keys, or keys that arrive already in order, no longer
-make a sort slow: the keys of a run are collected and sorted once. (Measured on SD Core
-for Linux, 100,000 equal keys took nearly three minutes before and a fraction of a
-second after; not timed on Windows.) A sort with `srt$unique`, `srt$compound` or
-`srt$strict`, or with a right justified key that holds numbers and text together, is
-sorted as before and is not faster. Lowering `SORTMEM` is no longer a way to speed up a
-sort of equal keys.
+`SORTMEM` setting), and however many files `SORTMRG` merges at once. Before
+25 Oct 2026 a sort that spilled could give equal keys in another order and keep a
+later duplicate, and the order depended on `SORTMEM` and `SORTMRG`. The one
+exception is a right justified key that holds numbers and text together: the
+comparison of a number with text is not consistent, so there the order depends on
+how the sort was cut into runs. Do not rely on the order of equal keys beyond
+that; the order of *different* keys is the same either way.
+Since 20 Oct 2026 many equal keys, or keys that arrive already in order, no longer
+make a sort slow: the keys of a run are collected and sorted once, so 100,000 equal
+keys take a fraction of a second where they took nearly three minutes. A sort with
+`srt$unique`, `srt$compound` or `srt$strict`, or with a right justified key that
+holds numbers and text together, is sorted as before and is not faster. Lowering
+`SORTMEM` is no longer a way to speed up a sort of equal keys.
 
 **The values of *flags*.** `srt$left` 0, `srt$right` 1, `srt$compound` 2,
 `srt$right.float` 3 and `srt$strict` 4 choose how two keys are compared, the
@@ -340,6 +337,21 @@ way in; with it off, the bytes pass through unchanged.
 
 **It has no effect on a dynamic file**, where records are stored in SD's own
 format.
+
+## A matrix as a dynamic array: `matstr`
+
+```
+matstr(matrix)
+```
+
+Gives a two-dimensional matrix as one dynamic array: **each row becomes a field and each
+column a value** within it. It works the same on a matrix passed into a subroutine.
+
+```
+dim m(2, 2)
+m(1, 1) = 'p' ; m(1, 2) = 'q' ; m(2, 1) = 'r' ; m(2, 2) = 's'
+s = matstr(m)        ;* 'p' : @vm : 'q' : @fm : 'r' : @vm : 's'
+```
 
 ## What is not here
 

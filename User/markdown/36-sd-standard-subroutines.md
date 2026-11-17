@@ -1,17 +1,17 @@
 Title: SD Standard Subroutines
-Subtitle: The catalogued names beginning with !, which of them an application may use, and how each is called.
+Subtitle: The cataloged names beginning with !, which of them an application may use, and how each is called.
 
-**SD ships 138 catalogued routines whose names begin with `!`** — counted from
-the `$catalog` lines of `gpl.bp` on 19 October 2026; this page used to say
+**SD ships 190 cataloged routines whose names begin with `!`** — counted from
+the `$catalog` lines of `gpl.bp` on 17 November 2026; this page used to say
 forty-two. The figure grows as features are added, so read it as dated.
 Twenty-two are the embedded Python interface (`!PY_CREATEDICT` and the rest —
 see [Embedded Python](37a-sd-basic-python-integration.html); this page does
-not repeat them) and forty-one, all named `!SCREEN_...`, are the routines
+not repeat them) and forty-nine, all named `!SCREEN_...`, are the routines
 behind the `screen` statement (see
 [The Screen Statement](12a-sd-basic-the-screen-statement.html); they are not
 called directly and are not listed here). This page names the rest that a
-programmer is likely to meet. They are in the global catalogue, so any account
-reaches them without cataloguing anything of its own.
+programmer is likely to meet. They are in the global catalog, so any account
+reaches them without cataloging anything of its own.
 
 **Most exist to support SD itself and are not an interface for applications.**
 They are listed in full because a name in a stack trace, a `map` listing or an
@@ -54,7 +54,7 @@ Nothing here is typed at the TCL prompt. These are called from SD BASIC.
 | | |
 |---|---|
 | `!ABSPATH` | `abspath((dir), rel)` — resolve *rel* against *dir* and return an absolute path. A null *dir* means `@path`; a *rel* that starts with `/` comes back as it is, and one that starts with `@sdsys` has that replaced by the SDSYS directory |
-| `!PATHTKN` | `pathtkn((path))` — replace a leading `@sdsys`, `@tmp` or `@home` in *path* with the SDSYS directory, `config('TEMPDIR')` or the `HOME` environment variable; the token may be in either case. Anything else comes back unchanged. The token is recognised by its first characters alone, so `@homex/y` becomes the home directory followed by `x/y`. It does not split anything |
+| `!PATHTKN` | `pathtkn((path))` — replace a leading `@sdsys`, `@tmp` or `@home` in *path* with the SDSYS directory, `config('TEMPDIR')` or the `HOME` environment variable; the token may be in either case. Anything else comes back unchanged. The token is recognized by its first characters alone, so `@homex/y` becomes the home directory followed by `x/y`. It does not split anything |
 | `!FTYPE` | `ftype(path)` — what kind of file is at *path* |
 | `!VALID_OS_NAME` | `valid_os_name(name)` — is *name* usable as an operating system account name |
 | `!VALID_OS_PATH` | `valid_os_path(path)` — is *path* a well-formed host path |
@@ -94,17 +94,9 @@ of numbers.
 Both need a real terminal. Neither does anything useful in a phantom, a
 scheduled job or an API session.
 
-### Editing a data collection
-
-| | |
-|---|---|
-| `!CED` | `call !ced(collection)` — the data collection editor, on a collection held in a variable; see [ced](27b-sd-tcl-ced.html) |
-
-It needs a real terminal too, and returns at once without one.
-
 **The routine is `!PICKLIST`.** An earlier version of this page called it
 `!PICKLST`, which is the name of the program that holds it; there is no
-catalogue entry of that name, and `call !picklst(...)` stops at run time with
+catalog entry of that name, and `call !picklst(...)` stops at run time with
 *"Unable to load '!picklst' object code"*.
 
 `!PICKLIST` takes *list* as a field-mark delimited list of rows; a row of
@@ -122,6 +114,14 @@ waited for a key (read from the program, not run). **The box is not
 erased afterwards:** a program that needs the screen under it back must redraw
 it.
 
+### Editing a data collection
+
+| | |
+|---|---|
+| `!CED` | `call !ced(collection)` — the data collection editor, on a collection held in a variable; see [ced](27b-sd-tcl-ced.html) |
+
+It needs a real terminal too, and returns at once without one.
+
 ### Printing and program information
 
 | | |
@@ -135,13 +135,13 @@ it.
 |---|---|
 | `!PARSER` | `call !parser(key, type, string, keyword, voc.rec, quote.char)` — variable arguments |
 
-`!PARSER` is the tokeniser SD's own verbs use to read their arguments, and the
+`!PARSER` is the tokenizer SD's own verbs use to read their arguments, and the
 keys it takes are defined in `SYSCOM/PARSER.H`. It is the most useful of the
 internal routines and the one most likely to change.
 
 ## The internal ones
 
-These exist for SD's own use. They are catalogued because SD's programs are
+These exist for SD's own use. They are cataloged because SD's programs are
 ordinary compiled programs and reach them the same way anything else does.
 
 **Calling them from an application is not supported.** Several refuse a session
@@ -151,7 +151,7 @@ machine.
 | | |
 |---|---|
 | `!ATVAR` `!SETVAR` | read and set the `@` variables |
-| `!GETPU` `!SETPU` | read and set one characteristic of a print unit: `call !getpu(key, unit, value, status)` and `call !setpu(key, unit, new.value, status)`, which are the `getpu()` function and the `setpu` statement wrapped as subroutines. *key* is the print unit key (width 2, length 3, mode 1 and so on: see the keys in *SD Basic - Printing*); *unit* runs from -1 to 256, and any other number gives *status* 1007, "Bad print unit". They hold nothing per user. An application can use the statement and the function directly |
+| `!GETPU` `!SETPU` | read and set one characteristic of a print unit: `call !getpu(key, unit, value, status)` and `call !setpu(key, unit, new.value, status)`, which are the `getpu()` function and the `setpu` statement wrapped as subroutines (the IDE uses `!SETPU` to set a print unit's banner and location). *key* is the print unit key (width 2, length 3, mode 1 and so on: see the keys in *SD Basic - Printing*); *unit* runs from -1 to 256, and any other number gives *status* 1007, "Bad print unit". They hold nothing per user. An application can use the statement and the function directly |
 | `!CREATE_USER` `!DELETE_USER` `!SET_PASSWD` | the Windows account half of `create.account`, `delete.account` and `modify.password` |
 | `!CRED_SET` `!CRED_VERIFY` | write and check a credential in the credential store |
 | `!SD_GET_SALT` `!SD_KEY_FROM_PW` | the key derivation behind that credential |
@@ -169,15 +169,15 @@ Core for Windows does not have. Three a reader may come looking for:
 
 | | |
 |---|---|
-| `!OCONV` `!ICONV` | not catalogued. `oconv()` and `iconv()` are ordinary BASIC functions and do the same work |
-| `!SCREEN` | not catalogued, and there is no equivalent |
+| `!OCONV` `!ICONV` | not cataloged. `oconv()` and `iconv()` are ordinary BASIC functions and do the same work |
+| `!SCREEN` | not cataloged, and there is no equivalent |
 
 **To settle the question for any name, use `map` in the account.** It lists what
-the catalogue holds. A name that is not there is not available, and calling it
+the catalog holds. A name that is not there is not available, and calling it
 fails at run time rather than at compile time.
 
 ## See also
 
 [SD Dictionaries - Conversions and Formatting](34-sd-dicts-conversions.html) ·
-[SD TCL - Programs and the Catalogue](24-sd-tcl-programs-and-the-catalogue.html) ·
+[SD TCL - Programs and the Catalog](24-sd-tcl-programs-and-the-catalogue.html) ·
 [SD Basic - Program Structure](01-sd-basic-program-structure.html).

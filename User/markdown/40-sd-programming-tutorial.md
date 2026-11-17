@@ -6,8 +6,8 @@ page covers one subject and every statement on it. Here we put them
 together into programs that do something, and each program builds on
 the one before.
 
-**Every program on this page compiles and runs on SD Core for Windows
-W1.0-0.** The output shown is what SD printed. If you type the program
+**Every program on this page compiles and runs on SD Core for Windows.**
+The output shown is what SD printed. If you type the program
 in, compile it and run it, you will see the same thing.
 
 The reference pages are linked at the end of each section. Read them
@@ -28,12 +28,18 @@ sd
 ```
 
 You land at the `:` prompt. That is TCL — the command processor. From
-here you compile, catalogue and run programs. The programs themselves
+here you compile, catalog and run programs. The programs themselves
 are written in SDBasic, which is a different language from TCL.
 
+**A new account must be given `bp-on` before it can save or compile a
+program.** Without it `ed bp hello` refuses to save and `basic bp hello` is
+refused, and the message says which switch is missing. SDSYS gives it with
+`modify.account` *name* `bp-on`; `edit` and `micro` need `os-on` as well. See
+*Saving changes to a VOC, a program file or a dictionary* in *Managing
+accounts*, in the GettingStarted set.
+
 Your `bp` file is an ordinary Windows folder. You can write programs
-in `ed` from inside SD, in `edit` or `micro` if your account can run
-external programs, or in any text editor you like — Notepad, VS Code,
+in `ed` from inside SD, in `edit` or `micro` (once the account has `os-on`), or in any text editor you like — Notepad, VS Code,
 anything. The folder is on disk at:
 
 ```
@@ -73,7 +79,7 @@ own source uses.
 
 > **`program` is optional.** A source record with no declaration is a
 > program. But every program on this page has one, because naming the
-> program is how you know what it is when it is catalogued and called
+> program is how you know what it is when it is cataloged and called
 > from another program.
 
 ## 2. Variables and input
