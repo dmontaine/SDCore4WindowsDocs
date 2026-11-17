@@ -220,8 +220,11 @@ is where the answer is — a suspended account shows it in that listing.
 ### If your data lives outside an account
 
 Name the directory in the **`NETDIRS`** setting in `C:\ProgramData\SD\sd.conf`,
-separating several with a semicolon. Nothing else needs changing.
-`config('NETDIRS')` prints what is in force.
+separating several with a semicolon. Nothing else needs changing. An entry that is not an
+absolute path, not an existing directory, a drive root, or that overlaps the SD system
+directory or any account is ignored and named in the error log when SD starts; the Administrator
+Guide's *Configuration: The API, Printing and the Rest* has the rules. `config('NETDIRS')` does
+not read it: read the file.
 
 **THE PASSWORD FILE, THE PROGRAM CATALOG AND THE ACCOUNT REGISTER ARE NEVER
 REACHABLE from an API session, and cannot be added to `NETDIRS`.**

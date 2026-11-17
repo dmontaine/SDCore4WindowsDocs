@@ -16,9 +16,15 @@ same verb is the account holder's read-only "what my account may do" page,
 described in the User set under *What this account may do*). One row for each
 registered account but SDSYS, one column for each gate the system has, in the
 order `modify.account` carries them out: `ssh api sh os sd voc bp dict net sh-rd
-sh-wr files f-wr f-adm ai home sock`. **`home`** is where a session of the account
+sh-wr files f-wr f-adm ai home sock key`. **`home`** is where a session of the account
 starts: ON is the home screen, off the command prompt (the words `start-menu` and
-`start-terminal`). A cell says **ON**, **off**, a **dash** (the gate
+`start-terminal`). **`key`** is ssh key sign-in (the words `ssh-key-on` and `ssh-key-off`,
+[Signing in over ssh with a
+key](01-accounts-and-security-7-files-only-ai-and-passwords.html#signing-in-over-ssh-with-a-key-ssh-key-on-and-ssh-key-off)):
+for a user account whose Windows user SD made, off as delivered, and turning it ON asks you to
+type the account's name; a dash for any other account, including a user account whose Windows
+user SD did not make (its keys are its own). With this column an account's name is cut to ten
+characters in the matrix and shown in full in the box below it. A cell says **ON**, **off**, a **dash** (the gate
 does not apply to this kind of account: ssh, api, files and ai are routes for a
 person, and a group or other account has no Windows user of its own) or **plan**
 (not built yet; sockets). A star after a cell is a change you have queued; the
@@ -53,7 +59,7 @@ audited by the verb as if you had typed it.
   delivered, is left alone).
 * **Turning ON a gate that is off as delivered says so**, and says that leaving
   it off is the tighter choice. **Turning ON a gate that reaches beyond SD**
-  (ssh, api, sh, os, sd, net, files, files-write, files-admin, ai) **asks for the
+  (ssh, api, ssh-key, sh, os, sd, net, files, files-write, files-admin, ai) **asks for the
   account's name to be typed**; turning anything OFF does not.
 * **ssh and api are one setting** in the verb: the words `ssh`, `api`, `both` and
   `none` SET the pair. The page therefore sends the one word that gives the pair

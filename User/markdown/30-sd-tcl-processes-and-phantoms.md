@@ -131,6 +131,8 @@ never started.
 | *Phantom processes cannot be started within a transaction* | inside `begin transaction` |
 | *Failed to create phantom process* | the operating system would not create the process |
 
+**A phantom that is created and then cannot start** (the operating system would not run SD for it) has no terminal to say so. It writes one line to the error log, `phantom: cannot start a phantom from` *path* `-` *reason*, and ends; it does not go on as a second copy of your session.
+
 > **A phantom cannot be started from a scripted session, and this is the one
 > to know.** When SD is fed commands down a pipe, the phantom child inherits
 > that pipe. The job then never completes — not even after the parent session

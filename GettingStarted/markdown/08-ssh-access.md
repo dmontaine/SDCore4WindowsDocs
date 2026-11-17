@@ -146,6 +146,40 @@ It also **refuses outright** if `sshd_config` already carries an `AllowGroups`,
 `AllowUsers`, `DenyGroups` or `DenyUsers` line — that is somebody's policy and
 it is left alone.
 
+## Signing in with a password, and with a key
+
+**A Windows user that `create.account` makes signs in over ssh with its password, and only if
+its account has the ssh route. It cannot sign in with a key, as delivered.** A key is a
+second way in that the account's password does not control, so SD leaves it shut until
+SDSYS opens it, account by account:
+
+```
+modify.account fred ssh-key-on
+modify.account fred ssh-key-off
+create.account user fred ssh ssh-key-on
+```
+
+Opening it means that whoever holds a private key for that user signs in without the
+password, and nothing in SD can tell who holds a copy; leaving it off is the tighter choice.
+The gate pages show where each account stands: the administrator's gate matrix has a column
+for it (turning it on asks for the account's name to be typed), and every account's own
+*What this account may do* page shows its own state.
+
+* **Not everyone is affected.** Only a Windows user SD made. The user who ran the installer,
+  a Windows user attached to an account, SDSYS and every user outside SD keep the ssh
+  settings they had, and `ssh-key-on` is refused for them: their keys are their own.
+* **An upgrade changes no existing account.** Accounts that existed before keep the key
+  sign-in they had; only accounts made afterwards start with it off.
+* **On a machine whose ssh server allows no password sign-in**, an account SD makes cannot
+  use ssh at all until `ssh-key-on`.
+* **A rule of your own wins.** A setting you wrote in the ssh server's configuration ahead
+  of SD's block, that allows keys for the same user, is the one the server uses.
+* **A backup made before this release** restores its account with key sign-in off.
+
+SD does it with a Windows group, `sdsshnokey`, which the installer makes empty and
+`create.account` fills; the ssh server's SD block ends with a rule that offers its members no
+key. The Administrator Guide's *Accounts and Security* chapter has the whole of it.
+
 ## Reaching the machine from the network
 
 **Port 22 is closed to other computers unless you tick the box during

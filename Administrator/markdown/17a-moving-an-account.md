@@ -75,7 +75,7 @@ dictionaries. The zip also holds a manifest that any zip tool will show you, in 
 header (`format`, `product`, `sd.version`, `created`, `host`, `source.root`, `accounts`), then one
 section per account, `[account` *name*`]`, with its `type`, its operating-system user and group,
 its routes (`route.ssh`, `route.api`, `route.files`, `route.files.write`, `route.files.admin`), its
-switches (`os.sh`, `os.execute`, `edit.voc`, `edit.bp`, `edit.dict`, `shared.read`,
+switches (`ssh.key`, `os.sh`, `os.execute`, `edit.voc`, `edit.bp`, `edit.dict`, `shared.read`,
 `shared.write`, `net`, `recovery`), `description`, `suspended`, `source.path`, the counts
 (`files`, `bytes`, `dirs`) and a `gcat:` line for each globally cataloged program that belongs
 to it. A group account's section has `members:` in place of the switches.
@@ -85,7 +85,8 @@ to it. A group account's section has `members:` in place of the switches.
 | the files | fill the new folder | replace the folder |
 | `description`, `suspended` | set from the zip | **set from the zip**, so a suspended account comes back suspended |
 | the routes, `type`, `members` | the kind of account made, its routes, and a group account's members | unchanged |
-| the switches | set as the zip says | **unchanged** (change one with `modify.account`) |
+| `ssh.key` (ssh key sign-in) | the Windows user is put in `sdsshnokey`, so keys are **off**, unless the zip says it had them; a zip made without `ssh.key` leaves them off, and `modify.account` *name* `ssh-key-on` afterwards turns them on | unchanged |
+| the other switches | set as the zip says | **unchanged** (change one with `modify.account`) |
 | `gcat:` lines | the program is put in the global catalog again | same |
 
 **Global programs.** The backup notes each global program whose object file is in the account, and

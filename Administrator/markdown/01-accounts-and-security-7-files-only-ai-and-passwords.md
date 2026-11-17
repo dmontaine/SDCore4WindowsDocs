@@ -162,6 +162,75 @@ pipe. SDSYS has no gate and may always use the AI. The account's manifest record
 machine, the security warning, and the page that does all of this, `tool.ai`, are in
 [The AI Helper](21-the-ai-helper.html).
 
+### Signing in over ssh with a key: `ssh-key-on` and `ssh-key-off`
+
+```
+modify.account fred ssh-key-on
+modify.account fred ssh-key-off
+create.account user fred ssh ssh-key-on
+```
+
+**A Windows user that `create.account` makes cannot sign in over ssh with a key, as delivered.**
+It signs in with its password, and only if the account's ssh route is on. `ssh-key-on` lets
+that one account sign in with a key as well as with its password; `ssh-key-off` takes it
+back; `create.account user` *name* `ssh-key-on` makes the account with it on. Only SDSYS may
+use the words. `ssh-key-on` does not give the ssh route: the account still needs `ssh` or
+`both`. The gate matrix (`tool.gates`) has a column for it, turning it ON there asks you to
+type the account's name, and each account's own gate page shows its state, as `own` for a user
+SD did not make. After the word SD says `Account fred may sign in over ssh with a key: yes` (or
+`no`). The word is audited as `modify.account ssh-key-on account=fred`, and the audit line of a
+`create.account` that used it ends `gates=` with `ssh-key-on` among the words.
+
+**What opening it means for security.** A key is a second way in that the account's password
+does not control. Whoever holds the private key signs in without the password, SD cannot see
+who holds a copy, and changing or removing the password does not close it: the key stays valid until it
+is taken out of the person's `authorized_keys` file. Turn it on only for an account whose
+keys you trust, and leave it off for everything else; leaving it off is the tighter choice.
+
+**How it is done.** The installer makes a Windows group, `sdsshnokey`, empty, and adds to the
+end of the ssh server's SD block two lines (the host name is the computer's, in lower case):
+
+```
+Match Group sdsshnokey,<host>\sdsshnokey User *,!sdsys,!<host>\sdsys,!sdradmin,!<host>\sdradmin
+    PubkeyAuthentication no
+```
+
+`create.account` puts each Windows user it makes in the group. `ssh-key-on` takes the user out
+of the group and `ssh-key-off` puts it back. The two lines set `PubkeyAuthentication no` and
+nothing else, so a member still signs in with its password and every other setting comes
+from where it came before. It is the first `Match` block of the ssh server's file, with the
+global settings above it, and the remote administration user (`sdradmin`) and SDSYS are
+named out of it. The group is not `sdsshonly`: that group carries the rights that
+deny the console and Remote Desktop, which no verb may lift.
+
+**Who it never affects.** Only a Windows user that SD itself made. The user who ran the
+installer, a Windows user attached to an account, SDSYS and every user outside SD keep
+exactly the ssh settings they had, and `modify.account` refuses `ssh-key-on` and
+`ssh-key-off` for them. The refusal (message 15170) reads *name*: its Windows user *user* was not
+made by SD, so its ssh keys are its own and `ssh-key-on` and `ssh-key-off` do not apply to it;
+nothing was changed. A group account or an `other` account has no Windows user and refuses
+them too. **The gate pages show a dash** for them, and the holder's own page says `own`.
+
+**A backup and a restore.** The backup's manifest carries `ssh.key`, 1 for an account whose
+Windows user may sign in with a key. `restore.account` gives it back to an account it has to
+make; a backup made without it restores with keys off, and `ssh-key-on` afterwards turns them
+on (see [Moving an Account](17a-moving-an-account.html)).
+
+**What it does not do:**
+
+* **An upgrade changes no existing account.** The installer makes the group empty, so every
+  account that existed before keeps the key sign-in it had; only accounts made after the
+  upgrade start with keys off. To shut keys for an older account, `ssh-key-off` puts it in the
+  group.
+* **It does not help on a machine whose own ssh server allows no password sign-in.** There an
+  account SD makes cannot use ssh at all until `ssh-key-on`.
+* **It does not override a rule you wrote.** A `Match` block or setting of your own in the ssh
+  server's configuration that is read before SD's block and sets `PubkeyAuthentication yes`
+  for the user wins: the first value the server finds is the one it uses.
+* **The group must exist.** It fails open: if `sdsshnokey` is missing or cannot be read, the
+  ssh server offers keys according to the machine's own settings, and `create.account`
+  refuses to make a user until the group is there.
+
 ## Passwords: `modify.password`
 
 ```

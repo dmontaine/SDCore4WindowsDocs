@@ -80,7 +80,9 @@ account that an account **without** `os-on` may still open by their path (see
 [Accounts and Security](01-accounts-and-security-2-making-an-account.html#the-operating-system-switches-sh-on-and-os-on)).
 That holds for every session, a person at the console
 included. The verb will not tell you
-what it is set to. Read it from the file.
+what it is set to, and `config('NETDIRS')` does not read it. Read it from the file. The rules for
+what it may hold are in [Configuration: The API, Printing and the
+Rest](07b-sd-admin-configuration-api-printing-and-netfiles.html#netdirs-directories-outside-an-account).
 
 The `config()` function reads one parameter from a program:
 
@@ -88,8 +90,8 @@ The `config()` function reads one parameter from a program:
 group.size = config('GRPSIZE')
 ```
 
-**48 parameters are readable this way.** The three that are not are `BACKUPDIR`,
-`SCREENTHEME` and `SDSYS`. The name is truncated to eight
+**47 parameters are readable this way.** The four that are not are `BACKUPDIR`,
+`NETDIRS`, `SCREENTHEME` and `SDSYS`. The name is truncated to eight
 characters before it is matched; no parameter name is longer than eight, so
 that only shows up if you pass something which is not a parameter.
 
@@ -174,7 +176,7 @@ shows only the rows where the file and SD disagree, and `S` only the parameters 
 column, `Change`, says `e` for a parameter the page can change (press `E`) and `by hand` for every
 other.
 
-`SDSYS` and `BACKUPDIR` cannot be read with the `config()` function; the page says `(not readable)`
+`SDSYS`, `BACKUPDIR` and `NETDIRS` cannot be read with the `config()` function; the page says `(not readable)`
 for what SD is running with and shows the file's value. `DEBUG` is not compared: the function reports
 it in another form than the file writes it.
 

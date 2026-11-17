@@ -178,6 +178,14 @@ from its source rather than driven at a keyboard.** SD installs it and calls
 it; it does not implement it. If a binding differs from what is written, the
 editor is right and the page is wrong.
 
+## The agent account
+
+**The recipe in [The Agent Account](18-the-agent-account.html) has not been run
+end to end for this release**: an account made as it says, an agent signed in
+over ssh with its password, and then with a key after `ssh-key-on`, and each
+refusal of step 4 seen in the guide's words. Each piece is a feature with its
+own checks; the whole sequence is not.
+
 ## What is NOT on this page, and why
 
 **Anything that was tested and failed is a defect, not a gap**, and does not

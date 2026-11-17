@@ -6,7 +6,7 @@ This page continues [Accounts and Security](01-accounts-and-security.html).
 ## Making an account: `create.account`
 
 ```
-create.account user <name> {ssh | api | both | none} {sh-on} {os-on} {voc-on} {bp-on} {dict-on}
+create.account user <name> {ssh | api | both | none} {ssh-key-on} {sh-on} {os-on} {voc-on} {bp-on} {dict-on}
                            {shared-read-off} {shared-write-on} {net-on} {files-on} {files-write-on} {files-admin-on} {ai-on}
                            {start-menu | start-terminal} {pins-on} {recovery-on} {xfer-on} {no.query}
 
@@ -60,7 +60,11 @@ Account fred has shared.read yes, shared.write no
 (More lines, for `files-write`, `files-admin`, `ai`, the recovery copy
 (`Account fred keeps a recovery copy of unsaved editor text: no`) and file transfer
 (`Account fred may move files over its ssh login (receive / send): no`), follow the `files`
-line; the remote-route line is the one for the words you gave.)
+line; the remote-route line is the one for the words you gave. The last line is
+`Account fred may sign in over ssh with a key: no`, the state of `ssh-key-on` (see *Signing in
+over ssh with a key*, in [Accounts and Security: Files-Only, AI and
+Passwords](01-accounts-and-security-7-files-only-ai-and-passwords.html)); it is not said for an
+account attached to an existing Windows user.)
 
 **One more word, for a user account only: `recovery-on`** makes the account's `ide` keep a recovery copy of
 text that was not saved (*The recovery copy*, below). It is off when the word is left out, a group or `other`
@@ -164,7 +168,7 @@ these:
 the account's own directory always works. Three more places are open to an
 account without the switch: the shipped SDSYS entries that every VOC names
 (**read only**) and the directories the administrator listed in `NETDIRS`
-(read and write; see [SD Admin Configuration](07-sd-admin-configuration.html)).
+(read and write; see *`NETDIRS`: directories outside an account* in [Configuration: The API, Printing and the Rest](07b-sd-admin-configuration-api-printing-and-netfiles.html#netdirs-directories-outside-an-account)).
 
 **SD says no in words.** `sh` gives "*name* is not permitted to use the
 operating system shell", `OS.EXECUTE` gives "*name* is not permitted to use

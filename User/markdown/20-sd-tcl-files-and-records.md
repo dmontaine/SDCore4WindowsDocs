@@ -265,7 +265,9 @@ removed in 2.0-0.) `@system.return.code` is `0` on success and `-1` if the argum
 wrong.
 
 **`cname` on a file renames the VOC record too**, which is the point — the
-name you type and the name on disk stay together.
+name you type and the name on disk stay together. **A new name that differs from the old
+only in case is refused** (message 6151, *name is already defined in your VOC*): a VOC does
+not tell the two spellings apart, so the rename would lose the record.
 
 ## Seeing what is actually in a record
 

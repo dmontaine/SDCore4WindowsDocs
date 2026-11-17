@@ -276,6 +276,12 @@ there. To let a person copy one to `bp` and compile it, give the account `bp-on`
 change you want in every account is made to the file under `examples` and spread with
 `load.examples`; a change made in one account's `examples.bp` is put back by the next run.
 
+**SDSYS's own two files are locked.** Each time `load.examples` runs for SDSYS, `examples.bp`
+and `examples.bp.out` in SDSYS's directory are given the rights of `bp.out`: full control to
+SYSTEM and the Administrators, read only to `sdusers`, so no ordinary account can change SDSYS's
+copy of the programs. A failure to do so is named and counted, and
+the programs stay loaded.
+
 ## Reading and setting configuration: `config`
 
 ```

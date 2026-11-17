@@ -9,6 +9,7 @@ Switches](01-accounts-and-security-3-edit-switches.html).
 ```
 modify.account account add | delete  user.name
 modify.account account ssh | api | both | none
+modify.account account ssh-key-on | ssh-key-off
 modify.account account sh-on | sh-off
 modify.account account os-on | os-off
 modify.account account sd-on | sd-off
@@ -80,6 +81,7 @@ rights it had.* A `logto` refused for a suspended account is audited with
 | | |
 |---|---|
 | **`ssh`** \| **`api`** \| **`both`** \| **`none`** | what the account's remote access **is**. Absolute: `api` takes ssh away |
+| **`ssh-key-on`** \| **`ssh-key-off`** | ssh sign-in with a key, for a user account whose Windows user SD made (see [Signing in over ssh with a key](01-accounts-and-security-7-files-only-ai-and-passwords.html#signing-in-over-ssh-with-a-key-ssh-key-on-and-ssh-key-off)). **Off as delivered**; independent of `ssh`: the account still needs its ssh route |
 | **`sh-on`** \| **`sh-off`** | the `sh` verb |
 | **`os-on`** \| **`os-off`** | `OS.EXECUTE`, the screen editors, the embedded Python, and operating-system paths outside the account's own directory (see above) |
 | **`sd-on`** \| **`sd-off`** | may reach files under the directory of an account the person could `logto` (also allowed on a group account) |

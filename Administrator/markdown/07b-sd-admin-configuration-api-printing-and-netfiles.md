@@ -11,15 +11,18 @@ SD](07a-sd-admin-configuration-changing-from-sd.html).
 | `APILOCAL` | unset (0) | 1 makes the API listener (`APIPORT`) listen on `127.0.0.1` only, so only this computer can reach it; 0 or no line, every address. `remote.api local` writes it and `remote.api on` takes it away (see *Remote Access and the Machine*) |
 | `APIPORT` | 4247 | Switches the API on. Any number above zero means on, and SD listens on port 4247 whatever the number is; the port cannot be changed. If the line is absent no socket is created at all, which is how the API is turned off. A file that says `APIPORT=4243` still means on |
 | `BACKUPDIR` | unset | The folder `backup.account` and `restore.account` use. Set by `set.backup.directory`, not by hand - see [Backing Up and Restoring Accounts](01b-backup-and-restore.html) |
-| `NETDIRS` | unset | Directories outside any account that an account without `os-on` may still open by path (every session), separated by semicolons because a Windows path contains a colon |
+| `NETDIRS` | unset | Directories outside any account that an account without `os-on` may still open by path (every session), separated by semicolons because a Windows path contains a colon; see *`NETDIRS`: directories outside an account*, below |
 | `SDCLIENT` | 0 | Restricts what an API session may do. Non-zero disables file access outright (no file can be opened, so no dictionary can be evaluated either), refuses `SDIConv`, `SDOConv`, `SDIConvs` and `SDOConvs` a conversion code that reads a file (`T` with a file) or calls a program (`U`), and refuses `SDOpenSeq`, `SDExecute`, `SDTrans` and `SDRTrans`; `2` additionally refuses any subroutine not compiled as callable from a client |
 
 Unset is the strict value for `NETDIRS`. With nothing there, an API session can
 open files in the account it is standing in and nothing else. It never grants
 the credential store, the global catalog, `os.users` or the account register,
-and naming those has no effect. A directory listed here is reachable by every
-API session in every account, so it is a decision about the machine rather than
-about one account.
+and naming those has no effect. **An API session's file access is its own
+account's, widened only by `NETDIRS`** (below, *`NETDIRS`: directories outside
+an account*), which names directories every account without `os-on` may
+additionally open, the API session's included. A directory listed there is
+reachable by every such session in every account, so it is a decision about the
+machine rather than about one account.
 
 `SDCLIENT` is not reported by the `config` verb and has no entry in the shipped
 `sd.conf`. It defaults to 0, which permits everything.
@@ -114,6 +117,58 @@ matters: `SH1` carries `-NonInteractive` and `SH` does not, so a bare `sh` in a
 phantom or a scheduled job hands control to a shell with nobody at the keyboard.
 Operating system access has its own page in this set.
 
+## `NETDIRS`: directories outside an account
+
+An account that has not been given `os-on` is held to its own directory: it
+opens no file by pathname anywhere else. `NETDIRS` names directories that such
+an account may reach all the same, for a site whose data lives in a shared
+directory outside every account:
+
+```
+NETDIRS=D:\Data\Sales;D:\Data\Shared
+```
+
+The entries are absolute paths separated by semicolons (a Windows path holds a
+colon). **Nothing is listed as delivered**: `sd.conf` has no `NETDIRS` line, and
+every account is held to its own directory as before.
+
+**What filling it opens.** Every account without `os-on`, on every route (a
+terminal session, a phantom, the API), can then read, change, create and delete
+files in the listed directories and below them, by pathname. The Windows
+permissions of the account's own user still apply. It is a smaller thing to open
+than `os-on`, which opens the whole machine to one account, but it is opened for
+every account at once: list only directories that hold nothing one account must
+keep from another.
+
+**What it does not open.** `sh` and `os.execute`, the edit gates (`voc-on`,
+`bp-on`, `dict-on`), the shared account's rules and what the `ai` line may send
+are separate and unchanged. The administrator and an account with `os-on` are
+not affected: they reach every path already. `NETDIRS` is asked last: after the
+account's own directory and the shared `SDSYS` entries, and after the `os-on` and
+`sd-on` gates.
+
+**Entries SD ignores.** An entry is left out, and named in the error log when SD
+starts, when it is not an absolute path, is not an existing directory, is the
+root of a drive, or holds or lies inside the SD system directory, the directory
+of `sd.conf`, the user or group accounts directory (`USRDIR`, `GRPDIR`), or the
+directory of any registered account. An account created later inside a listed
+directory closes that entry at once. At most 16 entries are taken.
+
+**How a path is judged.** The name a program gives is resolved first, and a
+name that still holds a `.` or `..` component is refused. It is then compared
+with each entry ignoring upper and lower case, and the whole folder name must
+match: `D:\Data\xkey` is not inside `D:\Data\x`.
+
+SD reads the line when it starts, so a change reaches sessions after SD has been
+restarted. **A value longer than 191 characters is refused, by name**: SD says
+`NETDIRS value is longer than 191 characters.` rather than cutting it, because
+a cut path is a shorter directory and would admit more than you wrote. It is not
+shown by `config()`, and `config('NETDIRS')` does not read it: read the file.
+
+One API route is not widened: request 29, the old remote open of an account's
+file that `NETFILES` gates (below). A pointer followed there must still lead
+inside the account, whatever `NETDIRS` lists.
+
 ## `NETFILES` and SDNet
 
 **`NETFILES` is not what SDNet uses.** A `server;file` VOC reference is
@@ -126,8 +181,9 @@ value is 0, so as delivered the request is refused; leave it at 0 unless an API
 client needs it. With bit 2 set the request is still refused unless the
 account's NET switch is on (`net-on`, off as delivered), and under `SDCLIENT`;
 when it opens the file, the connection's containment applies: only the account
-the session stands in, the shared `SDSYS` entries (read only) and the
-directories named in `NETDIRS`. The SDNet **client** (`set.server`, `set.netlogin`, a VOC
+the session stands in and the shared `SDSYS` entries (read only). **`NETDIRS` does not widen
+this request**: a pointer followed there must still lead inside the account, whatever
+`NETDIRS` lists. The SDNet **client** (`set.server`, `set.netlogin`, a VOC
 pointer of type `N`; see [SDNet](12a-sdnet.html)) does not read `NETFILES`.
 
 There is no `FILERULE` parameter. **The
