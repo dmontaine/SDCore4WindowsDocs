@@ -12,7 +12,7 @@ folds case, so any of this may be typed in either case.
 > **This page is generated, and it is checked for completeness rather
 > than proof-read for it.** The roster is computed from SD's own VOC:
 > every verb record in `newvoc`, plus the ones only `voc_template`
-> has, which is **214** verbs, and `tools/mktclsyntax.py` refuses to
+> has, which is **216** verbs, and `tools/mktclsyntax.py` refuses to
 > write the page if any of them has no line. The shapes come from the
 > subject documents, where each verb is described in full.
 
@@ -24,7 +24,7 @@ not refused — the name is simply not recognised.**
 | | | |
 |---|---|---|
 | **every account** | 162 verbs | `newvoc`, identical for every ordinary account |
-| **SDSYS only** | 52 more | in `voc_template` but not `newvoc` |
+| **SDSYS only** | 54 more | in `voc_template` but not `newvoc` |
 
 ## The verbs
 
@@ -133,6 +133,7 @@ not refused — the name is simply not recognised.**
 | **`list.vars`** | **`list.vars`** {*pattern*} |  |
 | **`list.voc.removed`** | **`list.voc.removed`** {*account*}  —  the VOC records SD no longer ships and, with an account, what the next **`update.accounts`** would do in it (changes nothing) | S |
 | **`listu`** | **`listu`** {**`detail`**} {**`no.page`**} {**`lptr`** {*n*}} | S |
+| **`load.examples`** | **`load.examples`** {*account* …}  —  put the shipped example programs into examples.bp of every account (or the accounts named) and compile them there (administrator) | S |
 | **`load.help`** | **`load.help`**  —  load the shipped context help into the file context.help of the shared account (administrator) | S |
 | **`lock`** | **`lock`** *n* {**`no.wait`**} | S |
 | **`lock.tracer`** | **`lock.tracer`** **`on`** \| **`off`** \| {**`user`** *n*} {**`lptr`** {*n*}} {**`no.page`**} | S |
@@ -171,6 +172,7 @@ not refused — the name is simply not recognised.**
 | **`remote.api`** | **`remote.api`** {**`on`** \| **`local`** \| **`off`** {**`restart`** \| **`no.restart`**}} | S |
 | **`remote.sdsys`** | **`remote.sdsys`** {**`on`** \| **`off`** \| **`ssh`** {**`on`** \| **`off`**} \| **`api`** {**`on`** *address* ... \| **`on any`** \| **`off`**}}  —  from SDRADMIN's remote session also **`audit`** {*n*} and **`accounts`** | S |
 | **`remote.ssh`** | **`remote.ssh`** {**`on`** \| **`off`**} | S |
+| **`remove.examples`** | **`remove.examples`** {*account* …}  —  take the shipped example programs, with their compiled objects, out of examples.bp of every account (or the accounts named); programs you added are kept (administrator) | S |
 | **`report.src`** | **`report.src on`** \| **`off`** \| **`report.src`** to toggle |  |
 | **`report.style`** | **`report.style`** {*name* \| **`off`**} |  |
 | **`restore.account`** | **`restore.account`** *zipfile* *account* {*account* …} {**`no.query`**}  ·  **`restore.account`** *zipfile* **`all`** {**`no.query`**}  ·  **`restore.account latest`** *account* {*account* …} {**`no.query`**}  ·  **`restore.account latest all`** {**`no.query`**} | S |

@@ -228,6 +228,54 @@ the SDSYS directory.
 To see it work, put a record in the file and run `update.accounts`; then
 `ct voc` the id in the account.
 
+## The example programs in every account: `load.examples` and `remove.examples`
+
+Every account has its own file `examples.bp` of example programs, compiled: the five
+programs of the *SD Text User Interface - Programmer's Guide* and a first course in
+programming (User guide, *SD Example Programs*). They come from the directory `examples`
+of the SD system directory (`C:\ProgramData\SD\sdsys\examples`), one file to a program;
+an upgrade replaces that directory with the new release's.
+
+```
+load.examples                       every account in service
+load.examples <account> ...         the accounts named, a list
+remove.examples                     every account in service
+remove.examples <account> ...       the accounts named, a list
+```
+
+The installer runs `load.examples` on every install and upgrade (its output is in
+`C:\ProgramData\SD\load-examples.log`), and `create.account` runs it for each account it
+makes. In each account it makes `examples.bp` when it is not there, writes each shipped
+program that is new or has changed, leaves alone a program it does not ship (one you
+added), and compiles what it wrote. A suspended account is skipped; run
+`load.examples <account>` once it is back. The two summary lines count the accounts, the
+programs written and compiled, and the ones of yours it kept; each program that did not
+compile, or account it could not enter, is named. The run is on the audit trail
+(`load.examples accounts=... compiled=...`).
+
+Both verbs take a list of accounts (`load.examples ann bob`). A name that is not
+registered is said and skipped, and the others go on.
+
+`remove.examples` is the companion. In each account it deletes the shipped programs from
+`examples.bp` together with their compiled objects, and keeps any program you added; it
+deletes `examples.bp` itself only when nothing of yours is left in it. An account with no
+`examples.bp` is counted and left alone. **What it removes comes back:** the next install
+or upgrade, a new account, or a `load.examples` puts the programs back. The run is on the
+audit trail (`remove.examples accounts=... removed=...`).
+
+**Neither verb leaves SDSYS.** On Windows a `logto` out of SDSYS gives up the
+administrator's right, so the two verbs reach each account's folder by the path the
+account register holds, and you stay in SDSYS throughout. They write the two pointers
+`examples.bp` and `examples.bp.out` into the account's VOC, as a file made in the
+account would have; `remove.examples` takes them out again with the files.
+
+**No access is opened by it.** `examples.bp` is an ordinary program file of the account,
+so the account's `bp.edit` setting decides whether its person may change it: off as
+delivered, so every account can list, read and run the examples and none can alter them
+there. To let a person copy one to `bp` and compile it, give the account `bp-on`. A
+change you want in every account is made to the file under `examples` and spread with
+`load.examples`; a change made in one account's `examples.bp` is put back by the next run.
+
 ## Reading and setting configuration: `config`
 
 ```
@@ -347,7 +395,7 @@ the one most people meet.)*
 
 **All of them are SDSYS's** — `create.account`, `modify.account`,
 `modify.password` for another account, `delete.account`, `clean.account`,
-`update.accounts`, `config`, `grant`, `revoke`, `list.grants`. An ordinary
+`update.accounts`, `load.examples`, `remove.examples`, `config`, `grant`, `revoke`, `list.grants`. An ordinary
 account has none of these names at all — this is not a permission it
 lacks, the verbs are simply not in its VOC.
 
