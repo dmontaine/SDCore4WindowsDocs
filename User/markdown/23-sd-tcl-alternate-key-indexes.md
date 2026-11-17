@@ -112,8 +112,8 @@ list.index zzak f1 f2
 Alternate key indices for file zzak
 Number of indices = 2
 Index name...... En Type Nulls S/M Fmt Field/Expression
-F1                Y  D    Yes   S   L  1
-F2                Y  D    Yes   S   L  2
+f1                Y  D    Yes   S   L  1
+f2                Y  D    Yes   S   L  2
 ```
 
 | column | |
@@ -144,7 +144,7 @@ values and the most records any one value has.
 Analysis of the indices of file zzak
 
 Index name...... Indexed values  Most records for one value
-CITY                          4                           5
+city                          4                           5
 ```
 
 With an index name the totals follow (index entries, key values, least, average
@@ -270,15 +270,15 @@ delete.index zzak all
 ```
 
 ```
-Deleted index F1
-Deleted index F2
+Deleted index f1
+Deleted index f2
 ```
 
 `all` removes every index on the file. Naming them individually works too, and
-**in either case**: index names are held in upper case, `list.index` prints them
+**in either case**: index names are lower case, `list.index` prints them
 that way, and `delete.index zzak f1`, `delete.index zzak F1` and
 `delete.index zzak f1 f2` all do what they say (the answer is
-*Deleted index F1*, in upper case, whichever case you typed).
+*Deleted index f1*, in lower case, whichever case you typed).
 
 Deleting the file removes its indexes with it.
 
