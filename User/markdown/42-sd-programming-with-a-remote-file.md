@@ -65,7 +65,7 @@ The other machine's text in message 12505 is cut at 100 characters and anything 
 
 **`GETLOCKS(f, user)`** (internal programs only) of a remote file is the **local view**, as in openQM: the locks of a remote file are held on the other machine and do not appear in this machine's lock table, in `LIST.READU` or in `GETLOCKS()`. It returns the one field of three numbers (`NUMLOCKS`, the number of record locks held on this machine, the peak) and **no lock line**, whatever the user number, and it asks the other machine nothing. To see who holds what on the other machine, look there (`LIST.READU`, which an administrator of that machine can run).
 
-## Administering a remote file (added 21 October 2026)
+## Administering a remote file
 
 These do on the other machine what they do on a local file, **for your remote login and in the account that login entered there**, so every switch that account has on that machine applies (a file named `voc`, `*.bp` or `*.dic` still needs `voc.edit`, `bp.edit` or `dict.edit` there). They need **three things**, the last on the other machine: a `write` definition here, the remote login in the other machine's write group, **and** in its administration group (`modify.account <account> files-admin-on`; it needs `files-on` and `files-write-on` first and is off for every account until the administrator of that machine gives it).
 

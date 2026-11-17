@@ -13,11 +13,6 @@ SD folds case, so a command may be typed in either case. Commands are shown here
 in lower case. In the tables, *italics* mark something you supply and **bold**
 marks a word typed as it stands; braces mark an optional part.
 
-> **Every listing on this page was produced by running it**, on SD Core for
-> Windows. The lock listings come from a program that took the locks
-> first and then ran the verb against itself, because a lock nobody holds is not
-> something a listing can show.
-
 ## Two things are not on this page, on purpose
 
 **A programmer needs to understand locks without being able to force one**, so
@@ -175,8 +170,7 @@ The record is the file `login.inhibit` in the SDSYS directory (user number,
 process id, login name, date, time). **It is not the same thing as the hold that
 `backup.account` and `restore.account` take**, which keeps *everybody* out,
 the administrator's new sessions included, while they run. That hold also lapses
-when the session that took it is killed, which it did not until 15 October 2026:
-it used to wait for `sd -cleanup` to remove the dead session's entry.
+when the session that took it is killed.
 
 ## The paragraph every session runs first: `MASTER.LOGIN`
 

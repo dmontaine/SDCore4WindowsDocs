@@ -415,8 +415,7 @@ setting: a name in no VOC record with one colon is read as a Q-pointer to that
 account and file, and the **Q-pointer rule above applies to it unchanged**, so it
 opens only what a Q-pointer the account wrote could open. A drive-letter pathname
 such as `C:\data\x` has one colon too; it is read as account `C`, which is not
-registered, so it is not found. The `path:name` form went with the `FILERULE`
-setting on 28 October 2026. Any other file outside the account is reached only
+registered, so it is not found. Any other file outside the account is reached only
 through a VOC pointer, which is held to the `os-on` rule and the Q-pointer rule
 above.
 
@@ -461,7 +460,7 @@ modify.account account pins-on | pins-off
 modify.account account suspended | unsuspended
 ```
 
-**More than one action in a command** (from 25 October 2026). Any number of the
+**More than one action in a command.** Any number of the
 words above except `add` and `delete` may follow the account, in one command:
 `modify.account fred sh-on os-on voc-on bp-on`. SD reads every word first and
 then carries out all of them, or none of them:
@@ -494,8 +493,7 @@ sh-on and sh-off set the same access to different states, and nothing was change
 bogus is not a modify.account action, and nothing was changed: give modify.account with an account and no action to see them
 ```
 
-(These lines are the messages' texts and the order of the work; they were
-produced on Linux and have not been run on Windows.) `add` and `delete` take one
+`add` and `delete` take one
 user name and stand alone: among other words, or with a word after the user
 name, they are refused with the message *add and delete take a user name and
 stand alone, and nothing was changed: ...*. The same word twice is one action.
@@ -815,7 +813,7 @@ set.start.default                        says which it is now
   default`) and `fred already starts that way; nothing changed` when the word is the
   one already set. It is audited as `modify.account start-menu account=fred`, and
   `set.start.default menu` as `set.start.default menu`.
-* **`create.account` takes `start-menu` or `start-terminal`** (from 28 October 2026),
+* **`create.account` takes `start-menu` or `start-terminal`**,
   for any kind of account; without one the new account follows the default. Two
   different start words in one command are refused (*start-menu and start-terminal set
   the same access to different states*), and a start word that is neither is refused
@@ -858,7 +856,7 @@ modify.account account pins-off   they may not (the delivered state)
 
 * **Tiles are on as delivered and are turned off one account at a time**; there is
   no setting for every account. The standard tile ids are `editor`, `ide`, `ced`,
-  `terminal`, `keys`, `switch` and `signout`, and `recent` (from 28 October 2026),
+  `terminal`, `keys`, `switch` and `signout`, and `recent`,
   which is not a tile but the **Recent group** of the home screen: the tiles the person
   started last, newest first, which they turn on themselves in the View menu (it is
   off as delivered). `set.tile account recent off` forbids it for the account: the

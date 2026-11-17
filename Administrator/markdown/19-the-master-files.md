@@ -174,8 +174,8 @@ the page's limit is refused (narrow it until every row is shown). `G` asks what 
   on **one record only**: when more than one record is shown it is refused before the box
   (`field 1 is the type of the record: G changes it on one record only, and 3 are shown ...`), and
   on a single record the box carries a **WARNING** line with the old and the new type (`"X" ->
-  "PA"`). Cancel is still the default, and `U` puts field 1 back like any other field (the owner,
-  3 Nov 2026: exclude field 1 from batch actions, allow it on a single item with a confirm warning).
+  "PA"`). Cancel is still the default, and `U` puts field 1 back like any other field (field 1 is
+  excluded from batch actions and allowed on a single item with a confirm warning).
 - **Programs**: a text to replace in the source and what replaces it. Each program changed is then
   compiled again **in its own account** through `run.in` (as `C` does), and is counted as failed
   when the compiler does not say it compiled.
@@ -184,7 +184,7 @@ The texts are printable characters only, up to 120 of them. **One box** (titled 
 records?*) then shows the change, and each account with how many records would change, the first
 ids, how many are as they are already and how many would be refused, with the first reasons. **Run
 or Cancel is all it asks** (Cancel is the default): no name or count is typed. This is looser than
-`D`, which asks for the id; it is the owner's choice (3 Nov 2026), made after he was told so, and
+`D`, which asks for the id; it is deliberate, and
 it is how the page is delivered.
 
 Run writes **account by account**. Each account is judged again (it must still be in the register),

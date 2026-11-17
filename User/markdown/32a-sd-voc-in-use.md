@@ -71,8 +71,7 @@ update.accounts
 ```
 
 Re-runs `LOGIN`'s `update.voc` paragraph, which copies any changed
-records from the system `NEWVOC` into the account's VOC. **Since 17 Aug
-2026 this is incremental** — it re-copies only the records whose stamp has
+records from the system `NEWVOC` into the account's VOC. **This is incremental** — it re-copies only the records whose stamp has
 changed, not the whole file. Every ordinary account gets the same `NEWVOC`
 now, so `update.accounts` is only ever bringing an existing account's copy
 up to date after a release changes something — there is no tier list left
@@ -181,15 +180,15 @@ account tiers used before they were removed.
 
 ## Case on disk
 
-Since 18 Aug 2026 the VOC ids are stored in lower case — `list`,
+The VOC ids are stored in lower case — `list`,
 `create.account` and so on. This changes nothing about what you type —
 SD tries a name as typed, then lower, then upper. What it changes is what
 SD prints back: `CT VOC LIST` answers `VOC list`.
 
-The file-pointer entries — `bp`, `bp.out`, `gpl.bp`, `gpl.bp.out` — moved
-to lower case on 19 Aug 2026. **The migration is complete, not partial**: an
+The file-pointer entries — `bp`, `bp.out`, `gpl.bp`, `gpl.bp.out` — are
+lower case. **The change is complete, not partial**: an
 account's own `voc`, and the system directory's `newvoc`, `accounts`,
-`messages` and `syscom`, are all lower case on disk too, confirmed directly
+`messages` and `syscom`, are all lower case on disk too
 — there is nothing left in upper case to migrate. `qfile` was never a path
 of its own; it is a VOC pointer to `@SDSYS/$ipc`, the session IPC area, and
 has no on-disk name to fold.
@@ -211,8 +210,8 @@ longer dispatched; the home screen (`home`, or `menu`) is the menu system.
 
 **`EDIT` runs.** It was once exactly the kind of VOC entry described
 above — present but undispatchable, its type field reading
-`Verb - Full screen editor` rather than `V`. That was reversed 26 Aug
-2026: it is a real `V` record now, a working full-screen editor. See [SD
+`Verb - Full screen editor` rather than `V`. That is no longer so:
+it is a real `V` record now, a working full-screen editor. See [SD
 VOC - Structure and Usage](32-sd-voc-structure-and-usage.html#what-sdsyss-own-voc-holds).
 
 ## See also

@@ -131,7 +131,7 @@ that also has the API route.
 
 **`MASTER.LOGIN`.** If the administrator has put a `MASTER.LOGIN` paragraph in the SDSYS VOC it is run when an API session first enters an account, before that account's own `LOGIN` paragraph, as it is for a terminal session; entering another account with `SDLogto` runs the new account's `LOGIN` only. A session can be recognized inside either paragraph by `@TTY`, which is `apisrvr`.
 
-**Threads** (from 15 Oct 2026; before that the library kept its state in plain globals and a program with more than one thread could not use it safely). The client library may be used from several threads of one process, as OpenQM's QMClient may, on these rules:
+**Threads.** The client library may be used from several threads of one process, as OpenQM's QMClient may, on these rules:
 
 - **The current session belongs to the thread.** `SDSetSession` and `SDGetSession` act on the calling thread's own selection, so two threads can work on two sessions at the same time. A thread that has not selected a session starts on session 0, which is the one the first connection of the process received; a thread given a session by another thread must `SDSetSession` it before use.
 - **A session must not be used by two threads at the same time.** The library does not serialise requests on one session. If more than one thread can reach it, take your own lock round each action, and treat an `SDExecute` and the `SDRespond` calls that answer it as one action.
@@ -141,8 +141,6 @@ that also has the API route.
 - The same applies to a session that dies under its thread (`SDConnected()` is false for it and `SDError()` says why).
 
 *Not changed:* a local session is still a server process of its own (`sd.exe`), so a program that starts many threads each with a local session starts that many `sd.exe` processes.
-
-*Measured:* a test program with no server running (`gplsrc\sdclilib\tests\thread_smoke.c`) shows two threads each keeping their own connect error, 32 threads connecting, failing and disconnecting together without meeting a session or error that is not theirs, and the slots of ended threads free again. A run of several threads against a real server has not been made.
 
 ### How big a request may be, and what the server does with one it cannot accept
 
@@ -155,7 +153,6 @@ Every request starts with a 4-byte length that counts the whole packet, itself i
 
 A packet that declares anything else (below 6, negative, or over the limit) is not read: the server ends the session at once and writes one line to the Windows Application event log, source `sd_Log` (`API packet length ... refused (before login)` or `(after login)`). The same test applies to the reply a client sends to an `INPUT` prompt.
 
-*Before 13 Nov 2026 the Windows client library refused any reply over 256 MB, so a record larger than that could be written through it but not read back, and `SDWriteBlk` and `SDWriteSeq` stopped at the same size.*
 
 ## Server status codes
 
@@ -183,7 +180,7 @@ A packet that declares anything else (below 6, negative, or over the limit) is n
 | `SDSetSession(session)` | Boolean | switch to a session |
 | `SDLogto(account)` | Boolean | switch to another account: true if the server moved there, false (and `SDError()` says why) if not, in which case the session stays where it was |
 
-**Sessions.** One program can hold up to **1024** sessions at once, each with its own server process, number and account (it held four before 15 Oct 2026). The server's own user table (`USERPOOL`, 1023 by default) is the real ceiling. Open more than one with `SDConnect` or `SDConnectLocal`, one after another, noting `SDGetSession()` each time, and move between them with `SDSetSession`.
+**Sessions.** One program can hold up to **1024** sessions at once, each with its own server process, number and account. The server's own user table (`USERPOOL`, 1023 by default) is the real ceiling. Open more than one with `SDConnect` or `SDConnectLocal`, one after another, noting `SDGetSession()` each time, and move between them with `SDSetSession`.
 
 ### File operations
 
@@ -218,7 +215,7 @@ A packet that declares anything else (below 6, negative, or over the limit) is n
 | Function | Returns | Description |
 |---|---|---|
 | `SDField(str, delim, first, occurrences)` | String | extract a field from a delimited string |
-| `SDDcount(src, delim)` | Long | the number of delimited items: 1 more than the number of times `delim` occurs, counting non-overlapping occurrences from the left; 0 for a null string or a null delimiter. **The delimiter may be more than one character** (`a::b::c` by `::` is 3); before 15 Oct 2026 only its first character was used |
+| `SDDcount(src, delim)` | Long | the number of delimited items: 1 more than the number of times `delim` occurs, counting non-overlapping occurrences from the left; 0 for a null string or a null delimiter. **The delimiter may be more than one character** (`a::b::c` by `::` is 3) |
 | `SDChange(str, old, new, occurrences, start)` | String | replace substrings |
 | `SDMatch(src, template)` | Boolean | match a string against a pattern |
 | `SDMatchfield(src, template, component)` | String | extract a matched component |

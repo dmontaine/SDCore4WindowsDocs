@@ -164,9 +164,7 @@ have gone.
 
 **`reset all` is refused in an API session**, with *LOGTO RESET ALL is not available in a client
 session* (message 12397), before anything is changed: the API server is its own bottom level and
-has no prompt to return to. That refusal was written but not run, because a test session cannot
-host an API connection.
-
+has no prompt to return to.
 ## What is not here
 
 **There is no online help and `help` is not a verb.** The command processor

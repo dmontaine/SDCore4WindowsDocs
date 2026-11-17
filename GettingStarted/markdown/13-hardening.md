@@ -36,11 +36,9 @@ SDSYS and start `sd` elevated. There is no other route in to try instead.
 `<sysdir>\bin` holds the pcode library — the interpreter itself, which SD loads
 into shared memory at start-up and every session then runs.
 
-**UNTIL 23 Aug 2026 ANY MEMBER OF `sdusers` COULD WRITE TO IT**, so one SD
-user could have replaced what everybody else's session executes, including an
-administrator's.
-
-It is now readable by SD users and writable only by administrators. Nothing
+It is readable by SD users and writable only by administrators, so that no SD
+user can replace what everybody else's session executes, including an
+administrator's. Nothing
 needs to write it after an install — only the process that starts SD reads it,
 and that is already elevated. **If you have anything that writes into
 `<sysdir>\bin`, it will now be refused and will need to run elevated.**
@@ -256,9 +254,8 @@ launched with `-ExecutionPolicy Bypass` **on that single command line**, which
 applies to that one process and that one script. It does not change the
 machine, and it does not affect any other script you or anyone else runs.
 
-**If you loosened the policy to get SD working, put it back.** That was needed
-on builds before 5 September 2026, where those commands failed with *"running
-scripts is disabled on this system"*. It is fixed. The `sh` verb still gives
+**If you loosened the policy to get SD working, put it back.** SD's scripts do not
+need it. The `sh` verb still gives
 you a PowerShell prompt under your machine's own policy — SD lifts the
 restriction only for the scripts it installed itself, never for a shell you
 type into.

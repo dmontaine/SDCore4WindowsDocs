@@ -75,8 +75,7 @@ must survive a dialog with `screen text`, or `screen refresh` will not bring it
 back. Before `screen open` a dialog still works, but it leaves blanks where it
 was.
 
-**A form on a screen opened with `clear` writes only what has changed** (since
-19 October 2026). The terminal is then known to show the shadow, so when a form is
+**A form on a screen opened with `clear` writes only what has changed.** The terminal is then known to show the shadow, so when a form is
 drawn again, or one of its widgets is, the text that is already there in the same style
 is left out; choosing a record in the IDE wrote 6,635 characters to the terminal
 before and about 780 now. Two things follow. A form does not repair what the program
@@ -176,8 +175,6 @@ for a click on no widget when the program has asked for those): *x* is the colum
 click, and the menu whose title is over it opens instead of the first. A column with no
 title over it (the space to the right of the titles) opens nothing, and the statement
 takes `else`. A title is its label with a blank on each side, from column 0.
-A program compiled before 19 October 2026 that uses `screen menubar` must be compiled
-again.
 
 **Submenus.** A menu whose title begins with `>` is not on the bar: it is a submenu. An
 entry whose *code* is that title opens it beside the entry, with a `>` at its right edge;
@@ -297,7 +294,7 @@ another page, is passed over.
 | list | up, down, home, end, page up, page down; a letter jumps; with `multi` the space bar picks |
 | combo | as an entry field; down or F4 opens the list |
 | tabs | left, right, home, end |
-| memo | the arrow keys, home, end, page up and down; typing, Return (splits the line), backspace, delete (both join lines at the ends); Home and Ctrl-E go to the ends of the row; Ctrl-P and Ctrl-U a word back and on; Ctrl-A selects all, Ctrl-G the mark, Ctrl-X cut, Ctrl-C copy, Ctrl-V paste; Ctrl-D duplicates the line, Ctrl-K (or Alt-K) cuts the whole line into the clipboard; Ctrl-Z undo, Ctrl-Y redo; Ctrl-F or Ctrl-T find, Ctrl-B find backward, F3 the next one; and SED's editing commands (since 9 November 2026): Alt-Backspace and Alt-D delete the word before or at the cursor, Alt-E cuts to the end of the line, Alt-T swaps two characters, Alt-U, Alt-L and Alt-C put the word in capitals, in small letters or with a capital initial, Alt-Space closes a run of blanks into one, Alt-A indents the line as the line above, Alt-M swaps the cursor and the mark, and Ctrl-Up and Ctrl-Down move the view a line (not in a memo that wraps) |
+| memo | the arrow keys, home, end, page up and down; typing, Return (splits the line), backspace, delete (both join lines at the ends); Home and Ctrl-E go to the ends of the row; Ctrl-P and Ctrl-U a word back and on; Ctrl-A selects all, Ctrl-G the mark, Ctrl-X cut, Ctrl-C copy, Ctrl-V paste; Ctrl-D duplicates the line, Ctrl-K (or Alt-K) cuts the whole line into the clipboard; Ctrl-Z undo, Ctrl-Y redo; Ctrl-F or Ctrl-T find, Ctrl-B find backward, F3 the next one; and SED's editing commands: Alt-Backspace and Alt-D delete the word before or at the cursor, Alt-E cuts to the end of the line, Alt-T swaps two characters, Alt-U, Alt-L and Alt-C put the word in capitals, in small letters or with a capital initial, Alt-Space closes a run of blanks into one, Alt-A indents the line as the line above, Alt-M swaps the cursor and the mark, and Ctrl-Up and Ctrl-Down move the view a line (not in a memo that wraps) |
 | table | up, down, home, end, page up, page down; left and right the current column; F3 sorts by it; `<` and `>` its width; a letter jumps to the next row whose first cell starts with it; with `multi` the space bar marks the row |
 | tree | up, down, home, end, page up, page down; right opens a node (or goes to the first one under it); left closes it (or goes to the node it is under); the space bar opens or closes; a letter jumps |
 | scrollbar | up and down (left and right when it is horizontal), page up, page down, home, end |
@@ -355,9 +352,9 @@ work by *row*, so a wrapped line is several rows.
 
 **Selection and the clipboard.** The selection runs from the *mark* to the cursor.
 Ctrl-G sets the mark where the cursor is (and takes it away again); the selected text
-is drawn in the `highlight` style. **Ctrl-A selects all the text** (since 28 October 2026;
-Home is the start of the row). Ctrl-X cuts the selection, Ctrl-C copies it (Ctrl-O does not:
-since 28 October 2026 a program may use it for opening a record), Ctrl-V
+is drawn in the `highlight` style. **Ctrl-A selects all the text** (Home is the start of
+the row). Ctrl-X cuts the selection, Ctrl-C copies it (Ctrl-O does not:
+a program may use it for opening a record), Ctrl-V
 puts what was cut or copied in at the cursor. The clipboard belongs to the library, so
 it passes from one text area to another. Typing, Return, backspace and delete on a
 selection replace or delete it. A `readonly` area can select and copy, and nothing else.
@@ -367,14 +364,13 @@ characters (or of backspaces, or of deletes) is one step, and so is replacing a
 selection by typing over it.
 
 **Lines.** **Ctrl-D duplicates the line** the cursor is on, below it, and **Ctrl-K cuts the
-whole line** into the clipboard (since 28 October 2026; they joined lines and cut to the end
-of the row before). **Alt-K** does the same (since 8 November 2026), for a program that keeps
+whole line** into the clipboard. **Alt-K** does the same, for a program that keeps
 Ctrl-K for itself through `passkeys`, as the IDE does. Ctrl-V at the start of a line puts a cut line back above it. Delete
 joins lines.
 
 **Find.** Ctrl-F or Ctrl-T asks for text on the bottom row of the area and selects the first
 place it is found from the cursor on; Ctrl-B asks and looks backward. **F3 finds the next one and Shift-F3 the one before**
-(since 28 October 2026; the next was Ctrl-N, which a program may use for a new record), and so does
+(Ctrl-N is left to a program, which may use it for a new record), and so does
 Return on the question, which starts with the last text. Case is ignored and the
 search goes on past the end of the text to its start. A bell means there is none.
 
@@ -536,7 +532,7 @@ Things to know:
 - A viewport is not a window of its own: it is drawn into the form, and a later widget
   placed over it is drawn over it (a scroll draws it again too).
 - Scrolling 200 by 60 of sheet (630 widgets) in a window of 138 by 40 takes about a tenth
-  of a second a step, measured. The cost is the widgets in the window.
+  of a second a step. The cost is the widgets in the window.
 
 ### Running a form
 
@@ -587,7 +583,7 @@ field 3 its data.
 | `resize` | the terminal's window changed size; the form has been drawn again at the new size | | the width, a value mark and the height |
 | `cancel` | Esc, or the form's cancel button | the button, if any | |
 | `timeout` | no key came in time | | |
-| `end` | the input ended, whether or not the statement has a `timeout` (before 19 October 2026 a wait with a timeout answered `timeout` instead, again and again) | | |
+| `end` | the input ended, whether or not the statement has a `timeout` | | |
 
 `then` is taken for `button`, `change`, `focus`, `key` and `resize`; `else` for `cancel`,
 `timeout` and `end`. Esc does **not** close the form here: the program decides. An

@@ -344,9 +344,7 @@ commit writes. For one nested inside another, the commit **writes nothing**:
 the records the nested transaction changed and deleted, and the locks it holds,
 are handed to the transaction around it, which alone writes them when it commits
 or throws them away with its own work when it aborts. Afterwards the enclosing
-transaction is the running one again. Measured with the same program compiled
-with and without the directive, the nested transaction taking its own records and
-the parent taking its own:
+transaction is the running one again. The table compares a program compiled with the directive and one without it:
 
 | | with the directive | without it |
 |---|---|---|

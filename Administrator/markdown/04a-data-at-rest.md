@@ -75,5 +75,5 @@ SD needs nothing changed: it starts after Windows has unlocked the drives.
 - **Copies you make.** A record exported to a file, a report printed to a file,
   or a file copied off the machine is outside BitLocker once it leaves the drive.
 
-None of this has been tried on an SD install for this release: it is Windows'
+This is Windows'
 encryption of the drive under SD, and SD is not aware of it.

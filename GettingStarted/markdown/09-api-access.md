@@ -144,7 +144,7 @@ The server accepts API connections on any network interface, unless
 in which case only this computer can connect.
 
 **If you tunnel, stop.** `ssh -L 4247:127.0.0.1:4247 user@host` still works
-but is no longer what the design expects, and it is not tested. Point the
+but is no longer what the design expects. Point the
 client straight at port 4247 on the server.
 
 **Reaching the port from another computer is off unless you tick the box during

@@ -8,8 +8,7 @@ SD folds case, so a command may be typed in either case. Commands are shown here
 in lower case. In the tables, *italics* mark something you supply and **bold**
 marks a word typed as it stands; braces mark an optional part.
 
-> **Every listing on this page was produced by running it**, on SD Core for
-> Windows, against a two-line program in an account's `bp` file.
+> The examples use a two-line program in an account's `bp` file.
 
 An account that SDSYS has not given `bp-on` cannot save a program to `bp`, and
 `basic`, `catalog`, `delete.catalog` and `decatalog` are refused for it. A new

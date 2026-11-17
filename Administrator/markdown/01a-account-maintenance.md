@@ -222,7 +222,7 @@ the standard records, so it has the last word.
 
 The file is a directory file: one record per file, the record id as the file
 name, the VOC record as its contents. There is no file until you make one, and
-nothing is created for you. The tested form is a directory file made by hand in
+nothing is created for you. The form to use is a directory file made by hand in
 the SDSYS directory.
 
 To see it work, put a record in the file and run `update.accounts`; then
@@ -384,8 +384,7 @@ by accident:
 | *Cannot delete own account* | the account you are standing in |
 | *Account not registered in ACCOUNTS file* | the name is not one of SD's |
 
-*(Those three wordings are the verb's own; they are not shown as a transcript
-here because reaching them takes an elevated session, and an unelevated one is
+*(Those three wordings are the verb's own. Reaching them takes an elevated session; an unelevated one is
 refused by the privilege gate first — which is itself the fourth refusal, and
 the one most people meet.)*
 

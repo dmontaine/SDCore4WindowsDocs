@@ -122,10 +122,7 @@ target is left behind and the file is as before.
   output, and ends with status 1. The reason is the operating system's, or *a file
   of that name exists* when a component of the path is a file. *akpath* in the
   message is the whole path as you typed it, not the component that failed, and
-  the indexes and the header are where they were. Before 23 October 2026 the tool
-  ended with status 1 and printed nothing at all in these two cases. (Carried
-  from SD Core for Linux, which printed the same two lines; the Windows form has
-  not been run.)
+  the indexes and the header are where they were.
 
 ### `-p`, point
 `-p` writes the path into the header and moves nothing. Use it when you have

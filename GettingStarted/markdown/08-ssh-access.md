@@ -151,21 +151,15 @@ it is left alone.
 **Port 22 is closed to other computers unless you tick the box during
 installation.** The rule is scoped to `127.0.0.1,::1` otherwise.
 
-> **IF YOU INSTALLED A BUILD BEFORE 25 Aug 2026, CHECK THIS.** The narrowing
-> step failed **every single time it ran**, leaving port 22 open to the local
-> network even when the box was unticked. The installer's closing page said so:
-> *"Setting who may reach ssh FAILED, and Windows' own default is in force —
-> port 22 open to your local network."* The recovery command it offered failed
-> for the same reason. Only machines where SD installed ssh itself are
-> affected. Fix it with:
->
-> ```
-> powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\ssh-firewall.ps1" -Installed -Restrict
-> ```
->
-> It now reports *"ssh is reachable FROM THIS MACHINE ONLY"*. Check the current
-> setting with `-Show`, or look at the rule **OpenSSH SSH Server (sshd)** in
-> `wf.msc`.
+To restrict it again, or to check it, run:
+
+```
+powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\ssh-firewall.ps1" -Installed -Restrict
+```
+
+It reports *"ssh is reachable FROM THIS MACHINE ONLY"*. Check the current
+setting with `-Show`, or look at the rule **OpenSSH SSH Server (sshd)** in
+`wf.msc`.
 
 **Connecting to SD on your own machine is unaffected**, over IPv4 and IPv6
 alike — Windows does not filter traffic that never leaves the machine, so

@@ -15,10 +15,6 @@ which parameter controls it.
 > outside the administrator set. Where a page in another set is worth naming,
 > it is named in words.
 
-> Every figure here was read from the sources that define it, or counted
-> directly from this tree's own shipped directories, not from documentation
-> of another product.
-
 ## Data
 
 | | | |
@@ -34,15 +30,15 @@ concatenation, and to anything a program assembles in memory.
 
 **A record id may be longer than 63 characters only if `MAXIDLEN` is raised**,
 and the range starts at 63 rather than 0 — a lower value is refused at start-up
-rather than accepted. The ceiling of 255 is compiled, and the comment in the
-source notes that raising it would require major file-format changes.
+rather than accepted. The ceiling of 255 is compiled, because raising it would
+require major file-format changes.
 
 ## Files
 
 | | | |
 |---|---|---|
 | File types | **two** — directory and dynamic | compiled |
-| Group size for a dynamic file | **4 KB** by default (2 KB until 12 Nov 2026), maximum **8** | `GRPSIZE` |
+| Group size for a dynamic file | **4 KB** by default, maximum **8** | `GRPSIZE` |
 | Open files across all sessions | **80** | `NUMFILES` |
 | Maximum pathname length | **255** | compiled |
 | Sort keys in one query | **32** | compiled |
@@ -50,19 +46,15 @@ source notes that raising it would require major file-format changes.
 Group size is expressed in 1 KB units, so the compiled maximum of 8 is 8 KB.
 
 **A sort that outgrows `SORTMEM` is written to work files, and an item or a key may be of any
-length SD can hold** (16 Oct 2026). The lengths in a work file were 16 bits, so an item or a key of
-32 KB or more wrapped when a sort spilled to disk and the result was wrong; they are 32 bits now.
-The count of a sort that returned no data was also one short when the last record ended the file.
+length SD can hold.** The lengths in a work file are 32 bits, so an item or a key of
+32 KB or more is handled correctly when a sort spills to disk.
 
-**A split of a dynamic file stops before it changes the file when the disk cannot take it** (16 Oct
-2026). A dynamic file grows by splitting its groups. The split writes the new, empty group first and
+**A split of a dynamic file stops before it changes the file when the disk cannot take it**. A dynamic file grows by splitting its groups. The split writes the new, empty group first and
 only then advances the file's modulus; it does nothing if that write cannot be made, or if the file
-system holds less than 1 MB, and writes a line to the log. Before, a full disk could leave the modulus
-advanced with no group behind it, and the records that hashed there could not be found. **A split that
+system holds less than 1 MB, and writes a line to the log. **A split that
 fails after the new group has begun to be used still cannot be undone**: it logs the failure and
 writes the file's header, and the file needs a file check (`sdfix`, described in
-[sdfix, the File Check Tool](14-sdfix.html)). This was tested with a write
-limit standing in for a full disk; the free-space check itself was not driven.
+[sdfix, the File Check Tool](14-sdfix.html)).
 
 ## Sessions and locks
 
@@ -139,10 +131,10 @@ set's SD TCL syntax card.)
 | Parameters settable for the current session | **23** |
 
 The verb displays `DEBUG` and `FDS` only when they are set, and `TIMEZONE`,
-which is not a file parameter. No parameter is accepted and ignored any more:
-on 27 October 2026 the eleven that were (`APILOGIN`, `CODEPAGE`, `CREATUSR`,
-`EXCLREM`, `FIXUSERS`, `GDI`, `JNLDIR`, `JNLMODE`, `PORTMAP`, `RINGWAIT` and
-`TXCHAR`) were removed, and a line naming one now stops SD from starting;
+which is not a file parameter. No parameter is accepted and ignored: a line
+naming an unknown one (such as `APILOGIN`, `CODEPAGE`, `CREATUSR`,
+`EXCLREM`, `FIXUSERS`, `GDI`, `JNLDIR`, `JNLMODE`, `PORTMAP`, `RINGWAIT` or
+`TXCHAR`) stops SD from starting;
 *Configuration* in this set says how the installer takes them out of a kept
 `sd.conf`. `NETFILES` is not inert, because bit 2 gates API request 29, and
 *Configuration* says so.

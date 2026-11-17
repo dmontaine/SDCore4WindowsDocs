@@ -154,7 +154,7 @@ are not in SD Core for Windows:
 
 | Gone | Why |
 |---|---|
-| The old SDNet (`server;file` in a VOC entry) | Removed in September 2026, and a name with a semicolon in it stays unresolved. A new SDNet replaces it: it is off until the administrator turns it on, and it opens a file on another SD server through an `N` entry in the VOC (the *Administrator* set's *SDNet* page describes it). The API is the other way to reach another SD server |
+| The old SDNet (`server;file` in a VOC entry) | Removed, and a name with a semicolon in it stays unresolved. A new SDNet replaces it: it is off until the administrator turns it on, and it opens a file on another SD server through an `N` entry in the VOC (the *Administrator* set's *SDNet* page describes it). The API is the other way to reach another SD server |
 | Embedded Python (a Python interpreter loaded into `sd.exe` itself) | Gone permanently - `sd.exe`'s MSYS2 runtime cannot safely share a process with Python. Calling Python **from** a BASIC program is not gone: it runs as a separate helper process instead - see *SD BASIC - Python Integration* |
 | `sdlnxd` daemon | Linux-only; the Windows service replaces it |
 | `ENCRYPT.FIELD` verb | Removed; `sdencrypt()` and `sddecrypt()` in SDBasic are the supported route |

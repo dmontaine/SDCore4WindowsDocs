@@ -15,8 +15,7 @@ SD folds case, so a query may be typed in either case. Commands and keywords are
 shown here in lower case. In the tables, *italics* mark something you supply and
 **bold** marks a word typed as it stands; braces mark an optional part.
 
-> **Every listing on this page was produced by running it**, on SD Core for
-> Windows. The file being queried is `voc`, because it is the one file
+> The file queried on this page is `voc`, because it is the one file
 > every account has and it is interesting enough to ask real questions of.
 
 ## The shape of a query
@@ -36,7 +35,7 @@ count voc
 418 record(s) counted
 ```
 
-**That number is particular to the account it was run in.** Every account has
+**That number is particular to the account it is run in.** Every account has
 a `voc`, and no two need hold the same records — every ordinary account
 starts with the same set as every other, but local additions can differ, and
 `SDSYS`'s is larger to begin with. The counts on this page came from SDSYS.
@@ -76,8 +75,8 @@ entry that is empty for anything that is not a verb.
 ### The operators, and their synonyms
 
 **SD accepts several spellings of each operator** and they are exactly
-equivalent — the same token underneath. Each row below was run, and the
-spellings in a row returned identical counts on the same data.
+equivalent — the same token underneath. The
+spellings in a row return identical counts on the same data.
 
 | | |
 |---|---|

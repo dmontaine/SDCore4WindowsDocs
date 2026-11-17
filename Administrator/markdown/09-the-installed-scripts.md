@@ -51,7 +51,7 @@ machine and nothing about any other script.
 | **Set it through Group Policy** | **This one stops SD.** See below |
 
 **So if you loosened the policy to get SD working, you can put it back.** That
-was needed on builds before 5 September 2026, where SD's own commands failed
+was needed on earlier builds, where SD's own commands failed
 with *"running scripts is disabled on this system"*. It is fixed, and the
 workaround is no longer doing anything for you.
 

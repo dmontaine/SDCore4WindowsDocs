@@ -40,7 +40,7 @@ any `PY_` function, and the decision stands for the rest of the session:
 |---|---|
 | allowed | the helper starts (or a prior failure to start is retried) |
 | `-12041` | this session may not use the operating system, so it may not have Python either |
-| `-12042` | SD could not determine the permission at all - one line is written to the error log saying which. (Since 25 October 2026 the permission is a field of the account's record, read at account entry, so this answer is no longer given for a damaged `os.users` file) |
+| `-12042` | SD could not determine the permission at all - one line is written to the error log saying which. (The permission is a field of the account's record, read at account entry, so this answer is not given for a damaged `os.users` file) |
 | `-12040` | the session **is** permitted, but the helper itself could not be started or has died - typically no usable Python on the machine |
 
 SDSYS always has the permission, the same as it always has `SH` and
@@ -123,7 +123,7 @@ string values - not a general-purpose Python object store.
 
 ## Lists
 
-**`PY_LISTCREATE` is the newest of the twenty-one**, added 14 Sep 2026. The
+**`PY_LISTCREATE` is the newest of the twenty-one**. The
 opcode and the C-side dispatch for it existed since Python's return, but
 nothing in BASIC called it, so a list could be appended to and read but
 never actually made - `PY_LISTAPPD` on a name nothing had created simply
@@ -191,8 +191,7 @@ used; only the mechanism moved.
 
 **`-12040` used to mean all three of the last rows, and a caller could not
 tell them apart** - "Python is broken", "you don't have the permission",
-and "SD couldn't tell" all looked identical. Separated on the owner's
-ruling, 12 Sep 2026, because confusing them tells an administrator Python
+and "SD couldn't tell" all looked identical. They are separate because confusing them tells an administrator Python
 is broken when it is a permission, or tells an ordinary user they lack a
 right when the real problem is a missing Python install. `-12040` kept its
 narrower meaning; the other two are new.

@@ -36,7 +36,7 @@ gets both ssh and the API, which is what every account is entitled to. See
 
 ### A file that came and went in the same release: `tier.policy`
 
-**If you read, on 13 Sep 2026, that the tier lists moved to a dedicated
+**If you read that the tier lists moved to a dedicated
 `SDSYS tier.policy` file** (`omit.standard` and `add.administrator`,
 replacing the malformed-looking `TIER.OMIT.STANDARD` and
 `TIER.ADD.ADMINISTRATOR` VOC records) — that move was itself superseded five
@@ -255,6 +255,6 @@ configured; nobody has asked for one.
 
 [Accounts and Security](01-accounts-and-security.html) — the current
 account model in full. [Operating System Access](03-operating-system-access.html)
-— the `sh` and `os` switches (a later change: since 25 October 2026 they are
+— the `sh` and `os` switches (they are
 fields of the account, not entries in `os.users`). [Installation and the
 service](08-sd-installation.html) — what an upgrade replaces today.

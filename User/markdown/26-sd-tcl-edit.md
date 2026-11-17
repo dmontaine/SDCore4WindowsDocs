@@ -135,9 +135,7 @@ the account's `os-on` switch, the `OS.EXECUTE` switch.
 
 An editor runs outside SD, so it needs operating-system permission that `ed`
 does not. It comes from the `os-on` switch in the account's own record, **and
-only SDSYS can turn it on.** (Until 25 October 2026 it was field 2 of a record
-in the system file `os.users`, keyed to the person; that file is no longer
-read, and the permission now follows the account.)
+only SDSYS can turn it on.** The permission follows the account.
 
 **SDSYS reaches the operating system regardless of the register** — the same
 identity check that grants administration grants this too, so signing in as

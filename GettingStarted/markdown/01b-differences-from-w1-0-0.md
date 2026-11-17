@@ -48,8 +48,8 @@ did not work before: leaving SDSYS used to end the elevated session.
 
 **`SH` and `!` are back on ordinary accounts** — gated the same way they
 always should have been, by an administrator's grant
-(`modify.account <account> sh-on`; since 25 October 2026 a switch of the
-account, before that an `OS.USERS` record), not by whether the account could type
+(`modify.account <account> sh-on`, a switch of the
+account), not by whether the account could type
 the command at all.
 
 ## Passwords are stronger, and yours to change
@@ -162,8 +162,7 @@ server is now also told to refuse port forwarding, so `ssh -L`, `ssh -R` and
 `ssh -D` against the machine are refused. `scp` and `sftp` were already
 unreachable, because the session command was already forced.
 
-**An administrator's own account has no special ssh or API route** — that
-was tried and reversed the same day it was built (18 Sep 2026): the settled
+**An administrator's own account has no special ssh or API route** — the
 rule is that Windows administrator status changes nothing about what an SD
 account may do remotely. See [Reaching SDSYS](#reaching-sdsys) above.
 
@@ -248,8 +247,7 @@ else is affected. The installer can install Python for you from the release
 zip: see *Installation*.
 
 **Access follows the same rule as the shell.** Whatever governs `SH` and
-`OS.EXECUTE` for an account — its `os-on` switch (an `OS.USERS` grant until
-25 October 2026), or being SDSYS — governs
+`OS.EXECUTE` for an account — its `os-on` switch, or being SDSYS — governs
 Python too, since it can read and write files and start programs just as
 freely.
 

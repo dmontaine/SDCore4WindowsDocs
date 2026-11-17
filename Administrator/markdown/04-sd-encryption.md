@@ -46,10 +46,10 @@ the machine's.
 | | |
 |---|---|
 | The `encrypt.field` verb | Removed. It pointed at a program, `$CRYPTO`, which never existed in the GPL release, so the verb could not have worked in any build derived from it |
-| `encrypt()` and `decrypt()` | Removed upstream in July 2024 and replaced by `sdencrypt()` and `sddecrypt()`. The old names do not compile |
+| `encrypt()` and `decrypt()` | Removed upstream and replaced by `sdencrypt()` and `sddecrypt()`. The old names do not compile |
 
 **The Python half of SDEXT is no longer on this list.** It was removed along
-with the embedded interpreter, then rebuilt on 12 Sep 2026 as a separate
+with the embedded interpreter, then rebuilt as a separate
 helper process, `sdpy.exe`, rather than restored as a library inside
 `sd.exe` - the two cannot safely share a process (`long` is a different
 width on each side of the MSYS2 boundary). `SDPYFUNC.H` and its twenty-one

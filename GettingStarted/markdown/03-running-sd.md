@@ -74,7 +74,7 @@ PowerShell script whose own output is captured (`*> file`) returned, but the
 script went on waiting until SD was stopped: the background process kept a
 Windows handle to the script's output, which it cannot see to give back. Run
 `sd -start` directly as above, or use `sd -restart` or `Start-Service SD`, which
-were measured returning at once.
+return at once.
 
 ## After an unclean shutdown
 

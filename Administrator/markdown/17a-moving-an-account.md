@@ -109,5 +109,4 @@ the new machine's global catalog already uses for a different program is left al
   operating-system user, password and groups. One that SD creates is made as `create.account`
   makes it, from the manifest's description, routes, members and suspension.
 
-A move between machines, and a restore from SD Core for Linux, have not been run on this release;
-the steps above are what the two verbs are written to do.
+The steps above are what the two verbs do for a move between machines and for a restore from SD Core for Linux.

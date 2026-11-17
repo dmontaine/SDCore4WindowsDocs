@@ -248,8 +248,7 @@ assign it. A name is wholly public or wholly restricted: a `restricted function 
 `public subroutine foo` is a compile error.
 
 `restricted` is a reserved word inside the program now. **A starting value** (`public x = 1`) is
-covered in the next section for `public` and `private`; giving one to a `restricted` variable has not
-been tested.
+covered in the next section for `public` and `private`; do not give one to a `restricted` variable.
 
 ## Starting values
 

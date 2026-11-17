@@ -82,8 +82,7 @@ other account into SDSYS once a session has started. See
 > **This reverses how SD Core 1.0 and early 1.1 builds worked**, where any
 > Windows administrator's own account was an SD administrator, and `logto
 > sdsys` from an elevated session was the way in. If you read that in an
-> older document, or remember it from testing before 18 September 2026, it
-> no longer holds.
+> older document, it no longer holds.
 
 **SDSYS has its own Windows sign-in password**, set once during installation
 in the window that appears after the wizard closes. It is an ordinary

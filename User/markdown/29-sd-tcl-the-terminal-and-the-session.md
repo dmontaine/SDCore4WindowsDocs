@@ -57,8 +57,7 @@ upper left corner and stops taking keys while the cursor is off the screen — s
 the SED page. A `screen open` program of your own asks for the size it needs
 with `minsize`, and SD asks nothing more of it.)
 
-**SD's default is 140 columns by 43 lines, not 80 × 24** (it was 120 by 36
-until 25 October 2026, and 140 by 42 until 9 November 2026). It is what a session gets when there is no terminal to
+**SD's default is 140 columns by 43 lines, not 80 × 24**. It is what a session gets when there is no terminal to
 ask — a phantom, a piped script, a service — and a report that looks wrapped or
 truncated on a narrow window is usually the window, not the report.
 
@@ -313,9 +312,8 @@ executes `autologout 10` (`SDExecute("AUTOLOGOUT 10")`) has its server session e
 ten minutes in which it sent nothing, and its next request fails at once
 (see [SD Client API](37-sd-client-api.html)). The setting belongs to the one session that gave it.
 
-**It works in the full-screen programs too** (since 28 October 2026). The screen library, `ide`, the
-home screen and every tool page wait for a key one second at a time, and each of those waits used to
-start the timer again, so a session left in one of them was never logged out. SD now adds up the time
+**It works in the full-screen programs too.** The screen library, `ide`, the
+home screen and every tool page wait for a key one second at a time. SD adds up the time
 spent waiting across such short waits: only a key actually typed (or the break key) starts the period
 again, and the logout is the same as at the prompt. A page left open without typing, `tool.sessions`
 included, is therefore logged out like any other session. A program that waits for a key with no time

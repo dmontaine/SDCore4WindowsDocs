@@ -2,7 +2,7 @@ Title: Operating System Access
 Subtitle: The `sh` verb, and the per-account switch that decides who may use it.
 
 `sh` runs a Windows command from the SD prompt. (The `!` form, a shorter name for
-the same verb, was removed on 28 October 2026: write `sh command`.) **Each
+the same verb, does not exist: write `sh command`.) **Each
 account has its own switch for it, `sh-on`, and a new account does not have
 it** — SDSYS turns it on, account by account, with `modify.account`. Without it
 the verb refuses.
@@ -233,7 +233,7 @@ than relying on the helper alone to behave.
 
 **A Windows process cannot give up its own administrator rights, and SD tells
 you so.** The flag and the helper end at the `logto`, but the Windows process
-that is running the session stays elevated (measured: high integrity, 24
+that is running the session stays elevated (high integrity, 24
 privileges). A program that session starts, where the account's switches allow
 one, can use those rights. So, once per `logto` out of `SDSYS`, SD prints:
 *"This session started as an administrator and keeps its Windows administrator

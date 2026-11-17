@@ -71,8 +71,7 @@ is the fallback when nothing answers — a phantom or a piped script.
 
 ## The page is 140 × 43
 
-SD's default is **140 columns by 43 lines**, not 80 × 24 (it was 120 by 36
-until 25 October 2026, and 140 by 42 until 9 November 2026). A console window
+SD's default is **140 columns by 43 lines**, not 80 × 24. A console window
 narrower than that makes ordinary reports look wrapped or truncated — which
 reads as a formatting bug and is not one. `term 120,36` gives the old size
 back for a session that wants it.
@@ -111,8 +110,7 @@ Think before you give an entry an `erev` of its own: it ends reverse video and n
 
 Put the additions in `terminfo.mods` in the SDSYS account directory, which the installer compiles
 after `terminfo.src` so that an upgrade does not lose them, and compile with `sdtic` as described
-below. The start functions `@(-5)` and `@(-13)` were not changed. Tested with a copy of the `ansi`
-entry that has all five, a copy that has none and a copy with only `erev`.
+below. The start functions `@(-5)` and `@(-13)` are not changed.
 
 ## Compiling a definition
 

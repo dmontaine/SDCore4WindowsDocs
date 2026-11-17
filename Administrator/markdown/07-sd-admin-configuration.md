@@ -44,10 +44,9 @@ anything.
 An unrecognized parameter is not ignored. The parser abandons the file with
 `Unrecognized configuration parameter`, and SD does not start.
 
-That is why a name SD has dropped has to be taken out of the file. On 27 October
-2026 eleven parameters were removed (`APILOGIN`, `CODEPAGE`, `CREATUSR`,
+That is why a name SD has dropped has to be taken out of the file. Eleven parameters have been removed (`APILOGIN`, `CODEPAGE`, `CREATUSR`,
 `EXCLREM`, `FIXUSERS`, `GDI`, `JNLDIR`, `JNLMODE`, `PORTMAP`, `RINGWAIT` and
-`TXCHAR`), and `INVCASE` before them; `FILERULE` followed on 28 October 2026. The
+`TXCHAR`), and `INVCASE` and `FILERULE` are gone too. The
 installer removes those lines from an `sd.conf` it keeps across a re-install or an
 upgrade, and logs which it removed. A file copied in by hand must have them taken
 out before SD will start.
@@ -79,8 +78,8 @@ SD accepts **51** parameters. The verb prints all of them except `BACKUPDIR`,
 `NETDIRS` is the one to know about. It names the directories outside any
 account that an account **without** `os-on` may still open by their path (see
 [Accounts and Security](01-accounts-and-security.html#the-operating-system-switches-sh-on-and-os-on)).
-Since 25 October 2026 that holds for every session, a person at the console
-included; before, it held for an API session only. The verb will not tell you
+That holds for every session, a person at the console
+included. The verb will not tell you
 what it is set to. Read it from the file.
 
 The `config()` function reads one parameter from a program:
@@ -319,7 +318,7 @@ useful that would be; such a parameter joins the list when SD itself checks it.
 |---|---|---|
 | `NUMUSERS` | 20 | Maximum concurrent sessions. Sizes the user table in shared memory |
 | `NUMFILES` | 80 | Maximum open files across all sessions |
-| `NUMLOCKS` | 100 | Maximum record locks across all sessions. Range 1 to 32767 (the lock table's cells are 16 bits; a value outside it stops SD starting, which it did not before the check of 16 Oct 2026, when 40000 wrapped) |
+| `NUMLOCKS` | 100 | Maximum record locks across all sessions. Range 1 to 32767 (the lock table's cells are 16 bits; a value outside it stops SD starting) |
 | `MAXCALL` | 10000 | Maximum subroutine call depth. Range 10 to 1000000 |
 | `CMDSTACK` | 99 | Depth of the command stack |
 | `NETWAIT` | 5 | Seconds to wait for a connection to a server defined for SDNet (`set.server`, `set.netlogin`, a file opened through an `N` pointer): the TCP connection, then the TLS handshake, each. 1 to 3600; zero is refused |
@@ -334,7 +333,7 @@ useful that would be; such a parameter joins the list when SD itself checks it.
 
 | Parameter | Default | Effect |
 |---|---|---|
-| `GRPSIZE` | 4 | Default group size for a new dynamic file, in 1 KB units. Read by `create.file` and `configure.file` when no group size is given. **4 since 12 Nov 2026** (the shipped `sd.conf` said 2): Linux measured 200,000 records of 130 bytes with 5 to 11 percent of their groups overflowed at 2 KB and under 2 percent at 4 KB. A system that is already installed keeps the `sd.conf` it has, and so keeps 2 until you change it; a file keeps the size it was made with |
+| `GRPSIZE` | 4 | Default group size for a new dynamic file, in 1 KB units. Read by `create.file` and `configure.file` when no group size is given. **4**: Linux measured 200,000 records of 130 bytes with 5 to 11 percent of their groups overflowed at 2 KB and under 2 percent at 4 KB. A system that is already installed keeps the `sd.conf` it has, and so keeps 2 until you change it; a file keeps the size it was made with |
 | `MAXIDLEN` | 63 | Maximum record id length. 63 is also the lower bound |
 | `MUSTLOCK` | 0 | When 1, a `write` or `delete` requires the record to be locked first |
 | `DEADLOCK` | 0 | When 1, SD traps deadlocks |
@@ -371,7 +370,7 @@ server's runtime addresses them. `C:\WINDOWS\TEMP` and
 | `APILOCAL` | unset (0) | 1 makes the API listener (`APIPORT`) listen on `127.0.0.1` only, so only this computer can reach it; 0 or no line, every address. `remote.api local` writes it and `remote.api on` takes it away (see *Remote Access and the Machine*) |
 | `APIPORT` | 4247 | Switches the API on. Any number above zero means on, and SD listens on port 4247 whatever the number is; the port cannot be changed. If the line is absent no socket is created at all, which is how the API is turned off. A file that says `APIPORT=4243` still means on |
 | `BACKUPDIR` | unset | The folder `backup.account` and `restore.account` use. Set by `set.backup.directory`, not by hand - see [Backing Up and Restoring Accounts](01b-backup-and-restore.html) |
-| `NETDIRS` | unset | Directories outside any account that an account without `os-on` may still open by path (every session, since 25 October 2026), separated by semicolons because a Windows path contains a colon |
+| `NETDIRS` | unset | Directories outside any account that an account without `os-on` may still open by path (every session), separated by semicolons because a Windows path contains a colon |
 | `SDCLIENT` | 0 | Restricts what an API session may do. Non-zero disables file access outright (no file can be opened, so no dictionary can be evaluated either), refuses `SDIConv`, `SDOConv`, `SDIConvs` and `SDOConvs` a conversion code that reads a file (`T` with a file) or calls a program (`U`), and refuses `SDOpenSeq`, `SDExecute`, `SDTrans` and `SDRTrans`; `2` additionally refuses any subroutine not compiled as callable from a client |
 
 Unset is the strict value for `NETDIRS`. With nothing there, an API session can
@@ -487,13 +486,11 @@ client needs it. With bit 2 set the request is still refused unless the
 account's NET switch is on (`net-on`, off as delivered), and under `SDCLIENT`;
 when it opens the file, the connection's containment applies: only the account
 the session stands in, the shared `SDSYS` entries (read only) and the
-directories named in `NETDIRS`. This is read from the source and has not been
-run on an install. The SDNet **client** (`set.server`, `set.netlogin`, a VOC
+directories named in `NETDIRS`. The SDNet **client** (`set.server`, `set.netlogin`, a VOC
 pointer of type `N`; see [SDNet](12a-sdnet.html)) does not read `NETFILES`.
 
-There is no `FILERULE` parameter any more (removed 28 October 2026). **The
-`account:file` form of a file name is always available** (back on 3 November 2026,
-for programs moved from openQM): a name that is in no VOC record and has one colon,
+There is no `FILERULE` parameter. **The
+`account:file` form of a file name is always available** (for programs moved from openQM): a name that is in no VOC record and has one colon,
 such as `open 'sales:orders'`, opens that account's file exactly as a Q-pointer to it
 would, with the same checks: the account must be registered, the person must be able
 to `logto` it, and it must not be suspended. It reaches nothing a Q-pointer could not.
