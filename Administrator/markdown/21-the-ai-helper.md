@@ -22,7 +22,7 @@ When a person types `ai some text`, SD shows them the provider, the model and th
 
 SD adds nothing of the account, the session or the data. A person can of course type or paste whatever they like into the question, which is why the preview is not optional and why the gate is yours to give.
 
-**The standing text.** Every request, from the `ai` verb and from every AI line, begins with a few lines of yours: what SD is, how its commands are written, which gates there are, and where SD's help is. SD ships a default; you can replace it (see [The standing text](#the-standing-text) below). It is invisible to the person asking: it is not in their preview and it does not change their question. The preview's size counts it.
+**The standing text.** Every request, from the `ai` verb and from every AI line, begins with a few lines of yours: what SD is, how its commands are written, which gates there are, and where SD's help is. SD ships a default; you can replace it (see [The standing text](21a-the-ai-helper-set-ai-and-the-key.html#the-standing-text) below). It is invisible to the person asking: it is not in their preview and it does not change their question. The preview's size counts it.
 
 **Passages of the documentation.** The AI line (the home screen, the pages of the toolkit, the IDE, SED, the collection editor and the debugger; not the `ai` verb) also adds up to four sections of SD's own documentation that match the request, at most 2,400 bytes each and 6,000 in all. They are sent and counted in the preview's size, but the preview does not list them. The installer puts the markdown of the User and Administrator documents in `docs\user` and `docs\admin` under the system directory (`C:\ProgramData\SD\sdsys`), from the documentation repository (`SDCore4WindowsDocs`) beside the source on the machine that builds the installer. `docs` and `docs\user` are read-only for the group `sdusers`. **`docs\admin` is yours alone: only SYSTEM and the Administrators group can open it, there is no entry for `sdusers`, and the routine asks SD for the administrator before it looks there.** An account holder's request is never answered from those pages. An upgrade replaces the directory whole and locks it again, and it is not a place to put your own text. The installer is not built without the documentation repository, so an installed system always has the pages. This is documentation, not source: the rule below that the AI is never given SD's own code is unchanged.
 
@@ -124,128 +124,8 @@ An administrator-only full-screen page (140 columns by 43 lines at least; it is 
 
 Opening the page changes nothing and writes one audit line, `tool start app=tool.ai`.
 
-## The verb: `set.ai`
+## Continued in
 
-```
-set.ai
-set.ai provider anthropic | openai | google | deepseek | custom | none
-set.ai model PROVIDER NAME | -
-set.ai models PROVIDER
-set.ai key PROVIDER
-set.ai key PROVIDER handover
-set.ai key PROVIDER clear
-set.ai custom NAME URL FORMAT AUTH VERSION MAXPARAM
-set.ai custom clear
-set.ai ca PATH | -
-set.ai limit NAME NUMBER
-set.ai context HEX | -
-```
-
-For the administrator only (SDSYS's VOC). Alone it says what is set: the provider in use, each provider's address, model and whether its key is set, the certificate file and the limits. It never shows a key. `provider none` turns the AI off for everyone. `models` asks the provider, with its key, for the names of its models and prints them, one to a line. `model` keeps the name you give, and says so when the provider does not list it (`deepseek does not list a model named Deepseek-V4-Pro, so requests may be refused`, then `It lists deepseek-v4-pro (model names are case-sensitive)`). `key` hands the console to the helper's prompt; nothing typed there reaches SD. `key PROVIDER handover` is what the page runs: it hands the page's file to the helper's client and removes it. When a provider refuses a request, its own explanation is shown after the HTTP status (`the provider refused the request (HTTP 400): Model Not Exist`), cut to one line, with any copy of the key taken out; a refused key (401 or 403) shows only that the key was not accepted. A word may hold letters, digits and `. _ : / @ + , -` and nothing else, so **a path is written with forward slashes**: `set.ai ca C:/ProgramData/SD/ai/ca.pem`. The helper checks every result whole before it writes it: one provider selected means its details are complete, a Custom address is `https://` with no query string, a limit is a whole number in range.
-
-`set.ai` runs the helper's client, `C:\Program Files\SD\lib\sd-ai\sd-ai.exe`. The helper decides from the Windows user it reads off the pipe that the caller is the administrator, so the client needs no password.
-
-The limits, and what they are as delivered:
-
-| Limit | Delivered | Meaning |
-|---|---|---|
-| `requests-hour` | 20 | requests one Windows user may make in an hour |
-| `tokens-day` | 100000 | tokens (in plus out) one Windows user may use in a day |
-| `timeout` | 30 | seconds to wait for the provider (at most 300) |
-| `bytes-request` | 65536 | the most that may be sent in one request |
-| `bytes-reply` | 65536 | the most that may come back |
-| `max-tokens` | 1024 | the longest answer asked for, at the prompt (`ai`) and on every page: raise it for longer answers, lower it for shorter ones (a provider may refuse a figure above its model's own limit) |
-
-## The standing text
-
-Press **T** on `tool.ai` (or choose Provider, Standing text). A box shows the text that is sent first with every AI request from every account, and says whether it is SD's default or yours. Edit it there: Enter starts a new line and Tab moves to the buttons. **Save** shows the command and its effect in a Run / Cancel box (Enter chooses Cancel), and Run keeps your text. **Shipped default** removes yours, so SD's default is sent again. **Cancel** or Esc changes nothing.
-
-The default tells the AI that this is SD Core for Windows, that it should answer for SD and not for another multivalue product, that command words are lower case, which dictionary types there are, that access to the operating system, the shell and the API is a gate you turn on for each account, and where SD's help is: F1 and the `[?]` buttons, the documentation PDFs in the shared account, the SD BASIC guide and the knowledge pack under `C:\ProgramData\SD\sdsys\agent-pack` (for an AI agent that can read files on this machine), and the documentation on the web. Put your own site's facts in it, such as which accounts and files matter and how your programs are named.
-
-What is kept:
-
-- plain English: printable ASCII characters and new lines, at most 4,000 characters;
-- nothing that names SD's own code or build (`gpl.bp`, `gplsrc` and the other names of the screen above). Such a text is refused when you save it, with the line `set.ai context refused name=...` in the audit trail. A text that names them all the same (written into the helper's file by hand) stops every request, with `ai refused why=context`, until it is put right.
-
-The text is sent to the provider with every request, before SD's own instruction, and counts towards `bytes-request`. It is invisible to the person asking: it is not in their preview (the size shown there counts it) and their question is sent as they typed it. It is kept by the helper in `C:\ProgramData\SD\ai\context`, and only you can change it. An upgrade keeps it.
-
-At the prompt the verb takes the text as one word of hexadecimal (`set.ai context 48656c6c6f`), which is how the page passes a text of several lines; `set.ai context -` goes back to the default.
-
-## The gate for each account
-
-```
-modify.account NAME ai-on
-modify.account NAME ai-off
-create.account user NAME ai-on
-```
-
-The gate is membership of the Windows group `sdaiusers`, as `sdapi` and `sdfiles` are for the API and the files route. It is **off for every account** as delivered and for every new account; the installer's box *Open every access gate for your SD Core account* turns it on for the installing user's own account, with every other gate, and for no other. It is for accounts that belong to a person (a group account is refused), and `ai-on` needs the person to be a member of `sdusers`, as the other gates do. The line printed is `Account fred has ai yes`, read back from the group. It takes effect at the person's next request, with no new sign-in: the helper reads the group each time. `modify.account NAME ai-on ai-off` in one command is refused. An install from before this release has no `sdaiusers` group until the next install or upgrade makes it, and `ai-on` says the group is not a valid Windows group.
-
-SDSYS has no gate: the administrator, who chooses the provider and holds the key, may always use the AI, from the prompt (`ai`) and from the AI line of every page, once a provider, a model and a key are set. `modify.account sdsys ai-on` is not needed and is refused, as every `modify.account` of SDSYS is.
-
-The backup of an account records the gate (`route.ai`) and a restore puts it back.
-
-## The key
-
-The key is typed at the helper's own prompt (`set.ai key anthropic`) or in the setup dialog on the page. At the prompt it goes from your console straight to the helper's client and SD never sees it; the prompt shows one `*` for each character you type or paste (Backspace takes one back, Ctrl-U clears the line), so a long key shows that it arrived, and the key itself is never shown (the number of stars is its length, which anyone looking at the screen can count). From the dialog it passes through SD's memory and a hand-over file only SDSYS and SYSTEM can reach, which is removed at once (see above). Either way the helper encrypts it with DPAPI for its own account and writes it to `C:\ProgramData\SD\ai\keys\anthropic`, open only to the service and SYSTEM; SD does not keep it, print it or put it in the audit trail, and the page and the verb read back only whether it is **set**. `set.ai key anthropic clear` removes it. A key is never an argument of a command, so it is in no process list and no history.
-
-**The encryption protects a copy, not this machine.** A backup, a copied disk or a key file carried to another machine cannot be opened. On this machine an administrator can obtain the key (see [Security warning](#security-warning)).
-
-If a key is lost or shown to someone, clear it and ask the provider for a new one: SD cannot tell you who has seen it.
-
-## Custom: say it plainly
-
-Custom lets you point the helper at any `https://` address. The text people send, and the key, then go to that host. That is your deliberate act and it is the widest thing on this page. What stays fixed: https only (a local model server on `http://` is not allowed), TLS 1.2 or later, the certificate and the host name are always checked (there is no switch to turn that off), the helper never follows a redirect to another host, and the key is sent only to the address you gave. With no certificate file set, Windows itself checks the provider's certificate, as it would for a browser on this machine: the name, the dates, and a root Windows trusts, including a trusted root Windows fetches the first time it is needed (a newly installed machine holds only some of them). An address written as an IP number is checked against the roots already in the Windows store. A private certificate authority is the file you name with `set.ai ca` (a drive path written with forward slashes, of a file the helper can read); **it replaces the Windows store for the helper**, so whoever holds one of its keys can read what accounts send and the key. Use a file you trust, and `set.ai ca -` to go back to the Windows store.
-
-If you want only the four named providers, leave Custom unfilled.
-
-## The audit trail
-
-All in lower case, none with a key or the text:
-
-```
-ai request account=fred program=ai bytes.out=154
-ai refused reason=pipe.owner
-set.ai provider=anthropic
-set.ai model provider=anthropic model=claude-...
-set.ai key set provider=anthropic
-set.ai key set provider=anthropic from=page
-set.ai key cleared provider=anthropic
-set.ai custom name=MyLLM host=api.example.com
-set.ai ca file=C:/ProgramData/SD/ai/ca.pem
-set.ai limit name=tokens-day value=50000
-set.ai context bytes=1640
-set.ai context=default
-set.ai context refused name=gpl.bp
-ai refused why=context app=home name=gpl.bp
-modify.account ai-on account=fred
-tool start app=tool.ai
-```
-
-The `ai request` line is written by the SD kernel **before** the connection is made, with the account and the program that called, so a crash or a refusal still leaves the record. The Custom line names the host and never the whole address. The helper itself writes nothing to the audit trail; its own one line per request is in `C:\ProgramData\SD\ai\sd-ai.log`.
-
-## Troubleshooting
-
-Start with the service. In an ordinary or an elevated prompt:
-
-```
-sc.exe query sd-ai
-```
-
-A `STATE` line that ends `RUNNING` is what you want. `The specified service does not exist as an installed service` means it was never set up: see `install-aihelper.log` (see [Setting the service up again](#setting-the-service-up-again)). A service that is stopped and will not start writes the reason to the **Application** event log with the source **`sd-ai`** (Event Viewer, *Windows Logs*, *Application*), for example when a pipe of its name was already made by someone else. The installer's record of setting it up is `C:\ProgramData\SD\install-aihelper.log`, and the helper's own record of each request is `C:\ProgramData\SD\ai\sd-ai.log`.
-
-| What you see | What it means |
-|---|---|
-| `The AI helper could not be reached: it is not running, or it is not installed` | the service is not running, is not installed, or the pipe is not the service's (then the audit trail has `ai refused reason=pipe.owner`): `sc.exe query sd-ai`, the Application log, and `install-aihelper.ps1` |
-| `The AI is off: the administrator has not chosen a provider (tool.ai or set.ai)` | nothing is checked on the page (`set.ai provider ...`) |
-| `The AI is not set up for anthropic: the administrator has not set its key` (or `model`) | the provider is chosen but its key is missing; a model is missing only for Custom, which has no default (the named providers have one) |
-| `This account may not use the AI: the administrator can allow it with modify.account NAME ai-on` | the account's Windows user is not in `sdaiusers`, or the session runs as one of Windows' service accounts |
-| `The AI did not answer: limit (...)` | one of the limits above is used up; wait, or raise it |
-| `The AI did not answer: net (...)` or `timeout` | the provider could not be reached; check the address, the certificate, the clock, and whether the machine needs a proxy to reach the internet (the helper uses none) |
-
-## See also
-
-[Accounts and Security](01-accounts-and-security.html) ·
-[Giving an AI Agent an Account](18-the-agent-account.html) ·
-[Operating system access](03-operating-system-access.html) ·
-[The Audit Trail](20-the-audit-trail.html).
+[The AI Helper: set.ai, the Key and
+Troubleshooting](21a-the-ai-helper-set-ai-and-the-key.html) — set.ai, the
+standing text, the key and troubleshooting.

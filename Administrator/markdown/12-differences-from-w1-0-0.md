@@ -32,7 +32,7 @@ longer has a tier column; it shows the suspension state instead.
 **The route keyword on `create.account` is optional, and defaults to
 `BOTH`.** Leaving it out used to be a syntax error; now it means the account
 gets both ssh and the API, which is what every account is entitled to. See
-[Making an account: `create.account`](01-accounts-and-security.html#making-an-account-createaccount).
+[Making an account: `create.account`](01-accounts-and-security-2-making-an-account.html#making-an-account-createaccount).
 
 ### A file that came and went in the same release: `tier.policy`
 
@@ -53,7 +53,7 @@ letter, a digit and a symbol (any printable character that is not a letter
 or digit; a space counts). It applies everywhere SD sets a password —
 `modify.password`, `create.account`, an elevated session's first-run prompt,
 and the SDSYS password the installer asks for. See
-[Passwords: `modify.password`](01-accounts-and-security.html#passwords-modifypassword).
+[Passwords: `modify.password`](01-accounts-and-security-7-files-only-ai-and-passwords.html#passwords-modifypassword).
 
 **`modify.password` typed alone now changes the caller's own password, for
 every account** — before this it belonged to SDSYS alone, so an ordinary
@@ -191,7 +191,7 @@ being handed to a Linux print command that silently discarded it. Windows'
 "Let Windows manage my default printer" (on by default) makes the default
 printer become whichever one was last used *from any program*; on a
 multi-printer machine, either turn that off or always name the printer with
-`AT`. See [Printing](07-sd-admin-configuration.html#printing).
+`AT`. See [Printing](07b-sd-admin-configuration-api-printing-and-netfiles.html#printing).
 
 **`SENDMAIL` now reports that it is not supported, instead of reporting
 success and sending nothing.** SD Core on Windows has no mail transport

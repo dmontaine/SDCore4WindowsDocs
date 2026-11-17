@@ -139,7 +139,7 @@ editors, the embedded Python, or reaching an operating-system file by its path.
 They are governed by the other switch, `os-on`, which is independent: `sh-off`
 leaves it alone, and an account can be refused the shell and still run `edit`
 and `micro`, and the reverse. See [Accounts and
-Security](01-accounts-and-security.html#the-operating-system-switches-sh-on-and-os-on)
+Security](01-accounts-and-security-2-making-an-account.html#the-operating-system-switches-sh-on-and-os-on)
 for everything `os-on` covers.
 
 **The form that does go through this gate is `execute 'sh …'` from a program**,
@@ -200,7 +200,7 @@ administrator opens it for chosen addresses with `remote.sdsys api on`
 still deserves the same caution.** `os-on` plus API access on *any* account
 puts an operating-system shell behind that account's own credential,
 reachable from wherever the API is reachable from — see [What `os-on`
-actually costs](01-accounts-and-security.html#what-os-on-actually-costs). That
+actually costs](01-accounts-and-security-3-edit-switches.html#what-os-on-actually-costs). That
 risk did not go away with the tiers; it just no longer has anything to do with
 being an administrator.
 
