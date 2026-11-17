@@ -49,7 +49,11 @@ Only your text and SD's own text. `ai` does not add your account, your files, yo
 
 SD does not take questions about its own code or build (`gpl.bp`, `gplsrc`, the kernel) to the AI: it says so and sends nothing; the source is open, so ask an AI outside SD for that. In the editors, a record of SD's own files, such as a header in `syscom`, is never sent either.
 
-On SD Core for Linux the AI line (below, not the `ai` verb) also sends a few matching sections of SD's own documentation. SD Core for Windows does not install the copy of the documentation that it reads, so here no passages are sent and the preview shows none.
+### Passages of the documentation (the AI line, not the `ai` verb)
+
+When you ask in the AI line (the home screen, a page of the toolkit, the IDE, SED, the collection editor or the debugger), SD looks through its own User documentation, installed under `C:\ProgramData\SD\sdsys\docs\user`, for the sections that match your words and adds up to four of them to the request, so that the model answers from SD's pages and not from what it remembers of other multivalue systems. The preview shows how many passages there are and how many bytes, each one's page and section in brackets (for example `[user/01-sd-basic-program-structure.md#the-program-header]`) and its first four lines, and says how many lines more it sends. Nothing leaves until you choose Send, and Cancel is the default. A passage is at most 2,400 bytes and all of them 6,000. A request of common words, or of words no page holds, gets none. The model is asked to name the page it used, so you can find it in the documents. If you are the administrator, the pages written for the administrator are searched too; they are never searched for anyone else.
+
+If a page cannot be read, it is left out and the line works as it did. The `ai` verb adds no passages.
 
 ## The AI line on a page of the toolkit
 
