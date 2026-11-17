@@ -20,14 +20,15 @@ Reach it with `logto payroll`, or through an F pointer.
 ## Sharing a user account
 
 ```
-grant   <account> to   <user>
-revoke  <account> from <user>
-list.grants <account>
+modify.account <account> add    <user>
+modify.account <account> delete <user>
 ```
 
-**All three are SDSYS's, like every other administration verb** — they are
+**Both are SDSYS's, like every other administration verb** — they are
 not in an ordinary account's VOC at all, so typing them anywhere else says
-the verb is not recognized, not that you lack permission for it.
+the verb is not recognized, not that you lack permission for it. (`grant`,
+`revoke` and `list.grants` were removed in 2.0-0: these two do what the first
+pair did, and there is no verb that lists who is in.)
 
 **Read this twice, because it is the most confusing part of how SD controls
 access.** Entry to an account is membership of the Windows group named in
@@ -35,14 +36,12 @@ the account's record, and **Windows fixes group membership when you sign
 in**. So:
 
 - a grant does not reach the person until they sign out of Windows and back in;
-- and **somebody you have just revoked keeps the account until they do the
+- and **somebody you have just removed keeps the account until they do the
   same.**
 
-Both verbs print that reminder every time.
-
-**`list.grants`** also shows the account's own user, which is always there
-and is not a grant. It is listed anyway so that what you see matches the
-Windows group it is reporting.
+**To see who is in an account,** read its Windows group: `net localgroup
+sdu_`*name* (`sdg_`*name* for a group account). The account's own user is
+always there and is not a grant.
 
 > From an ordinary account the register is reached as `sd.accounts`, not
 > `accounts` — `list sd.accounts`, `ct sd.accounts fred`. There is no tier

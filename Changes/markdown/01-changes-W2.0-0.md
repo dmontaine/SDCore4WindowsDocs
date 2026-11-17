@@ -192,6 +192,7 @@ Statements, functions, `$mode` words and compiler directives.
 | `select.socket()` | Added | waits on the sockets held in a matrix <!--s 161 g176--> |
 | `selectindexv` family | Added | `selectindexv`, `selectleftv`, `selectrightv`: index scans into a select list variable <!--s g177--> |
 | `send` | Added | `writeseq`, or with a colon `writeblk`, to a file opened with `openseq` <!--s g178--> |
+| `set.socket.mode` trace | Added | `skt$info.trace` logs the data sent and received on a socket to a file only the session's own Windows user, SYSTEM and the Administrators can open; a link at the path or a folder is refused, and the gates of `openseq` apply |
 | `socket.info()` | Changed | fixed: `skt$info.open` on a number, a string or an unassigned variable stopped with a fatal error <!--s 249--> |
 | `!sort` | Changed | sorts a select list variable; the internal sort is open to programs <!--s 274 371--> |
 | `sort()` and sort variables | Added | `sort()`, `sortadd`, `sortclear`, `sortdata()`, `sortnext()`: several sorts at once in sort variables, up to 32 keys each with its own `srt$` flags, and 255 sorts open at once |
@@ -490,6 +491,7 @@ compiled with until it is compiled again.
 | PARSER$MFILE (!parser key 5) | Removed | PARSER$GET.TOKEN |
 | error 3031 (component not found) and 3032 (no component name) | Removed | none; the numbers are retired |
 | the Pick style matrix in the run-time system | Removed | nothing could make one since `$mode pick.matrix` went; the matrix descriptor type, its opcode (reserved), its flag and their branches in the kernel, the debugger and the process dump are gone, with messages 1136 and 1139, `readnext` mode 0, the wait path of a remote `write`/`delete` under `autolock`, and the option-flags field of a phantom's start-up record and its seal. No program changes |
+| `grant`, `revoke` and `list.grants` | Removed | write `modify.account` *account* `add` *user* and `modify.account` *account* `delete` *user* (the same group change and the same audit lines, as on SD Core for Linux); to see who is in an account read the members of its Windows group (`net localgroup sdu_`*name*); `list.voc.removed` names the replacement |
 | dictionary field numbers 9998 and 9999 | Removed | a `d`, `a` or `s` item whose location was 9998 gave the item count and one whose location was 9999 the record length in bytes; they are ordinary field numbers now. Write an I-type with `@ni` or `len(@record)` |
 
 ## New Features Unique to SD Core
@@ -520,7 +522,7 @@ the fixes to SD's own code. The sections above are the openQM items that were bu
 | `remote.sdsys` | Added | remote administration over ssh by a separate account, SDRADMIN (never a Windows administrator; one fixed list of account commands); shut as delivered and not asked about by the installer; opened only by the administrator, as SDSYS, with `remote.sdsys on` (or `ssh on`); `api on` with addresses or ranges, or `api on any`, opens the API door for SDSYS, `api off` shuts it; no keyword reports both; see Administrator 22 and 22a for what opening them means |
 | `list.voc.removed` | Added | administrator only: the VOC records SD no longer ships, with the release each went in and what to write instead; given an account, what the next `update.accounts` would do in it (changes nothing) |
 | `logto` by the administrator | Changed | runs no `login` paragraph of the account it enters and does not open the home screen: the administrator lands at the prompt (owner's ruling; an ordinary user's `logto` is unchanged) |
-| `modify.account` | Changed | takes more than one action in a command (`modify.account fred sh-on os-on voc-on`), all carried out or none; no action at all prints the usage; its messages and audit lines, and those of `grant`, name the account in lower case |
+| `modify.account` | Changed | takes more than one action in a command (`modify.account fred sh-on os-on voc-on`), all carried out or none; no action at all prints the usage; its messages and audit lines name the account in lower case; `add` and `delete` give and take away entry to an account (what `grant` and `revoke` did) and write an audit line each; suspending prints *Account X is now suspended* and one line saying that nothing on Windows changed |
 | `modify.account add` and `delete` | Changed | fixed: a program that ran the verb with `execute` read `@system.return.code` as -1 after a change that had been made; it is now 0 (done, or nothing to change) or a failure code |
 | `create.account` xfer word | Added | `create.account user <name> xfer-on` lets the new account's person move files with `receive` and `send`; off as delivered, user accounts only (`xfer-off` is for `modify.account`) |
 | `modify.account files-off` | Changed | fixed: deals with a leftover `sdfileswrite` membership instead of making it live at the next `files-on` |

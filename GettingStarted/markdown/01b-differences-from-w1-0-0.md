@@ -316,9 +316,10 @@ freely.
 - **`ssh -L` / `-R` / `-D` (port forwarding) against the machine** is
   refused.
 - **`CREATE.FILE ... CASE`** is refused; every file is nocase now.
-- **A file with two ids differing only by case** is left untouched by the
+- **A file with two ids differing only by case**, an indexed file, and a file
+  outside its account or under SDSYS are left untouched by the
   upgrade and named in `nocase-upgrade.log` — resolve those by hand, then
-  convert the file with `configure.file no.case`.
+  convert the file with `configure.file no.case`. SDSYS's own files are not walked.
 
 ## Continued in
 

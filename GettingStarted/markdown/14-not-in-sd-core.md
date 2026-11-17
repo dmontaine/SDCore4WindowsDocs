@@ -164,7 +164,8 @@ is the TCL verb that encrypted a field in place, and **nothing replaces that**.
 | `RDPACCOUNT`, `NO.RDPACCOUNT` | typing it now stops **`create.account`** with *Unexpected token (RDPACCOUNT)* and makes no account |
 | `CREATUSR` | **`config`** no longer lists it; `config('CREATUSR')` returns nothing. The parameter itself was removed on 27 October 2026, and a `CREATUSR` line in `sd.conf` now stops SD from starting (the installer takes it out of a kept file) |
 | `umask` | removed entirely. It controls POSIX file-mode bits, which Windows does not use for security — see [Security](12-security.html#what-ships-secured-before-you-change-anything) for what does the equivalent job here |
-| Field 4 of an `ACCOUNTS` record | the list of accounts allowed in. **`list.grants`** answers that question now |
+| `grant`, `revoke`, `list.grants` (removed in 2.0-0) | **`modify.account`** *account* **`add`** *user* and **`modify.account`** *account* **`delete`** *user* give and take away entry to an account, as SD Core for Linux does, and write the same audit lines; `list.voc.removed` names them as the replacement. There is no verb that lists who is in; the members of the account's Windows group are the answer (`net localgroup sdu_`*name*) |
+| Field 4 of an `ACCOUNTS` record | the list of accounts allowed in. The membership of the account's Windows group answers that question now |
 
 **Accounts already created with `RDPACCOUNT` keep their Windows sign-in.**
 Nothing goes round and takes it back, because SD did not record which accounts

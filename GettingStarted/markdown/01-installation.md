@@ -449,9 +449,11 @@ Every reason, warning and caveat that used to appear on them is here.
 - **The SDSYS password.** SDSYS is the administrator account: sign in to
   Windows as SDSYS and start SD Core from an **elevated** prompt. It is the
   only way to administer SD Core. In the finishing window, pressing Enter keeps
-  the current SDSYS password; typing a new one changes it (asked twice, not
-  shown; at least 8 characters with a lower-case letter, an upper-case letter,
-  a digit and a symbol). On a fresh install, pressing Enter keeps the generated
+  the current SDSYS password; typing a new one changes it (not shown; at least 8 characters with a
+  lower-case letter, an upper-case letter, a digit and a symbol). The rule is
+  checked before the repeat is asked for (*Repeat new password*), and there are three tries:
+  a failure says *ERROR: *, then the rule or *Passwords do not match.*, then
+  *That was attempt N of 3.* On a fresh install, pressing Enter keeps the generated
   password and shows it. If you do not know the SDSYS password, set one from an
   elevated PowerShell prompt:
 
@@ -520,7 +522,7 @@ PowerShell prompt. This is what each failure means until it is put right:
 | SD Core could NOT create an SD Core account for you | SD only admits accounts it creates and will not create one for a Windows account that already exists, so this is the one moment such an account can be made: running the installer again will not create it. The reason is in `attach-account.log` |
 | The AI helper service was NOT set up | Nobody can use the AI; nothing else is affected. The reason is in `install-aihelper.log`; run `install-aihelper.ps1 -Install` from `C:\Program Files\SD` (see *4. Python*, which also covers the AI helper) |
 | The OpenSSH server could NOT be installed | Usually a policy that blocks optional features, a metered connection, or no connection. Accounts cannot sign in over ssh until it is there (API-only accounts can use the API meanwhile) |
-| The dictionary, vocabulary or case-conversion step did not run | The upgrade kept what it had: SD Core works, a field added by the release may not be recognized, a command added by the release cannot be typed until `update.accounts` is run in SDSYS (answer Y), and records are still found typed in any case. If two record ids differ only by case the file is left unchanged: rename or delete one of each pair, then run `configure.file no.case` on it |
+| The dictionary, vocabulary or case-conversion step did not run | The upgrade kept what it had: SD Core works, a field added by the release may not be recognized, a command added by the release cannot be typed until `update.accounts` is run in SDSYS (answer Y), and records are still found typed in any case. If two record ids differ only by case, or the file is indexed, or it lies outside its account or under SDSYS, the file is left unchanged and the closing box says some files were not converted (`nocase-upgrade.log` names each): rename or delete one of each pair of ids, then run `configure.file no.case` on it, as its owner. SDSYS's own files are not walked |
 
 ### Uninstalling
 

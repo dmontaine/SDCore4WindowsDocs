@@ -225,6 +225,11 @@ configured; nobody has asked for one.
 
 - **A script naming a tier keyword** anywhere — creating, modifying, or
   lifting a suspension — is now a syntax error.
+- **A script that runs `grant`, `revoke` or `list.grants`.** All three were
+  removed in 2.0-0; `modify.account` *account* `add` *user* and `modify.account`
+  *account* `delete` *user* do what the first two did, with the same audit
+  lines, and there is no verb that lists who is in (the members of the account's
+  Windows group are the answer).
 - **A program or firewall rule that names API port 4243** no longer reaches
   SD. Name 4247.
 - **Going back to an older release with a `BACKUPDIR` line in `sd.conf`.** An

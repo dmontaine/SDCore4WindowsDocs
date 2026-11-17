@@ -51,6 +51,12 @@ no `no.case` or `case` word to give it): SD writes records preserving the
 casing given by whatever performs the write, and reads locate records
 regardless of casing.
 
+**An upgrade converts the files you already had**, account by account, and leaves
+what it cannot convert safely: a file with two ids that differ only by case, an indexed
+file, a file outside its account's directory or under SDSYS, and SDSYS's own files.
+`nocase-upgrade.log` names each one, and the installer's closing box says that some were
+left. The mechanics are in [Upgrading and uninstalling](01a-upgrading-and-uninstalling.html).
+
 ## One correction worth reading
 
 **`list` and `ct` used to disagree about the same name.** `list voc $HOLD`

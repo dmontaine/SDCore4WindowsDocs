@@ -162,7 +162,7 @@ DOCS = [
    release
  """),
  ('Administrator', '01-accounts-and-security.md', """
-   create.account grant list.grants load.help modify.account modify.password revoke
+   create.account load.help modify.account modify.password
    tool.gates tool.menus tool.accounts
  """),
  # THE MAINTENANCE VERBS MOVED TO 01a AND ONLY ONE OF THEM SAID SO.  tclmap

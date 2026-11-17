@@ -9,7 +9,7 @@ have forgotten its arguments, it is here. If you want to know what it
 braces an optional part, and a vertical bar separates alternatives. SD
 folds case, so any of this may be typed in either case.
 
-> This page lists every verb SD ships (**216** of them). The shapes come from the
+> This page lists every verb SD ships (**213** of them). The shapes come from the
 > subject documents, where each verb is described in full.
 
 **The "who" column is the VOC, not an opinion.** It is taken from the
@@ -19,7 +19,7 @@ not refused — the name is simply not recognized.**
 | | | |
 |---|---|---|
 | **every account** | 162 verbs | `newvoc`, identical for every ordinary account |
-| **SDSYS only** | 54 more | in `voc_template` but not `newvoc` |
+| **SDSYS only** | 51 more | in `voc_template` but not `newvoc` |
 
 ## The verbs
 
@@ -101,7 +101,6 @@ not refused — the name is simply not recognized.**
 | **`get.list`** | **`get.list`** *list* {**`to`** *list.no*} |  |
 | **`get.stack`** | **`get.stack`** {*name*} |  |
 | **`go`** | **`go`** *label* |  |
-| **`grant`** | **`grant`** *account* **`to`** *user* | S |
 | **`home`** | **`home`**  —  the home screen: tiles for the account's tools, a terminal, switch account and sign out |  |
 | **`hsm`** | **`hsm on`** \| **`off`** \| **`display`** {**`user`** *n*} |  |
 | **`hush`** | **`hush on`** \| **`off`** \| **`hush`** to toggle |  |
@@ -114,7 +113,6 @@ not refused — the name is simply not recognized.**
 | **`list`** | **`list`** {**`dict`**} *file* {*selection*} {*fields*} {*options*} |  |
 | **`list.common`** | **`list.common`** {**`all`**} {**`detail`**} |  |
 | **`list.files`** | **`list.files`** |  |
-| **`list.grants`** | **`list.grants`** *account* | S |
 | **`list.index`** | **`list.index`** *file* {*field* …} |  |
 | **`list.item`** | **`list.item`** {**`dict`**} *file* {*selection*} |  |
 | **`list.label`** | **`list.label`** {**`dict`**} *file* {*selection*} {*fields*} |  |
@@ -172,7 +170,6 @@ not refused — the name is simply not recognized.**
 | **`report.style`** | **`report.style`** {*name* \| **`off`**} |  |
 | **`restore.account`** | **`restore.account`** *archive* *name* … {**`no.query`**}  ·  **`restore.account`** *archive* **`all`** {**`no.query`**}  ·  **`restore.account latest`** *name* … \| **`all`** {**`no.query`**} | S |
 | **`restore.voc`** | **`restore.voc`** *account* *id*  ·  **`restore.voc`** *account* **`all`**  —  put back the newest saved copy of a record the VOC update removed; never overwrites | S |
-| **`revoke`** | **`revoke`** *account* **`from`** *user* | S |
 | **`run`** | **`run`** {*file*} *record* {*arguments*} |  |
 | **`run.in`** | **`run.in`** *account* {**`basic`** *file* *program* {**`debugging`**} {**`no.query`**} \| **`catalog`** *file* *program* {**`local`**} {**`no.query`**} \| **`decatalog`** *program* \| **`delete.catalog`** *program* {**`local`**} \| **`debug`** *file* *program* \| **`compile.dict`** *file* *item*}  —  the administrator runs one of these commands inside another account and is back in SDSYS afterwards, whatever happens to it; the account's LOGIN does not run and its **`basic`** never catalogs (it is given **`no.catalog`**); refused when a word of the command is not the VOC entry SD supplies in that account, when a file it writes lies outside the account, when a file it opens has a trigger, or (in a compile) at a **`$execute`** line | S |
 | **`save.list`** | **`save.list`** *list* {**`from`** *list.no*} |  |

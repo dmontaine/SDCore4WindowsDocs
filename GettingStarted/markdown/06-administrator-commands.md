@@ -59,19 +59,22 @@ here:
 **`clean.account`** tidies an account's workspace. **`update.accounts`** is
 the one you run in each account after upgrading SD.
 
-## Grants
+## Who may enter an account
 
 ```
-grant       <account> to   <user>
-revoke      <account> from <user>
-list.grants <account>
+modify.account <account> add    <user>
+modify.account <account> delete <user>
 ```
 
-**A grant or a revoke does not take effect until the person signs out of
+**`grant`, `revoke` and `list.grants` were removed in 2.0-0**; these two
+`modify.account` words do what the first pair did, with the same audit lines, and
+there is no verb that lists who is in (the members of the account's Windows group
+are the answer).
+
+**An `add` or a `delete` does not take effect until the person signs out of
 Windows and back in.** Entry to an account is Windows group membership, and
-Windows fixes that at logon. **Somebody you have just revoked keeps the
-account until they get a new token.** Both verbs print the reminder every
-time.
+Windows fixes that at logon. **Somebody you have just taken out keeps the
+account until they get a new token.**
 
 ## Passwords
 
@@ -234,8 +237,7 @@ no API route to arrive over in the first place — see
 **`create.account`** · **`delete.account`** · **`modify.account`** ·
 **`update.accounts`** · **`clean.account`** · **`backup.account`** ·
 **`restore.account`** · **`set.backup.directory`** · **`set.config`** ·
-**`settings.report`** · **`grant`** · **`revoke`** ·
-**`list.grants`** · **`unlock`** · **`config`** · **`listu`** ·
+**`settings.report`** · **`unlock`** · **`config`** · **`listu`** ·
 **`list.readu`** · **`list.locks`** · **`clear.locks`** · **`lock`** ·
 **`logout`** · **`set.date`** · **`remote.api`** · **`remote.ssh`** ·
 **`ssh.server`** · **`append.sd.path`**

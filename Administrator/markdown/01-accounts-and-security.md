@@ -33,7 +33,7 @@ page is refused outright to any session that is not actually SDSYS, whether
 or not that session is elevated:
 
 ```
-:list.grants don
+:modify.account fred add don
 Command requires administrator privileges
 :delete.account sdsys
 Command requires administrator privileges
@@ -226,6 +226,7 @@ these:
 | `OPENSEQ` and `OPENPATH` with a path | status 3035, so `OPEN ... ELSE` works as before |
 | `DIR()` and the `select.dir` verb | refused (the verb says why) |
 | `DELETESEQ` of a bare path | refused; the file is left alone |
+| the socket trace file (`set.socket.mode` with `skt$info.trace`) | `set.socket.mode` returns 0 and nothing is written |
 | `OPENTEMP` with a pathname or in the temporary directory, `DIGEST` of a file, and the file keys of `OSPATH()` | the `ELSE` branch, or a null result, with status 3035 (`DIGEST`'s `STATUS()` says the file is outside what the account may reach) |
 | `!OSCOPY`, `!IOSCOPY` and the `oscopy` verb | refused, status -4 (the verb says why) |
 | printing into a file by path (`setptr ... as pathname`, `SETPU`, or a `$hold` print name that climbs out with `..`) | refused |
@@ -319,7 +320,7 @@ stack commands on an existing VOC record. Making a new file is not asked. `cname
 program file out of its name, or put a file under one, for a person without the
 switch, so a rename is not a way round. `OPENSEQ` in such a place opens the file
 for reading only and cannot create one; `DELETESEQ`, a print file made there,
-and `!OSCOPY` or `!IOSCOPY` into it are refused. For these operating-system routes the name of the record or file
+the socket trace file (`set.socket.mode` with `skt$info.trace`, status 3035) and `!OSCOPY` or `!IOSCOPY` into it are refused. For these operating-system routes the name of the record or file
 being made counts only when it is itself a directory or anything but a plain
 file, so a plain file called `sample.bp` in an ordinary directory is not held
 back, while a file inside the directory `bp` is. Over the API a client's
@@ -507,7 +508,11 @@ command prints its usage.
 **Nothing about the account moves except the one field.** No Windows
 membership changes, no VOC changes — every account's VOC is the whole of
 `newvoc` regardless of the field. Three doors refuse a suspended account:
-signing in, `logto`, and the API.
+signing in, `logto`, and the API. **Suspending prints two lines**, *Account fred
+is now suspended* and *Nothing on Windows has changed: fred keeps its Windows
+account, its password and every group it belongs to, including any administrator
+rights it had.* A `logto` refused for a suspended account is audited with
+`reason=suspended`.
 
 ### The other keywords
 
@@ -1168,49 +1173,75 @@ so every visible sign said it had worked — while the password had already
 reached SD's command stack, and a shell's history and process list if the
 verb was reached from one. Refusing does not put it back, but it says so.
 
-The prompts are hidden, asked twice, and the account must already exist in
-the register. **`modify.password` cannot be scripted**, by design.
+The prompts are hidden, and the account must already exist in
+the register. **The rule is checked before the repeat is asked for**, and
+there are up to three tries:
+
+```
+A password needs at least 8 characters, with a lower-case letter, an upper-case letter, a digit and a symbol.
+New password:
+ERROR: A password needs at least 8 characters, with a lower-case letter, an upper-case letter, a digit and a symbol.
+That was attempt 1 of 3.
+New password:
+Repeat new password:
+ERROR: Passwords do not match.  That was attempt 2 of 3.
+```
+
+A password that does not meet the rule is refused at once and is not asked for
+again; one that does is asked for a second time, and a difference between the two
+says *Passwords do not match.* Each failure names which it was and says which
+attempt it was; the third ends the command with *ERROR: Password not changed.*
+and nothing is changed. An empty line at *New password* leaves the password as it
+was. `create.account user` asks the same way, with the same three tries, saying the
+rule first and asking *Retype new password*; its failure lines carry no `ERROR: `
+prefix.
+**`modify.password` cannot be scripted**, by design.
 
 **SDSYS's *Windows* sign-in password is a separate thing** — set once,
 during installation, and changed afterward the ordinary Windows way, not
 with this verb.
 
-## Who may enter an account: `grant`, `revoke`, `list.grants`
+## Who may enter an account: `modify.account add` and `delete`
 
 ```
-grant account to user
-revoke account from user
-list.grants account
-grant account              the same as list.grants
+modify.account account add user
+modify.account account delete user
 ```
 
-**The grant is Windows group membership and nothing is written to the
+**`add` and `delete` are the grant.** There is no separate `grant`, `revoke` or
+`list.grants` verb: they were removed in 2.0-0, and `list.voc.removed` names
+`modify.account` as what replaces them. **The grant is Windows group membership and nothing is written to the
 account record.** Every SD account has a Windows group — `sdu_`*name* for a
 user account, `sdg_`*name* for a group account — and entry to the account
-**is** membership of that group. These three verbs edit that group and
-read it back.
+**is** membership of that group. `add` puts a Windows user into that group and
+`delete` takes one out.
 
 | | |
 |---|---|
-| *There is no Windows account named %1* | `grant` to somebody who does not exist |
-| *%1 is already a member of group %2* | `grant` to somebody who already has it |
-| *%1 has not been granted account %2* | `revoke` from somebody who has not |
-| *Account not registered in ACCOUNTS file* | the account name is not one of SD's |
-| *Account %1 has no Windows group recorded* | a record predating the group model; it is **refused, not guessed at** |
+| *%1 added to group %2* | `add` worked |
+| *%1 removed from group %2* | `delete` worked |
+| *%1 is already a member of group %2* | `add` for somebody who already has it; nothing changed |
+| *%1 is not a member of %2* | `delete` for somebody who has not got it; nothing changed |
+| *%1 is not a member of sdusers, not allowed* | the person is not a Windows user SD knows (`add` only) |
+| *Unable to add user %1 to group %2 status: %3* | Windows refused the change |
+| *SDRADMIN is the remote administration account* | `add` of `sdradmin`, which joins no group account |
 
-**The account's own user is listed like any other member.** It is not a
-grant — creating the account put them there — but hiding it would make the
-listing disagree with the Windows group it is reporting.
+**To see who is in an account,** read the Windows group: `tool.accounts` shows a
+group account's members, and any account's group can be listed with `net localgroup sdu_`*name*
+(`sdg_`*name* for a group account) or in Windows' own tools. The account's own user is a member
+like any other. It is not a grant — creating the account put them there.
 
-**A successful `grant` or `revoke` writes an audit record** to SD's audit
-trail, stamped with the user and process that did it. The identity is
+**A successful `add` or `delete` writes an audit record** to SD's audit
+trail (`modify.account add account=`*name*` to=`*user* and `modify.account delete
+account=`*name*` from=`*user*), stamped with the user and process that did it. The identity is
 stamped by SD and is not passed in, so a caller cannot get it wrong or
 forge it. Windows records the group change in its own security log as
 well, and the two are independent records of the same act.
 
-> **`modify.account` *account* `add`/`delete` *user* makes the same group
-> change and writes no audit record.** Prefer `grant` and `revoke` when
-> there is a choice: they say what they mean and they leave a trail.
+**`delete` is deliberately unguarded**: taking access away is always allowed.
+**A change reaches the person at their next sign-in to Windows**, because
+Windows fixes a person's groups when they sign in; a person you have just taken out keeps the account
+until then.
 
 ## Continued in
 

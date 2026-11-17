@@ -31,6 +31,29 @@ release adds can be typed in accounts that already existed. This did not happen
 before W1.0-0: an upgrade replaced the shipped files and no existing account —
 including the system account — ever gained a new verb.
 
+**Your files are converted to case-insensitive record ids for you.** Every
+file `create.file` makes now treats ids as one whatever the
+case (see [Lower case](11-lower-case.html)), and an upgrade keeps your existing
+files, which were built case sensitive. So the upgrade walks every registered
+account, **naming each one as it goes** (*Account fred*), reads each file its VOC
+names first, and converts it only if no two of its ids differ only by case, so a
+conversion cannot lose a record. **`nocase-upgrade.log`** in `C:\ProgramData\SD`
+holds the whole walk. A file is **left exactly as it was** and named in the log when:
+
+- it holds two ids that differ only by case (rename or delete one of each pair);
+- it has alternate key indexes (*File has indices, so convert it by hand*);
+- it lies outside its account's directory, or under SDSYS (the log says how many,
+  and each is converted by its owner with `configure.file no.case`);
+- its work file could not be made or cleared (the file is named, so it can be
+  found).
+
+**SDSYS's own files are left as they are**: the walk does not go into SDSYS at all.
+When any file was left, the installer's closing box says so
+(*Some files were not converted to case-insensitive record ids*, with the log's
+name) and the step ends with a warning, not a failure; a file that could not be read
+or rebuilt is a failure and the box says so. Whatever was left keeps working: ids are
+still found typed in any case.
+
 **The parameters SD no longer has are taken out of a kept `sd.conf` for
 you.** SD refuses to start on a name it does not recognize, so when you install
 over a kept `sd.conf`, the installer removes each line that names a parameter

@@ -398,14 +398,9 @@ the one most people meet.)*
 
 **All of them are SDSYS's** — `create.account`, `modify.account`,
 `modify.password` for another account, `delete.account`, `clean.account`,
-`update.accounts`, `load.examples`, `remove.examples`, `config`, `grant`, `revoke`, `list.grants`. An ordinary
+`update.accounts`, `load.examples`, `remove.examples`, `config`. An ordinary
 account has none of these names at all — this is not a permission it
 lacks, the verbs are simply not in its VOC.
-
-**`list.grants` is gated the same way even though it only reads.** It
-answers *who may enter this account*, which is worth knowing before you
-have it, and the gate is at the top of the program the three grant verbs
-share.
 
 ## See also
 

@@ -24,7 +24,7 @@ back to case-sensitive ids.
 file that already holds two ids differing only by case — both are named in
 `nocase-upgrade.log` in the SD data folder. Resolve the pair by hand (rename
 or delete one), then convert that file yourself with `configure.file
-no.case`. A file with alternate key indexes needs the same treatment. See
+no.case`. A file with alternate key indexes, and one outside its account or under SDSYS, needs the same treatment. See
 *Lower case*, in the GettingStarted set, for the full mechanism.
 
 ## SD's own names are lower case, but every lookup still finds what you type
