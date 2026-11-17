@@ -91,8 +91,7 @@ Windows password, not something SD stores or checks — see
 [Accounts](05-account-types.html#sdsys-is-the-only-administrator).
 
 **`sd <command>` never asks you to set a password.** It runs and exits, so it
-is not a session anybody is being invited into. In earlier builds of this port
-it walked into a prompt it could never be given input for. See
+is not a session anybody is being invited into. See
 [Running SD](03-running-sd.html#the-command-line).
 
 ## Being a Windows administrator gets you nothing
@@ -234,24 +233,17 @@ The global catalog and the pcode library are locked the same way.
 
 ### The credential file
 
-**ON INSTALLS MADE BEFORE 17 Aug 2026, EVERY SD USER COULD WRITE THE FILE SD
-KEEPS ACCOUNT PASSWORDS IN.** No password is stored there — SD keeps a
-scrambled verifier that cannot be turned back into a password — but **being
-able to replace one was enough**: a user could put in a verifier for a password
-of their own choosing and sign in as somebody else, including through the API.
-
-The installer was always meant to lock that file down and never did. The step
-ran, reported nothing, and had no effect, because of a quoting fault in how it
-was called. **Nothing in the install looked wrong.**
-
-**Reinstalling is what fixes it.** To check without reinstalling, from an
+**No password is stored in the file SD keeps account passwords in**: SD keeps a
+scrambled verifier that cannot be turned back into a password. **Being able to
+replace one would be enough to take over an account**, so the installer locks
+the file to the administrators and SD's own service. To check it, from an
 **ordinary** (not administrator) prompt:
 
 ```
 icacls "C:\ProgramData\SD\sdsys\$CRED"
 ```
 
-If that prints permissions, the file is still open. **If it says "Access is
+If that prints permissions, the file is open: reinstall. **If it says "Access is
 denied", it is protected — which is what you want.**
 
 ## Continued in

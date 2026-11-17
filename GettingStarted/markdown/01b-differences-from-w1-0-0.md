@@ -119,7 +119,7 @@ you. Now it can only reach what your own Windows account may. See
 Windows will not let a process started the way an API login starts one
 launch anything that needs a desktop — which includes PowerShell. Console
 sessions and ssh are unaffected. See
-[`sh` and `OS.EXECUTE` are refused over the API](09-api-access.html#sh-and-osexecute-are-refused-over-the-api).
+[`sh` and `OS.EXECUTE` over the API](09-api-access.html#sh-and-osexecute-over-the-api).
 
 ## The API port is 4247
 

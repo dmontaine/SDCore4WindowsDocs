@@ -175,8 +175,8 @@ records with numeric ids were copied in; the skipping is what protects them. The
 the file header at once, so a power failure can leave it one behind the records; setting it with
 `configure.file … next` puts that right. The client library
 has it as `SDWriteSeqKey` and `SDWriteuSeqKey` ([SD Client API](37-sd-client-api.html)). On a file
-reached through an `N` pointer to another SD server it works only with the administration
-group on that server ([Programming with a Remote File](42-sd-programming-with-a-remote-file.html)).
+reached through an `N` pointer to another SD server the write goes to that server, which decides
+whether to allow it ([Programming with a Remote File](42-sd-programming-with-a-remote-file.html)).
 
 ### `fcontrol`: the counter, a test for an id, the minimum modulus
 
@@ -206,7 +206,7 @@ cannot do this action in SD*. Any action number SD does not know stops the progr
 knows* (message 12360). `FC$SYNC` works on a hashed file only (`status()` is 3005 on any other). The
 qualifier may be left out where the action does not use it. The internal programs' own function is called `fcontrol.int` and is not available to
 ordinary programs. On a file reached through an `N` pointer to another SD server the call goes to
-that server, and needs the administration group there (page 42).
+that server, which decides whether to allow it ([Programming with a Remote File](42-sd-programming-with-a-remote-file.html)).
 
 ### Forced writes: `sync`
 

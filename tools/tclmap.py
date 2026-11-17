@@ -112,6 +112,7 @@ DOCS = [
    basic catalog decatalog delete.catalog map run
  """),
  # 13 Nov 26 (RELEASE_1.1 269): 24 was cut in two; the program-development verbs and the IDE are explained on 24a.
+ # 17 Nov 26 (coordinator, D8): Linux's own page 24 is over the 14,000-character limit, so the split stays.
  ('User', '24a-sd-tcl-find-program-dictionaries-and-the-ide.md', """
    compile.dict debug delete.common find.program format generate ide list.common
  """),
@@ -148,19 +149,7 @@ DOCS = [
    ai
  """),
  ('User', '29c-sd-tcl-the-development-tools.md', """
-   tool.files tool.voc
- """),
- ('User', '29c1-sd-tcl-tool-dict.md', """
-   tool.dict
- """),
- ('User', '29c2-sd-tcl-tool-query.md', """
-   tool.query
- """),
- ('User', '29c3-sd-tcl-tool-bulk.md', """
-   tool.bulk
- """),
- ('User', '29c4-sd-tcl-tool-catalog-and-tool-test.md', """
-   tool.catalog tool.test
+   tool.files tool.voc tool.dict tool.query tool.bulk tool.catalog tool.test
  """),
  # 15 Nov 26 (RELEASE_1.1 299): file transfer, carried from Linux S.242 (Linux's map has the same entry).
  ('User', '29e-sd-tcl-moving-files-in-and-out.md', """
@@ -184,7 +173,8 @@ DOCS = [
  # arriving from the other direction: the name is on the page and the
  # explanation is not.  Each verb is assigned where it is actually explained.
  ('Administrator', '01a-account-maintenance.md', """
-   clean.account config delete.account list.voc.removed restore.voc set.date update.accounts
+   clean.account config delete.account list.voc.removed load.examples remove.examples
+   restore.voc set.date update.accounts
  """),
  # 9 Nov 26 (RELEASE_1.1 197): set.batch is explained on the scheduled jobs page of Getting Started; Core's Administrator guide has no such page.
  ('GettingStarted', '04-scheduled-jobs.md', """
@@ -210,14 +200,11 @@ DOCS = [
    set.job tool.jobs
  """),
  ('Administrator', '19-the-master-files.md', """
-   tool.entries
+   run.in tool.entries
  """),
  # 14 Nov 26 (RELEASE_1.1 247): the audit trail page, carried from Linux; in voc_template (SDSYS's set), not in newvoc.
  ('Administrator', '20-the-audit-trail.md', """
    tool.audit
- """),
- ('Administrator', '19b-run-in.md', """
-   run.in
  """),
  # 13 Nov 26 (RELEASE_1.1 246): Linux's page is Administrator 20; here 20 is the audit trail, so the AI is 21 (the help records name it).
  ('Administrator', '21-the-ai-helper.md', """

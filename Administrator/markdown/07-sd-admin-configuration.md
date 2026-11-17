@@ -143,7 +143,7 @@ A full-screen page in SDSYS's VOC only (a window of 140 columns by 43 lines or m
 it can change 14 of the parameters**; it writes no file itself. A change is made by the verb
 `set.config` (see *Changing a parameter from SD*, below) through SDSYS's elevated helper, and only
 after you have typed a value, the page has checked it against the range SD enforces and a box has
-shown the exact command and been answered Run. The other 37 parameters are not changed from SD;
+shown the exact command and been answered Run. The other 45 parameters are not changed from SD;
 editing the file as an administrator and restarting SD stays the way to change them.
 
 The page has three views. **P, the parameters**: one row for every parameter SD knows, from the table
@@ -252,9 +252,9 @@ command, a log or a security setting:
 | `SORTMRG` | 2 to 10 | session |
 | `USPLIT` | 0 to 1 | restart |
 
-**The other 37 are not changed from SD**, and the helper refuses them by name (a name it does not
+**The other 45 are not changed from SD**, and the helper refuses them by name (a name it does not
 know at all it refuses with a different sentence, because an unknown name in `sd.conf` stops SD from
-starting). They are the doors and what they allow (`APIPORT`, `NETDIRS`, `NETFILES`, `SDCLIENT`),
+starting). They are the doors and what they allow (`APILOCAL`, `APIPORT`, `NETDIRS`, `NETFILES`, `SDCLIENT`),
 every path and command, the log, dump and diagnostic settings, the security throttle `PWDELAY`, the
 sizes and combinations that SD does not check or checks against each other, and the ones that change
 what existing programs compute. Change them by hand, as before. The page shows the same sentence in
@@ -262,6 +262,7 @@ its box:
 
 | Parameter | Why it is not changed from SD |
 |---|---|
+| `APILOCAL` | A door: it decides whether the API listener is reached by this computer only. `remote.api local` and `remote.api on` write it. |
 | `APIPORT` | A door: it opens the API listener to the network. |
 | `BACKUPDIR` | A directory: set.backup.directory saves it, with its own checks of the path. |
 | `CMDSTACK` | Sizes a table in shared memory and SD checks no range: a mistake shows only at the next start. |
@@ -367,6 +368,7 @@ server's runtime addresses them. `C:\WINDOWS\TEMP` and
 
 | Parameter | Default | Effect |
 |---|---|---|
+| `APILOCAL` | unset (0) | 1 makes the API listener (`APIPORT`) listen on `127.0.0.1` only, so only this computer can reach it; 0 or no line, every address. `remote.api local` writes it and `remote.api on` takes it away (see *Remote Access and the Machine*) |
 | `APIPORT` | 4247 | Switches the API on. Any number above zero means on, and SD listens on port 4247 whatever the number is; the port cannot be changed. If the line is absent no socket is created at all, which is how the API is turned off. A file that says `APIPORT=4243` still means on |
 | `BACKUPDIR` | unset | The folder `backup.account` and `restore.account` use. Set by `set.backup.directory`, not by hand - see [Backing Up and Restoring Accounts](01b-backup-and-restore.html) |
 | `NETDIRS` | unset | Directories outside any account that an account without `os-on` may still open by path (every session, since 25 October 2026), separated by semicolons because a Windows path contains a colon |

@@ -139,8 +139,9 @@ OpenQM and ScarletDME also use. `sd.conf`'s `APIPORT` now only switches the API
 on: any number above zero means on, and SD listens on 4247 whatever the number
 is. A file that says `APIPORT=4243` keeps working and means 4247. A program that
 names port 4243 must name 4247 instead; one that names no port needs no change.
-The server accepts API connections on any network interface. **Earlier builds of this port shipped it commented out
-and listened on `127.0.0.1` only**, which is why an ssh tunnel was needed.
+The server accepts API connections on any network interface, unless
+`remote.api local` has limited it to `127.0.0.1` (`APILOCAL=1` in `sd.conf`),
+in which case only this computer can connect.
 
 **If you tunnel, stop.** `ssh -L 4247:127.0.0.1:4247 user@host` still works
 but is no longer what the design expects, and it is not tested. Point the
@@ -231,20 +232,12 @@ REACHABLE from an API session, and cannot be added to `NETDIRS`.**
 and the session reaches files with your access rather than the service's. If
 your account may not read something, the API session may not read it either.
 
-This was not true before 24 Aug 2026, and the way it failed is worth knowing
-because it was invisible: taking on your Windows identity applied only to the
-one thread that did it, and starting a short-lived helper process during the
-switch quietly put the session back to the service's own identity — **with no
-error and nothing in the log** — before it had opened a single file. So the
-login half worked and the part you would notice did not: records came out owned
-by the system account.
-
-**If your identity cannot be taken on, the login is now refused** rather than
+**If your identity cannot be taken on, the login is refused** rather than
 continued with the service's identity. A session that believes it is you while
 holding the service's rights is worse than one that never started.
 
 **There is an alarm for the condition returning.** If a session ever believes
-it is you while Windows says it is not, the error log gets:
+it is you while Windows says it is not, SD's error log gets:
 
 ```
 API IDENTITY LOST at record write - session believes it is ...
@@ -252,17 +245,25 @@ API IDENTITY LOST at record write - session believes it is ...
 
 Nothing is written when the two agree, so **a healthy session is silent** and
 you should never see this. It refuses and slows nothing; it exists so the
-condition cannot go unnoticed a second time.
+condition cannot go unnoticed.
 
-## `sh` and `OS.EXECUTE` are refused over the API
+## `sh` and `OS.EXECUTE` over the API
 
-**Before this port they were not refused**, and on Windows that turned out to
-be worse than it sounds: **an API session ran as the LocalSystem account**, so
-a remote client could run any command on the machine with full privilege —
-more than the administrator sitting at the keyboard gets.
-
-An API session is no longer treated as an administrator for any purpose, which
-is what SD's own code already assumed and did not enforce.
+**They follow the account's switches, the same as anywhere else.** The
+per-account switches `sh-on` and `os-on` are read when a session enters its
+account, and by the API server when it enters the account for an API session,
+so an account that holds `sh-on` has the `sh` verb over the API, one that holds
+`os-on` has `OS.EXECUTE`, and a new account has neither. **That puts a shell
+behind the account's API credential, reachable from wherever the API port
+is**: weigh it before you turn either on for an account that also has the
+`api` route. SDSYS is the exception: an API session is not treated as an
+administrator for any purpose, so there is no shell over the API for it; use
+the local sign-in. An API session runs with the signed-in user's own rights,
+never as the service's LocalSystem account. `SDCLIENT` in `sd.conf` is the
+further control, if a site wants one: see the *Administrator* set's
+*Configuration* chapter. One limit is Windows': a process started the way an
+API login starts one cannot launch anything that needs a desktop, which
+includes PowerShell (see [Differences from W1.0-0](01b-differences-from-w1-0-0.html)).
 
 ## Client libraries
 
