@@ -26,7 +26,9 @@ files of the `shared` account, [The Shared Account](13-the-shared-account.html),
 and not write them). Say nothing and it has no ssh, no API, no `sh` and no
 `OS.EXECUTE`, it cannot save a change to a VOC, a program file or a
 dictionary, it has no right to use a server defined for SDNet, no
-files-only login and no use of the AI; you open each one by naming it. `ssh`, `api` or `both` give
+files-only login and no use of the AI; you open each one by naming it. **That includes the account of the user who ran the installer: a first install
+leaves the `sdssh` group empty, so that user has no ssh until the installer's "open every gate" box was ticked or you
+run `modify.account` *name* `ssh`; an upgrade keeps the ssh access the system had.** `ssh`, `api` or `both` give
 the remote routes (`none` is the default and is accepted so that a script can
 say so); `files-on` gives the narrower files-only API route (below, *The
 files-only route*); `sh-on` and `os-on` give the two operating-system switches,

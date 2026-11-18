@@ -160,7 +160,8 @@ pins on the home screen, no recovery copy of unsaved editor text, no file transf
 (`receive` and `send`). Tick the box and the installer opens every one of those on your account,
 reads the result back, and the last screen says whether they all opened; if any
 did not, `C:\ProgramData\SD\attach-account.log` names each one and the word to
-give for it. It opens only your account. `files-admin-on` administers files on
+give for it. It opens only your account. **A first install leaves the `sdssh` group empty:** unticked, nobody can sign in over ssh until SDSYS runs `modify.account` *name* `ssh`. An upgrade
+keeps the ssh access the system had. `files-admin-on` administers files on
 this server over the files-only login, and `ai-on` lets your account send text
 to the AI provider SDSYS chooses (nothing is sent until a provider and its key
 are set), so tick the box only on a machine where you want both. File transfer also needs `XFER=1` in

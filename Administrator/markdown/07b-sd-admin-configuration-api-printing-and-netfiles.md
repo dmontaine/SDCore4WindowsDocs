@@ -149,7 +149,8 @@ account's own directory and the shared `SDSYS` entries, and after the `os-on` an
 
 **Entries SD ignores.** An entry is left out, and named in the error log when SD
 starts, when it is not an absolute path, is not an existing directory, is the
-root of a drive, or holds or lies inside the SD system directory, the directory
+root of a drive, is the root of a network share (`\\server\share` or `//server/share`, with nothing below the share:
+it holds a whole volume, as a drive root does), or holds or lies inside the SD system directory, the directory
 of `sd.conf`, the user or group accounts directory (`USRDIR`, `GRPDIR`), or the
 directory of any registered account. An account created later inside a listed
 directory closes that entry at once. At most 16 entries are taken.

@@ -111,6 +111,11 @@ logon, `AllowGroups` decides who may connect at all — and it names one group,
 `modify.account` put in `sdssh`.** A session that is not a member is refused
 at authentication, before sshd even reaches `ForceCommand`.
 
+**A first install leaves `sdssh` empty**, so nobody can ssh in until an account is
+given the route. The user who ran the installer gets it by ticking the installer's
+"open every gate" box, or later through `modify.account` *name* `ssh`; an upgrade keeps
+the ssh access the system had.
+
 **SD limits ssh to accounts with the `sdssh` route and puts every one of those
 sessions straight into SD.** The installer offers no choice about it; the page
 *Before you install* describes it, with the scp cost stated plainly. A machine

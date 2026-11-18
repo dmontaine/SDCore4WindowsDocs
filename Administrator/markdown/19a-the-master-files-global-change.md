@@ -8,20 +8,25 @@ This page continues [The Master Files](19-the-master-files.html).
 **`G` makes one change to every row the page shows, in every account the rows come from.** The rows
 are exactly those on the screen: the hits of a find (`F`, every account) or the entries a filter
 (`/`) keeps in the account under the cursor. A filter or a find must be on, and a list cut short at
-the page's limit is refused (narrow it until every row is shown). `G` asks what to change:
+the page's limit is refused (narrow it until every row is shown). `G` asks what to change **on one
+form, titled *Global change*, with the button *Preview***; Tab moves between the fields, and a
+refusal is said on the form, which stays open until every answer passes or you cancel:
 
-- **VOC entries and dictionary items**: the field, by its number (1 to 500) or, for a dictionary
-  item, the word `heading` (field 4 of a D, I, E or L item; an item of another type is refused for
-  having no heading), then `S` to set the field to a value or `R` to replace a text in it with
-  another (an empty replacement takes the text out).
+- **VOC entries and dictionary items**: four fields. *Field* is its number (1 to 500) or, for a
+  dictionary item, the word `heading` (field 4 of a D, I, E or L item; an item of another type is
+  refused for having no heading). *Change* is a choice, `replace` or `set`. With `replace`, *Text to
+  replace* is taken out of the field and *With, or the value* goes in its place (empty takes the text
+  out); with `set`, the field becomes *With, or the value* (empty empties it) and *Text to replace*
+  is not used. A text to replace may not be empty.
 - **Field 1 is the type of the record** (a VOC entry's V, F, Q, PA ...; a dictionary item's D, I,
   PH ...), and changing it turns a verb or a pointer into something else. `G` therefore changes it
-  on **one record only**: when more than one record is shown it is refused before the box
+  on **one record only**: when more than one record is shown the form refuses it, before the preview
   (`field 1 is the type of the record: G changes it on one record only, and 3 are shown ...`), and
   on a single record the box carries a **WARNING** line with the old and the new type (`"X" ->
   "PA"`). Cancel is still the default, and `U` puts field 1 back like any other field (field 1 is
   excluded from batch actions and allowed on a single item with a confirm warning).
-- **Programs**: a text to replace in the source and what replaces it. Each program changed is then
+- **Programs**: two fields only, *Text to replace* and *Replace it with*, for the source of every
+  program shown (an empty second text takes the first out). Each program changed is then
   compiled again **in its own account** through `run.in` (as `C` does), and is counted as failed
   when the compiler does not say it compiled.
 

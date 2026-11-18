@@ -126,6 +126,10 @@ Every reason, warning and caveat that used to appear on them is here.
   strong one and shut the door (`remote.sdsys off`, `remote.sdsys api off`)
   when it is not needed. See the Administrator set's *Remote administration
   over ssh* and *Remote administration through the API*.
+- **A first install gives nobody ssh.** The group `sdssh` is made empty. Your own
+  account gets ssh if you tick the installer's "open every gate" box; otherwise
+  SDSYS gives it with `modify.account <name> ssh`. An upgrade keeps the ssh access
+  the system had.
 - **Giving somebody else access.** At the machine itself, sign in to Windows
   as SDSYS and type `sd`, elevated, then `create.account user <name> ssh`.
   Windows asks you to confirm at the UAC prompt: do it at the machine,

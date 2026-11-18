@@ -272,7 +272,8 @@ opens only when it starts, so `A`'s form asks whether to restart SD now (`later`
 restart ends every SD session, this page's too. Answered `later`, the setting waits for the next start of SD.
 
 `remote.api`, `remote.ssh`, `delete.server` and `remote.sdsys off` run through the routine all the toolkit pages use, each only after a
-box that shows the command and what it does was answered Run (**Cancel is what Enter chooses**);
+box that shows the command and what it does was answered Run (**Cancel is what Enter chooses**); while the change runs the status line says
+"Making the change (a few seconds)...";
 `set.server` and `remote.sdsys on` are run by the verb itself on the terminal, after the same box. The verbs
 ask for the administrator again and write their own audit lines; the page writes nothing. `F5` reads
 everything again, `F1` explains the page and `Ctrl-Q` leaves. Opening the page writes the audit line

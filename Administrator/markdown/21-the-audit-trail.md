@@ -40,6 +40,15 @@ pipe name someone else made first and refuses connections from other computers.
 wrote the trail; such a line's `user=` is the name the session gives, without a domain. A run of such
 lines therefore marks a time when the service was down.
 
+**Every record also goes to the Windows Application event log**, whether the service or the session wrote the
+trail: the source is `sd-audit`, the level Information and the event id 1, and the event is stamped with the
+Windows user of the session that made the record. The copy never stops the trail's own write: a machine whose
+event log cannot be reached still writes the trail, and the copy is skipped without a message. The installer
+registers the source on a first install and on an upgrade. **The copy is a convenience, not a protected
+record**: any program on the machine can write events under the source name `sd-audit`, so a line there proves
+nothing by itself. The trail file, with its permissions, is the record; the event log lets you read it with the
+tools you already use for Windows.
+
 The service takes at most **600 records from one Windows user in any 60 seconds** and drops the rest;
 when that user's minute is over it writes one line saying how many were dropped. The limit is compiled
 in and is not a setting.

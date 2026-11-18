@@ -46,7 +46,8 @@ and security* chapter has the full rule.
 `NETDIRS` in `sd.conf` lists directories outside every account that an account
 without `os-on` may read and write by pathname, as it may inside its own
 directory. It is empty as delivered; the Administrator set's *Configuration*
-chapter has it.
+chapter has it. An entry that is a drive root or the root of a network share
+(`\\server\share`) is refused, because it would hold a whole volume.
 
 **Four rules hold for all of them:**
 

@@ -215,7 +215,7 @@ is where the answer is — a suspended account shows it in that listing.
 
 Name the directory in the **`NETDIRS`** setting in `C:\ProgramData\SD\sd.conf`,
 separating several with a semicolon. Nothing else needs changing. An entry that is not an
-absolute path, not an existing directory, a drive root, or that overlaps the SD system
+absolute path, not an existing directory, a drive root, the root of a network share (`\\server\share`), or that overlaps the SD system
 directory or any account is ignored and named in the error log when SD starts; the Administrator
 Guide's *Configuration: The API, Printing and the Rest* has the rules. `config('NETDIRS')` does
 not read it: read the file.

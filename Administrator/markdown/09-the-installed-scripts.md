@@ -233,7 +233,9 @@ powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\sync-route-groups.
 
 Exit **0** success, **1** failure; it prints what it did either way. It creates
 the groups that decide which remote route an SD account may use, and seeds
-`sdssh` so an install that predates them does not lose ssh. `-Check` prints
+`sdssh` from `sdusers` so an upgrade from an install that predates them does not
+lose ssh; on a first install the installer passes `-FirstInstall` and `sdssh` stays
+empty. `-Check` prints
 what it would do and changes nothing.
 
 ### Re-stamping the account directories
