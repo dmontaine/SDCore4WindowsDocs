@@ -146,7 +146,8 @@ on (see [Moving an Account](17-moving-an-account.html)).
   in the group; `ssh-key-on` afterwards if it should have it.
 * **The group must exist.** It fails open: if `sdsshnokey` is missing or cannot be read, the
   ssh server offers keys according to the machine's own settings, and `create.account`
-  refuses to make a user until the group is there.
+  refuses to make a user until the group is there (nothing is created; an account made with
+  `ssh-key-on`, or an attached user, is not put in the group and is not asked about it).
 
 ### `suspended`/`unsuspended` is a state, not a tier
 

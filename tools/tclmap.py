@@ -247,11 +247,11 @@ DOCS = [
  ('Administrator', '01a-account-maintenance.md', """
    list.voc.removed restore.voc
  """),
- ('Administrator', '22-remote-administration-over-ssh.md', """
-   remote.sdsys local.sdsys
- """),
  ('Administrator', '19-the-master-files.md', """
    run.in
+ """),
+ ('Administrator', '22-remote-administration-over-ssh.md', """
+   remote.sdsys local.sdsys
  """),
  ('Administrator', '07-sd-admin-configuration.md', """
    set.config

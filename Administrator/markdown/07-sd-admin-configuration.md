@@ -73,6 +73,7 @@ APIPORT   4247
 CLEANUP   300 seconds
 CMDSTACK  99
 DEADLOCK  0
+DHCACHE   10
 DUMPDIR   C:\ProgramData\SD\sdsys\dumps
 ERRLOG    50 kb
 ...

@@ -49,8 +49,8 @@ and nothing else changes:
 
 | | |
 |---|---|
-| **`edit`** | **Microsoft Edit** — ships in current Windows builds |
-| **`micro`** | **micro** — never ships with Windows; the installer fetches it |
+| **`edit`** | **Microsoft Edit** — comes with SD, beside `sd.exe` |
+| **`micro`** | **micro** — comes with SD, beside `sd.exe` |
 
 ```
 edit  bp myprog

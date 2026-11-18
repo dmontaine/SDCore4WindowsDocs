@@ -215,13 +215,13 @@ and the whole debugging family — `debug.on`, `debug.off`, `debug.set`,
 Commands* page carries the same names.
 
 **`errmsg` is not a statement at all.** It compiles to *"Unrecognized
-statement"* for everybody, as any word the compiler does not know does. It was
-removed from the compiler's statement table.
+statement"* for everybody, as any word the compiler does not know does. It is
+not in the compiler's statement table.
 
 **`sendmail`, `chgphant()` and `ccall()` compile for an ordinary account**, and
 each needs something outside SD before it can do anything: `sendmail` a mail
 relay, `chgphant` a phantom to change, and `ccall` a C function registered into
-the executable. Nothing on this page depends on them.
+the executable. Nothing on this page depends on them. `sendmail` takes its `else` on Windows, which has no mail command to hand a message to: `status()` is then 12 (*This operation is not supported on this platform*) and nothing is sent.
 
 ## See also
 

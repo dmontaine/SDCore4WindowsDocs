@@ -86,7 +86,8 @@ Two limits are worth knowing before you rely on it.
 or a dictionary (`voc-on`, `bp-on`, `dict-on`). But accounts made before those
 switches existed have always had all of it, so when you kept your accounts the
 installer copies the old `os.users` list into the switches, **once**, and switches
-the three edit switches on for every user account; ssh and the API are left as
+the three edit switches on for every user account in the register whose field is
+blank; group and other accounts are left off on purpose; ssh and the API are left as
 they were. Turn any of them off for an account whenever you like with
 `modify.account` *name* `sh-off` / `os-off` / `voc-off` / `bp-off` / `dict-off` —
 **a later install does not turn them back on.** Accounts you make after the
@@ -166,6 +167,10 @@ was: open stays open, closed stays closed. A server the install adds itself is
 reachable from this computer only, as on a new machine; `remote.ssh` changes it
 afterwards. The "Install the OpenSSH server" box is still shown, and ssh is
 still limited to SD's accounts.
+
+**What changed since the previous release**, and what an upgrade might break,
+is in the *Changes* document that comes with the release: every addition,
+change and removal, listed by section.
 
 ## Continued in
 

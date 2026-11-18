@@ -94,13 +94,14 @@ nothing.
 ## The full-screen editors
 
 **The installer makes sure the two terminal editors are on the machine**,
-because the **`edit`** and **`micro`** verbs run them. Current Windows builds
-already carry `edit.exe`; micro never ships with Windows, so it is always a
-winget install. Neither is offered as a choice, for the same reason the ssh
+because the **`edit`** and **`micro`** verbs run them. It puts both beside
+`sd.exe`, in `usr\bin` of the install folder, and the verbs run those copies
+first. Neither is offered as a choice, for the same reason the ssh
 server is not: an account with a verb that does nothing is worse than either
 answer.
 
-**If one cannot be installed, the install still succeeds.** No winget, no
+**If one is missing, the installer looks for it on the machine and then tries
+winget; if it cannot be installed, the install still succeeds.** No winget, no
 network or a policy in the way all end the same: SD is complete and one editor
 verb is not — **`ed`**, the line editor, needs nothing. What happened is in
 `C:\ProgramData\SD\install-editors.log`, and to do it by hand afterwards,

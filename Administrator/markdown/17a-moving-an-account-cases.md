@@ -48,9 +48,10 @@ sdg_work (status 2); the account was made*.
 * **A different folder for the accounts.** VOC entries that hold the account's old path are
   rewritten to the new one. A pointer to somewhere outside the account is listed, not followed.
   Only the VOC is rewritten: a path written in a record or a program is left as it is.
-* **From SD Core for Linux.** The archive's `product` says which system made it, and a Linux
-  account restores onto Windows like any other full-product backup; its paths are rewritten as
-  above.
+* **A Linux backup.** The archive format is shared with SD Core for Linux, and the restore
+  accepts a full backup of it by the same manifest rules as a Windows one (a Solo backup, or a
+  different format, is refused); the VOC values that hold the old account's path are rewritten
+  as above.
 * **From a Windows archive**, a rewritten path that does not exist with exactly that spelling is
   listed, so a path whose case changed on the way is seen before a program trips over it.
 * **Indices kept outside the account.** A hashed file whose indices were relocated inside the
@@ -85,8 +86,7 @@ sdg_work (status 2); the account was made*.
   machine names another host in its file name: it gives *No backup of jack made on this computer
   was found in …*. Name the zip by its path. A renamed file is also never picked by `latest`.
 
-The steps on the previous page are what the two verbs do for a move between machines and for a
-restore from SD Core for Linux.
+The steps on the previous page are what the two verbs do for a move between machines.
 
 ## When it refuses
 
@@ -106,6 +106,6 @@ name that is not plain printable ASCII is refused before anything is unpacked.
 
 ## See also
 
-[Account Maintenance](01a-account-maintenance.html) for the verbs and `set.backup.directory`;
+[Backing Up and Restoring Accounts](01b-backup-and-restore.html) for the verbs and `set.backup.directory`;
 [Accounts and Security](01-accounts-and-security.html) for the switches;
 [Data at Rest](04a-data-at-rest.html) for backups and encryption.

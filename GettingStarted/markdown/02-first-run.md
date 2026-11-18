@@ -80,8 +80,7 @@ ed customers 1001
 **`ed`** is the **line** editor, and it needs nothing installed. For a full
 screen, **`sed`** is SD's own editor, with drop-down menus, and needs no
 operating-system permission (see *The SED Screen Editor* in the User set);
-**`edit`** opens the same record in Microsoft Edit, which comes with current
-Windows, and **`micro`** opens it in micro, which the installer fetches. See
+**`edit`** opens the same record in Microsoft Edit and **`micro`** opens it in micro, and both come with SD. See
 [Development and file commands](07-programmer-commands.html#editors). The old
 full-screen editors `update.record` and `modify` are gone; see
 [Not in SD Core](14-not-in-sd-core.html).

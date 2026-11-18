@@ -22,16 +22,16 @@ in lower case. In the tables, *italics* mark something you supply and **bold**
 marks a word typed as it stands; braces mark an optional part.
 
 > **The keys below are Microsoft Edit's own**, for the version SD checks for —
-> **1.2.1**, which is what ships in current Windows. SD installs that editor
+> **1.2.1**, which is what SD ships. SD installs that editor
 > and calls it; it does not implement it, so where a binding differs the editor
 > is right.
 
 ## Both editors are installed with SD
 
-**You do not install anything.** SD's installer checks for both editors and
-installs whichever is missing, machine-wide, so every account SD creates can
-reach them. Microsoft Edit is usually already there — it is part of current
-Windows, at `C:\Windows\System32\edit.exe`.
+**You do not install anything.** SD's installer puts both editors beside
+`sd.exe`, in `usr\bin` of the install folder, and the verb runs that copy first,
+so every account SD creates can reach them. If one is missing, the installer
+looks for it on the machine and then installs it machine-wide.
 
 If that could not happen — an offline machine, or one whose policy blocks the
 package manager — the verb says so and names the command that installs it,

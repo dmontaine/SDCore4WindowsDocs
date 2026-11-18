@@ -64,8 +64,9 @@ administrator loosens it, account by account, for the people who need it:
 | `dict-on` | saving a change to a dictionary (a file whose name ends `.dic`) |
 
 `sh-on`, `os-on` and the three edit switches are independent of each other
-and of the routes (`create.account user fred ssh sh-on`); the Administrator
-set's *Accounts and Security* chapter has them all. **No new account is an
+and of the routes. The same words change an account afterwards in
+`modify.account` — see [Managing accounts](05a-managing-accounts.html), which has a
+section on the edit switches. **No new account is an
 exception — not even the one the installer creates for whoever installed SD on a
 fresh machine** (see [Installing SD Core](01-installation.html#what-you-are-asked)); the accounts that keep
 their shell, `OS.EXECUTE` and edit rights are the user accounts that already

@@ -210,7 +210,7 @@ command, the `DATA` queue and the log file name in the record. The new process m
 the seal again from what it read and **runs, stacks and sets nothing unless the two
 are the same**. A phantom whose records do not check ends at once, says so in its
 `como` log and to its parent (*Phantom n : start-up records missing or not from the
-process that started it, nothing was run*), and writes `phantom refused phantom=n` to
+process that started it, nothing was run*), and writes a `phantom refused` line to
 the audit trail. If the secret cannot be made, no process is started.
 
 ## What phantoms have I started: `status`

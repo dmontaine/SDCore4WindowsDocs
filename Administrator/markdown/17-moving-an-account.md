@@ -1,10 +1,12 @@
 Title: Moving an Account
-Subtitle: Taking an account to another SD machine with backup.account and restore.account: what you need, the steps and what comes across. The cases where the machines differ.
+Subtitle: Taking an account to another SD machine with backup.account and restore.account: what you need, the steps, and what comes across.
 
 Moving an account is a backup on one machine, a copy of one file, and a restore on the other.
 There is no verb that does it in one go. The two verbs are described on
 [Backing Up and Restoring Accounts](01b-backup-and-restore.html); this page is the procedure for
-using them between two machines.
+using them between two machines, and [the next page](17a-moving-an-account-cases.html) is what
+does not come across, what happens to the Windows user and groups, and the cases where the
+machines differ.
 
 > **Three things to know before you start.**
 > **No password comes with the account.** An account the new machine does not have asks for a

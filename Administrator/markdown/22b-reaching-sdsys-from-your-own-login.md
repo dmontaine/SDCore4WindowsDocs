@@ -252,6 +252,8 @@ Every line is in the audit trail ([The Audit Trail](21-the-audit-trail.html)):
 * A refusal over ssh after the password was asked:
   `elevation refused reason=sdsys local ssh wrong password user=fred`, or
   `elevation refused reason=sdsys local ssh no credential user=fred`.
+* The old refusal, while the ssh list has names: `login refused account=sdsys reason=SDSYS requires an
+  elevated session why=not-listed`. With an empty list the line has no `why=`, as before.
 * A grant through the API:
   `elevation granted reason=sdsys api from=this machine user=fred`.
 * A refusal through the API: `api refused user=sdsys reason=...`, naming the Windows user the program

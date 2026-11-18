@@ -57,7 +57,8 @@ here:
   *upgrade* — a fresh account never needs it, and **the installer runs
   `update.accounts all` for you** when you keep your accounts.
   **`list.voc.removed`** shows the list and **`restore.voc`** puts a removed
-  record back.
+  record back; the next `update.accounts` removes it again, because the list has
+  the last word, so give a record you want to keep a name SD does not ship.
 
 **`clean.account`** tidies an account's workspace. **`update.accounts`** is
 the one you run in each account after upgrading SD.

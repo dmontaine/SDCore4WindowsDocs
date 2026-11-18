@@ -157,13 +157,14 @@ file or a dictionary there, SDSYS gives it with `modify.account` *name*
 `voc-on` / `bp-on` / `dict-on`.
 
 **On an existing machine.** The upgrade switches all three on, **once**, for
-every *user* account in the register whose field is blank, so that no such account loses what it had; group and other accounts,
+every *user* account in the register whose field is blank (a field that already says `no` is left as it is), so that no such account loses what it had; group and other accounts,
 and accounts made afterwards, start with all three off. The installing user's
 own account is made with all three off like any other, unless the installer's box
 "Open every access gate" was ticked. The switches are kept
 in the account archive (`edit.voc`, `edit.bp`, `edit.dict`), but
 `restore.account` gives them back only to an account it has to create; an
-archive from before the switches existed carries none and gives none.
+account that already exists keeps its current switches, group and other accounts are not in
+the manifest, and an archive from before the switches existed carries none and gives none.
 
 ### The NET switch: `net-on` and `net-off`
 
