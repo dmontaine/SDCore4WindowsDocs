@@ -188,11 +188,15 @@ refusal.
 
 ### What uses it
 
-The shipped programs that call `sdext()` are `apisrvr`, `cred_set`,
-`cred_verify`, `sd_get_salt`, `sd_key_from_pw`, `sdclient` and the three key ring
-subroutines `keyring_set`, `keyring_clear` and `keyring_list`. (The `PY_`
-functions also go through `sdext()`, with their own keys.) The last three are
-cataloged for general use as `!keyset`, `!keyclear` and `!keylist`, so an
+Every shipped program that calls `sdext()` is an internal program, which runs
+only from the global catalog and cannot be compiled by an ordinary account. They
+are the credential and login programs (`apisrvr`, `cred_set`, `cred_verify`,
+`sd_get_salt`, `sd_key_from_pw` and `sdclient`), the programs for phantoms and
+network logins (`phantom`, `ipc_seal`, `setnetlogin`, `netcred`), the two that keep a
+recovery copy or a debugger store in a private folder (`edit_recovery`,
+`pdbg_store`), the embedded-Python interface (the `py_*` programs), and the three
+key ring subroutines `keyring_set`, `keyring_clear` and `keyring_list`. The last
+three are cataloged for general use as `!keyset`, `!keyclear` and `!keylist`, so an
 application reaches the ring without reaching `sdext()`. There is no `euid_set` or
 `euid_restore`: Windows has no effective user identity to switch.
 

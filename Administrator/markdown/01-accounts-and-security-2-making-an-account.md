@@ -25,7 +25,7 @@ and not write them). Say nothing and it has no ssh, no API, no `sh` and no
 `OS.EXECUTE`, it cannot save a change to a VOC, a program file or a
 dictionary, it has no right to use a server defined for SDNet, no
 files-only login and no use of the AI; you open each one by naming it. **That includes the account of the user who ran the installer: a first install
-leaves the `sdssh` group empty, so that user has no ssh until the installer's "open every gate" box was ticked or you
+leaves the `sdssh` group empty, so that user has no ssh until the installer's box "Open every access gate" was ticked or you
 run `modify.account` *name* `ssh`; an upgrade keeps the ssh access the system had.** `ssh`, `api` or `both` give
 the remote routes (`none` is the default and is accepted so that a script can
 say so); `files-on` gives the narrower files-only API route (below, *The
@@ -92,12 +92,20 @@ it back in a line, `Account fred keeps a recovery copy of unsaved editor text: y
 files in and out with an sftp client (*File transfer*, below). It is off when the word is left out, a group or
 `other` account is refused it before anything is made, and `xfer-off` is for `modify.account` only.
 
-**The installing user's own account is no exception**: the account the
-installer makes so that somebody can sign in starts with all of them off too.
-The installer has one option, unticked, that opens every gate for that account;
-left alone it opens nothing, and `modify.account` changes any of them
-afterwards. The accounts that keep their access are the ones that already exist
-when you *upgrade* — see *Changing one*, below.
+**The installing user's own account is no exception**: it starts with all of them
+off too. **The installer has one box about it, "Open every access gate for your SD
+Core account (ssh, API, shell, editing, files, AI, file transfer)", and it is
+unticked unless you tick it**; it is shown only when that account does not exist
+yet. Ticked, it opens, through `modify.account`, ssh and the API, `sh-on`, `os-on`,
+`sd-on`, the three edit switches, `recovery-on`, `net-on`, `shared-write-on`, the
+files-only login with its write and administration groups, `ai-on`, `pins-on` and
+`xfer-on`, reads each result back and names any gate it could not open; it does not
+turn on `ssh-key-on` or set `XFER=1` in `sd.conf`. **That is every door at once** (a
+shell, any path on the machine, the network routes, and the AI, paid for by the
+provider's key), so tick it only on a machine you are testing on. Left alone, the
+installer opens nothing, and `modify.account` changes any of them afterwards. The
+accounts that keep their access are the ones that already exist when you *upgrade*
+— see *Changing one*, below.
 
 **A group account and an `other` account have no Windows user of their own,
 so `sh-on` and `os-on` are refused for them** — "is a group account and has
@@ -184,7 +192,7 @@ these:
 | `OPENSEQ` and `OPENPATH` with a path | status 3035, so `OPEN ... ELSE` works as before |
 | `DIR()` and the `select.dir` verb | no entries, and `STATUS()` is set (the verb says why) |
 | `DELETESEQ` of a bare path | status 3035; the file is left alone |
-| the socket trace file (`set.socket.mode` with `skt$info.trace`) | `set.socket.mode` returns 0 and nothing is written |
+| the socket trace file (`set.socket.mode` with `skt$info.trace`) | `set.socket.mode` is refused with status 3035 and nothing is written |
 | `OPENTEMP` with a pathname or in the temporary directory, `DIGEST` of a file, and the file keys of `OSPATH()` | the `ELSE` branch, or a null result, with status 3035 (`DIGEST`'s `STATUS()` says the file is outside what the account may reach) |
 | `!OSCOPY`, `!IOSCOPY` and the `oscopy` verb | refused, status -4 (the verb says why) |
 | printing into a file by path (`setptr ... as pathname`, `SETPU`, or a `$hold` print name that climbs out with `..`) | the verb refuses when the unit is set; for either, the first line printed is refused and the program stops |

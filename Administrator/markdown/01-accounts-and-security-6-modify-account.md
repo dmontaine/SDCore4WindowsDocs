@@ -192,7 +192,7 @@ audited by the verb as if you had typed it.
   `none` SET the pair. The page therefore sends the one word that gives the pair
   of states you queued, and its box says which. A first install leaves the
   `sdssh` group empty, so the installing user's account has ssh only if the
-  installer's "open every gate" box was ticked, or after `ssh` or `both` is
+  installer's box "Open every access gate" was ticked, or after `ssh` or `both` is
   given here.
 * **files-write needs files, and files-admin needs files-write.** A queue that
   breaks that is refused by the page before the box opens, and the verb refuses

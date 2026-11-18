@@ -142,8 +142,12 @@ bit is cleared when the object is loaded. SD's own commands are all in the
 global catalog and are unaffected; a program that SDSYS compiled in internal
 mode into a user's account runs there as an ordinary program.
 
-**SDSYS is never refused.** `modify.account` refuses SDSYS as a target, so
-there is nothing to set for it.
+**SDSYS is never refused.** On a terminal or in a batch job the administrator
+passes every gate. So does an SDSYS session over the API that SD admitted, by
+either door (the local door, or SDSYS from another computer when `remote.sdsys
+api` lists that computer's address): it is the administrator, and nothing is
+loaded for it. `modify.account` refuses SDSYS as a target, so there is nothing to
+set for it.
 
 **Group and other accounts.** The three words are accepted for a group or
 other account. Because `logto` does not reload them, they decide only for a
@@ -156,7 +160,8 @@ file or a dictionary there, SDSYS gives it with `modify.account` *name*
 all three on, **once**, for every *user* account in the register whose field is
 blank, so that no such account loses what it had; group and other accounts,
 and accounts made afterwards, start with all three off. The installing user's
-own account is made with all three off like any other. The switches are kept
+own account is made with all three off like any other, unless the installer's box
+"Open every access gate" was ticked. The switches are kept
 in the account archive (`edit.voc`, `edit.bp`, `edit.dict`), but
 `restore.account` gives them back only to an account it has to create; an
 archive from before the switches existed carries none and gives none.

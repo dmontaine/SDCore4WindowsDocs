@@ -44,7 +44,7 @@ is in both `sdfileswrite` and the Windows group `sdfilesadmin`**: `modify.accoun
 files-write, so it cannot be given files-admin: use files-write-on first", message 12531),
 `files-admin-off`, and `files-admin-on` after `files-on` and `files-write-on` in `create.account
 user` (without them it is refused the same way, before anything is made). **It is off for every new
-account, and nothing in the installer turns it on.** The line
+account, and the installer turns it on only for the installing user's own account, when its box "Open every access gate" is ticked.** The line
 printed is `Account fred has files-admin yes`, read back from the group. A group account or an
 `other` account is refused as it is for `files-on`.
 

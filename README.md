@@ -67,10 +67,17 @@ The syntax cards are generated from SD itself and are not edited by hand:
 ```
 python tools\mksyntax.py <SDCore4Windows>\sdb_ai\sd64\sdsys\gpl.bp\bcomp User\markdown\94-sd-basic-syntax.md Administrator\markdown\10-sd-basic-restricted-commands.md
 python tools\mktclsyntax.py <SDCore4Windows>\sdb_ai\sd64\sdsys User\markdown\95-sd-tcl-syntax.md
+python tools\linkup.py User\markdown
 ```
 
-`tools\checklinks.py`, `tools\docmap.py` and `tools\tclmap.py` check the links
-and that every SD BASIC name and TCL verb is documented.
+`mksyntax.py` and `mktclsyntax.py` refuse to write a card if a name the compiler
+accepts, or a verb the VOC holds, has no line in `tools\syntax-shapes.txt` or
+`tools\tcl-syntax-shapes.txt`, one `NAME = syntax` per line. `linkup.py` turns
+the page names the two cards write in italics into links.
+
+`tools\checklinks.py`, `tools\docmap.py`, `tools\tclmap.py`, `tools\confmap.py`
+and `tools\verbcounts.py` check the links and that every SD BASIC name, TCL verb
+and `sd.conf` parameter is documented.
 
 `tools\` also holds the PowerShell programs (`sdtcl.ps1`, `sdprobe.ps1`,
 `sdprobe2.ps1`, `sdcompile.ps1` and `sddebug.ps1`) that run something inside a

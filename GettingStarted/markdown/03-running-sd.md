@@ -27,6 +27,14 @@ sd -stop
 sd -start
 ```
 
+**A session still running ten seconds after the stop is ended.** `sd -stop`
+and `sd -restart` send every session the termination signal, wait up to ten
+seconds for them to leave, and end any SD process still running by force (the
+runtime's `SIGKILL`, which gives the process no chance to clean up); they say how
+many they ended, for example `1 process(es) still running after ten seconds
+were ended with SIGKILL`. Only a process whose program is in SD's own folder is
+touched, and a session ended this way does not run its own logout.
+
 ## `sd -start` and `sd -stop` check the real process, not just the segment
 
 SD's shared state lives in a shared memory segment, which — unlike a file — can

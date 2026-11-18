@@ -187,8 +187,8 @@ off
    records. Then query it — the query processor is where most of the surface
    area is.
 2. **A client program against the API.** Point it at port 4247 — **not** an ssh
-   tunnel any more. It needs a client library from this release, because the
-   old cleartext login is gone. **The architecture must match the
+   tunnel any more. It needs a client library that speaks SCRAM, because there
+   is no cleartext login. **The architecture must match the
    application**, and **The DLL goes in the same directory as the application
    that loads it** — Windows searches there before `PATH`. See
    [API access](09-api-access.html) and

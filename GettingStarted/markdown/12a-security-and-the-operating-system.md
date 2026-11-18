@@ -197,7 +197,11 @@ the Per-account directory lock.** Everyone who uses SD needs file access to
 the tree, because their own process does the I/O. Anyone deploying SD for ten
 people over ssh should be told that plainly.
 
-**SD has no file-level access control of its own** on the console and ssh
-paths. The one place a path gate does exist is the API, where a session is
-confined to the account it stands in — see
+**SD's own access control to operating-system files is the account's `os-on`
+switch, and it is the only one.** While the switch is off, as delivered, SD holds
+every session of the account — at the console, over ssh and over the API alike — to the
+account's own directory when it opens an operating-system file by pathname (plus
+any directory the administrator listed in `NETDIRS`); an account that holds
+`os-on` is held only by Windows's permissions on its user. What the session
+may do inside the files SD itself opens is whatever Windows lets its user do — see
 [API access](09-api-access.html#a-session-is-confined-to-its-own-account).

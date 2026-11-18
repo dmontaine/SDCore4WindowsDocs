@@ -1,5 +1,5 @@
 Title: API access
-Subtitle: The client API, the port it answers on, the login that replaced the old one, and what a remote session may reach.
+Subtitle: The client API, the port it answers on, the SCRAM login, and what a remote session may reach.
 
 The client API is a normal way for any account to use SD. A person running a
 custom GUI program that talks to SD needs API access and may need nothing
@@ -33,41 +33,35 @@ allowed"*, and the connection stays open. An account with `api` has the whole
 API whether or not it also has `files-on`. This is the route SDNet's logins are
 meant to use.
 
-## The login is SCRAM-SHA-256, and the old one is gone
+## The login is SCRAM-SHA-256
 
 **A client that sends a password in clear is refused.** It gets *"Cleartext
 login is no longer supported; this server requires SCRAM authentication"* and
 the connection drops.
 
-The API used to send the user name and password as plain text — anything able
-to watch the connection could read the password. It now runs a challenge and
-response: the server sets a puzzle only someone who knows the password can
-answer, and **the password itself is never sent in any form.**
+The API runs a challenge and response rather than sending the user name and
+password as plain text: the server sets a puzzle only someone who knows the
+password can answer, and **the password itself is never sent in any form.**
 
 **The server also proves itself to you.** It finishes by returning a value
 only the real server can compute, and the client refuses the connection if it
 does not match. Another program that grabbed the port before SD started cannot
 pretend to be SD in order to collect passwords.
 
-### What you have to do
+**A client library that does not speak SCRAM is refused outright.** Use the
+client library that comes with SD (see
+[Client distribution](10-client-distribution.html)).
 
-| | |
-|---|---|
-| **Use a client library from this release or later.** | An older one is refused outright |
-| **Run `modify.password` again for every account that uses the API.** | The stored credentials changed shape and the old ones cannot be converted |
+**An account that has no password set is refused, and the refusal reads as a
+wrong password.** From the server's point of view there is no credential to
+check; `modify.password` sets one.
 
-**An account whose password has not been re-set is refused, and the refusal
-reads as a wrong password.** From the server's point of view there is no
-credential to check. If a working client suddenly cannot log in after an
-upgrade, this is the first thing to try.
-
-The old credentials cannot be converted because **the password was never kept
-anywhere, by design** — there is nothing to convert them from.
+**The password is never kept anywhere, by design** — SD stores only what the
+challenge and response needs to check an answer.
 
 **Programs using the `!sdclient` class are covered.** The class module BASIC
-programs use to reach another SD server speaks the new login too. Your code
-does not change — `connect()` takes the same arguments — but the program has to
-be running under this release **at both ends**.
+programs use to reach another SD server speaks the same login, so a program
+that uses it needs no change.
 
 **`SDConnectLocal()` connections are unaffected.** They send no password and
 never did.
@@ -192,7 +186,7 @@ program that hangs up during the wait is recorded as well. See
 | | |
 |---|---|
 | **Allowed** | everything inside its own account, and the shipped SDSYS files every account needs — messages, `syscom`, the dictionaries. Ordinary programs are unaffected |
-| **Not allowed** | opening, renaming, deleting or listing anything else |
+| **Not allowed** | opening, renaming, deleting or listing anything else, while the account's `os-on` switch is off (as delivered) |
 
 **A refused `OPEN` takes the `ELSE` branch and `STATUS()` is 3035**, which
 means *not permitted* rather than *not found*. That distinction matters when
@@ -221,8 +215,10 @@ directory or any account is ignored and named in the error log when SD starts; t
 Guide's *Configuration: The API, Printing and the Rest* has the rules. `config('NETDIRS')` does
 not read it: read the file.
 
-**THE PASSWORD FILE, THE PROGRAM CATALOG AND THE ACCOUNT REGISTER ARE NEVER
-REACHABLE from an API session, and cannot be added to `NETDIRS`.**
+**The account's `os-on` switch lifts this confinement**, for an API session as
+for any other: an account that holds it reaches whatever its Windows user may.
+**THE PASSWORD FILE, THE PROGRAM CATALOG AND THE ACCOUNT REGISTER CANNOT BE
+ADDED TO `NETDIRS`**, so that setting never opens them to an API session.
 
 ## An API session runs as you
 
@@ -254,9 +250,9 @@ so an account that holds `sh-on` has the `sh` verb over the API, one that holds
 `os-on` has `OS.EXECUTE`, and a new account has neither. **That puts a shell
 behind the account's API credential, reachable from wherever the API port
 is**: weigh it before you turn either on for an account that also has the
-`api` route. SDSYS is the exception: an API session is not treated as an
-administrator for any purpose, so there is no shell over the API for it; use
-the local sign-in. An API session runs with the signed-in user's own rights,
+`api` route. (SDSYS holds no `sh-on` or `os-on` switch: it is the
+administrator, and a session that is admitted as SDSYS, through the local door
+or the door `remote.sdsys api on` opens, has both gates open.) An API session runs with the signed-in user's own rights,
 never as the service's LocalSystem account. `SDCLIENT` in `sd.conf` is the
 further control, if you want one: non-zero disables file access outright for an
 API session, and `2` additionally refuses any subroutine not compiled as
@@ -272,7 +268,6 @@ includes PowerShell (see [Differences from W1.0-0](01b-differences-from-w1-0-0.h
 | 64-bit | `sdclilib.dll` |
 | 32-bit | built separately; 32-bit remains a supported target, not a test convenience |
 
-**Both must come from this release or later.** A client library that predates
-SCRAM is refused by the server, and the 32-bit client in particular once
-shipped sending passwords in clear — check which one your application is
-actually loading.
+**Both must speak SCRAM.** A client library that sends the password in clear
+is refused by the server — check which one your application is actually
+loading.

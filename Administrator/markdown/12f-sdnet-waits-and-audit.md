@@ -56,6 +56,9 @@ still waited for one read at a time; the limit is for each read, not for a whole
 `OPEN.SOCKET` takes the number of seconds to wait for the connection as its fourth argument
 (`NETWAIT` for every SDNet caller); see the User set's page on sockets.
 
+`open.socket` takes the number of seconds to wait for the connection as its fourth argument
+(`NETWAIT` for every SDNet caller); see the User set's page on sockets.
+
 ## What is audited
 
 Defining and deleting are written to the audit trail, in lower case:

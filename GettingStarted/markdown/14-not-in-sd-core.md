@@ -215,8 +215,9 @@ finish with **no password on any account**. Unattended deployment is not support
 
 **scp AND sftp DO NOT WORK INBOUND ONCE SD HAS CONFIGURED THE ssh SERVER**,
 for anybody, administrators included. This is the accepted cost of putting
-every ssh session straight into SD. **Pull files rather than pushing them** —
-see [ssh access](08-ssh-access.html#the-cost-scp-and-sftp-stop-working-inbound).
+every ssh session straight into SD. **Pull files rather than pushing them**, or use
+`receive` and `send`, which move plain-text files over the same login once the
+administrator has turned file transfer on (it is off as delivered). See [ssh access](08-ssh-access.html#the-cost-scp-and-sftp-stop-working-inbound).
 A machine with no ssh server is unaffected, because SD has configured nothing.
 
 **The cleartext API login is gone**, and a client that still sends a password

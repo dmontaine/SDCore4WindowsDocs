@@ -81,7 +81,7 @@ spellings in a row return identical counts on the same data.
 | | |
 |---|---|
 | equal | `=` · `eq` |
-| not equal | `ne` · `not` |
+| not equal | `<>` · `ne` · `not` |
 | less than | `<` · `lt` |
 | less or equal | `<=` · `le` |
 | greater than | `>` · `gt` |
@@ -94,8 +94,8 @@ spellings in a row return identical counts on the same data.
 
 All three spellings of *not equal* returned **331** on the same query, and
 `<` and `lt` both returned **381**. (The words `before`, `after`, `equal`,
-`greater`, `less`, `matches`, `matching`, `not.matching` and `spoken` were removed in 2.0-0:
-in a query they are taken as record ids.)
+`greater`, `less`, `matches`, `matching`, `not.matching` and `spoken` are not
+operators: in a query they are taken as record ids.)
 
 ### Joining clauses
 

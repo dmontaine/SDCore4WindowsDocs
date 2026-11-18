@@ -17,8 +17,9 @@ status = PY_CREATEDICT('mydict')
 ```
 
 All twenty-one are `$internal`-compiled and ship already cataloged, so no
-account needs to compile or catalog anything to use them - only `deffun`
-and a call. Failure is always `status()`, not the returned value: several of
+account needs to compile or catalog anything to use them - only the
+declarations and a call. `$include sdpyfunc.h` declares all of them at once.
+Failure is always `status()`, not the returned value: several of
 these functions return an empty string on both "genuinely empty" and
 "failed," so `status()` is what tells them apart. **Every one of the
 twenty-one refuses an empty object, dictionary, list or string name before
@@ -99,8 +100,8 @@ values.
 | `PY_DICTVALSETS(dictname,key,value)` | Sets (or creates) `key` to the string `value` |
 | `PY_DICTVALGETS(dictname,key)` | Returns the string value of `key`, or an empty string if it is not there |
 | `PY_DICTIDEL(dictname,key)` | Deletes `key` |
-| `PY_DICTGETKEYS(dictname)` | Returns every key, tab-separated |
-| `PY_DICTGETVALUES(dictname)` | Returns every value, field-mark (`@FM`) separated - not tabs, unlike the keys |
+| `PY_DICTGETKEYS(dictname)` | Returns every key, field-mark (`@fm`) separated |
+| `PY_DICTGETVALUES(dictname)` | Returns every value, field-mark (`@fm`) separated |
 
 ## Lists
 
@@ -111,7 +112,7 @@ A Python `list`, likewise held by name.
 | `PY_LISTCREATE(listname)` | Creates an empty list. `PY_LISTCRTE` is the same function under an older name; both work |
 | `PY_LISTCLR(listname)` | Empties it |
 | `PY_LISTAPPD(listname,objname)` | Appends the named Python object - a string, a dictionary, or another list made with these functions - to the list |
-| `PY_LISTGETS(listname)` | Returns every item, tab-separated |
+| `PY_LISTGETS(listname)` | Returns every item, field-mark (`@fm`) separated |
 
 A list has to be made with `PY_LISTCREATE` before anything is appended to it.
 It is shaped like `PY_CREATEDICT`, and a name that is already taken is refused
@@ -218,10 +219,10 @@ Four example programs are installed in the SDSYS account's `bp` file:
 
 | Program | What it shows |
 |---|---|
-| `PY_TEST` | starting Python, running a short script, and reading its results back |
-| `PY_TEST2` | the same with data read from a file; set the path at the top (`xxxx` is an account name) before you run it |
-| `PY_JSON` | Python's `json` module on a file you name |
-| `PY_TERM` | a minimal prompt that runs the Python you type |
+| `PY_TEST` | starting Python, running a short script, and reading its results back: a dictionary and a list made with the functions above, the keys, values and items as field-mark lists, the size and type of each object, and a string appended to a list |
+| `PY_TEST2` | the same with data read from a file: a record is stored as a Python string, read back, and compared with the original (`Match` or `Do Not Match!`). Set the file's path near the start (`xxxx` is an account name) before you run it |
+| `PY_JSON` | Python's `json` module on a file you name (its full path): the file is loaded, then walked object by object with `PY_OBJTYPE`, `PY_OBJLEN` and `PY_DICTGETKEYS`, and every key and value is printed, indented by nesting |
+| `PY_TERM` | a minimal prompt that runs the Python you type: lines are collected and `!` runs them, `??` shows them, `?` gives help and `quit` ends; the up and down arrows recall earlier lines |
 
 Copy one into your own account's `bp` to compile and run it. Like any use
 of Python, it needs the account's OS switch.

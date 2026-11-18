@@ -16,8 +16,8 @@ term
 ```
 
 ```
-Page width: 120
-Page depth: 36
+Page width: 140
+Page depth: 43
 Device    : windows
 ```
 
@@ -38,8 +38,8 @@ Common names that work out of the box: `windows`, `linux`, `vt100`,
 `vt220`, `wyse60`, `ansi`, `xterm`.
 
 The `-at` terminal types (`vt100-at`, `vt220-at`, `wy60-at` and the rest)
-were AccuTerm's, and `sdterm` was SDTerm's. They are gone: SD no longer
-supports either terminal program. A session that was set to one of them
+were AccuTerm's, and `sdterm` was SDTerm's. SD does not support either
+terminal program. A session that was set to one of them
 should use `xterm`, `vt100` or `vt220`.
 
 A name that is not installed is refused and your current type is kept:

@@ -20,7 +20,7 @@ of the API, and they are the only door a files-only login has to them.
 - **Who gives it, and how.** SDSYS, one person at a time, on the server being reached:
   `modify.account` *name* `files-admin-on`, taken away with `files-admin-off`, and
   `files-admin-on` after `files-on` and `files-write-on` in `create.account user`. **It is off
-  for a new account, and nothing in the installer turns it on** (you do that by hand). The installer makes the group, empty,
+  for a new account, and the installer turns it on only for the installing user's own account, when its box "Open every access gate" is ticked** (otherwise you do that by hand). The installer makes the group, empty,
   beside the other three (its `sync-route-groups.ps1`), and an interactive uninstall removes it.
 - **The chain is `sdfiles` < `sdfileswrite` < `sdfilesadmin`: each needs the ones below it, and
   none is ever added over one above it.** `files-admin-on` needs `files-on` and `files-write-on`

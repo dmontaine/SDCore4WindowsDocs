@@ -84,13 +84,14 @@ during the command, and any file it read, would have the elevated administrator'
 it is in the account and before the command runs, `run.in` also refuses:
 
 * **a file the command writes that lies outside the account**: the named file's data and dictionary,
-  the `.out` file of `basic` and `catalog`, and the private catalog of `catalog`, `decatalog` and
+  the `.out` file of `basic` and `catalog` (a Q pointer there is refused outright), and the private
+  catalog a `$private.catalogue` record names, for `catalog`, `decatalog` and
   `delete.catalog`. A path must be relative, with no `..`, no `@` token and no drive, and what of
   it exists is asked of the kernel (which resolves it as an open would). A VOC entry could
   otherwise point the compile's output at SDSYS's own files, which this session can write. `bp.out
   in account ACME names a path outside the account; run.in did not run the command`.
 * **a file the command opens that has a trigger**: the VOC, the named file and its dictionary, the
-  `.out` file and the private catalog. A trigger is a program found in the account's own catalog,
+  `.out` file and the private catalog. The account's VOC is looked at first. A trigger is a program found in the account's own catalog,
   and it would run in this session. `bp in account ACME has a trigger function; run.in did not run
   the command`.
 * **a `$execute` line in the source it compiles.** The compiler runs the command a `$execute`
