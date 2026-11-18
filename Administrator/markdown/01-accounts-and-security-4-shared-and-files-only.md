@@ -37,8 +37,8 @@ Account fred has shared.read no, shared.write yes
 `modify.account` *name* `shared-read-on` / `shared-read-off` / `shared-write-on` /
 `shared-write-off` change one switch each and say where the account now stands,
 both switches in one line. `create.account user` takes `shared-read-off` and
-`shared-write-on` (the other two would only restate the delivered state). Asking
-for what is already so changes nothing and says so.
+`shared-write-on` (the other two would only restate the delivered state), and so
+do `group` and `other`. Asking for what is already so changes nothing and says so.
 Each change is written to the audit trail (`modify.account shared-read-off
 account=fred`). A switch may be set on a group or other account, as `net-on` may;
 **SDSYS is never a target**.
@@ -74,7 +74,8 @@ other servers. The name is reserved: `create.account` refuses it, and
 **Upgrading.** The installer makes `shared` when it is run, and keeps it when the
 accounts are kept. **It stops before it changes anything if an account named
 `shared` already exists that is not its own**, and names the register record: rename
-that account by hand and run the installer again.
+that account by hand and run the installer again. Removing SD together with its
+accounts removes the Windows group `sdg_shared` too; keeping the accounts keeps it.
 
 ### The files-only route: `files-on` and `files-off`
 
@@ -102,9 +103,12 @@ back from the group** rather than taken from the request:
 ```
 :modify.account fred files-on
 Account fred has files yes
+:modify.account fred files-off
+Account fred has files no
 ```
 
-The change is written to the audit trail (`modify.account files-on account=fred`).
+Asking for what is already so changes nothing and says so ("fred already had that
+access; nothing changed"). The change is written to the audit trail (`modify.account files-on account=fred`).
 The three groups are made, empty, by the installer (its `sync-route-groups.ps1`),
 and removed by an interactive uninstall. The write permission and its removal are
 described under *Changing files*, on the next page.
@@ -118,9 +122,10 @@ end of the login, after the password has been proved:
 3. Otherwise a member of **`sdfiles`** is let in **files only**. On Windows the
    session that serves the connection works this out for itself from the groups
    when it starts, and the mark is never cleared for the life of the connection.
-4. A person in **neither** group is refused exactly as before, with the reason
-   `not a member of sdapi or sdfiles` in the audit trail. If the groups cannot be
-   read the login is refused, not guessed.
+4. A person in **neither** group is refused exactly as before: "*name* is not
+   permitted to use the API", with the reason `not a member of sdapi or sdfiles` in the
+   audit trail (the decision is made on both groups). If the groups cannot be read the
+   login is refused, not guessed, with a reason of its own.
 5. SDSYS is exempt from both groups by name and keeps the doors it has always
    had; it is never made files-only.
 
@@ -138,7 +143,7 @@ number this release has never heard of.
 | 11 to 15 | select; read the next id; clear a select list; read a saved list; release a lock |
 | 16 to 19 | write; write and keep the lock; delete; delete and keep the lock: **only with `files-write-on`** |
 | 26 | select on an index. Allowed because it is a select, with 37 to 39 |
-| 30 to 34 | lock a record; clear a file; lock and unlock a file; ask whether a record is locked (the answer names the holder by user number): **only with `files-write-on`** |
+| 30 to 34 | lock a record; clear a file; lock and unlock a file; ask whether a record is locked (34: the answer names the holder by his user number on this server): **only with `files-write-on`** |
 | 35, 36 | list the indices |
 | 37 to 39 | select a list; select by an index value; select by an index key |
 | 40, 41 | file information; read one field (a `readv` that takes a lock is a change and needs `files-write-on`) |

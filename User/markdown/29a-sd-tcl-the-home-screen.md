@@ -146,7 +146,7 @@ Terminal - type exit to return to the home screen
 
 That is the ordinary command prompt, with all of its features (the command stack,
 paragraphs, select lists, everything you can type at a prompt that did not come
-from the home screen). **`exit`** brings the home screen back. At a prompt that
+from the home screen). **`exit`** (or **`menu`**) brings the home screen back. At a prompt that
 *did not* come from the home screen, `exit` does what `quit` does and ends the
 session. The home screen remembers that you left by the Terminal tile for the rest
 of the session, so `exit` goes on coming back to it.

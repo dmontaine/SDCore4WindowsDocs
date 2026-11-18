@@ -138,10 +138,12 @@ is out of date.
   2 [2]*.
 * **On success it says what `-q` would now say**: `Index directory is
   C:\sdi_demo\byhand`, or `Indices are not relocated` when `akpath` is omitted.
-  A failure to write the header is reported and exits 1.
+  A failure to write the header is reported and exits 1. SD's own account restore
+  does not read this line: it runs `-q` itself and trusts what that says.
 * Omit `akpath` to say "the indexes are in the data file's folder".
 * It does not know about accounts. It will point a file at any folder you can
-  write, inside the account or not.
+  write, inside the account or not. The account restore goes through a helper
+  that keeps both paths in one account; typing `sdidx -p` yourself does not.
 
 ### `-d`, delete
 ```
@@ -164,7 +166,7 @@ the indexes back you create them and build them again with `create.index` and
   program prints `End of input` and `Indices not deleted` and exits 1.
 * With indexes in the data file's own folder there is no question. It deletes
   the files and clears the map. If a file cannot be deleted it says so, clears
-  the map anyway, and exits 1 with `The indices are removed from the file, but
+  the map anyway (the indexes are gone from the file's point of view), and exits 1 with `The indices are removed from the file, but
   some index files could not be deleted`.
 
 ## The check that SD does not have the file open

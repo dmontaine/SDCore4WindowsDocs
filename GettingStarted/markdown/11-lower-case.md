@@ -2,9 +2,8 @@ Title: Lower case
 Subtitle: Commands, file names, record ids and account names are lower case now — and nothing you type has to change.
 
 **Everything that can be lower case is lower case, completely — no name
-exists in two casings.** SD used to be inconsistent about it: BASIC source
-is free-form and usually written lower case, while file names, field names
-and account names were forced up.
+exists in two casings.** BASIC source is free-form and usually written lower
+case; file names, field names and account names are lower case as well.
 
 **What you type does not change.** `LIST`, `list` and `List` all run the same
 verb, and so does every keyword — `with`, `by`, `no.page` and the rest.
@@ -27,13 +26,9 @@ the `login` paragraph lookup, and `set.file`'s default `qfile` pointer.
 
 | | |
 |---|---|
-| Commands in the VOC | **`list`**, `count`, **`select`**, **`create.file`**, **`setptr`** … 386 of 386 `newvoc` records, 448 of 448 `voc_template` records — and that is how they appear in `list voc` and `ct voc` |
-| BASIC source and include records | the records of `gpl.bp` and `syscom` — all of them |
+| Commands in the VOC | **`list`**, `count`, **`select`**, **`create.file`**, **`setptr`** … and that is how they appear in `list voc` and `ct voc` |
+| BASIC source and include records | the `gpl.bp` programs and the `syscom` includes — all of them |
 | System files on disk | `accounts`, `bp`, `bp.out`, `gpl.bp`, `gpl.bp.out`, `messages`, `newvoc`, `pcode.out`, `syscom`, `voc_template` and the rest under `sdsys` |
-| The `bp` VOC entry | `bp` |
-| The hold file | `$hold` |
-| The saved select list file | `$savedlists` |
-| The command stack record | `$command.stack` |
 | Account names on disk | `sdsys\accounts\sam`, matching the account's own directory in `user_accounts` |
 | Files in a new account | created with lower-case names on disk |
 
@@ -59,12 +54,11 @@ file, a file outside its account's directory or under SDSYS, and SDSYS's own fil
 `nocase-upgrade.log` names each one, and the installer's closing box says that some were
 left. The mechanics are in [Upgrading and uninstalling](01a-upgrading-and-uninstalling.html).
 
-## One correction worth reading
+## One lookup order everywhere
 
-**`list` and `ct` used to disagree about the same name.** `list voc $hold`
-answered *"'$HOLD' not found"* on the very record `ct voc $hold` had just shown
-you. `list`, `sort`, `select` and the rest of the query language now use the
-same as-typed → lower → upper order as everything else.
+**`list` and `ct` find a name the same way.** `list voc $hold` finds the record
+`ct voc $hold` shows. `list`, `sort`, `select` and the rest of the query
+language use the same as-typed → lower → upper order as everything else.
 
 ## Account names
 

@@ -196,10 +196,10 @@ DOCS = [
  ('Administrator', '13-the-shared-account.md', """
    list.shared
  """),
- # S.67 (the master files): the chapter documents tool.entries and run.in
+ # S.67 (the master files): the chapter documents tool.entries
  # (in voc_template, SDSYS's set, not in newvoc).
  ('Administrator', '19-the-master-files.md', """
-   tool.entries run.in
+   tool.entries
  """),
  # S.75 A5 (the audit trail page): tool.audit, in voc_template (SDSYS's set), not in newvoc.
  ('Administrator', '21-the-audit-trail.md', """
@@ -209,9 +209,9 @@ DOCS = [
  ('Administrator', '23-scheduled-jobs.md', """
    set.batch set.job tool.jobs
  """),
- # S.75 A6 (the configuration page): tool.config and set.config, in voc_template (SDSYS's set), not in newvoc.
+ # S.75 A6 (the configuration page): tool.config, in voc_template (SDSYS's set), not in newvoc.
  ('Administrator', '07-sd-admin-configuration.md', """
-   tool.config set.config
+   tool.config
  """),
  # Verbs the roster has that are explained on a page of another number than Linux's.
  ('User', '20-sd-tcl-files-and-records.md', """
@@ -238,8 +238,7 @@ DOCS = [
  ('User', '30-sd-tcl-processes-and-phantoms.md', """
    list.phantoms
  """),
- # Windows: encrypt.key is explained on the encryption page of the Administrator set.
- ('Administrator', '04-sd-encryption.md', """
+ ('User', '06a-sd-basic-encryption.md', """
    encrypt.key
  """),
  ('Administrator', '02-sessions-and-locks.md', """
@@ -253,6 +252,12 @@ DOCS = [
  # so its page is not Linux's 22-remote-administration-over-ssh.
  ('Administrator', '22-remote-administration.md', """
    remote.sdsys
+ """),
+ ('Administrator', '19-the-master-files.md', """
+   run.in
+ """),
+ ('Administrator', '07-sd-admin-configuration.md', """
+   set.config
  """),
 ]
 
@@ -298,7 +303,6 @@ SPLITS = {
     ('User', '17-sd-basic-debugging.md'): ['17a-sd-basic-debugging-full-screen-and-ai.md'],
     ('User', '20-sd-tcl-files-and-records.md'): [
         '20-sd-tcl-files-and-records-2-comparing-triggers-and-import.md'],
-    ('User', '21-sd-tcl-query-processor.md'): ['21a-sd-tcl-query-processor-headings-and-output.md'],
     ('User', '24-sd-tcl-programs-and-the-catalogue.md'): [
         '24a-sd-tcl-find-program-dictionaries-and-the-ide.md', '24b-sd-tcl-the-ide-keys.md',
         '24c-sd-tcl-the-ide-other-files-and-options.md',
@@ -311,7 +315,6 @@ SPLITS = {
     ('User', '29c-sd-tcl-the-development-tools.md'): [
         '29c1-sd-tcl-tool-dict.md', '29c2-sd-tcl-tool-query.md', '29c3-sd-tcl-tool-bulk.md',
         '29c4-sd-tcl-tool-catalog-and-tool-test.md'],
-    ('User', '37-sd-client-api.md'): ['37-sd-client-api-2-select-lists-and-the-rest.md'],
 }
 
 

@@ -15,8 +15,8 @@ apply — it is what `create.account` and the installer already do:
 |---|---|
 | Every SD account | a standard Windows account with no privileged token — see [Being a Windows administrator gets you nothing](#being-a-windows-administrator-gets-you-nothing) |
 | ssh | `ForceCommand`s straight into `sd`, no shell, no `sh`, no `OS.EXECUTE` — see [ssh access](08-ssh-access.html) |
-| `sh`, `OS.EXECUTE`, the editors, the embedded Python, and operating-system files named by path | **off for a new account**, in two independent switches (`sh-on`, `os-on`) that SDSYS turns on account by account — see [Security and the operating system](12a-security-and-the-operating-system.html#the-shell-and-operating-system-access-are-per-account-switches) |
 | ssh and the API, per account | **off for a new account**; SDSYS gives each account the route it needs (`ssh`, `api`, `both`) — see [Managing accounts](05a-managing-accounts.html) |
+| `sh`, `OS.EXECUTE`, the editors, the embedded Python, and operating-system files named by path | **off for a new account**, in two independent switches (`sh-on`, `os-on`) that SDSYS turns on account by account — see [Security and the operating system](12a-security-and-the-operating-system.html#the-shell-and-operating-system-access-are-per-account-switches) |
 | Saving a change to a VOC, a program file or a dictionary (and compiling) | **off for a new account**, in three independent switches (`voc-on`, `bp-on`, `dict-on`) that SDSYS turns on account by account; reading is never stopped — see [Managing accounts](05a-managing-accounts.html) |
 | The `shared` account | the one door that is **open** in a new installation, on purpose: every account can read the data files of the `shared` account by file name, and none can write them — see [The shared account](#the-shared-account-is-open-to-read-by-design) |
 | The API | off (`APIPORT` unset in `sd.conf`) until an administrator turns it on — see [API access](09-api-access.html) |
@@ -70,7 +70,7 @@ are.**
 | `sd`, no account named, any other Windows login | you land in **the SD account with your own name** |
 | no SD account of that name | refused — *Account %1 not in register* (5018) |
 | not in `sdusers` | refused at the door — *not registered for SD use* (5009) |
-| `sd -A<name>` | **refused unless `<name>` is your own account** (10051) |
+| `sd -a<name>` | **refused unless `<name>` is your own account** (10051) |
 | `logto sdsys` from any other account | **refused** to every session that did not sign in to Windows as `sdsys` at its desktop, whether or not it is elevated — 10002, audited `logto refused account=sdsys reason=sdsys is entered by its own session only`; the administrator's own session, having gone to another account, may `logto sdsys` to come back (audited as `logto account=sdsys`) |
 
 **SDSYS is reached one way only: sign in to Windows as the account literally

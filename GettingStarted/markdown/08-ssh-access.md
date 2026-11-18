@@ -79,19 +79,27 @@ route in, not about who took it. SDSYS is not among them: see
 
 ### The cost: scp and sftp stop working inbound
 
-**NO FILE CAN BE PUSHED TO THIS MACHINE OVER ssh, BY ANYBODY, ADMINISTRATORS
-INCLUDED.** The command is forced, so there is no file-transfer subsystem left
-to run. This is deliberate and is the accepted cost of the above.
+**`scp`, `rsync` and a general `sftp` session cannot push a file to this
+machine over ssh**, for anybody who is `ForceCommand`'d into `sd`. The command
+is forced, so there is no system file-transfer subsystem left to run. This is
+the accepted cost of the boundary above.
 
-**The cost is INBOUND ONLY, and that is the whole of the answer.**
-`ForceCommand` applies to sessions where this machine is the ssh *server*.
-WinSCP or `scp` running **on** this machine, connecting outward, makes it the
-*client*, and `sshd_config` is not consulted at all.
+**File transfer is the one way in, and it is closed as delivered.** SD has a
+small sftp server of its own for plain-text files, and an account uses it by
+typing `receive` (to bring files in) or `send` (to take copies of records out) in its
+own SD session, then connecting an sftp client with the same ssh login. It is off
+twice as delivered: the system switch `XFER` in `sd.conf` is 0, and every account's
+`xfer-on` switch is off. The administrator turns on both, deliberately. Turning it on
+lets that person bring text into their own account from another machine and take
+copies of the account's records out, into one directory each way and nothing else;
+there is no shell behind it. See *File transfer* in the Administrator set and
+*Moving Files In and Out* in the User set.
 
-**So copy files by Pulling them, not pushing them.** Sit at the machine or
-connect with Remote Desktop — both untouched, because administrators are never
-put in `sdsshonly` — and fetch what you need from there. Outbound connections
-are not firewalled.
+**The cost is inbound, over ssh, only.** WinSCP or `scp` running **on** this
+machine, connecting outward, makes it the *client*, and `sshd_config` is not
+consulted at all. Outbound connections are not firewalled. An account can also
+move a file by sitting at the machine, or through SD's own file access (an
+editor, or an API client).
 
 Remote-control tools that copy files are unaffected, and so are the console and
 Remote Desktop.

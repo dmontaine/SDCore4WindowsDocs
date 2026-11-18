@@ -74,8 +74,8 @@ and that every SD BASIC name and TCL verb is documented.
 
 `tools\` also holds the PowerShell programs (`sdtcl.ps1`, `sdprobe.ps1`,
 `sdprobe2.ps1`, `sdcompile.ps1` and `sddebug.ps1`) that run something inside a
-real SD session, with the BASIC they run in `tools\probes\`; they are how the
-pages were measured and are not needed to read or build them.
+real SD session, with the BASIC they run in `tools\probes\`; they are not needed
+to read or build the pages.
 
 ## License
 

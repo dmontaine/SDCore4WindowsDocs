@@ -54,7 +54,10 @@ machine and nothing about any other script.
 prompt for you, and that prompt gets **no** such switch — it runs under
 whatever policy your machine sets. That is deliberate: SD lifts the
 restriction for the scripts it installed itself, and never for a shell you
-type into.
+type into. **The scripts you run by hand from the list below are in the same
+position**: you start them from a prompt of your own, so they need
+`-ExecutionPolicy Bypass` on the command line, as every command on this page
+shows.
 
 ### Group Policy is the exception, and it is the one to know about
 

@@ -116,7 +116,8 @@ with `logto shared`.
 * **Structure** means making a file by pathname inside `shared`, `clear.file`,
   `configure.file`, `create.index`, `build.index`, `delete.index`, `set.trigger`, the setters of
   `fcontrol`, resizing, renaming and deleting a file or directory. It is refused to everyone who is not the
-  administrator signed on at a terminal, **for a program marked internal as well, whatever switches
+  administrator (SDSYS signed on at a terminal, or SDSYS over the API when the administrator has opened
+  that door), **for a program marked internal as well, whatever switches
   the account has**: "The structure of a file in the shared account (making, clearing, configuring,
   indexing, triggers, renaming or deleting it) can only be changed by SDSYS, signed on at a terminal".
   Writing a record to an indexed shared file by someone who has `shared.write` still keeps the index.
@@ -179,9 +180,9 @@ with the right can reach (SDSYS's own `open` does not follow `shared`).
    account. `shared.write` is tested at every write.
 6. **SDSYS over the API is the administrator.** When the administrator has opened that door
    (`remote.sdsys api on`), a session of SDSYS runs with SDSYS's full rights, as at the keyboard
-   ([Remote Administration through the API](22a-remote-administration-through-the-api.html)), so it is
-   never refused a record write and is not given the by-name lookup either: its own `open` does not
-   follow `shared`.
+   ([Remote Administration through the API](22a-remote-administration-through-the-api.html)), so it can
+   write records in `shared` and change its structure, and it is not given the by-name lookup either: its
+   own `open` does not follow `shared`.
 
 ## What is not done
 

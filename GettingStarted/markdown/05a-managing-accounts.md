@@ -26,9 +26,7 @@ modify.account <account> delete <user>
 
 **Both are SDSYS's, like every other administration verb** — they are
 not in an ordinary account's VOC at all, so typing them anywhere else says
-the verb is not recognized, not that you lack permission for it. (`grant`,
-`revoke` and `list.grants` were removed in 2.0-0: these two do what the first
-pair did, and there is no verb that lists who is in.)
+the verb is not recognized, not that you lack permission for it.
 
 **Read this twice, because it is the most confusing part of how SD controls
 access.** Entry to an account is membership of the Windows group named in
@@ -73,18 +71,6 @@ membership changes, no VOC changes — every account's VOC is the whole of
 
 **You cannot suspend your own account, or the one you are standing in.**
 
-### The remote routes
-
-**The keyword says what the access is, not what to add.** So
-
-```
-modify.account fred api
-```
-
-gives Fred the API **and takes ssh away**. If you want both, say `both`. The
-message afterwards always names both routes, so you can see what you have
-left him with.
-
 ### Remote access, `sh` and `OS.EXECUTE`: four switches, all off for a new account
 
 **A new user account can sign in to nothing from outside and cannot reach
@@ -93,7 +79,7 @@ accounts that need it, one at a time:
 
 | | |
 |---|---|
-| **`ssh`** \| **`api`** \| **`both`** \| **`none`** | who may connect. Absolute: `api` takes ssh away. These four words leave `files-on` alone |
+| **`ssh`** \| **`api`** \| **`both`** \| **`none`** | who may connect. The word says what the access *is*, not what to add: `modify.account fred api` gives Fred the API and takes ssh away, and `both` gives both. These four words leave `files-on` alone |
 | **`files-on`** \| **`files-off`** | the files-only API route: a login that may work with files and do nothing else. Off for a new account; reported as "Account fred has files yes"; reaches the person at their next login. `api` wins when the account has both |
 | **`sh-on`** \| **`sh-off`** | the `sh` verb |
 | **`os-on`** \| **`os-off`** | `OS.EXECUTE` in a program, `edit`, `micro`, the embedded Python, and files or directories of the operating system named by their path outside the account's own directory |
@@ -103,12 +89,15 @@ each reports where the account now stands ("Account fred has SH yes,
 OS.EXECUTE no"). **A change reaches the account the next time it is
 entered.** Without `sh-on` the verb answers "*name* is not permitted to use
 the operating system shell"; without `os-on`, "*name* is not permitted to use
-OS.EXECUTE" or "*name* has no OS access, so a file or directory outside its
-own account cannot be reached by pathname". See the *Administrator* set's
+OS.EXECUTE" or "*name* has no OS access, so outside its own account it can
+reach by pathname only a directory the administrator opened to all". See the *Administrator* set's
 *Accounts and security* chapter, which says what each switch covers and what
-`os-on` costs on an account that is also reachable from outside. Any number of
-words may be given in one command (`modify.account fred sh-on os-on voc-on`);
-SD reads them all first and does all of them or none.
+`os-on` costs on an account that is also reachable from outside.
+
+**More than one word may be given in one command** (`modify.account fred sh-on os-on voc-on`).
+SD reads and checks them all first and changes nothing if any word is refused; it then carries
+them out in a fixed order and reports which it did. A word that contradicts another in the same
+command (`sh-on` with `sh-off`, or `ssh` with `api`) is refused.
 
 ### Saving changes to a VOC, a program file or a dictionary: three more switches
 
@@ -135,15 +124,16 @@ show that in their message line; every other verb prints it.
 When the installer is run over accounts that already exist, the upgrade
 switches all three on, once, for the *user* accounts in the register. Group and
 other accounts are left off on purpose, and a member who signs on to one
-directly (`sd -A`*name*, a batch job, or the API) gets that account's own
+directly (`sd -a`*name*, a batch job, or the API) gets that account's own
 switches, so give them there with `voc-on`, `bp-on` and `dict-on` where members
 need them. `restore.account` gives the switches back only to an account it has
 to create; an existing account keeps what it has. See the *Administrator* set's
 *Accounts and security* chapter for which files and which commands are covered,
 and for what is not stopped.
 
-**`modify.password` changes a password.** Every account has a password
-from the moment it is made, so there is nothing to *set* for the first time.
+**`modify.password` changes a password, and it is the only verb that does.**
+Every account has a password from the moment it is made, so there is nothing
+to *set* for the first time and there is no `set.password` verb.
 Run with no argument it changes your own; SDSYS may change any account's,
 naming it — see [Administrator commands](06-administrator-commands.html).
 

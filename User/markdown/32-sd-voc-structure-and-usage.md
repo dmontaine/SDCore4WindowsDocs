@@ -141,7 +141,7 @@ target, and the remaining fields carry options.
 | Field 2 | Field 3 | What it does |
 |---|---|---|
 | `CA` | *catalog name* | a cataloged program — 170 of the shipped verbs |
-| `IN` | *number* | internal verb *n*, handled by the command processor itself — 37 verbs |
+| `IN` | *number* | internal verb *n*, handled by the command processor itself — 38 verbs |
 | `OS` | *text* | an operating-system command — `sh`, and nothing else |
 | `CS` | *path* | a locally cataloged function |
 

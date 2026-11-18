@@ -77,8 +77,7 @@ was.
 
 **A form on a screen opened with `clear` writes only what has changed.** The terminal is then known to show the shadow, so when a form is
 drawn again, or one of its widgets is, the text that is already there in the same style
-is left out; choosing a record in the IDE wrote 6,635 characters to the terminal
-before and about 780 now. Two things follow. A form does not repair what the program
+is left out; choosing a record in the IDE writes about 780 characters to the terminal. Two things follow. A form does not repair what the program
 printed over it with `print` or `crt`, only `screen refresh` does; and a screen opened
 *without* `clear` is written in full, as before, because the terminal may show what the
 program printed there. `screen text`, `screen box` and the dialogs always write what

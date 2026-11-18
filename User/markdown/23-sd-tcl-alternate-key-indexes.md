@@ -44,7 +44,7 @@ create.index zzak f1
 ```
 
 ```
-Added index for F1
+Added index for f1
 ```
 
 That reports success, and the index it made matches no records at all. The
@@ -58,7 +58,7 @@ list.index zzak f1
 Alternate key indices for file zzak
 Number of indices = 1
 Index name...... En Type Nulls S/M Fmt Field/Expression
-F1                N  D    Yes   S   L  1
+f1                N  D    Yes   S   L  1
 ```
 
 **The `En` column is the one to read. `N` means the index is not enabled** —
@@ -66,7 +66,7 @@ it exists, it is listed, and it will not find anything. After `build.index` the
 same line reads `Y`:
 
 ```
-F1                Y  D    Yes   S   L  1
+f1                Y  D    Yes   S   L  1
 ```
 
 **So `list.index` is the check**, and *"the index is there"* is not the same
@@ -88,7 +88,7 @@ session** fails this way every time, because `create.index` leaves the file
 open. From a fresh session it succeeds:
 
 ```
-Building index 'F1'...
+Building index 'f1'...
 6 records processed
 Populating index...
 ```
@@ -267,7 +267,7 @@ not kept up as records are written, and the query processor does not use it. It 
 a large load, or a batch run that would change most of the records, where keeping
 three indexes live costs far more than building them afterwards. **`build.index`
 builds it again and switches it on.** Until then its data are out of date, and
-`list.index` shows it as *needing a build*.
+`list.index` shows an `N` for it in the `En` (enabled) column.
 
 **Like `delete.index` it needs the file to itself.** Another session that had the file
 open would go on using, and keeping up, an index this one had switched off. (openQM
@@ -286,7 +286,7 @@ Deleted index f2
 ```
 
 `all` removes every index on the file. Naming them individually works too, and
-**in either case**: index names are lower case, `list.index` prints them
+**in either case**: index names are held in lower case, `list.index` prints them
 that way, and `delete.index zzak f1`, `delete.index zzak F1` and
 `delete.index zzak f1 f2` all do what they say (the answer is
 *Deleted index f1*, in lower case, whichever case you typed).

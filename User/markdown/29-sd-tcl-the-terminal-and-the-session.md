@@ -175,8 +175,10 @@ tool.gates
 A full-screen page, for anyone, that answers "why can I not do that?" — it shows every
 **gate** the system has, the switches the administrator turns on or off for an account
 (`sh`, `os`, `sd`, `voc`, `bp`, `dict`, `net`, the shared account's read and write, and the
-routes `ssh`, `api`, `files`, `files-write`, `files-admin` and `ai`), each **ON** or **off
-for this session**. It needs a window of at least **140 columns by 43 lines**. (For the
+routes `ssh`, `api`, `files`, `files-write`, `files-admin` and `ai`, and `ssh-key`, whether
+you may sign in over ssh with a key as well as with your password; it is off as delivered
+for an account SD made, and a dash for a Windows user SD did not make, whose keys are its
+own), each **ON** or **off for this session**. It needs a window of at least **140 columns by 43 lines**. (For the
 administrator the same verb is the gate matrix of every account; this is the page every
 other account gets.)
 
@@ -193,7 +195,7 @@ again; **F1**, `?` or a click on the `[?]` explains the page; **Ctrl-Q** leaves.
 * **It reports what the session holds, not what the register says now.** `sh`, `os`, `sd`,
   `net` and the shared account were loaded when you entered this account, and `voc`, `bp`
   and `dict` when you signed on (`logto` does not reload them): after the administrator
-  changes one, sign off and on again to see it. The route gates are membership of a Windows
+  changes one, sign off and on again to see it. The route gates (and `ssh-key`) are membership of a Windows
   group by your **login name**, read from the system each time (F5 shows a change).
 * **Every account starts with every gate off, except the right to read the shared
   account.** A gate that is `plan` (raw sockets) is not built yet.

@@ -67,11 +67,12 @@ administrator loosens it, account by account, for the people who need it:
 and of the routes (`create.account user fred ssh sh-on`); the Administrator
 set's *Accounts and Security* chapter has them all.
 
-**`create.account user … ssh` and `… both` are refused when the machine has no
-ssh server**, with a warning saying why: the account would have no way to
-arrive over ssh. `api` and `none` still work. The test is made against the
-machine when you type the command, so installing an ssh server later makes
-`ssh` start working. See [Installing SD Core](01-installation.html#what-you-are-asked).
+**If the machine has no ssh server, `ssh` and `both` still make the account,
+and the command warns that it cannot sign in over ssh until one is installed; if
+it has no API listener, `api` and `both` warn the same way** (turn it on with
+`remote.api on`). The grant is already in place and takes effect then. The test
+is made against the machine when you type the command. See
+[Installing SD Core](01-installation.html#what-you-are-asked).
 
 ### What creating a user account actually does
 
@@ -92,7 +93,13 @@ from `sdsshonly`.** An account with route `none` still joins `sdsshonly` like
 every other ordinary account — that denies the *Windows* console
 and Remote Desktop, and has nothing to do with ssh — it simply also has
 neither `sdssh` nor `sdapi`, so it has no remote door of any kind and can
-only be reached with `logto`.
+only be reached with `logto`. A third group, `sdfiles`, is a narrower API route
+that reaches files and nothing else; the `files-on` and `files-off` words make
+and take it away, and `ssh`, `api`, `both` and `none` leave it alone. One more
+group works the other way round: a Windows user that `create.account` makes is
+put in `sdsshnokey`, and its members are offered no ssh key sign-in (only the
+password), until `modify.account` *name* `ssh-key-on` takes the user out; see
+[ssh access](08-ssh-access.html).
 
 ### What every account can do
 

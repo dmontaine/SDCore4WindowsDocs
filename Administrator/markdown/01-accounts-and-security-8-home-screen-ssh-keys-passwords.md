@@ -23,8 +23,7 @@ list and on the system default): F1 or `?` on the selected row, or a click on th
 setting in the file `context.help` of the shared account. **`load.help`, run by
 SDSYS, fills that file from the `helptext` directory of the SD system directory**
 (it replaces the shipped records and keeps any you added under another id); the
-Windows installer does not run it yet, so run it once after an install or an
-upgrade, or a `[?]` finds no text.
+installer runs it after an install or an upgrade, and it can be run again at any time.
 
 ```
 set.tile                          says which tiles are off, one line for each account that has any
@@ -35,15 +34,28 @@ modify.account account pins-off   they may not (the delivered state)
 ```
 
 * **Tiles are on as delivered and are turned off one account at a time**; there is
-  no setting for every account. The standard tile ids are `editor`, `ide`, `ced`,
-  `terminal`, `keys`, `switch` and `signout`, and `recent`,
-  which is not a tile but the **Recent group** of the home screen: the tiles the person
-  started last, newest first, which they turn on themselves in the View menu (it is
-  off as delivered). `set.tile account recent off` forbids it for the account: the
-  group is not on the page, nothing is read or written for it, and the person cannot
-  turn it on. **Sign out cannot be turned off**, and neither can the **Back** tile of
-  a sub-menu page: a person must always be able to leave. Any other id is accepted
-  and said not to be standard.
+  no setting for every account. The standard tile ids are `editor`, `ide`,
+  `terminal`, `keys`, `switch` and `signout`, the seven development tiles (`files`, `voc`,
+  `dict`, `query`, `bulk`, `catalog` and `test`) and `recent`, which is not a tile but the
+  Recent group (below): 14 ids, the ones the page draws and the rows of the *Menu* box of the
+  menu management page. **Sign out cannot be turned off**, and neither can the **Back** tile of
+  a sub-menu page: a person must always be able to leave. Any other id is accepted and said
+  not to be standard (it would apply to a tile of that name in a page of the account's own).
+* **`recent`: the Recent group.** A group at the top of the home screen with the tiles the
+  person started last, newest first, six at most. **It is off as delivered, and it is the
+  person's to turn on** (the *Recent group* entry of the View menu of their home screen); it
+  keeps its list in the person's own file `&menus&`, as the record `recent`, and writes
+  nothing while it is off. **`set.tile account recent off` is the administrator's wall:** the
+  group is then not on that account's page, nothing is read or written for it, and the View
+  entry cannot be chosen; the list the person kept stays in their file, and `set.tile
+  account recent on` gives the choice back (it does not turn the group on). The list holds
+  tile ids and never a command: each recent tile is built from the page as it is, so a tile
+  that is off for the account is not offered, and a record edited by hand cannot make the
+  page start anything it does not already offer.
+* **Sub-menus.** The home screen can open a second page of tiles from a tile, with a Back
+  tile, Esc and the path on the status line (the User's guide, page 29a). The delivered page
+  declares none, so there is nothing for you to set; a tile of a page of your own that opens
+  one is declared in the page table of the `home` program, not in a file.
 * The setting is **field 17** of the account's register record (tile ids separated by
   spaces). A tile that is off is not on the page, its menu entry cannot be chosen, and
   a group with no tile left has no heading. It takes effect when the home screen is
@@ -143,10 +155,16 @@ membership changes, no VOC changes — every account's VOC is the whole of
 signing in, `logto`, and the API. **Suspending prints two lines**, *Account fred
 is now suspended* and *Nothing on Windows has changed: fred keeps its Windows
 account, its password and every group it belongs to, including any administrator
-rights it had.* A `logto` refused for a suspended account is audited with
-`reason=suspended`.
+rights it had.*
 
-## Who may enter an account: `modify.account add` and `delete`
+**`logto` refuses it to the administrator too.** `logto` into a suspended account is
+refused for every session, SDSYS's included: `Account fred is suspended`, the session stays
+where it was, and the audit trail says `logto refused account=fred reason=suspended`. The
+administrator's maintenance of a suspended account does not need `logto`: `run.in fred ...`
+(`basic`, `catalog`, `decatalog`, `delete.catalog`, `debug`, `compile.dict`) still works in
+one, and `modify.account fred unsuspended` lifts the suspension.
+
+### Who may enter an account: `modify.account add` and `delete`
 
 ```
 modify.account account add user
@@ -245,6 +263,3 @@ with this verb.
 
 [Account Maintenance](01a-account-maintenance.html) — clean.account,
 update.accounts, [locked], config, set.date and delete.account.
-
-[Differences from W1.0-0](24-differences-from-w1-0-0.html) — what changed
-since the previous release, for an administrator upgrading into it.

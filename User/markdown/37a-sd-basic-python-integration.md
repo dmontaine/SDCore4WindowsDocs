@@ -9,18 +9,15 @@ documented.
 
 ## The short version
 
-A BASIC program declares each function it uses, then calls it like any other.
-`$INCLUDE SDPYFUNC.H` declares all twenty-one at once; none of them is a TCL
-verb, so there is no way to call Python from a command prompt, only from a
-compiled BASIC program:
+A BASIC program declares each function it uses, then calls it like any other:
 
 ```
-$INCLUDE SDPYFUNC.H
+deffun PY_CREATEDICT(dictname) calling '!PY_CREATEDICT'
 status = PY_CREATEDICT('mydict')
 ```
 
 All twenty-one are `$internal`-compiled and ship already cataloged, so no
-account needs to compile or catalog anything to use them - only the include
+account needs to compile or catalog anything to use them - only `deffun`
 and a call. Failure is always `status()`, not the returned value: several of
 these functions return an empty string on both "genuinely empty" and
 "failed," so `status()` is what tells them apart. **Every one of the

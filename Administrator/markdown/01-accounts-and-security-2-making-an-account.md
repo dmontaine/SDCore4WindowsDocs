@@ -6,13 +6,11 @@ This page continues [Accounts and Security](01-accounts-and-security.html).
 ## Making an account: `create.account`
 
 ```
-create.account user <name> {ssh | api | both | none} {ssh-key-on} {sh-on} {os-on} {voc-on} {bp-on} {dict-on}
-                           {shared-read-off} {shared-write-on} {net-on} {files-on} {files-write-on} {files-admin-on} {ai-on}
-                           {start-menu | start-terminal} {pins-on} {recovery-on} {xfer-on} {no.query}
+create.account user <name> {ssh | api | both | none} {ssh-key-on} {sh-on} {os-on} {voc-on} {bp-on} {dict-on} {shared-read-off} {shared-write-on} {net-on} {files-on} {files-write-on} {files-admin-on} {ai-on} {start-menu | start-terminal} {pins-on} {recovery-on} {xfer-on} {no.query}
 
-create.account group <name> {start-menu | start-terminal} {pins-on} {no.query}
+create.account group <name> {shared-read-off} {shared-write-on} {start-menu | start-terminal} {pins-on} {no.query}
 
-create.account other <name> <pathname> {start-menu | start-terminal} {pins-on} {no.query}
+create.account other <name> <pathname> {shared-read-off} {shared-write-on} {start-menu | start-terminal} {pins-on} {no.query}
 ```
 
 | | |

@@ -25,7 +25,8 @@ in lower case.
 sh command
 ```
 
-Everything after the verb is the command:
+Everything after the verb is the command. It runs in the account's own
+folder, at the account's own Windows permissions:
 
 ```
 :sh echo hello-from-the-shell
@@ -164,9 +165,10 @@ sign-in and `logto` do, so an account with `sh-on` has the shell over the API
 and an account without it is refused there too. **That is what makes `sh-on`
 on an account that also has the API route a shell behind its credential from
 wherever the API port is reachable** — see *What `os-on` actually costs* in
-[Accounts and Security](01-accounts-and-security.html). SDSYS reaches the API
-from another computer only through the door `remote.sdsys api on` opens
-([Remote Administration through the API](22a-remote-administration-through-the-api.html)). See also
+[Accounts and Security: File Writing, the AI and VOC Pointers](01-accounts-and-security-5-files-write-ai-pointers.html). SDSYS over the API
+is admitted only through the door `remote.sdsys api on` opens
+([Remote Administration through the API](22a-remote-administration-through-the-api.html)),
+and the session it is admitted to is the administrator's, on an elevated token. See also
 [Remote Access and the Machine](05-remote-access-and-the-machine.html).
 
 ## Who has these verbs
@@ -264,7 +266,8 @@ docs.install C:\path\to\the\pdf\files
 ```
 
 which copies every `*.pdf` of that directory into the shared account's `pdf`
-directory. A file is copied only if its name is lower case letters, digits and
+directory (which the installer makes readable by every SD user and writable by
+SYSTEM and the Administrators only: **no SD user can add a document there**). A file is copied only if its name is lower case letters, digits and
 `. _ -`, ends in `.pdf` and does not begin with a dot, and the file begins with
 `%PDF-`; anything else is skipped and named. A document already there is replaced.
 
@@ -272,7 +275,9 @@ directory. A file is copied only if its name is lower case letters, digits and
 the installer, the document that lists what changed in the release as
 `sd-core-for-windows-<version>-changes.pdf`, `.html` and `.md`. The installer copies
 each of them into the same `pdf` directory. A file that is a link, or whose name has
-a capital or another character, is not copied, and the log says so.
+a capital or another character, is not copied, and the log says so. An installer that
+was not run from a package, such as one downloaded alone, finds nothing and says so;
+the install goes on.
 
 ### The context help: `load.help`
 

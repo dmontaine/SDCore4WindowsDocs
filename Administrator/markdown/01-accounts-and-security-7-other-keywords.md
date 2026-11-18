@@ -51,7 +51,8 @@ Account fred has SH no, OS.EXECUTE yes
 
 Asking for what is already so changes nothing and says so ("fred already had
 that access; nothing changed"). A route word reports the route in the same way
-("fred has no remote access: not ssh, not the API").
+("SD routes for fred: ssh and the API." — "fred has no remote access: not ssh,
+not the API").
 
 **A change takes effect the next time the account is entered.** The setting is
 read when a session signs in, and for `sh`, `os`, `sd`, `net` and the two
@@ -63,10 +64,11 @@ the setting and then end their session.
 **Every one of these words is written to the audit trail** (`modify.account
 sh-on account=fred` and its siblings), in lower case.
 
-**Upgrading keeps what accounts have.** The installer's `upgrade_gates` step
-copies `sh` and `OS.EXECUTE` into the register once, from what `os.users` said
-(see *The operating-system switches*); `upgrade_editgates` switches `voc-on`,
-`bp-on` and `dict-on` on, once, for every user account whose field is blank.
+**Upgrading keeps what accounts have.** The installer carries `sh` and
+`OS.EXECUTE` into each account once, from what the earlier system had given its
+people (see *The operating-system switches*), so that nobody loses a command they
+were using; in the same way it switches `voc-on`, `bp-on` and `dict-on` on, once,
+for every user account whose field is blank.
 Ssh and the API are left exactly as they were. Group and other accounts are
 left off on purpose. **`net-on` is not part of it**: nothing used SDNet before,
 so every existing account has it off. **The `shared` switches are not part of it
@@ -144,7 +146,7 @@ opens, and it is held to this:
 * **Plain text only.** A file with a NUL byte or one of the bytes 248 to 255 is refused, in either
   direction, and so is a name that is not a plain file name. `XFERKIND` narrows it to the extensions you
   list. `XFERFILE` and `XFERSLOT` bound the size of a file and of a whole transfer; `XFERWAIT`, `XFERIDLE`
-  and `XFERMAX` bound the time (*Configuration*).
+  and `XFERMAX` bound the time (*Configuration: File transfer over ssh*).
 * **Nothing is replaced** unless the person typed `receive overwrite`.
 * **User accounts only, and the person's own.** A group or `other` account is refused the switch ("... is
   not a user account, and file transfer is only for a user account, for its own person; nothing was
@@ -153,8 +155,8 @@ opens, and it is held to this:
 * **It needs the ssh route.** The client signs in over ssh, so an account with no `ssh` route cannot
   connect. A file that arrives is only a record in `xfer.in`: bringing a program in does not compile or run
   it, and what the person may then do with it is what the account's other switches allow.
-* **Everything is in the audit trail**: each opening and closing, each connection with the address it came
-  from, each file with its size and SHA-256, and each refusal with its reason.
+* **Everything is in the audit trail** ([The Audit Trail](21-the-audit-trail.html)): each opening and closing, each connection with
+  the address it came from, each file with its size and SHA-256, and each refusal with its reason.
 
 A change takes effect at the next connection: the register is read each time a client connects. To end a
 transfer that is under way, `logout` the person's session or the connection (it shows in `listu` as `sftp`).
@@ -165,8 +167,8 @@ an sftp request included, to SD; until a transfer is opened, an sftp client is t
 ### Where a session starts: `start-menu`, `start-terminal`, `start-default` and `set.start.default`
 
 A session on a terminal starts either in the **home screen** (a screen of tiles:
-the account's tools, a terminal, switch account and sign out; the User set has the
-page *The Home Screen*) or at the **command prompt**. **You decide, account by
+the account's tools, a terminal, switch account and sign out; the User's guide has the
+page `29a`) or at the **command prompt**. **You decide, account by
 account**, and you decide what an account with no setting of its own does:
 
 ```
@@ -179,7 +181,7 @@ set.start.default                        says which it is now
 ```
 
 * **The default is `menu` as delivered.** `set.start.default` writes the word to the
-  file `start.default` in the `sdsys` directory; the file is absent until you use the
+  file `start.default` in the sdsys directory; the file is absent until you use the
   verb, and absent means menu.
 * **EVERY EXISTING ACCOUNT HAS NO SETTING OF ITS OWN**, so after an upgrade each
   follows the default and starts in the home screen. To keep the old start for
@@ -189,7 +191,8 @@ set.start.default                        says which it is now
   writes it; it applies at the person's next sign-on, and when they type `logto` at
   the prompt to enter the account. It may be set on any kind of account.
 * **It is not a wall.** Starting in the home screen confines nobody: its *Terminal*
-  tile gives the ordinary command prompt (and `exit` comes back).
+  tile gives the ordinary command prompt (and `exit` comes back). To keep a person from a
+  prompt you would need a setting that removes the prompt itself, which SD does not have.
 * The screen is never given to a session that cannot use it: a window under 140 by
   43, a session with no terminal (a pipe, a phantom), an API server, or a `logto`
   that a program ran with `execute`. Scripts and scheduled jobs are unchanged.
@@ -197,15 +200,9 @@ set.start.default                        says which it is now
   default`) and `fred already starts that way; nothing changed` when the word is the
   one already set. It is audited as `modify.account start-menu account=fred`, and
   `set.start.default menu` as `set.start.default menu`.
-* **`create.account` takes `start-menu` or `start-terminal`**,
-  for any kind of account; without one the new account follows the default. Two
-  different start words in one command are refused (*start-menu and start-terminal set
-  the same access to different states*), and a start word that is neither is refused
-  as an unexpected token, **before anything is made**, so a refused word makes no
-  Windows user, no folder and no account. `start-default` is not a word of
-  `create.account` (it only restates what the account has when the words are left out).
-  The command says `Account fred starts at: menu` back, and the audit line ends
-  `start=menu` or `start=terminal` when a start word was typed.
+* `create.account` takes `start-menu` and `start-terminal` too, so an account can be made
+  with its start in one command (see *Making an account*); `start-default` is not a word of
+  `create.account` (an account made without a start word follows the default already).
 
 ## Continued in
 

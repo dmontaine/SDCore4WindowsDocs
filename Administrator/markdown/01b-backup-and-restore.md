@@ -168,7 +168,9 @@ settings.report {directory}
 Writes, or shows, a **plain-text record** of the system's settings — `sd.conf`,
 ssh and API access, the accounts — for an administrator to keep. It is for
 reference only: nothing reads it back. **It never contains a password or a
-private key.**
+private key.** It also lists the entries of the global catalogue that are not
+SD's own (those that no `$catalog` line in SDSYS's `gpl.bp` names), because an
+account's backup holds that account's own entries and the rest are only here.
 
 ## Who has these verbs
 

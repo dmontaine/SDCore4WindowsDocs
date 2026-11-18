@@ -1,10 +1,8 @@
 Title: Development and file commands
 Subtitle: Compiling, editing, and the verbs that maintain files, indexes and records in bulk.
 
-**Every account has these, from the moment it is created.** SD Core used to
-hold them back from a *standard* account and only give them to a
-*programmer* or *administrator* one; that split is gone — see
-[Accounts](05-account-types.html). This page is now a reference for what
+**Every account has these, from the moment it is created** — see
+[Accounts](05-account-types.html). This page is a reference for what
 each of them does, not a list of what you have been given.
 
 **A few, named as they come up below, still need more than the verb**:
@@ -38,7 +36,7 @@ page.
 | **`ed`** | the line editor. Needs nothing installed |
 | **`edit`** | a **full-screen** editor — opens the record in Microsoft Edit |
 | **`micro`** | a **full-screen** editor — opens the record in micro |
-| **`sed`** | a **full-screen** editor that runs **inside** SD: drop-down menus that show the keys, color for the language, split windows and macros. Needs a window of 140 columns by 43 lines, and no operating-system permission |
+| **`sed`** | a **full-screen** editor that runs inside SD, with drop-down menus and color for SD BASIC and five other languages |
 | **`ced`** | a full-screen editor for a record that is a **data collection** (JSON), one level at a time with the type of every element shown |
 | **`ide`** | a full-screen workbench: the files and records, the program and its compile messages on one screen |
 | **`debug`** | the BASIC debugger |
@@ -59,6 +57,13 @@ edit  bp myprog
 micro bp myprog
 edit  dict customers name
 ```
+
+**A new account can do none of this until SDSYS gives it two switches.**
+Saving a record of a program file or a dictionary, and compiling or
+cataloging, need `bp-on` (and `dict-on` for a dictionary); `edit` and `micro`
+also need `os-on`, because each runs an operating-system program. See *Saving
+changes to a VOC, a program file or a dictionary* in
+[Managing accounts](05a-managing-accounts.html).
 
 Either verb writes the record to a working copy, opens the editor on it,
 reads it back, and asks whether to save. For a `bp` record it then offers
@@ -85,14 +90,17 @@ other file is treated as plain text, which is correct for a VOC entry or a
 data record.
 
 > **The word lists are generated from the compiler.** They come out of
-> `bcomp`'s own tables — **238 statements, 43 reserved words and 230
-> intrinsic functions** — so the highlighting cannot drift from the
-> language. **If a name you expect is not colored, that is worth
-> reporting**: it means the two have come apart, which is exactly what
-> generating them was meant to prevent.
+> the compiler's own tables of statements, reserved words and intrinsic
+> functions, so the highlighting follows the language. **If a name you
+> expect is not colored, that is worth reporting.**
 
 **Nothing is installed into your profile.** SD ships the rules with itself
 and points micro at them, so they work for every account on the machine.
+
+**`sed`, `ced` and `ide` run inside SD** and draw the screen themselves, so they need
+no operating-system permission and no editor installed; they need a terminal window of
+at least 140 columns by 43 lines (the debugger and the home screen use the same
+frame).
 
 **`ed` is unaffected and is still there.**
 
@@ -178,11 +186,6 @@ terminal rather than reading it through a pipe.
 **If an editor misbehaves over ssh and not at the console, that is worth
 reporting** with the terminal you connected from.
 
-**`sed`, `ced` and `ide` run inside SD** and draw the screen themselves, so they need
-no operating-system permission and no editor installed; they need a terminal window of
-at least 140 columns by 43 lines (the debugger and the home screen use the same
-frame).
-
 The removed full-screen editors are a different matter: `update.record` and
 `modify` are gone and are not coming back. See
 [Not in SD Core](14-not-in-sd-core.html).
@@ -254,7 +257,7 @@ It runs an editor outside SD, so it needs OS.EXECUTE permission, which an admini
 ed, the line editor, needs none of this.
 ```
 
-SDSYS grants it — see [Administrator commands](06-administrator-commands.html#how-you-grant-it).
+SDSYS grants it — see [Administrator commands](06-administrator-commands.html#the-shell-sh).
 
 **A session with no terminal is refused first and separately**: an API
 session or a piped script has nowhere to draw a full screen, and is told

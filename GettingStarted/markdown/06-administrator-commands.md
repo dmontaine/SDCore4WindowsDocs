@@ -1,9 +1,8 @@
 Title: Administrator commands
 Subtitle: The verbs only SDSYS has, and how to use them.
 
-**These verbs are not in an ordinary account's VOC at all.** SD Core used to
-give an *administrator-tier* account a larger VOC than a *programmer*
-account's; that model is gone. Every ordinary account now gets the same VOC
+**These verbs are not in an ordinary account's VOC at all.** Every ordinary
+account gets the same VOC
 — see [Accounts](05-account-types.html) — and administration is not a verb
 an account can be given. It is SDSYS, a single Windows account the installer
 makes, reached by signing in to Windows as SDSYS and running `sd`, elevated.
@@ -29,7 +28,10 @@ update.accounts {all}
 clean.account
 ```
 
-Covered in full in [Accounts](05-account-types.html) and
+The `modify.account` lines above are the ones this set describes; it has
+more words (`xfer-on`, `ai-on`, `net-on`, `recovery-on` and others), and typing
+`modify.account` with an account and no word prints them all. Covered in full in
+[Accounts](05-account-types.html) and
 [Managing accounts](05a-managing-accounts.html). The points worth repeating
 here:
 
@@ -40,10 +42,10 @@ here:
   route, and its API door from another computer opens only when the
   administrator runs `remote.sdsys api on`, which is not one of these settings.
 - **`modify.account` says what the access *is*, not what to add.**
-  `modify.account fred api` takes ssh away.
+  `modify.account fred api` gives Fred the API and takes ssh away; `both` gives both.
 - **`modify.account` takes several actions in one command**
-  (`modify.account fred sh-on os-on`); it reads them all first and does all of
-  them or none.
+  (`modify.account fred sh-on os-on`); it reads and checks them all first and changes
+  nothing if any word is refused.
 - **`suspended`/`unsuspended`** is a state, not a tier — nothing about the
   VOC moves either way, because every account's VOC is the whole of `newvoc`
   regardless.
@@ -52,7 +54,8 @@ here:
   records on SD's deletion list (the ones a release has stopped shipping),
   saving a copy of each first. Since every
   account already has the whole VOC, this now matters only after an
-  *upgrade* — a fresh account never needs it.
+  *upgrade* — a fresh account never needs it, and **the installer runs
+  `update.accounts all` for you** when you keep your accounts.
   **`list.voc.removed`** shows the list and **`restore.voc`** puts a removed
   record back.
 
@@ -65,11 +68,6 @@ the one you run in each account after upgrading SD.
 modify.account <account> add    <user>
 modify.account <account> delete <user>
 ```
-
-**`grant`, `revoke` and `list.grants` were removed in 2.0-0**; these two
-`modify.account` words do what the first pair did, with the same audit lines, and
-there is no verb that lists who is in (the members of the account's Windows group
-are the answer).
 
 **An `add` or a `delete` does not take effect until the person signs out of
 Windows and back in.** Entry to an account is Windows group membership, and
@@ -128,13 +126,21 @@ machine's clock and every other session are untouched.
 ```
 remote.api on | local | off
 remote.ssh on | off
+remote.sdsys on | off
+remote.sdsys api on <address ...> | off
 ssh.server ...
 append.sd.path ...
 ```
 
-These four set up the machine's own remote-access surface rather than any
+These set up the machine's own remote-access surface rather than any
 one account's — see [ssh access](08-ssh-access.html) and
-[API access](09-api-access.html) for what each one does.
+[API access](09-api-access.html) for what each one does. **`remote.sdsys` opens
+or shuts SDSYS's own remote doors, and both are shut as delivered.** `remote.sdsys on`
+opens remote administration through the separate account SDRADMIN, and
+`remote.sdsys api on` *address* opens SDSYS's own API login to the computers named.
+Opening either means that nothing but a password then stands between those
+computers and the administrator. The Administrator set's chapters on remote
+administration say what each risks.
 
 ## The shell — `sh`
 
@@ -151,86 +157,25 @@ rights, never elevated. SDSYS is never refused. See the *Administrator*
 set's *Accounts and security* chapter, "The operating-system switches:
 `sh-on` and `os-on`".
 
-### How you grant it
-
-```
-modify.account fred sh-on      the sh verb at the prompt
-modify.account fred sh-off
-modify.account fred os-on      OS.EXECUTE, the edit and micro editors, Python,
-                               and files outside the account's own directory
-modify.account fred os-off
-```
-
-**They are four switches over two fields**, not four names for one state,
-so `sh-off` leaves `OS.EXECUTE` alone. **Both default to off**, for every
-account `create.account` makes, and `create.account user fred sh-on os-on`
-gives them at creation. **The switch follows the account, not the person**: to
-take a grant from somebody who is signed in now, change it and end their
-session.
-
-| What you want an account to have | `sh-on` | `os-on` |
-|---|---|---|
-| nothing outside SD | off | off |
-| the editors and `OS.EXECUTE`, but no shell at the prompt | off | on |
-| a shell, but programs may not shell out | on | off |
-| both | on | on |
-
-### SDSYS always has both, from any session
-
-**SDSYS reaches `sh`, `OS.EXECUTE`, `edit` and `micro` whatever the
-register says** — the same identity check that gates administration (see
-[Accounts](05-account-types.html#sdsys-is-the-only-administrator)) grants
-this too. **`modify.account sdsys` is refused outright, for every action,
-not only these four** — *"Remote access is never available to SDSYS"* is
-the message whatever you asked for, because the refusal comes before the
-action is even parsed: SDSYS is outside this verb's reach entirely, not
-only for the routes the wording names.
-
-### Both switches are enforced
-
-`os-on` is what decides whether `OS.EXECUTE` may run, so **an account that can
-write a program does not thereby have the operating system.** The refusal reads *`<name>` is not permitted to
-use OS.EXECUTE*; the one for `sh` reads *`<name>` is not permitted to use the
-operating system shell*.
-
-```
-no switch         sh refused    OS.EXECUTE refused
-sh-on only        sh RUNS       OS.EXECUTE refused
-os-on only        sh refused    OS.EXECUTE RUNS      <- programs may shell
-                                                          out; the person at
-                                                          the prompt may not
-SDSYS             sh runs       OS.EXECUTE RUNS
-```
-
-SD's own system programs are exempt from the switches, so **`create.account`**
-works whatever they say.
-
-### Two rules that go with it
-
-**No account gets a pipe, a redirect or a chain at the prompt.** `sh`
-refuses a command that holds `;`, `|`, `&`, `$`, a backquote, `<`, `>` or a
-newline — for every account, SDSYS included, switch or no switch. (A bare `sh`,
-with nothing after it, is not a command, so it is not filtered: it starts an
-interactive shell for an account that has `sh-on`, and `exit` brings you back.)
-Write the work into a script and run the script:
+**`sh` runs one command at a time, and refuses a command that
+contains `;`, `|`, `&`, `$`, a backquote, `<`, `>` or a newline** — "Error 2
+executing operating system command", before anything runs. That is a safety
+measure against an accidental injection in a one-liner, applied to every
+account whether or not it has `sh-on`, SDSYS included. **There is no pipe,
+redirection or chaining from the prompt** (a bare `sh`, with nothing after it,
+does start an interactive shell for an account that has `sh-on`; `exit` brings
+you back); put the work in a script and run the script,
 `sh powershell -File nightly.ps1`.
 
-**`os-on` is also what lets an account name a file outside its own
-directory.** Without it, opening a file by its path, `dir()`, `select.dir`,
-`deleteseq` of a path and a print file made at a path are refused anywhere but
-the account's own directory (and the shipped SDSYS entries, read only, and the
-directories listed in `NETDIRS`). That holds at the console as well as over the
-network. `sd-on` is the narrower switch that reaches the directories of other
-SD accounts the person could `logto`.
+### Over the API they follow the same switches
 
-### Over the API
-
-**An API session is held to the same switches**: the API server reads the
-account's `sh-on` and `os-on` when it enters the account. An account with
-`sh-on` and the API route therefore has a shell behind its credential, from
-wherever the API port is reachable — which is why both default to off. SDSYS has
-no API route to arrive over in the first place — see
-[API access](09-api-access.html).
+**An API session reads the account's `sh-on` and `os-on` when it enters the
+account**, as sign-in and `logto` do: an account with `sh-on` has `sh` over the
+API, an account without it is refused there too, and a new account has
+neither. That makes `sh-on` or `os-on` on an account that also has the API
+route a shell behind its credential from wherever the API port is reachable —
+weigh that when you turn either on. An administrator who needs a shell uses the
+local sign-in. See [API access](09-api-access.html).
 
 ## The full list
 
@@ -240,7 +185,7 @@ no API route to arrive over in the first place — see
 **`settings.report`** · **`unlock`** · **`config`** · **`listu`** ·
 **`list.readu`** · **`list.locks`** · **`clear.locks`** · **`lock`** ·
 **`logout`** · **`set.date`** · **`remote.api`** · **`remote.ssh`** ·
-**`ssh.server`** · **`append.sd.path`**
+**`remote.sdsys`** · **`ssh.server`** · **`append.sd.path`**
 
 **`sh` and `modify.password` are not on this list** — every account
 has them; what SDSYS has that an ordinary account does not is the

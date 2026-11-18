@@ -90,7 +90,9 @@ the name and the password to the person, who runs `set.netlogin` here.
 than `sdfiles`, plus `sdfileswrite` for a server defined `write`. Opening a remote file
 through an `N` pointer is the client. `set.netlogin` itself makes the login exchange as it
 always did, which does not depend on the route: the server decides the route at the end of
-the exchange.
+the exchange. A `set.netlogin` made against a user who is only in `sdfiles` succeeds, and
+remote reads and queries work for that user; writes and locks work once it is also in
+`sdfileswrite`.
 
 **On the machine being reached:** the groups `sdfiles`, `sdfileswrite` and `sdfilesadmin` are made, empty,
 by the installer beside `sdssh` and `sdapi`, and removed by an interactive uninstall (a
@@ -141,7 +143,8 @@ command line (`LIST customers 'c2'`) selects nothing and reads only those record
 an index for asks the server's index (one request for the ids of a value, or a scan from one
 key to the next) and reads only the records it names; a file with no index is read as
 before. A remote file
-answers `FILEINFO(f, FL$TYPE)` with 7 (`FL$TYPE.NET`).
+answers `FILEINFO(f, FL$TYPE)` with 7 (`FL$TYPE.NET`) and counts as case-insensitive, as every file
+on a current server is.
 
 Who may open one, checked in this order before anything is dialled: the account holds the
 **NET switch** (or is SDSYS), the server is defined, the account is in the definition's

@@ -57,8 +57,7 @@ began, as `list.readu detail` already did.
 The command, the record it waits for, its program names and its account are shown with each control
 character, `del`, byte from 128 to 159 and mark character as `?`, so that a session cannot send a code to
 your terminal by what it types or locks. The text of `@pstat` (below) gets the same treatment, except that
-its marks are still shown as spaces. A long command or `@pstat` text used to be saved in the status record
-with the wrong length; that is fixed.
+its marks are still shown as spaces.
 
 ### The levels are additive
 
@@ -268,6 +267,14 @@ phantoms, and left blank for anyone else's**, as `listu` does. **openQM's
 `pool` word is refused** (*SD has no pools of phantom processes*), and `user`
 without a name is *User name required after USER*.
 
+```
+  User  Pid          Username                          Login time    Account
+    26  5124         sduser                            21 Oct 00:11  sduser
+```
+
+A phantom is listed only once it has signed on: `phantom` reports the user number it has given the new
+process at once, and a `list.phantoms` typed in the same second may show the heading and nothing under it.
+
 ## Telling a phantom what to do: `child()` and `signal()`
 
 ```
@@ -369,15 +376,46 @@ The events are `call` `open` `read` `write` `delete` `openseq` `readseq`
 `writeseq` `execute` and `object`; none named means all of them. Without
 `user` the verb profiles your own session.
 
-**The table is kept in SD's `$ipc` file under the user number, so no file is
-left on the disk.** A profile outlives the session that made it.
+```
+profiler on read write
+list t3 name
+profiler off
+```
+
+```
+Profiler on for user 28
+...
+Profiler off for user 28: 29 events in 13 entries
+```
+
+(The `...` is the report `list` printed.) **The table is kept in SD's `$ipc` file under the user number, so no file is
+left on the disk.** A profile outlives the session that made it: the profiles of sessions that have already
+ended can still be listed.
 
 `profiler` (or `profiler display`) then shows it. With several profiles it
-lists them and asks which to open (*Profiles available (user number, events,
-entries):*, then *User number to open, or Q to quit:*). With exactly one
+lists them and asks which to open:
+
+```
+Profiles available (user number, events, entries):
+    25       24        9
+    28       29       13
+User number to open, or Q to quit:?
+```
+
+With exactly one
 profile it opens that one without asking, and `profiler display user 28` names
 one. There are four levels, and you go down by typing the number of a line and
 up with `b`; `q` leaves:
+
+```
+Event types
+   1         29  READ
+Line number to open, B to go back, Q to quit:?1
+READ events, by name
+   1          4  (none)
+   2         14  T3
+Line number to open, B to go back, Q to quit:?
+```
 
 | Level | Shows |
 |---|---|

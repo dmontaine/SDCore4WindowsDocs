@@ -52,7 +52,7 @@ sdconv {options} pathname ...
 |---|---|
 | `-B` | Convert to big-endian. |
 | `-L` | Convert to little-endian. |
-| `-D` | Debug. It is accepted, is not listed in the usage text, and **does nothing** for a program file: the progress it would print belongs to the hashed-file routine that is not called. |
+| `-D` | Debug. It is accepted, is not listed in the usage text, and **does nothing** for a program file: the progress it would print belongs to the hashed-file routine that is not called. It prints no extra output. |
 | (neither `-B` nor `-L`) | Convert to the byte order of the machine it is run on, which here is little-endian, so the same as `-L`. |
 
 Options may be joined in one word (`-BD`) and are not case sensitive. If both
@@ -104,12 +104,12 @@ A file whose first byte is neither value, or that is shorter than the 165-byte
 header, is not touched.
 
 ```
-before   64 00 00 00 00 00 a5 00 00 00 00 00 03 00 64 00
-after -B 65 00 00 00 00 00 00 00 00 a5 00 00 00 03 00 64
+before   64 00 00 00 00 00 bf 01 00 00 00 00 08 00 68 00
+after -B 65 00 00 00 00 00 00 00 01 bf 00 00 00 08 00 68
 ```
 
-(the first 16 bytes of a compiled program in an account's `bp.out`, before and
-after). Then `sdconv -L` on the same file restored it **byte for byte**, and a
+(the first 16 bytes of a global catalog entry, before and after). Then
+`sdconv -L` on the same file restored it **byte for byte**, and a
 second `-B` on a file already big-endian changed nothing.
 
 **Only the object header is converted**: the program id, the start offset, the
@@ -128,12 +128,9 @@ C:\sdi_demo\zzcust is a hashed file: sdconv converts compiled programs only, not
 ```
 
 `%0` and `%1` are byte for byte as before, with `-B`, with `-L` and with no
-option, and naming the file twice refuses it twice. The source has a routine,
-`process_file`, that would convert the header, the data groups and the index
-nodes. It was commented out of `convert_file` in a compiler-warning clean-up,
-nothing records a decision to do that, and it has faults of its own (an endless
-loop on an unknown block type, a 64-bit field cut to 32 bits, two buffer
-overflows, no open-file check and no backup), so it is not used.
+option, and naming the file twice refuses it twice. The tool does not convert the
+header, the data groups or the index nodes of a hashed file, and it does not
+offer to.
 
 **A hashed file taken to a machine of the other byte order cannot be converted by
 this tool, and this SD could not open it if it were.**

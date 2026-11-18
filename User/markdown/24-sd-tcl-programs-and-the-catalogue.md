@@ -131,7 +131,7 @@ map {all} {lptr {n}} {file {name}}
 
 ```
 System catalog map at 23:12:07 on 26 Aug 2026                    Page 1
-  Catalog name..................  Compiled.  Time....  ...Obj  ..Xref  ..Size
+  Catalog name....................  Compiled.  Time....  ...Obj  ..Xref  ..Size
   ZZPROG                            26 Aug 26  23:12:07     189       6     195
                                                                 Total:      195
 ```

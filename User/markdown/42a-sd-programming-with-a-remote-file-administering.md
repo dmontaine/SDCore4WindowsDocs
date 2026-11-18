@@ -6,7 +6,7 @@ File](42-sd-programming-with-a-remote-file.html).
 
 ## Administering a remote file
 
-These do on the other machine what they do on a local file, **for your remote login and in the account that login entered there**, so every switch that account has on that machine applies (a file named `voc`, `*.bp` or `*.dic` still needs `voc.edit`, `bp.edit` or `dict.edit` there). They need **three things**, the last on the other machine: a `write` definition here, the remote login in the other machine's write group, **and** in its administration group (`modify.account <account> files-admin-on`; it needs `files-on` and `files-write-on` first and is off for every account until the administrator of that machine gives it).
+These do on the other machine what they do on a local file, **for your remote login and in the account that login entered there**, so every switch that account has on that machine applies (a file named `voc`, `*.bp` or `*.dic` still needs `voc.edit`, `bp.edit` or `dict.edit` there, and the shared account's structure rule holds). They need **three things**, the last on the other machine: a `write` definition here, the remote login in the other machine's write group, **and** in its administration group (`modify.account <account> files-admin-on`; it needs `files-on` and `files-write-on` first and is off for every account until the administrator of that machine gives it).
 
 | | |
 |---|---|
@@ -20,7 +20,7 @@ These do on the other machine what they do on a local file, **for your remote lo
 
 **What it records.** The other machine writes `api admin request=70 op=create.index file=customers user=name` before it runs the verb, and this machine writes `netfile admin server=nfa file=customers op=create.index` (and `netfile fcontrol ... key=n`), so a killed command is still on both trails.
 
-**Not available:** the statements that read or change the tree of an index (`AKREAD`, `AKWRITE`, `AKDELETE`, `CLEAR.AK`, `AKENABLE`, `AKMAP`) on a remote file are still refused (message 12516), as are `OPENSEQ` and the other sequential-file statements. A change is never sent twice: a lost reply is message 12514, and the program must look at the file to find out what happened.
+**Not available:** the statements that read or change the tree of an index (`AKREAD`, `AKWRITE`, `AKDELETE`, `CLEAR.AK`, `AKENABLE`, `AKMAP`) on a remote file are still refused (message 12506, or 12516 on a write definition), as are `OPENSEQ` and the other sequential-file statements. A change is never sent twice: a lost reply is message 12514, and the program must look at the file to find out what happened.
 
 ## Indices of a remote file
 

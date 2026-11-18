@@ -132,6 +132,11 @@ There is no "insert only" form — read first if that distinction matters, and
 hold a lock between the read and the write or two sessions will both find it
 absent.
 
+`delete file.variable, record.id` removes a record. After
+`delete f, 'R2'`, reading `R2` takes the `else` branch.
+
+`clearfile file.variable` empties the file but leaves it in place.
+
 ### Files an account may not change: the edit switches
 
 Three kinds of file can be changed only by an account whose administrator
@@ -158,15 +163,15 @@ under the counter's next value, **1** in a file that has never used it, and `id.
 is given that id (as text). An update lock on the new id is taken for the write and
 released before the next statement, or with `writeu` **kept**. In a transaction the id is
 taken at the `write`, not at the `commit`, so a transaction that does not commit leaves a gap.
-**A directory file is refused** (*WRITE … CREATING.SEQKEY needs a hashed file*, message 12353;
-status 3005 under `on error`) and `id.variable` is left as it was. `fileinfo(file, 1031)` is
+**A directory file is refused** (*WRITE … CREATING.SEQKEY needs a hashed file*; status 3005 under
+`on error`) and `id.variable` is left as it was. `fileinfo(file, 1031)` is
 the id of the last record written this way (0 if none), and `configure.file` *file* `next` *n*
 sets the next id (`next query` shows it).
 
 **An id that already names a record is skipped.** Before it uses an id, `write … creating.seqkey`
 looks in the file: if a record is already there (written by a copy, by a load, or by a program that
 chose its own numbers) it takes the next id instead, so that record is never overwritten. **This is
-SD's behavior, not openQM's** - openQM does not look, and its manual tells the programmer to write
+SD's behavior, not openQM's** — openQM does not look, and its manual tells the programmer to write
 every record of the file this way. The skipped numbers leave gaps. In a transaction only the records
 already committed to the file are looked at; an id this process took earlier is never given out twice.
 **`clear.file` keeps the counter**, so the ids go on from where they were; `configure.file`
@@ -206,25 +211,7 @@ knows*. `FC$SYNC` works on a hashed file only (`status()` is 3005 on any other).
 qualifier may be left out where the action does not use it. The internal programs' own function is called `fcontrol.int` and is not available to
 ordinary programs. On a file reached through an `N` pointer to another SD server the call goes to
 that server: the test for an id (action 6) needs only read access there, and every other action needs
-the server's administration group (`sdfilesadmin`), as the server decides ([Programming with a Remote File](42-sd-programming-with-a-remote-file.html)).
-
-### Forced writes: `sync`
-
-A file that must survive a power failure can be told to write to disk as it goes. Without it SD, like any
-program that writes files, leaves data in the operating system's cache for a short while.
-
-```
-open 'LEDGER' to f.ledger sync else stop 'cannot open'
-openpath 'C:/data/ledger' to f.ledger sync else stop
-x = fcontrol(f.ledger, FC$SYNC, 1)       ;* or turn it on, or off, for a file already open
-x = fileinfo(f.ledger, FL$SYNC)          ;* 1 if this open has it on
-```
-
-With the state on, every write and delete flushes the primary and the overflow subfiles before the
-statement returns. The `S` flag in field 6 of the file's VOC entry (an `F` entry) gives the same state to every
-`open` of it, and bit 4 of the `FSYNC` parameter in `sd.conf` gives it to every hashed file. **It is much slower: a write costs a disk flush, so use it on the
-files that need it and not on all.** It protects the file you flagged and nothing else on the machine, and a file
-that is not hashed (a directory file) does not take it.
+the server's administration group, as the server decides ([page 42](42-sd-programming-with-a-remote-file.html)).
 
 ### Line terminators: `fcontrol` `FC$CRLF` and the letters `L C B X`
 
@@ -259,10 +246,23 @@ was = fcontrol(f.in, FC$CRLF, FC$CRLF.NOCR)   ;* was = 0, the number for a file 
 read rec from f.in, 'from.linux' then ... else ...
 ```
 
-`delete file.variable, record.id` removes a record. After
-`delete f, 'R2'`, reading `R2` takes the `else` branch.
+### Forced writes: `sync`
 
-`clearfile file.variable` empties the file but leaves it in place.
+A file that must survive a power failure can be told to write to disk as it goes. Without it SD, like any
+program that writes files, leaves data in the operating system's cache for a short while.
+
+```
+open 'LEDGER' to f.ledger sync else stop 'cannot open'
+openpath 'C:/data/ledger' to f.ledger sync else stop
+x = fcontrol(f.ledger, FC$SYNC, 1)       ;* or turn it on, or off, for a file already open
+x = fileinfo(f.ledger, FL$SYNC)          ;* 1 if this open has it on
+```
+
+With the state on, every write and delete flushes the primary and the overflow subfiles before the
+statement returns. The `S` flag in field 6 of the file's VOC entry (an `F` entry) gives the same state to every
+`open` of it, and bit 4 of the `FSYNC` parameter in `sd.conf` gives it to every hashed file. **It is much slower: a write costs a disk flush, so use it on the
+files that need it and not on all.** It protects the file you flagged and nothing else on the machine, and a file
+that is not hashed (a directory file) does not take it.
 
 ## Continued in
 

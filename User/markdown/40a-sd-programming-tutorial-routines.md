@@ -387,7 +387,3 @@ function alphabetically:
 |---|---|
 | [SD Basic - Syntax](94-sd-basic-syntax.html) | every SDBasic name, with its syntax |
 | [SD TCL - Syntax](95-sd-tcl-syntax.html) | every TCL verb, with its syntax |
-
-Coming from an earlier release? [Differences from
-W1.0-0](43-differences-from-w1-0-0.html) covers what changed in the
-language and the command processor.

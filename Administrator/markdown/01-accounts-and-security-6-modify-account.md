@@ -43,7 +43,7 @@ then carries out all of them, or none of them:
   typed:** the route words, then `sh`, `os`, `sd`, the three edit switches,
   `recovery`, `xfer` and `net`, then the shared-account words, then the files words
   (`files-on` before `files-write-on`, which needs it, and that before
-  `files-admin-on`), then `ai-on` / `ai-off`, the start and pins words, and the
+  `files-admin-on`), then `ai-on` / `ai-off`, `ssh-key-on` / `ssh-key-off`, the start and pins words, and the
   suspension last. Each is reported and audited
   exactly as if it had been given alone.
 * **A command of more than one action ends with a line** saying which were

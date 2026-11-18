@@ -72,6 +72,38 @@ be running under this release **at both ends**.
 **`SDConnectLocal()` connections are unaffected.** They send no password and
 never did.
 
+## The port
+
+**The API port is 4247, and nothing can change it.** (OpenQM and ScarletDME
+use 4243.) `sd.conf`'s `APIPORT` now only switches the API
+on: any number above zero means on, and SD listens on 4247 whatever the number
+is. A file that says `APIPORT=4243` keeps working and means 4247. A program that
+names port 4243 must name 4247 instead; one that names no port needs no change.
+The server accepts API connections on any network interface, unless
+`remote.api local` has limited it to `127.0.0.1` (`APILOCAL=1` in `sd.conf`),
+in which case only this computer can connect.
+
+**If you tunnel, stop.** `ssh -L 4247:127.0.0.1:4247 user@host` still works
+but is no longer what the design expects. Point the
+client straight at port 4247 on the server.
+
+**Reaching the port from another computer is off unless you tick the box during
+installation.** To change it afterwards, from an elevated prompt:
+
+```
+powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\api-firewall.ps1" -Open
+powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\api-firewall.ps1" -Restrict
+```
+
+**To turn the API off altogether**, comment out the `APIPORT` line in
+`C:\ProgramData\SD\sd.conf` and restart SD. With no `APIPORT` set, SD creates
+no socket at all — "no API" is a real state, not just a firewall rule.
+
+> **Declining the API at install time leaves no listener at all.** The
+> installer writes an `sd.conf` with no `APIPORT` line, so nothing listens and
+> there is no firewall rule to open. The API box is unticked by default.
+> `remote.api on` puts a listener back.
+
 ## The connection is encrypted
 
 **Every API connection — the network port and the local one alike — is wrapped
@@ -126,47 +158,16 @@ group. SD's service creates it and removes it. **Leave it alone**: if it is
 deleted by hand, every API connection is refused until the service is
 reinstalled.
 
-## The port
-
-**The API port is 4247, and nothing can change it.** (OpenQM and ScarletDME
-use 4243.) `sd.conf`'s `APIPORT` now only switches the API
-on: any number above zero means on, and SD listens on 4247 whatever the number
-is. A file that says `APIPORT=4243` keeps working and means 4247. A program that
-names port 4243 must name 4247 instead; one that names no port needs no change.
-The server accepts API connections on any network interface, unless
-`remote.api local` has limited it to `127.0.0.1` (`APILOCAL=1` in `sd.conf`),
-in which case only this computer can connect.
-
-**If you tunnel, stop.** `ssh -L 4247:127.0.0.1:4247 user@host` still works
-but is no longer what the design expects. Point the
-client straight at port 4247 on the server.
-
-**Reaching the port from another computer is off unless you tick the box during
-installation.** To change it afterwards, from an elevated prompt:
-
-```
-powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\api-firewall.ps1" -Open
-powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\api-firewall.ps1" -Restrict
-```
-
-**To turn the API off altogether**, comment out the `APIPORT` line in
-`C:\ProgramData\SD\sd.conf` and restart SD. With no `APIPORT` set, SD creates
-no socket at all — "no API" is a real state, not just a firewall rule.
-
-> **Declining the API at install time leaves no listener at all.** The
-> installer writes an `sd.conf` with no `APIPORT` line, so nothing listens and
-> there is no firewall rule to open. The API box is unticked by default.
-> `remote.api on` puts a listener back.
-
 ## Reaching the port is not getting in
 
-A caller must clear two gates, in this order:
+A caller must clear two gates, in this order, and SDSYS has a door of its own:
 
 1. **Complete the SCRAM exchange** against a password held for that account —
    so **an account with no password cannot connect at all**.
-2. **Be a member of the `sdapi` group**, which an account joins only when you
-   give it API access. `create.account user fred api` or `... both` does that;
-   `ssh` or `none` does not.
+2. **Be a member of the `sdapi` group** (or of `sdfiles`, for the files-only
+   route), which an account joins only when you give it API access:
+   `create.account user fred api` or `... both` does that; `ssh` or `none` does
+   not.
 
 **SDSYS is admitted from another computer only through a door the
 administrator opens.** It is never joined to `sdapi`, because only
@@ -257,7 +258,9 @@ is**: weigh it before you turn either on for an account that also has the
 administrator for any purpose, so there is no shell over the API for it; use
 the local sign-in. An API session runs with the signed-in user's own rights,
 never as the service's LocalSystem account. `SDCLIENT` in `sd.conf` is the
-further control, if a site wants one: see the *Administrator* set's
+further control, if you want one: non-zero disables file access outright for an
+API session, and `2` additionally refuses any subroutine not compiled as
+callable from a client. It defaults to `0` — see the *Administrator* set's
 *Configuration* chapter. One limit is Windows': a process started the way an
 API login starts one cannot launch anything that needs a desktop, which
 includes PowerShell (see [Differences from W1.0-0](01b-differences-from-w1-0-0.html)).

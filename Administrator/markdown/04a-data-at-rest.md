@@ -41,12 +41,23 @@ process that sorts: for a person at the keyboard their own
 `%LOCALAPPDATA%\Temp`, for the SD service its own. The work files of a large
 sort hold the keys being sorted, in plain text. On an encrypted system drive
 they are covered. If SD's data is on another drive and only that drive is
-encrypted, point both at a folder on it:
+encrypted, point both at a folder on it, written in POSIX form as `sd.conf` does
+(`/cygdrive/d/` is the drive `D:\`):
 
 ```
-TEMPDIR=D:\SDData\temp
-SORTWORK=D:\SDData\sortwork
+TEMPDIR=/cygdrive/d/SDData/temp
+SORTWORK=/cygdrive/d/SDData/sortwork
 ```
+
+Create the folders first. A folder that does not exist when SD starts is ignored,
+and the default applies without a message. A change to either parameter needs a
+restart ([Configuration](07-sd-admin-configuration.html)).
+
+**The page file and the hibernation file.** SD's shared memory can be paged out
+to the page file, and a hibernated computer writes its whole memory, SD's included,
+to `hiberfil.sys`. Both are on the system drive. With BitLocker on that drive they
+are covered; on a computer without it, switch hibernation off (`powercfg /hibernate off`
+in an elevated prompt) and consider a page file that is cleared at shutdown.
 
 ## Doing it
 

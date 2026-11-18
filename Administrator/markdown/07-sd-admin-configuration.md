@@ -49,9 +49,9 @@ An unrecognized parameter is not ignored. The parser abandons the file with
 `Unrecognized configuration parameter`, and SD does not start.
 
 That is why a name SD has dropped has to be taken out of the file. These
-twelve parameters no longer exist (`APILOGIN`, `CODEPAGE`, `CREATUSR`,
-`EXCLREM`, `FIXUSERS`, `GDI`, `JNLDIR`, `JNLMODE`, `PORTMAP`, `RINGWAIT`,
-`TXCHAR` and `FILERULE`), and so does `INVCASE`. The installer removes those
+thirteen parameters no longer exist (`APILOGIN`, `CODEPAGE`, `CREATUSR`,
+`EXCLREM`, `FIXUSERS`, `GDI`, `INVCASE`, `JNLDIR`, `JNLMODE`, `PORTMAP`,
+`RINGWAIT`, `TXCHAR` and `FILERULE`). The installer removes those
 lines from a `sd.conf` it restores when you keep the configuration across a
 re-install, and writes which it removed to the setup log. A file copied in by hand must have them
 taken out before SD will start.
@@ -80,7 +80,7 @@ YEARBASE  1930
 
 SD accepts **59** parameters. The verb prints all of them except `APILOCAL`,
 `BACKUPDIR`, `NETDIRS` and `SDSYS`, and `DEBUG`, `FDS` and `PHANTOMS` only when
-they are set.
+they are set; it also prints `TIMEZONE`, which is not a file parameter.
 
 `NETDIRS` is the one to know about. It names the directories outside any
 account that an account **without** `os-on` may still open by their path (see
@@ -97,7 +97,8 @@ The `config()` function reads one parameter from a program:
 group.size = config('GRPSIZE')
 ```
 
-**56 parameters are readable this way.** The three that are not are `BACKUPDIR`,
+**57 parameters are readable this way** (the 59 that `sd.conf` accepts, and `TIMEZONE`,
+which is not a file parameter). The three that are not are `BACKUPDIR`,
 `NETDIRS` and `SDSYS`. A name of more than sixteen characters is not found (the
 function answers an empty string and `status()` is not 0); no parameter name is
 that long, so that only shows up if you pass something which is not a
@@ -113,7 +114,7 @@ Editing `sd.conf` and restarting SD is the durable route, and for most
 parameters it is the only one. Fourteen tuning parameters can also be changed from SD itself, with
 `set.config` or the `E` key of `tool.config` (see *Changing a parameter from SD*, below).
 
-**28 parameters can also be changed for the current session:**
+**29 parameters can also be changed for the current session:**
 
 ```
 config sortmem 8192
@@ -123,11 +124,11 @@ That writes to the session's own copy of the settings, which the session read
 from `sd.conf` when it started. It does not reach `sd.conf`, it does not affect any
 other session, and it is gone when the session ends.
 
-The 28 are `DHCACHE`, `DUMPDIR`, `FLTDIFF`, `FSYNC`, `GRPSIZE`, `INTPREC`,
+The 29 are `DHCACHE`, `DUMPDIR`, `FLTDIFF`, `FSYNC`, `GRPSIZE`, `INTPREC`,
 `LPTRHIGH`, `LPTRWIDE`, `MAXCALL`, `MAXRLOCK`, `MUSTLOCK`, `NETREPLY`,
 `NETWAIT`, `OBJECTS`, `OBJMEM`, `PWDELAY`, `RECCACHE`, `SAFEDIR`, `SDCLIENT`,
 `SH`, `SH1`, `SORTMEM`, `SORTMRG`, `SORTWORK`, `SPOOLER`, `TEMPDIR`,
-`TERMINFO` and `YEARBASE`.
+`TERMINFO`, `TIMEZONE` and `YEARBASE`.
 
 Everything else takes effect only when SD is next started. That includes every
 limit which sizes the shared memory segment and every setting the API listener
@@ -135,7 +136,7 @@ reads.
 
 **A session reads `sd.conf` itself when it starts.** It does not copy the
 settings the service left in shared memory, which an SD user with a shell could
-change. So an edit to a setting a session keeps for itself (the 28 above, and
+change. So an edit to a setting a session keeps for itself (the 29 above, and
 others such as `USRDIR` and `GRPDIR`) reaches the sessions started after it,
 without a restart. **A bad line in `sd.conf` stops a new session from starting**,
 with the message `sd -start` gives, until it is repaired; SD and the sessions

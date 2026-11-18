@@ -129,8 +129,8 @@ or through your own export/import BASIC.
 ## Language and locale
 
 **SD Core is English only.** `set.language` and `load.language` do not exist.
-`NLS` does: it shows and sets the currency symbol and the thousands and decimal
-separators.
+`nls` is still there: it shows and sets the currency symbol and the thousands
+and decimal separators, which is all it ever did.
 
 ## Embedded Python
 
@@ -140,7 +140,7 @@ loaded into the server. Python and the runtime `sd.exe` is built on cannot share
 one process safely (`long` is a different width on each side); the helper avoids
 that by never being the same process at all.
 
-**21 `gpl.bp/PY_*` programs** are BASIC-callable (`CALL !PY_CREATEDICT`,
+**21 `gpl.bp/py_*` programs** are BASIC-callable (`call !py_createdict`,
 and so on) — there is no TCL verb, so this is a programming capability, not
 a command you type at the prompt. Access is gated per session, at the
 moment Python starts, by the same `os-on` switch that gates
@@ -164,7 +164,8 @@ Administrator set and *SD Basic - Encrypting Data* in the User set.
 | `RDPACCOUNT`, `NO.RDPACCOUNT` | typing it now stops **`create.account`** with *Unexpected token (RDPACCOUNT)* and makes no account |
 | `CREATUSR` | **`config`** no longer lists it; `config('CREATUSR')` returns nothing. The parameter itself no longer exists, and a `CREATUSR` line in `sd.conf` now stops SD from starting (the installer takes it out of a kept file) |
 | `umask` | removed entirely. It controls POSIX file-mode bits, which Windows does not use for security — see [Security](12-security.html#what-ships-secured-before-you-change-anything) for what does the equivalent job here |
-| `grant`, `revoke`, `list.grants` (removed in 2.0-0) | **`modify.account`** *account* **`add`** *user* and **`modify.account`** *account* **`delete`** *user* give and take away entry to an account, as SD Core for Linux does, and write the same audit lines; `list.voc.removed` names them as the replacement. There is no verb that lists who is in; the members of the account's Windows group are the answer (`net localgroup sdu_`*name*) |
+| `grant`/`revoke`/`list.grants` | folded into `modify.account add`/`delete` — see [Accounts](05-account-types.html). There is no verb that lists who is in; the members of the account's Windows group are the answer (`net localgroup sdu_`*name*) |
+| the `os.users` permit list | the file is gone; `sh-on`/`sh-off`/`os-on`/`os-off` are kept, and they set two fields of the account's own register record instead — see [Security and the operating system](12a-security-and-the-operating-system.html) |
 | Field 4 of an `ACCOUNTS` record | the list of accounts allowed in. The membership of the account's Windows group answers that question now |
 
 **Accounts already created with `RDPACCOUNT` keep their Windows sign-in.**
@@ -176,19 +177,23 @@ restricted group by hand:
 net localgroup sdsshonly <name> /add
 ```
 
-## The five programs SD used to ship into the SDSYS BP file
+## Eighteen SDSYS test and legacy programs
 
-`PCL` and `PCL.GRID` (printer control), `U0032` and `U50BB` (user exits) and
-`VFS.CLS` (a template class module) are no longer installed there.
+`bigstr_test`, `msgtest`, `pcl`, `pcl.grid`, `pcode_list`, `sdtest_v8`,
+`sd_encrypt`/`_b64`/`_ext`, `sd_ext`, `test.then.else`, `testsz`, `u0032`,
+`u50bb`, `vfs.cls`, `pref_t`, `sdTests` and `tilde_test` are no longer
+installed into the SDSYS `bp` file — developer-era test and demonstration
+programs with no product function, not something an application ever
+called. **`py_json`, `py_term`, `py_test` and `py_test2` were kept
+deliberately**, as the documented examples for embedded Python, above.
 
-**PCL is unaffected as a printer feature** — the `PCL` keyword and the
-cataloged `PCL` routine are both still there. What has gone is a second, older
-copy of the source sitting in `BP`.
+**`pcl` is unaffected as a printer feature** — the `pcl` keyword and the
+cataloged `pcl` routine in `gpl.bp` are both still there. What has gone is
+a second, older copy of the source sitting in `bp`.
 
-**SD now ships only four programs into the SDSYS bp file**: `PY_JSON`,
-`PY_TERM`, `PY_TEST` and `PY_TEST2`, the examples for embedded Python (see
-*SD BASIC - Python Integration*). The rest of `bp` is yours — and because of
-that, **`bp` and its compiled objects are preserved when you upgrade**,
+**SD ships only those four examples into the SDSYS `bp` file now.**
+Everything else in it is yours — and because of that, **`bp` and its compiled objects
+are preserved when you upgrade**,
 alongside your accounts and the rest of your own data. An upgrade replaces
 those four programs by name and touches nothing else in `bp`.
 

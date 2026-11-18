@@ -236,7 +236,7 @@ Things to know:
 - A viewport is not a window of its own: it is drawn into the form, and a later widget
   placed over it is drawn over it (a scroll draws it again too).
 - Scrolling 200 by 60 of sheet (630 widgets) in a window of 138 by 40 takes about a tenth
-  of a second a step. The cost is the widgets in the window.
+  of a second a step, measured. The cost is the widgets in the window.
 
 ## Continued in
 

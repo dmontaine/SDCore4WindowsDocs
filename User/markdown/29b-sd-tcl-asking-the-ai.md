@@ -17,7 +17,7 @@ what does the SELECT verb do
 Send it? (y/N)
 ```
 
-You see the provider, the model and the size of all that will be sent, then **your text**. SD's own text - the administrator's standing text and one fixed sentence that asks for a short plain answer - is sent before it and counted in the size, but not shown; that is why the size is larger than your question. Nothing is sent unless you answer `y` or `yes`. Anything else - Enter alone, `n`, a typing error, an input that has ended - sends nothing, so a program cannot make `ai` send by feeding it an answer.
+You see the provider, the model and the size of all that will be sent, then **your text**. SD's own text - the administrator's standing text and one fixed sentence that asks for a short plain answer - is sent before it and counted in the size, but not shown; that is why the size is larger than your question. The 1887 bytes above are the shipped standing text, the fixed sentence and this 28-character question; an administrator who sets a different standing text changes the figure. Nothing is sent unless you answer `y` or `yes`. Anything else - Enter alone, `n`, a typing error, an input that has ended - sends nothing, so a program cannot make `ai` send by feeding it an answer.
 
 The answer is printed as plain text, wrapped to your window, followed by the tokens used:
 
@@ -43,7 +43,7 @@ The quotes are taken off before anything is shown or sent.
 
 ## What is sent, and what is not
 
-Only your text and SD's own text. `ai` does not add your account, your files, your session or your data. If you paste a record into the question, the provider sees it. The administrator's audit trail records that you asked (your account, the program, the number of bytes), never what you asked or what came back.
+Your text, the administrator's standing text and the fixed sentence, which are SD's own and are not shown in the preview (their size is counted in it). `ai` does not add your account, your files, your session or your data. If you paste a record into the question, the provider sees it. The administrator's audit trail records that you asked (your account, the program, the number of bytes), never what you asked or what came back.
 
 `ai` only prints the answer. It never runs anything the answer says.
 
@@ -51,7 +51,7 @@ SD does not take questions about its own code or build (`gpl.bp`, `gplsrc`, the 
 
 ### Passages of the documentation (the AI line, not the `ai` verb)
 
-When you ask in the AI line (the home screen, a page of the toolkit, the IDE, SED, the collection editor or the debugger), SD looks through its own User documentation, installed under `C:\ProgramData\SD\sdsys\docs\user`, for the sections that match your words and adds up to four of them to the request, so that the model answers from SD's pages and not from what it remembers of other multivalue systems. The passages are SD's own text: they are sent before your request and counted in the size, but the preview does not list them. Nothing leaves until you choose Send, and Cancel is the default. A passage is at most 2,400 bytes and all of them 6,000. A request of common words, or of words no page holds, gets none. The model is asked to name the page it used, so you can find it in the documents. If you are the administrator, the pages written for the administrator are searched too; they are never searched for anyone else.
+When you ask in the AI line (the home screen, a page of the toolkit, the IDE, SED, the collection editor or the debugger), SD looks through its own User documentation, installed under `C:\ProgramData\SD\sdsys\docs\user`, for the sections that match your words and adds up to four of them to the request, so that the model answers from SD's pages and not from what it remembers of other multivalue systems. The passages are SD's own text: they are sent and counted in the size on the preview's first line, and not shown, like the rest of what SD adds. A preview taller than the screen scrolls with PgUp and PgDn (Home and End go to its first and last lines; the bottom border says which lines are shown), and Send and Cancel stay on the screen. Nothing leaves until you choose Send, and Cancel is the default. A passage is at most 2,400 bytes and all of them 6,000. A request of common words, or of words no page holds, gets none. The model is asked to name the page it used, so you can find it in the documents. If you are the administrator, the pages written for the administrator are searched too; they are never searched for anyone else.
 
 If a page cannot be read, it is left out and the line works as it did. The `ai` verb adds no passages.
 

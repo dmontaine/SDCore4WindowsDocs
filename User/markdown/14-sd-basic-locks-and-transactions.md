@@ -181,7 +181,7 @@ unlock n
 ```
 
 There are **64** of them, numbered 0 to 63, and SD attaches no meaning to any
-of them. They are for serialising something that is not a record — a nightly
+of them. They are for serializing something that is not a record — a nightly
 report, a printer, an external file.
 
 **A `lock` with no `else` clause retries for ever.** The compiler generates

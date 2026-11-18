@@ -7,10 +7,6 @@ your machine, the network between two servers, the program you run beside
 SD. Treat the page as a list of things to try on your own system before an
 application depends on them.
 
-> This document is separate so that it can be withheld. It links to nothing
-> outside the administrator set. Where a page in another set is worth naming,
-> it is named in words.
-
 ## How to read an entry
 
 | | |
@@ -43,9 +39,7 @@ how long the waiters wait.
 
 ### A lock held by a terminal session and wanted by an API connection
 
-**What to expect.** Two local sessions compete correctly: record, update and
-file locks are reported against the right holder, a waiting read is released
-when the holder lets go, and a task lock refuses a second taker. The API's own
+**What to expect.** Two local sessions compete correctly, and the API's own
 session-confinement gate is described in *API access* in the **Getting
 Started** set.
 

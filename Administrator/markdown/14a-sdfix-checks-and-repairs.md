@@ -1,5 +1,5 @@
 Title: sdfix: What It Checks and Repairs
-Subtitle: Every error a check reports, what -F or -Q does about it, the dump and rebuild of mis-hashed groups, interactive mode, and the faults in the tool that were found by running it and fixed.
+Subtitle: Every error a check reports, what -F or -Q does about it, the dump and rebuild of mis-hashed groups, interactive mode, and what the tool will not do.
 
 > This document is separate so that it can be withheld. It links to nothing
 > outside the administrator set. Where a page in another set is worth naming,
@@ -58,7 +58,10 @@ Data rewritten
 Temporary file deleted
 ```
 
-A second check is clean. Under `-Q` the same file is reported and, with the
+In this example the header's mod value was 1, so half the records hashed
+to the wrong group. The check reports 20 records, the `-F` run sets the mod value
+back to 2 and rebuilds the group, and a second check is clean. All 40 records
+were still there. Under `-Q` the same file is reported and, with the
 answer `n` to `Fix?`, left alone.
 
 * The temporary file is `~SDFix.n` (n is the numeric user id the runtime gives
@@ -96,18 +99,20 @@ number shows the window at that address; `rebuild n` dump and rebuild group *n*;
 `recover`; `z` the file's statistics counters; `q`.
 
 * **Addresses it prints with an `x` in front are decimal.** `Header size 2048
-  (x0800)` is the hex form. The offsets `h` prints at the start of each line,
+  (x0800)` is the hex form; `Group 1 (x000000002048)` is 2,048 in decimal.
+  The offsets `h` prints at the start of each line,
   without an `x`, are hex.
 * **`Wa=x` writes into the file.** Do not use it on a
   file you cannot lose. The address *a* is **hex**, the same text `h` prints
   (`W002E=4142`), and the value *x* is 2, 4 or 8 hex digits for 1, 2 or 4 bytes,
-  written **in the order you type them**. It prints `Was` and the bytes that
+  written **in the order you type them**, which is the order a dump of the file
+  shows them. It prints `Was` and the bytes that
   were there. `Wa="text"` writes the text. An address past the end of the subfile
   is `Illegal address`, a value that is not 2, 4 or 8 hex digits is `Illegal data
   length`, and any character that is not a hex digit is `Format error in W
   command`. The address must be hex digits followed at once by `=` (spaces before
   it are allowed): `W1G0=41`, `W10xyz=41` and `W10 =41` are format errors and
-  write nothing.
+  write nothing. The address and the value are read as hex digits, as written.
 * **If its input ends or fails, interactive mode ends**: `End of input`
   and `Status: 0` when it ended, `Input error [n]` and `Status: 1` when reading
   failed.

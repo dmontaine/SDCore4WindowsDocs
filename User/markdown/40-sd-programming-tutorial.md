@@ -23,6 +23,13 @@ You need an SD session and a `bp` file. If you have signed in and
 created a file called `customers` as the Introduction suggests, you
 already have `bp` — every account gets one.
 
+**A new account must be given `bp-on` before it can save or compile a
+program.** Without it `ed bp hello` refuses to save and `basic bp hello` is
+refused, and the message says which switch is missing. SDSYS gives it with
+`modify.account` *name* `bp-on`; `edit` and `micro` need `os-on` as well. See
+*Saving changes to a VOC, a program file or a dictionary* in *Managing
+accounts*, in the GettingStarted set.
+
 ```
 sd
 ```
@@ -30,13 +37,6 @@ sd
 You land at the `:` prompt. That is TCL — the command processor. From
 here you compile, catalog and run programs. The programs themselves
 are written in SDBasic, which is a different language from TCL.
-
-**A new account must be given `bp-on` before it can save or compile a
-program.** Without it `ed bp hello` refuses to save and `basic bp hello` is
-refused, and the message says which switch is missing. SDSYS gives it with
-`modify.account` *name* `bp-on`; `edit` and `micro` need `os-on` as well. See
-*Saving changes to a VOC, a program file or a dictionary* in *Managing
-accounts*, in the GettingStarted set.
 
 Your `bp` file is an ordinary Windows folder. You can write programs
 in `ed` from inside SD, in `edit` or `micro` (once the account has `os-on`), or in any text editor you like — Notepad, VS Code,

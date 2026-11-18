@@ -1,5 +1,5 @@
 Title: Installing SD Core
-Subtitle: What the installer does to the machine, the two kinds of installation, and the choices it puts in front of you.
+Subtitle: What the installer does to the machine, and the choices it puts in front of you.
 
 There is no compiler to run and no dependency to resolve. SD Core for Windows
 ships as a single installer, `sd-setup-` and the version, carries its own
@@ -198,13 +198,13 @@ machine can reach. That is a real deployment rather than a degraded one.
 Windows console and Remote Desktop, so they reach SD over ssh or over the API
 and nothing else — including at this keyboard, where an ssh account arrives by
 `ssh localhost`. With no ssh server on the machine, `create.account … ssh` and
-`… both` are refused, because the account could sign in nowhere. `api` and
-`none` still work, and `none` is meaningful: an application account reached only
-by `logto`.
+`… both` still make the account and warn that it can sign in nowhere until one
+is installed. `api` and `none` work as ever, and `none` is meaningful: an
+application account reached only by `logto`.
 
-The refusal is tested against the machine when you type the command, not
+The warning is tested against the machine when you type the command, not
 against a decision recorded at install time. Install an ssh server later and
-`create.account … ssh` simply starts working.
+the account's `ssh` simply starts working.
 
 ## Continued in
 

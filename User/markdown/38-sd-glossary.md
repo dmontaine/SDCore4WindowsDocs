@@ -61,6 +61,9 @@ without arguments.
 on input (`iconv`) or output (`oconv`). Examples: `D` for dates, `MR`
 for masked decimal, `MC` for case conversion.
 
+**Correlative** — a computation applied to a field value before the conversion is
+applied. SD has no A or S dictionary items; the computation is written as an I-type item.
+
 ## D
 
 **Dictionary** — a file that defines the fields of a data file for the

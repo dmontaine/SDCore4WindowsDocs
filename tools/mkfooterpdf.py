@@ -274,10 +274,11 @@ def main():
     html_path = os.path.abspath(args.html)
     pdf_path = os.path.abspath(args.pdf)
     page_html = open(html_path, encoding='utf-8').read()
+    sys.stdout.write('mkfooterpdf: page %s\nmkfooterpdf: out %s\nmkfooterpdf: date %s\n'
+                     % (html_path, pdf_path, args.date))
     heads = headings(page_html)
     m = re.search(r'<title>(.*?)</title>', page_html, re.S)
     title = html.unescape(m.group(1)).split(' - ')[0].strip() if m else 'Changes'
-    sys.stdout.write('mkfooterpdf: page %s\nmkfooterpdf: out  %s\nmkfooterpdf: date %s\n' % (html_path, pdf_path, args.date))
     if not heads:
         sys.stderr.write('mkfooterpdf: no h2 or h3 in %s\n' % html_path)
         return 1

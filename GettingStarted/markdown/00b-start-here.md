@@ -40,12 +40,12 @@ from. What changed since an earlier release of SD Core for Windows is on the
 
 ## The pages
 
-**There are twenty-two, and they are numbered.** Read them in numerical order the
-first time; after that they stand alone.
+**The pages are numbered.** Read them in numerical order the first time; after
+that they stand alone.
 
-**A number with a letter after it is the second half of a long page**, split so
+**A number with a letter after it continues the page before it**, split so
 that no page runs longer than a reader will scroll: `01a` continues `01`, and
-so on. Nothing was renumbered when they were split.
+so on.
 
 | | | |
 |---|---|---|
@@ -69,7 +69,7 @@ so on. Nothing was renumbered when they were split.
 | **13** | [Other hardening](13-hardening.html) | The global catalog, the pcode library, scheduled jobs, the logs, line endings, the terminal, and running SD |
 | **14** | [Not in SD Core](14-not-in-sd-core.html) | What has been removed, and what to use instead |
 | **15** | [Migrating to SD](15-migrating-to-sd.html) | Bringing programs and queries from another MultiValue database: where the compatibility words are set, and the words SD does not accept |
-| **15a** | [Option words](15a-migrating-option-words.html) | The eight words of the `option` command, one line each |
+| **15a** | [Option words](15a-migrating-option-words.html) | The words of the `option` command, one line each |
 | **15b** | [Mode words](15b-migrating-mode-words.html) | The names `$mode` accepts and the lines of a `$basic.options` record, one line each |
 
 ## The five things most likely to surprise you
@@ -102,17 +102,20 @@ gone. What an account cannot do is administer: that is SDSYS alone, and
 SDSYS is not something `create.account` can produce.
 See [Accounts](05-account-types.html).
 
-**4. Commands and names are lower case now.** Everything that can be lower case
-is. Typing in upper case still works — the lookup tries what you typed, then
-lower, then upper. See [Lower case](11-lower-case.html).
+**4. Commands and names are lower case now, completely.** Everything that
+can be lower case is — names on disk, VOC entries, program and include
+names, and the files `create.file` makes — with upper-case input converted
+on the fly, so no command, file or record id can exist in two casings. See
+[Lower case](11-lower-case.html).
 
-**5. The API login is SCRAM, and the old cleartext one is gone.** Clients built
-against the old protocol will not connect. See [API access](09-api-access.html).
+**And one that carries over unchanged: the API login is SCRAM**, and the
+old cleartext one is gone. Clients built against the old protocol will not
+connect. See [API access](09-api-access.html).
 
 ## What this release is
 
-**W2.0-0.** Windows only, and English only. There are no `#ifdef` branches keeping Linux alive in
-this source — Linux SD is a separate project and this is not a build of it.
+**W2.0-0.** Windows only, and English only. SD Core for Linux is a separate
+project and this is not a build of it.
 
 **It is a hobby project with no release schedule.**
 

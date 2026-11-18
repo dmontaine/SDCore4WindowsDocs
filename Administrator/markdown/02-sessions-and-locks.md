@@ -1,5 +1,5 @@
 Title: Sessions and Locks
-Subtitle: Seeing who is logged in, ending a session that will not end itself, and inspecting or forcing the locks a session holds.
+Subtitle: Seeing who is signed in, ending a session that will not end itself, and inspecting or forcing the locks a session holds.
 
 These are the verbs for looking at the machine as a whole and intervening in it:
 **whose sessions are running, what they are holding, and how to take either
@@ -24,10 +24,10 @@ processes.
 
 **This page is the other half**: the verbs that see and act across the machine.
 
-## Who is logged in: `listu`
+## Who is signed in: `listu`
 
 ```
-listu {no.page} {lptr {n}}
+listu {detail} {no.page} {lptr {n}}
 ```
 
 ```
@@ -80,7 +80,6 @@ it. The mark behind it is set in only one place, the API server's request 29,
 *Configuration*). The SDNet described in this set, where a program opens a file
 on another SD server, does not use request 29, so a session that comes from it
 shows an address like any other API session.
-
 **`(logout pending)`** after the name means somebody has asked that session to
 end and it has not gone. See below.
 

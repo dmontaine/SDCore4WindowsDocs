@@ -128,14 +128,14 @@ set's SD TCL syntax card.)
 |---|---|
 | Parameters accepted in `sd.conf` | **59** |
 | Parameters the `config` verb displays | **56** |
-| Parameters readable with `config()` | **56** |
-| Parameters settable for the current session | **28** |
+| Parameters readable with `config()` | **57** |
+| Parameters settable for the current session | **29** |
 
 The verb displays `DEBUG`, `FDS` and `PHANTOMS` only when they are set, and `TIMEZONE`,
 which is not a file parameter. No parameter is accepted and ignored: a line
 naming an unknown one (such as `APILOGIN`, `CODEPAGE`, `CREATUSR`,
-`EXCLREM`, `FIXUSERS`, `GDI`, `JNLDIR`, `JNLMODE`, `PORTMAP`, `RINGWAIT` or
-`TXCHAR`) stops SD from starting;
+`EXCLREM`, `FIXUSERS`, `GDI`, `INVCASE`, `JNLDIR`, `JNLMODE`, `PORTMAP`,
+`RINGWAIT`, `TXCHAR` or `FILERULE`) stops SD from starting;
 *Configuration* in this set says how the installer takes them out of a kept
 `sd.conf`. `NETFILES` is not inert, because bit 2 gates API request 29, and
 *Configuration* says so.

@@ -12,12 +12,12 @@ This page continues [Installing SD Core](01-installation.html).
 | the catalog and compiled programs | your accounts and their passwords |
 | the BASIC source | the private catalog |
 | the messages and include records | which Windows users are linked to which SD accounts |
-| the VOC templates and library routines | the commands each account may run |
+| the VOC templates and library routines | anything you added to an account's VOC (the installer adds the release's new commands; see below) |
 | the SDSYS `BP` programs | your print queue and held reports |
 | terminfo, the license, the contributor list | everything under your own accounts, and `sd.conf` |
 
-Anything SD created while it was running — your VOC included — is left exactly
-as it is.
+Anything SD created while it was running is left as it is, except that each
+account's VOC is brought up to the release, as the next paragraphs say.
 
 **The dictionaries are brought up to date for you.** Upgrading reapplies the
 dictionary definitions the release ships: it adds and updates the entries SD

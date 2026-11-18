@@ -126,6 +126,8 @@ records of the file as a select list does, the first ten in tabs** (both work af
 `dict`; the ids are the words of the command, so an id with a blank in it is opened with Ctrl-O). It needs a terminal and
 **stops in a phantom**.
 
+**The `sed` command is this editor by itself**, with no files pane: see [SED](27a-sd-tcl-sed.html) for what is different there. The keys every full-screen page shares are in [Using the Full-Screen Pages](29d-sd-tcl-using-the-full-screen-pages.html).
+
 | part | what it is |
 |---|---|
 | menu bar | the top row; F10 or Esc opens it, and a click on a title opens that menu (a click on the bar beside the titles does nothing). Its right end says *ide* and who you are (*ide  pat@sales*), as the toolkit pages and SED do |

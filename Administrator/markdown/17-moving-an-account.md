@@ -22,12 +22,14 @@ using them between two machines.
   the SD release but the restore does not compare it, so put the same release, or a newer one,
   on the new machine.
 * **You are SDSYS on both**, and **no other session is logged in on either** while the verb runs.
-  SD lists any it finds and stops. While a backup or restore runs nobody can sign in, at the
+  SD lists any it finds: *1 other session(s) are logged in. Every other session must log out
+  first:*, then a line for each. While a backup or restore runs nobody can sign in, at the
   console, over ssh or through the API.
 * **Disk for a second copy on the new machine.** A restore unpacks the zip into
   `.sdrestore.`*n*, in the folder that holds `user_accounts` and `group_accounts`, before it
   changes anything, and removes it when it ends. If a restore that did not finish left one, the
-  next refuses until it is removed.
+  next refuses: *… already exists, left by an earlier restore that did not finish. Remove it,
+  then run restore.account again.*
 
 ## The steps
 
@@ -71,8 +73,10 @@ using them between two machines.
    bytes.* **Replaced means its folder is swapped for the zip's and the old one is removed.**
    Whatever was made in it since is gone, and nothing is kept to undo it. If that matters, run
    `backup.account jack` on the new machine first.
-8. Check it: sign in as the person and open a file. `settings.report` gives the same switch names
-   as the manifest, to compare with step 1.
+8. Check it. For a user account that SD created, the lines it printed say what the account was
+   given (*SD routes for jack: …*, *Account jack has SH no, OS.EXECUTE no*, and the lines for the
+   edit, NET, FILES and shared switches). `settings.report` gives the same switch names as the
+   manifest, to compare with step 1. Sign in as the person and open a file.
 
 An account that fails (a name clash, a refused password) is reported as *jack was not restored.*
 and the others in the same zip go on. The restore ends with the count of those it restored, and a
@@ -81,28 +85,71 @@ non-zero return code if any failed.
 ## What comes across
 
 Everything under the account's folder: files, programs and their object code, the VOC and
-dictionaries. The zip also holds a manifest that any zip tool will show you, in plain ASCII: a
-header (`format`, `product`, `sd.version`, `created`, `host`, `source.root`, `accounts`), then one
-section per account, `[account` *name*`]`, with its `type`, its operating-system user and group,
-its routes (`route.ssh`, `route.api`, `route.files`, `route.files.write`, `route.files.admin`), its
-switches (`ssh.key`, `os.sh`, `os.execute`, `edit.voc`, `edit.bp`, `edit.dict`, `shared.read`,
-`shared.write`, `net`, `recovery`), `description`, `suspended`, `source.path`, the counts
-(`files`, `bytes`, `dirs`) and a `gcat:` line for each globally cataloged program that belongs
-to it. A group account's section has `members:` in place of the switches.
+dictionaries. The zip also holds a manifest, `manifest.txt`, that any zip tool will show you. It is
+plain ASCII text: a header, then one section per account.
+
+```
+format: 1
+product: windows-full
+sd.version: W2.0-0
+created: 2026-10-18T11:49:48
+host: oldbox
+source.root: C:\ProgramData\SD
+accounts: 1
+
+[account jack]
+type: USER
+os.user: jack
+os.group: sdu_jack
+route.ssh: 0
+route.api: 0
+route.files: 0
+route.files.write: 0
+route.files.admin: 0
+route.ai: 0
+ssh.key: 0
+os.sh: 1
+os.execute: 0
+edit.voc: 1
+edit.bp: 1
+edit.dict: 1
+net: 1
+shared.read: 1
+shared.write: 1
+recovery: 0
+xfer: 0
+description: Jack's test account
+suspended: 0
+source.path: C:\ProgramData\SD\user_accounts\jack
+files: 10
+bytes: 45332
+dirs: 6
+gcat: hello = bp.out hello
+```
+
+A group account's section has `members:` in place of the `route`, `os`, `edit`, `net` and `shared`
+lines.
 
 | In the manifest | On an account **SD has to create** | On an account that **already exists** |
 |---|---|---|
 | the files | fill the new folder | replace the folder |
 | `description`, `suspended` | set from the zip | **set from the zip**, so a suspended account comes back suspended |
-| the routes, `type`, `members` | the kind of account made, its routes, and a group account's members | unchanged |
+| `route.ssh`, `route.api`, `route.files` | the Windows user joins `sdssh`, `sdapi`, `sdfiles` as the zip says | unchanged |
 | `ssh.key` (ssh key sign-in) | the Windows user is put in `sdsshnokey`, so keys are **off**, unless the zip says it had them; a zip made without `ssh.key` leaves them off, and `modify.account` *name* `ssh-key-on` afterwards turns them on | unchanged |
-| the other switches | set as the zip says | **unchanged** (change one with `modify.account`) |
+| `os.sh`, `os.execute`, `edit.*`, `net`, `shared.read`, `shared.write` | set as the zip says | **unchanged** (change one with `modify.account`) |
+| `type`, `members` | the kind of account made, and a group account's members | unchanged |
 | `gcat:` lines | the program is put in the global catalog again | same |
+
+A key the zip does not have (an older backup) gives the delivered default: every gate off,
+`shared.read` on, `shared.write` off. **An existing account keeps its own switches whatever the zip
+says**: a zip with `os.sh: 1` restored over an account with `sh` off leaves it off; to change one,
+use `modify.account`.
 
 **Global programs.** The backup notes each global program whose object file is in the account, and
 the restore catalogs it again from the restored file. A program recompiled after it was cataloged
 no longer matches, so it is not carried; `settings.report` lists the global catalog. A name that
-the new machine's global catalog already uses for a different program is left alone and listed.
+the new machine's global catalog already uses for a different program is left alone and listed
+(message 13017).
 
 ## When the machines differ
 

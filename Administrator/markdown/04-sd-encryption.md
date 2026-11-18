@@ -124,7 +124,7 @@ is encrypted with a fresh nonce), `total` adds cipher text, an index holds ciphe
 text and no plaintext reaches the disk, and `copy` moves the stored value. The
 User page lists each.
 
-**`encrypt.key set` refuses a passphrase of fewer than 12 characters** and sets no
+**`encrypt.key set` refuses a passphrase of fewer than 12 characters** (message 12999) and sets no
 key: it says `The passphrase has fewer than 12 characters.  No key was set.` The
 check comes after the two typings are compared, so two different short ones are
 still reported as different. The rule for SD passwords is not applied, because
@@ -200,6 +200,5 @@ application reaches the ring without reaching `sdext()`. There is no `euid_set` 
 
 `SD_ENCODEHX` (201) and `SD_ENCODE64` (202) are defined alongside the SDEXT
 keys and are easily mistaken for them. They are not keys and `sdext()` does not
-implement them — passing either as a key returns a key error. They are the
-third argument to `sdencrypt()` and `sddecrypt()`, and they are documented
-above.
+implement them: passing either as a key returns a key error. They are the third
+argument to `sdencrypt()` and `sddecrypt()`.

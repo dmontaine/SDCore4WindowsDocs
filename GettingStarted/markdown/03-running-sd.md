@@ -106,7 +106,7 @@ sd -a               prompt for an account
 sd -a<name>         enter account <name>  -- refused unless it is your own
 sd <command>        run one command       -- needs elevation, or batch.jobs
 sd -quiet           suppress the displays on entry
-sd -u               list current users
+sd -u               list current users   -- elevated only
 sd -k <n> | -k all  log out user n, or everybody
 sd -start           start the system
 sd -stop            stop the system
@@ -136,7 +136,12 @@ jobs possible without giving them SDSYS's own rights — see
 `-start`, `-stop`, `-restart` and `-k` do, and otherwise answer "This command
 needs an elevated session". `-suspend` stops every update on the system and the
 two dumps show every session and the configuration, so they are not for
-ordinary users. `sd -cleanup` and `sd -u` need one too.
+ordinary users.
+
+**`sd -cleanup` and `sd -u` need an elevated session**, and answer anybody else
+the same way: `-u` lists every session on the machine with its user and process,
+and `-cleanup` removes other people's entries from the user table. Inside SD,
+`listu` shows an ordinary user their own sessions. `sd -status` is for anyone.
 
 **`sd <command>` runs and exits, and is never asked to set a password.** Nor
 is any session with no terminal — a scheduled task, or a piped script. **Only

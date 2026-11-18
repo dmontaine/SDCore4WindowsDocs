@@ -56,7 +56,7 @@ failure. `files-on` and `files-write-on` take a stray higher membership away bef
 words that ask for opposite things in one command are refused with message 12796 and nothing is
 changed (`files-admin-on` with `files-off` or with `files-write-off`, and `files-write-on` with
 `files-off`). What the permission allows, what the server checks and how it is audited is in
-[SDNet](12-sdnet.html), *The administration group*. A refused request is answered "This login
+[SDNet: The Administration Group and Read-only Files](12d-sdnet-administration-group-and-read-only-files.html). A refused request is answered "This login
 cannot administer files here: ask the administrator for files-admin-on (request *n*)" (message
 12529) and nothing is carried out. The account's backup manifest records the membership as
 `route.files.admin`, and `restore.account` gives it back only to an account that is in `sdfiles`
@@ -67,9 +67,38 @@ other: the account must be entered, the account's own switches (the OS-access
 gate, the three edit switches, the NET switch) are loaded and enforced, `SDCLIENT` in
 `sd.conf` still decides whether a client may open the files it names, and the
 API listener must be on (`remote.api`). **`sdfiles` alone is a read-only route.**
-`modify.account fred none` takes away `ssh` and the API and not the files-only
-login; withdraw it with `files-off`. `sdapi` is never touched by `files-on` or
+
+**The route words are not one state.** `ssh`, `api`, `both` and `none` are
+absolute about the two routes they name, and **leave `files-on` alone**:
+`modify.account fred none` takes away ssh and the API and not the files-only
+login. Withdraw it with `files-off`. `sdapi` is never touched by `files-on` or
 `files-off`.
+
+**User accounts only.** A group account, which has no Windows user, is refused
+`files-on` and `files-off` ("is a group account and has no remote access"), an
+`other` account too ("Unable to change remote access ... status: 2"), and
+`create.account group` and `create.account other` refuse the word the same way.
+`files-on` also refuses a person who is not in `sdusers`, because the login would
+refuse them first. If the Windows group `sdfiles` does not exist, `files-on` says
+"sdfiles is not a valid Windows group" and changes nothing.
+
+**A change takes effect at the person's next login.** The group is read when the
+login finishes, so a connection already open keeps the route it started with.
+To take the route away from somebody who is connected now, `files-off` and end the
+connection.
+
+**Audit trail.** A files-only login writes `api login route=sdfiles write=off admin=off user=fred`
+(`write=on` for a person in `sdfileswrite`, `admin=on` for one in `sdfilesadmin`). Each refusal writes
+`api refused request=26 route=sdfiles write=off admin=off user=fred` (the number is the
+request; `write` and `admin` are the state of the login, so a refusal with both `on` is a request
+no files-only login may make). A user in neither group, as before, has the refused login in the usual
+`api refused` form.
+
+**The archive.** For a user account the manifest carries `route.files: 1` or `0`
+beside `route.ssh` and `route.api` (not `files:`, which is already the count of files
+in the archive), and `restore.account` puts an account it has to create back in
+`sdfiles` if the manifest says so. An archive from before this release has no such
+line and restores the account out of the group.
 
 ### The AI: `ai-on` and `ai-off`
 
@@ -97,19 +126,35 @@ another account. For everybody but SDSYS:
 
 | | |
 |---|---|
-| **a file pointer (F-type)** | must lead **inside the account's own directory**, or be **the pointer SD itself put in the VOC** (the stock entries of `newvoc`). An account that holds `os-on` may go anywhere its Windows user can. Anything else is refused with status 3035 |
-| **a Q-pointer** into a **registered account** | is followed only if the user **could `logto` that account**: a member of its Windows group, and the account not suspended — `logto`'s own test — **whether or not the account holds `os-on`** |
+| **a file pointer (F-type)** | must lead **inside the account's own directory**, or inside the directory of an account a Q-pointer was followed into (below), or be **the pointer SD itself put in the VOC** — the same id, with the same path, as in `newvoc` (`syscom`, `$map`, `dict.dict`, `voc`, `newvoc`, `$acc`). An account that holds `os-on` may go anywhere its Windows user can. Anything else is refused with status 3035 |
+| **a Q-pointer** into a **registered account** | is followed only if the user **could `logto` that account**: a member of its Windows group, and the account not suspended — `logto`'s own test — **whether or not the account holds `os-on`**. SD's own Q-pointer, `sd.accounts` (which leads into SDSYS, an account nobody can `logto`), is exempt because it is exactly what SD put there |
 | **a Q-pointer** that **names a path** | is an operating-system path, and the `os-on` question |
 
 So `set.file` into somebody else's account works only for a user who may enter
 that account, and a hand-made pointer at a system directory or another
 account's directory is refused unless the account holds `os-on`. A refused
 open takes the `ELSE` branch with status 3035, like any other refusal here.
-**SDSYS is never refused.** The accounts that existed at an upgrade hold what
-`os.users` gave them (above), so an account that had `os-on` keeps its own
-pointers; the Q-pointer rule applies to every account. The API's request 29,
-"open an SDNet file", asks the same question of the account named in the
-request ([SDNet](12-sdnet.html)).
+**SDSYS is never refused.**
+
+**The API's request 29, "open an SDNet file", asks the same question.** It asks it of the
+account **named in the request**, from that account's own register record, and not of
+the account the API session happens to be in: a file pointer in the named account's VOC
+must lead inside that account's own directory (`..` and links resolved, a folder
+that merely begins with the account's name is not inside), unless the account holds
+`os-on`. SDSYS entering its own account is never refused. It is stricter than the local
+rule in one way: the pointers SD itself put in every VOC (`syscom`, `$map`,
+`dict.dict`, `newvoc`) lead out of the account and are refused here too,
+because a remote caller has no use for them. A refusal is error `ELSE` with status 3035
+and a line on the audit trail, `api refused request=29 reason=os gate off user=...
+account=... path=...`. The register is read at each request, so `os-off` applies to a
+session that is already signed on.
+
+**What this changes on an existing machine.** A Q-pointer that leads into an
+account its owner can no longer enter stops opening, and so does a hand-made
+file pointer to a folder outside the account in an account that does not
+hold `os-on`. The accounts that existed at an upgrade keep the `os-on` they
+had (*The operating-system switches*), so their own pointers keep working; the
+Q-pointer rule applies to every account.
 
 The `account:file` form of a file name is always available, with no `sd.conf`
 setting: a name in no VOC record with one colon is read as a Q-pointer to that
@@ -122,20 +167,14 @@ above.
 
 ### What `os-on` actually costs
 
-Granting `os-on` to any account is a larger decision than it looks.
-
-**That account reaches the operating system over the API as well as
-locally** — and over the API the session's process token is LocalSystem.
-On an ordinary account with both `os-on` and API access, a remote API
-connection makes the operating system report the session as
-`nt authority\system`.
-
-This is accepted behavior rather than a defect, and it follows from the
-way SD's listener creates a session — it is unrelated to the account's own
-identity, which is why it is stated here rather than assumed. It is stated
-here because it is not something a reader should have to discover: `os-on`
-on an account with API access gives that account the operating system, as
-LocalSystem, from any machine that can reach the API port.
+Granting `os-on`, or `sh-on`, to an account that also has a remote route is
+a larger decision than it looks: **it puts an operating-system shell behind
+that account's credential, reachable from wherever the route is reachable
+from** — the ssh port, or the API port. What the shell can do is exactly
+what that Windows user can do on this machine, and nothing more, because SD
+starts an API session as that user, with no SYSTEM token left in it, and
+never as LocalSystem; so the cost is the cost of giving that person a login
+on the machine. For an account that needs only SD, leave both off.
 
 ## Continued in
 

@@ -59,7 +59,7 @@ None of them can be changed from `tool.config` or `set.config`; edit
 |---|---|---|
 | `LPTRWIDE` | 80 | Default page width for the printer. Range 10 to 1000 |
 | `LPTRHIGH` | 66 | Default page depth for the printer. Range 10 to 32767 |
-| `SPOOLER` | empty | The Windows printer a print job goes to when `setptr` names none (`at` wins); empty is the Windows default printer. On SD Core for Linux it is the spooler command instead |
+| `SPOOLER` | empty | The Windows printer a print job goes to when `setptr` names none (`at` wins); empty is the Windows default printer |
 
 ## Sorting
 
@@ -86,9 +86,8 @@ None of them can be changed from `tool.config` or `set.config`; edit
 | `OBJECTS` | 0 (no limit) | Compiled programs held in memory at once |
 | `OBJMEM` | 0 (no limit) | Memory those programs may occupy, in KB |
 
-SD Core for Windows has no `STARTUP` parameter (a command run when SD starts, on
-SD Core for Linux). A line that names it stops SD from starting, with a message
-that says to remove the line.
+There is no `STARTUP` parameter. A line that names it stops SD from starting, with
+a message that says to remove the line.
 
 ## The screen
 
@@ -109,6 +108,9 @@ Both are full paths on a real install:
 SH        C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NoLogo
 SH1       C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command
 ```
+
+**A value longer than 255 characters for `SH` or `SH1` stops SD** with "SH value is
+longer than 255 characters." (or `SH1`). A value that fits is unchanged.
 
 **Both run at the account's own Windows permissions, and only for an account
 that has the `sh-on` switch** (see *Accounts and Security*, "The
@@ -172,20 +174,31 @@ inside the account, whatever `NETDIRS` lists.
 
 ## `NETFILES` and SDNet
 
-**`NETFILES` is not what SDNet uses.** A `server;file` VOC reference is
-refused whatever it holds (the old SDNet is gone), and the value is parsed,
-stored, shown by `config` and readable with `config('NETFILES')`. **One thing
-still reads it:** the API server's request 29, "open an SDNet file", which
-opens the file that a VOC entry of the named account names, for a client that
-has signed in. It is refused unless bit 2 of `NETFILES` is set. The delivered
-value is 0, so as delivered the request is refused; leave it at 0 unless an API
-client needs it. With bit 2 set the request is still refused unless the
-account's NET switch is on (`net-on`, off as delivered), and under `SDCLIENT`;
-when it opens the file, the connection's containment applies: only the account
-the session stands in and the shared `SDSYS` entries (read only). **`NETDIRS` does not widen
-this request**: a pointer followed there must still lead inside the account, whatever
-`NETDIRS` lists. The SDNet **client** (`set.server`, `set.netlogin`, a VOC
-pointer of type `N`; see [SDNet](12-sdnet.html)) does not read `NETFILES`.
+**`NETFILES` is not what SDNet uses.**
+SDNet is the way a program opens a file that lives on another SD server: a VOC
+entry of type `N`, a server you define with `set.server`, and a per-account
+`net-on` switch, all off until SDSYS turns them on. It is built and is
+described on the SDNet page of this set ([SDNet](12-sdnet.html)). None of it reads `NETFILES`,
+and the older SDNet (a `server;file` VOC
+entry, with each server's password in `sd.conf`) does not exist: that form of
+name is refused. `NETFILES` is parsed, stored, shown by `config` and readable
+with `config('NETFILES')`. **One
+thing reads it:** the API server's request 29, "open an SDNet
+file", answers "Remote server disallowed access" unless bit 2 of
+`NETFILES` is set, and the files-only API route refuses request 29 whatever the
+value is. **Setting the bit is not enough.** The request also refuses unless
+`SDCLIENT` is 0, the account has a register record (a path names none), the
+caller may enter the account by the same rule as `logto` (a member of its
+group, the account not suspended, the reason never told to the caller), and
+the account's `net-on` switch is on (SDSYS's own account excepted). It also asks the
+operating-system question of the file the VOC names: a file pointer that leads out of
+the account's folder is followed only if the account holds `os-on` (see *Accounts and
+Security: File Writing, the AI and VOC Pointers*, the VOC pointers section), and
+**`NETDIRS` does not widen this request**. Each
+refusal is on the audit trail as `api refused request=29 reason=...`. The value
+is 0 unless `sd.conf` sets it, and the installer does not, so the request is
+refused as delivered. Leave it at 0: no client function in this set sends
+request 29.
 
 There is no `FILERULE` parameter. **The
 `account:file` form of a file name is always available** (for programs moved from openQM): a name that is in no VOC record and has one colon,

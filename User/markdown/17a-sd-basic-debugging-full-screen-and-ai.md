@@ -157,7 +157,7 @@ holds the program's data**, so remove it when you have read it.
 
 ## What is not here
 
-**`trace` is gone.** It is not in the compiler. In an
+**`trace` does not exist.** In an
 ordinary account it is *"Unrecognized statement"*.
 
 **The programmatic debug statements are restricted.** `debug.on`,

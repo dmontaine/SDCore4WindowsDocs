@@ -15,13 +15,22 @@ SDSYS turns it on (`modify.account` *name* `sh-on` / `os-on`):
 | `OS.EXECUTE` | the operating system from inside a BASIC program | `os-on` |
 | **`edit`** and **`micro`** | a text editor, running outside SD | `os-on` |
 | the embedded Python | arbitrary code in the account's own process | `os-on` |
-| a file or directory of the operating system **by its path**, outside the account's own directory | `OPENSEQ` and `OPENPATH` with a path, `DIR()` and `select.dir`, `DELETESEQ` of a path, `!OSCOPY`, `!IOSCOPY` and the `oscopy` verb, printing into a file by path | `os-on` |
+| a file or directory of the operating system **by its path**, outside the account's own directory | `OPENSEQ` and `OPENPATH` with a path, `DIR()` and `select.dir`, `DELETESEQ` of a path, `!OSCOPY`, `!IOSCOPY` and the `oscopy` verb, `sed` given a `path:` name, printing into a file by path | `os-on` |
 
-`sed` is not in the table: it runs inside SD, so editing a record of an SD file
-needs no switch. The narrower `sd-on` allows the directories of other SD
-accounts the person could `logto`. **The switches are in the register, which is
-in SDSYS and is read-only to everybody else on disk.** That ACL is the whole of
-the protection: without it a user grants themselves any of them in one line.
+`sed` is not in the table: it runs inside SD, so editing a record of an SD
+file needs no switch. `sed` asks the `os-on` question only for a `path:` name
+outside the account's own directory (the last row). The narrower `sd-on` allows
+the directories of other SD accounts the person could `logto`. **The switches
+are in the register, which is in SDSYS and is read-only to everybody else on
+disk.** That ACL is the whole of the protection: without it a user grants
+themselves any of them in one line.
+
+The switches are independent: `sh-off` leaves `OS.EXECUTE` alone, and the
+reverse. A change reaches the account the next time it is entered. **SDSYS is
+never refused**, and no other account is an exception. When you upgrade, the
+installer switches both on, once, for every account that already exists, so
+nobody loses a command they were using; you can then turn them off account by
+account.
 
 **Without a switch SD says so in words** — "*name* is not permitted to use the
 operating system shell", "*name* is not permitted to use OS.EXECUTE", or "*name*
@@ -32,7 +41,8 @@ and `DELETESEQ ... ELSE` take their ELSE as for any other refusal.
 
 **What an account without `os-on` still has** is everything that stays inside
 SD: every file its VOC names (dictionaries and other SD files included) and
-anything inside its own directory.
+anything inside its own directory. A path is judged by its **real** path, so `..`
+and a symbolic link that points out of the account do not get round it.
 
 **A VOC pointer is held to the same rule.** A file pointer in an account's VOC
 must lead inside the account (or be one of the pointers SD itself puts in every
@@ -86,7 +96,12 @@ file.
 > machine, because that is close to what you are granting.
 
 **How to grant and remove them** is on
-[Administrator commands](06-administrator-commands.html#how-you-grant-it).
+[Administrator commands](06-administrator-commands.html#the-shell-sh).
+
+**A session with no terminal is refused for the editors regardless** — an API
+session or a piped script has nowhere to draw a full screen for an editor; see
+[API access](09-api-access.html) for what `sh`/`OS.EXECUTE` do over the API, which
+takes the same switches.
 
 ## Privileged work is done through a script, not a command line
 
@@ -117,8 +132,9 @@ change an account's ssh and API routes or its `sh` and `os` switches, and
 names the account it concerns.
 
 ```
-2026-08-16 11:42:07 user=sam uid=1 pid=8624 logto account=SDSYS
-2026-10-06 21:03:55 user=sdsys uid=1 pid=4120 delete.account account=ANN
+2026-10-07 21:07:52 user=sam uid=1 pid=8624 login account=sdsys
+2026-10-07 21:07:52 user=sam uid=1 pid=8624 logto refused account=sdsys reason=sdsys is entered by its own session only
+2026-10-06 21:03:55 user=sdsys uid=1 pid=4120 delete.account account=ann
 2026-10-06 21:04:31 user=sdsys uid=1 pid=4120 remote.api local
 ```
 
@@ -144,9 +160,10 @@ the gates it granted at creation as well:
 in this order whatever order the words were typed: `ssh`, `api`, `sh-on`,
 `os-on`, `voc-on`, `bp-on`, `dict-on`, `net-on`, `files-on`, `files-write-on`,
 `files-admin-on`, `ai-on`, `shared-read-off`, `shared-write-on`, `pins-on`,
-`recovery-on`, `xfer-on`. It says `none` when there is none. The line is
-written only after the account has been made: a creation that is refused (an
-empty password, say) leaves no line.
+`recovery-on`, `xfer-on` and `ssh-key-on` (key sign-in over ssh), each only
+when it was asked for. It says `none` when there is none. The line is written
+only after the account has been made: a creation that is refused (an empty
+password, say) leaves no line.
 
 **The refusals are the interesting half.** An entry saying somebody who is
 not an administrator asked for SDSYS by name, or asked for an account they have

@@ -2,8 +2,8 @@ Title: SD Standard Subroutines
 Subtitle: The cataloged names beginning with !, which of them an application may use, and how each is called.
 
 **SD ships 190 cataloged routines whose names begin with `!`** — counted from
-the `$catalog` lines of `gpl.bp`. The figure grows as features are added.
-Twenty-two are the embedded Python interface (`!PY_CREATEDICT` and the rest —
+the `$catalog` lines of its programs. The figure grows as
+features are added, so read it as approximate. Twenty-two are the embedded Python interface (`!PY_CREATEDICT` and the rest —
 see [Embedded Python](37a-sd-basic-python-integration.html); this page does
 not repeat them) and forty-nine, all named `!SCREEN_...`, are the routines
 behind the `screen` statement (see

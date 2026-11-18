@@ -80,7 +80,8 @@ what the target is willing to let that login do.
   them in `sdfiles` alone, with read access and never write access without read. **In
   that second case the command says what did happen before it says it failed**: it
   prints `Account fred has files-write no` and writes the audit line
-  `modify.account files-write-off account=fred` for the removal that worked, so the
+  `modify.account files-write-off account=fred` for the removal that worked (the audit line
+  for `files-off` itself is written only when both removals worked), so the
   screen and the trail agree with the group. When the write group went and the command
   went on to succeed, the same line `Account fred has files-write no` comes before
   `Account fred has files no`.
@@ -105,8 +106,10 @@ what the target is willing to let that login do.
   group; the `admin=` word is the administration group, next section). **The person at the client is told why**: a program that does not trap the error
   with `ON ERROR` stops with message 12505, "Server *name* answered *write* with an error:
   This login cannot change or lock files here: ask the administrator for files-write-on
-  (request 16)". A program that traps the error with `ON ERROR` sees `STATUS()` 7000. The
-  audit trail on the target also has the request number.
+  (request 16)". (The client shows the text of any `ON ERROR` reply that has one, cut at 100
+  characters; a reply with no text still shows "status *n*".) A program that traps the error
+  with `ON ERROR` sees `STATUS()` 7000, as before. The audit trail on the target also has the
+  request number.
 - **The group is read at login**, from the Windows groups, so a change takes effect at the
   person's **next** login on that server, and a refusal to read the groups refuses the
   login.
