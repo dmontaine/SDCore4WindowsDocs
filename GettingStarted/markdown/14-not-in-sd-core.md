@@ -146,7 +146,7 @@ a command you type at the prompt. Access is gated per session, at the
 moment Python starts, by the same `os-on` switch that gates
 `OS.EXECUTE` — a session without it cannot start the helper at all. All
 twenty-one functions, their arguments and their error codes are in the User
-set's *SD BASIC - Python Integration* chapter.
+set's *Embedded Python* chapter.
 
 ## Field-level encryption
 

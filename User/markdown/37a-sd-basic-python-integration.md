@@ -136,9 +136,20 @@ namespace - rather than a type-specific handle.
 
 | Function | Returns |
 |---|---|
-| `PY_OBJLEN(objname)` | Its length, as Python's own `len()` would report |
-| `PY_OBJTYPE(objname)` | Its Python type name as a string - `str`, `list`, `dict`, `int`, and so on |
+| `PY_OBJLEN(objname)` | Its length, as Python's own `len()` would report. Returns `SD_INT_OVERFLW` (**-10302**) if the true length does not fit a 32-bit int |
+| `PY_OBJTYPE(objname)` | A numeric type code, **not a type name** - see the table below |
 | `PY_GETATTR(objname)` | Its value as a string. `objname` is looked up in the interpreter's global namespace - this is how a value a script computed comes back into BASIC |
+
+`PY_OBJTYPE` returns one of six codes (the `SD_Obj_` keys in `SYSCOM KEYS.H`):
+
+| Code | Python type |
+|---|---|
+| 0 | unknown - none of the five below |
+| 1 | string (`str`) |
+| 2 | list |
+| 3 | dictionary (`dict`) |
+| 4 | integer (`int`) |
+| 5 | float |
 
 ## A worked sequence
 
@@ -155,11 +166,11 @@ rs = PY_RUNSTRING("zz_probe = 'SDPY-' : str(6*7)")
 if rs then stop 'PY_RUNSTRING failed: ' : rs
 
 vv = PY_GETATTR('zz_probe')      * vv = 'SDPY-42' - Python did the arithmetic
-ot = PY_OBJTYPE('zz_probe')      * ot = 'str'
+ot = PY_OBJTYPE('zz_probe')      * ot = 1 (string)
 
 lc = PY_LISTCREATE('zz_list')
 if lc then stop 'PY_LISTCREATE failed: ' : lc
-lty = PY_OBJTYPE('zz_list')      * lty = 'list'
+lty = PY_OBJTYPE('zz_list')      * lty = 2 (list)
 ```
 
 ## Error codes

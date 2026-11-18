@@ -49,7 +49,7 @@ is the short form.
 | The spelling of what SD prints | Changed | was British (catalogue, colour, analyse, initialised, unrecognised, licence); now **US** (catalog, color, analyze, initialized, unrecognized, license). A program or script that matches SD's messages by their words should be checked. Names are unchanged: verbs, keywords, options and files (`analyse.index`, the `catalogued()` function) |
 | The terminal's size | Changed | every session started at the terminal type's 120 by 36; now SD asks the terminal how big it is at the start and when it is resized (`term w,h` still sets it by hand); a session with no terminal to ask (a phantom, a piped script, the API) starts at 140 by 43, as `term default` sets |
 | `when field` with no operator | Changed | kept the null values; now keeps the values that are **not** null |
-| Where a session starts | Changed | a session at a terminal started at the prompt; now it starts in the home screen unless the administrator says otherwise, and after an upgrade every existing account follows the default (the home screen): `set.start.default terminal` (as SDSYS) keeps the old start for all, `modify.account name start-terminal` for one; a script, a phantom and the API are unchanged |
+| Where a session starts | Changed | a session at a terminal started at the prompt; now it starts in the home screen unless the administrator says otherwise, and **an upgrade from W1.1-3 or earlier keeps the command prompt** (the installer says so; an upgrade of a later tree keeps the start it has): `set.start.default menu` (as SDSYS) starts the accounts with no start setting of their own at the home screen, `modify.account name start-terminal` for one; a script, a phantom and the API are unchanged |
 
 ## Sections
 
@@ -77,7 +77,7 @@ Administrator commands from the openQM list.
 | `lock.tracer` | Added | administrator only: logs every lock taken and released, with program and line, to the file `locktrace`, which only the SD service writes |
 | `logout` | Changed | `logout n group` also ends the phantoms n started; `logout` of a session whose process has gone clears the entry and its locks <!--s 386--> |
 | `newvoc.mods` | Changed | applied to SDSYS's own VOC and kept across an upgrade that keeps the accounts <!--s 501--> |
-| `SCREENTHEME` | Changed | readable with `config()`; the shipped `sd.conf` says `SCREENTHEME=paper`; a terminal with no color stays `mono` |
+| `SCREENTHEME` | Changed | readable with `config()`; the shipped `sd.conf` says `SCREENTHEME=paper`; an upgrade adds that line to a kept `sd.conf` that has none and changes a kept `SCREENTHEME=blue` to `paper` once (a comment line in the file marks the change, so setting `blue` again afterwards is kept; any other value is kept); a terminal with no color stays `mono` |
 
 ## API
 
@@ -549,6 +549,7 @@ the fixes to SD's own code. The sections above are the openQM items that were bu
 | `shared-write-on` | Added | lets one account change the shared account's files (off as delivered); `shared-write-off` takes it away |
 | `set.batch` | Added | allows or stops allowing a paragraph or sentence that an account may run from the command line (`sd -a<account> <command>`, as a scheduled job does), after checking it in that account's VOC; none is allowed as delivered; until now `batch.jobs` was edited by hand |
 | `set.config` | Added | changes one of 14 tuning parameters of `sd.conf` (administrator, through SDSYS's elevated helper): a name on the helper's list and a whole number inside the range SD enforces; the old file is kept as `sd.conf.bak` |
+| `backup.account` and a group Windows cannot read | Changed | when Windows cannot say whether a user account's Windows user is in one of the seven groups SD keeps for it (`sdssh`, `sdapi`, `sdfiles`, `sdfileswrite`, `sdfilesadmin`, `sdaiusers`, `sdsshnokey`), the backup of that account stops with message 12005; before, only a lookup for `sdssh`, `sdapi` and `sdsshnokey` did, and the others were recorded as "not a member" |
 | `backup.account` links | Changed | a junction or other link inside an account is left out and named ("Not in the backup: ..."), and the backup goes on; it stopped the whole backup before, so one link in one account stopped `backup.account all` and the `backup-all` job |
 | `set.job` | Added | the administrator's scheduled jobs: makes, changes, deletes or starts now one of two fixed jobs (`backup-all`, `update-accounts`) on one of five schedules, each a Task Scheduler task that runs as SDSYS with no stored password, through the job helper `sd-jobs.ps1`; alone, lists them with their next and last runs; each change audited, and every audit line of a run ends `job=`*name*; nothing is scheduled as delivered, and uninstalling removes every job |
 | `set.start.default` | Added | chooses where accounts start: the home screen or the command prompt |
@@ -705,7 +706,7 @@ Three simple layers, with no vault and nothing on by default.
 | `sdssh` on a reinstall | Changed | an install over an existing SD seeds `sdssh` only when it creates it, so an account taken off ssh stays off |
 | source not installed | Changed | the complete source (C, `gpl.bp`, build and installer scripts) is `SDCore4Windows-source-<version>.zip` beside the installer and is no longer installed: SDSYS has no `gpl.bp` folder or VOC entry, and an upgrade removes the ones an earlier release installed |
 | Start Menu entry | Added | the install puts SD Core in the Start Menu, opening a classic console window; the uninstaller removes it |
-| start question | Added | a new install asks whether new sessions start at the command prompt instead of the home screen; an upgrade does not ask |
+| start question | Added | a new install asks whether new sessions start at the command prompt instead of the home screen; an upgrade does not ask, and **an upgrade from W1.1-3 or earlier keeps the command prompt** (every session of that release started there); an account's own start setting is not touched |
 | uninstall | Changed | removing SD with its data also removes the group `sdg_shared`; a profile that cannot be removed because its account is still signed in is removed at the next startup |
 | `upgrade_editgates` | Added | switches the three edit gates (`voc-on`, `bp-on`, `dict-on`) on once for every existing user account whose setting is blank, so no account loses what it had; a group account is left off; it does not run a second time |
 | `upgrade_gates` | Changed | copies once what `os.users` said into the account's `sh` and `os` settings, and fills only a blank setting, so a kept `no` stays |
@@ -789,6 +790,7 @@ Fixes that close a way round a gate, and what the gates now ask.
 | audit trail, control characters | Changed | fixed: a value written to the audit trail that held a newline started a false line; a control character, DEL or a mark is now written as `?` |
 | control codes in data | Changed | text from data (a record, a lock id another user made, a file name, a command shown by `pstat`) cannot send escape sequences to a terminal: the screen library draws control characters as reverse letters, the kernel's lock list, `getlocks()`, `pstat`, the `profiler` and `hsm` displays show them as `?`; `kernel(k$show.safe, text)` gives a program the kernel's rule |
 | `delete.account` and a kept Windows user | Changed | a Windows user that is kept also leaves `sdfiles`, `sdfileswrite`, `sdfilesadmin` and `sdaiusers`, so a later account for the same user gets none of those rights |
+| `create.account` for a user SD made earlier | Changed | the Windows user is reused and leaves `sdssh`, `sdapi`, `sdfiles`, `sdfileswrite`, `sdfilesadmin` and `sdaiusers` unless the request names them, so it keeps nothing of its earlier account (it leaves `sdsshnokey` when `ssh-key-on` is given); a membership that cannot be read stops the verb (message 10081) |
 | deleting a directory tree | Changed | fixed: `delete.account`, `delete.file` of a directory file and the other deletes of a whole tree followed a link inside it and deleted what it pointed at, so a link an account holder planted could turn the administrator's delete onto files elsewhere; a link is now removed as a link and its target left alone; a path longer than 255 characters fails cleanly |
 | `edit` and `micro` | Changed | refuse, before the editor starts, a VOC record, program or dictionary item the account may not change (`voc-on`, `bp-on`, `dict-on`) |
 | global catalog modes | Changed | SD refuses to load a program from the global catalog that other users can write, and names it |
@@ -832,6 +834,7 @@ Fixes that close a way round a gate, and what the gates now ask.
 | `sh` whose shell cannot be started | Changed | the command ends with status 127; a copy of the session used to carry on in the background |
 | `spooler` | Changed | the `spooler` line of `sd.conf` names the Windows printer a print job goes to when `setptr` names none; empty is the Windows default printer, as before |
 | `system(1057)` | Changed | fixed: a phantom's parent numbered above the number of table cells was reported as missing |
+| `term` and a damaged terminfo file | Changed | a terminfo file that is corrupt or cut short keeps the session's current terminal type; it used to leave the session with none |
 
 ### Tools and the home screen
 
