@@ -48,11 +48,11 @@ fred has no remote access: not ssh, not the API
 Account fred has SH no, OS.EXECUTE no
 Account fred has VOC.EDIT no, BP.EDIT no, DICT.EDIT no
 Account fred has NET no
+Account fred has shared.read yes, shared.write no
 Account fred has files no
 Account fred has files-write no
 Account fred has files-admin no
 Account fred has ai no
-Account fred has shared.read yes, shared.write no
 Account fred keeps a recovery copy of unsaved editor text: no
 Account fred may move files over its ssh login (receive / send): no
 Account fred may sign in over ssh with a key: no
@@ -200,7 +200,7 @@ these:
 
 The containment is by **real path**: `..` is resolved before the test, so it
 does not get round it. A path inside the account's own directory always works.
-Three more places are open to an account without the switch: the shipped SDSYS
+Two more places are open to an account without the switch: the shipped SDSYS
 entries that every VOC names (**read only**) and the directories the administrator
 listed in `NETDIRS` (read and write; see *`NETDIRS`: directories outside an account* in [Configuration: The API, Printing and the Rest](07b-sd-admin-configuration-api-printing-and-netfiles.html#netdirs-directories-outside-an-account)).
 

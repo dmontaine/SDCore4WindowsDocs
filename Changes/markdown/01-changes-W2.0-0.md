@@ -309,12 +309,12 @@ The kernel, `sd.conf`, and the numbered keys.
 | default terminal | Changed | 140 by 43 |
 | `deadlock=2` | Added | saves the lock tables when a deadlock is found <!--s 500--> |
 | `fileinfo()` | Added | the keys 1022 to 1040 as the openQM manual numbers them; `fl$seqtype`, `fl$locks`; 1021 now answers the user numbers <!--s 62 113 498 337--> |
+| index clear failures | Changed | an index whose clear could not shrink its file reports an error |
 | `intprec` | Changed | default 11 <!--s 6--> |
 | lock table | Changed | the time each lock was taken and each wait began is noted; a program that filled the table can be logged out <!--s 487 344 532--> |
 | `logto` out of SDSYS | Changed | prints once that the session keeps its Windows administrator rights and to sign out and in to work without them (Windows only) |
 | `numlocks` | Changed | range checked, 1 to 32767 |
 | `phantoms=u,n` | Added | keeps user numbers for phantoms started with `user` <!--s 31 g296--> |
-| print and index clear failures | Changed | an index whose clear could not shrink its file reports an error |
 | process dump | Changed | shows the length of each string, the variables of objects and the environment; made readable by its owner only, and a failure to make one names the file and the reason <!--s 22 125 569 439--> |
 | `pterm` keys | Added | `pterm erase`, `ctrl.filter`, `mark`, `query`: which key erases; control characters filtered; control keys that type the marks; shows what your keys send, in hex and in terminfo form <!--s 155 253 254--> |
 | sessions on a dropped connection | Changed | a session whose terminal or ssh connection goes away while it is writing the error log or the audit trail no longer waits for itself for ever, which stopped every later login |
@@ -603,7 +603,7 @@ can read a provider's key; turning the AI on sends what a person types to the pr
 | `set.ai` | Added | SDSYS chooses the provider, model and key from the prompt; `set.ai models` lists the provider's own model names, and a model it does not list is warned about |
 | `set.ai key` | Added | the key typed at the prompt shows one `*` for each character and is never shown itself; if the helper's client fails, `set.ai` says the key was not set and writes no audit line, even when an earlier key is stored |
 | `set.ai limit` | Added | SDSYS sets the limits of AI use: requests an hour (20) and tokens a day (100000) for each Windows user, seconds (30) and bytes each way (65536) for a request, and `max-tokens`, the length of an answer at the prompt and on every page (1024) |
-| `tool.ai` | Added | SDSYS page: Anthropic, OpenAI, Google, DeepSeek or custom, one provider for every account, each named provider with its address and a default model (a key is all it needs), each account's gate; S, one setup dialog that looks the same every time: the key in a password field and the model chosen from the provider's own list |
+| `tool.ai` | Added | SDSYS page: Anthropic, OpenAI, Google, DeepSeek or custom, one provider for every account, each named provider with its address and a default model (a key is all it needs), each account's gate; S, one setup dialog that looks the same every time: the key in a password field (handed to the helper through a file, so it passes through SD) and the model chosen from the provider's own list |
 
 ### API and client library
 

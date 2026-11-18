@@ -30,8 +30,8 @@ files, its description and its suspension change.
   not read. The user is made with the group `sdu_jack`, joins `sdusers`, and joins `sdssh`,
   `sdapi` and `sdfiles` where the manifest says 1.
 * **SD asks for the password at the terminal** and prints the rule (*A password needs at least 8
-  characters, with a lower-case letter, an upper-case letter, a digit and a symbol.*). If Windows
-  or SD refuses it, SD says why and asks *Warning, user created but password not set, Retry
+  characters, with a lower-case letter, an upper-case letter, a digit and a symbol.*). It gives
+  three attempts at the pair of entries. If Windows or SD refuses it, SD says why and asks *Warning, user created but password not set, Retry
   (y/<n>)?*. If you decline, SD removes the
   Windows user again, says *An account must have a password. Nothing was created.* and the
   account is *not restored*. **`no.query` removes the "Restore these accounts" question and not
@@ -45,18 +45,24 @@ sdg_work (status 2); the account was made*.
 
 ## When the machines differ
 
+* **Different host names.** `restore.account latest` picks the newest backup *made on this
+  computer* that holds every named account, and a zip made on another machine names another host
+  in its file name: it gives *No backup of jack made on this computer was found in …*. Name the
+  zip by its path. A renamed file is also never picked by `latest`.
 * **A different folder for the accounts.** VOC entries that hold the account's old path are
-  rewritten to the new one. A pointer to somewhere outside the account is listed, not followed.
-  Only the VOC is rewritten: a path written in a record or a program is left as it is.
+  rewritten to the new one. **A pointer to somewhere outside the account is listed, not
+  followed** (*… points outside the account (…) and was left unchanged.*). Only the VOC is rewritten: a path written in a record or a program is left as it is.
 * **A Linux backup.** The archive format is shared with SD Core for Linux, and the restore
   accepts a full backup of it by the same manifest rules as a Windows one (a Solo backup, or a
   different format, is refused); the VOC values that hold the old account's path are rewritten
   as above.
 * **From a Windows archive**, a rewritten path that does not exist with exactly that spelling is
-  listed, so a path whose case changed on the way is seen before a program trips over it.
+  listed (*… points at …, which does not exist here with that exact spelling.*), so a path whose
+  case changed on the way is seen before a program trips over it.
 * **Indices kept outside the account.** A hashed file whose indices were relocated inside the
   account is pointed at its new index path. Indices outside the account are not in the archive,
-  and the restore says so: build them again with `build.index`.
+  and the restore says so (*The indices of … were at …, outside the account, so they are not in
+  the backup. Rebuild them with build.index.*): build them again with `build.index`.
 * **The account's Windows user.** An account the new machine already has keeps its own
   operating-system user, password and groups. One that SD creates is made as `create.account`
   makes it, from the manifest's description, routes, members and suspension.
@@ -81,11 +87,6 @@ sdg_work (status 2); the account was made*.
   Rename or remove that Windows user with the operating system's tools, then run the restore
   again. **There is no way to restore under another account name.** A word such as `as` is read
   as an account name: *as is not in this backup.*
-* **`latest` will not find a zip made elsewhere.** `restore.account latest` picks the newest
-  backup *made on this computer* that holds every named account, and a zip made on another
-  machine names another host in its file name: it gives *No backup of jack made on this computer
-  was found in …*. Name the zip by its path. A renamed file is also never picked by `latest`.
-
 The steps on the previous page are what the two verbs do for a move between machines.
 
 ## When it refuses

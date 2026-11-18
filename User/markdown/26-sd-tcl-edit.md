@@ -159,7 +159,7 @@ not a setting to change:
 
 ```
 :modify.account sdsys os-off
-Remote access is never available to SDSYS
+Remote access is never available to SDSYS; it is administered at this computer
 ```
 
 **And a session with no terminal is refused before anything is written** — an

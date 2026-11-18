@@ -53,10 +53,10 @@ sends after the handshake, and a half record, cost what they have used and no mo
 
 | the server | the caller waits |
 |---|---|
-| completes the handshake, never sends the acknowledgement byte | about 3 s |
-| accepts the connection and never answers the TLS hello (`NETWAIT=2`) | about 2 s |
-| sends the acknowledgement byte as half of a TLS record | about 3 s |
-| answers the first login message with half of a TLS record | about 3 s |
+| completes the handshake, never sends the acknowledgement byte | 3.0 s |
+| accepts the connection and never answers the TLS hello (`NETWAIT=2`) | 2.0 s |
+| sends the acknowledgement byte as half of a TLS record | 3.0 s |
+| answers the first login message with half of a TLS record | 3.1 s |
 | answers a request after 1.5 s (a slow server inside the limit) | 1.5 s, and the record is read |
 
 What the caller sees is what it sees for any lost connection:

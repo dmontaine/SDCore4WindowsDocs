@@ -75,7 +75,10 @@ exist when the installing user upgrades.
 **If the machine has no ssh server, `ssh` and `both` still make the account,
 and the command warns that it cannot sign in over ssh until one is installed; if
 it has no API listener, `api` and `both` warn the same way** (turn it on with
-`remote.api on`). The grant is already in place and takes effect then. The test
+`remote.api on`). The grant is already in place and takes effect then. SDSYS's own
+remote doors are not among these words: `remote.sdsys on` opens remote administration for the
+separate account SDRADMIN over ssh, and `remote.sdsys api on` *address* opens SDSYS's API login
+for a listed address; both are shut as delivered. The test
 is made against the machine when you type the command. See
 [Installing SD Core](01-installation.html#what-you-are-asked).
 

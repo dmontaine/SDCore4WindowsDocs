@@ -43,7 +43,7 @@ everything, Ctrl-D duplicates the line, **Alt-K** cuts the whole line into the
 clipboard (Ctrl-K in a text area elsewhere; in the IDE Ctrl-K is the keys, as on every page), and a word back and on are Ctrl-P and Ctrl-U. The editor passes
 Ctrl-E (the zoom), Ctrl-T (the theme) and Ctrl-K (the keys) on to the IDE.
 
-On a UTF-8 terminal (`LC_ALL`, `LC_CTYPE` or `LANG` says UTF-8) the frame, menus
+On a UTF-8 terminal (`LC_ALL`, `LC_CTYPE` or `LANG` says UTF-8, or none of them is set, as in a Windows console) the frame, menus
 and scroll bars use line-drawing characters; elsewhere `+ - |`. The colors are
 your own theme if you chose one, else the site's (`SCREENTHEME` in `sd.conf`, paper as delivered), as on the toolkit
 pages and in the debugger: paper when neither names one or the name is not
