@@ -88,12 +88,11 @@ it is in the account and before the command runs, `run.in` also refuses:
   catalog a `$private.catalogue` record names, for `catalog`, `decatalog` and
   `delete.catalog`. A path must be relative, with no `..`, no `@` token and no drive, and what of
   it exists is asked of the kernel (which resolves it as an open would). A VOC entry could
-  otherwise point the compile's output at SDSYS's own files, which this session can write. `bp.out
-  in account ACME names a path outside the account; run.in did not run the command`.
+  otherwise point the compile's output at SDSYS's own files, which this session can write. `run.in:
+  bp.out in account ACME names a path outside the account; nothing was run`.
 * **a file the command opens that has a trigger**: the VOC, the named file and its dictionary, the
   `.out` file and the private catalog. The account's VOC is looked at first. A trigger is a program found in the account's own catalog,
-  and it would run in this session. `bp in account ACME has a trigger function; run.in did not run
-  the command`.
+  and it would run in this session. `run.in: bp in account ACME has a trigger; nothing was run`.
 * **a `$execute` line in the source it compiles.** The compiler runs the command a `$execute`
   directive names while it compiles; under `run.in` it refuses it instead, and the compile fails
   with `$execute is refused in a compile started by run.in: it would run a command from the
@@ -110,7 +109,7 @@ And while the command runs:
 * **`logto`.** `logto is refused while run.in is running a command in account acme`.
 
 Each refusal writes `run.in refused account=ACME reason=...` to the audit trail (a refused word
-also gives `word=`).
+also gives `word=`, and a refused file `file=`).
 
 **What it does not cover:** a source that includes a record from another of the account's own files
 reads that file too, and a read trigger on that file would run. The files a command reads by a name

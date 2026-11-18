@@ -98,8 +98,12 @@ system that is already up.
 
 ## SD will not start a second time inside itself
 
-If you leave SD with **`sh`** and then type `sd` in that shell, it says so and
-returns you to the session you already have.
+**Starting `sd` from inside `sh`** is refused. The shell that `sh` and
+`os.execute` start is marked as SD's own (the environment variable `SD_SESSION`
+is set in it), and `sd` typed there answers "SD is already running in this
+session - type exit to return to it." in every form of the command. It keeps a
+second session from being nested inside the first; it is not a wall, because
+the mark is an environment variable of that shell.
 
 Worth knowing alongside it: **`sh` itself needs the account's `sh-on` switch
 (or SDSYS)**, which is off for a new account, so an ordinary account cannot

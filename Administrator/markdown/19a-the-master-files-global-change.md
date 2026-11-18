@@ -40,7 +40,7 @@ Run writes **account by account**. Each account is judged again (it must still b
 and each file by **the pointer rule** before it is opened for writing: the path, what the kernel
 opened, and the two parts of a hashed file must lie inside the account (a program's own file too). A
 row whose file lies outside the account it is listed under - the dictionary of `@SDSYS/voc.dic`,
-another account's file reached through a pointer, a path written with `..` - is **refused**, in the
+another account's file reached through a pointer, a path written with `..` or through a link - is **refused**, in the
 box and again at the write; its target is never written. Each record is read with its update lock
 (a record another session holds is refused) and must still be what the box read (one changed since
 is refused). **A refusal or a failure is counted and the run goes on**, in that account and in the

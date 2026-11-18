@@ -31,8 +31,8 @@ consoles, cmd, PowerShell and Windows Terminal.
 ## What ships
 
 **26 terminfo definitions ship with SD**, compiling to **37 terminal
-names** — the extra names are variants. For example, `vt100-w` is an alias
-that maps to the same definition as its base name.
+names** (what `list.term.types` lists) — the extra names are variants. For example, `vt200` is an alias
+that maps to the same definition as `vt220`.
 
 Common names that work out of the box: `windows`, `linux`, `vt100`,
 `vt220`, `wyse60`, `ansi`, `xterm`.

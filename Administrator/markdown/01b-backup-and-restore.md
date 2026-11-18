@@ -73,10 +73,13 @@ archive that lies is refused with nothing changed** — counts that disagree wit
 the manifest, an entry path with `..` in it or an absolute path, no manifest or
 two of them.
 
-**A restored account comes back as it was:** an account that already exists
-keeps its Windows user, its password and its groups, **and its own switches**:
-the manifest's switches are used only for an account that has to be created
-(`sd-on` is not carried). **Moving an account to another machine** is covered by
+**A restored account comes back as it was:** the files are put back with the
+permissions of the account's folder (every file under it inherits them again, so
+the backup does not carry Windows permissions), and everything in the account
+belongs to its Windows user and its own group (`sdu_<name>`) again. An account
+that already exists keeps its Windows user, its password and its groups, **and
+its own switches**: the manifest's switches are used only for an account that
+has to be created. **Moving an account to another machine** is covered by
 [Moving an Account](17-moving-an-account.html).
 
 **What it does not do:**
@@ -85,6 +88,7 @@ the manifest's switches are used only for an account that has to be created
   below, records that for reference only).
 - It carries **no passwords**: an account restored onto a machine that never
   had it asks for a new one, and an account that exists keeps its own.
+- It does not follow links inside an account; any it finds are named and left out.
 - A program recompiled after it was cataloged globally is not recognized as the
   account's and is not cataloged again. Such a program is listed by
   `settings.report`, which is why it is missing from a backup.
@@ -168,7 +172,7 @@ settings.report {directory}
 Writes, or shows, a **plain-text record** of the system's settings — `sd.conf`,
 ssh and API access, the accounts — for an administrator to keep. It is for
 reference only: nothing reads it back. **It never contains a password or a
-private key.** It also lists the entries of the global catalogue that are not
+private key.** It also lists the entries of the global catalog that are not
 SD's own (those that no `$catalog` line in SDSYS's `gpl.bp` names), because an
 account's backup holds that account's own entries and the rest are only here.
 

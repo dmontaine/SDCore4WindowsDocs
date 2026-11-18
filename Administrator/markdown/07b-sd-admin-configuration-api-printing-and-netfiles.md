@@ -93,7 +93,7 @@ a message that says to remove the line.
 
 | Parameter | Default | Effect |
 |---|---|---|
-| `SCREENTHEME` | unset (`mono`); `paper` in the shipped `sd.conf` | The color theme that a program using the `SCREEN` statement gets when it does not choose one: `paper`, `night`, `mono`, `classic` or `blue`. `paper` is black and dark blue text on light gray, with the menu bar and menus the other way round (light gray on black); `night` is white and yellow text on black, its menus black on light gray; `mono` uses only reverse video, underline and bold and reads on any terminal. The shipped `sd.conf` says `SCREENTHEME=paper`, so the toolkit pages and any program that opens a screen show paper on a color terminal on a fresh install (an upgrade adds that line to a kept `sd.conf` that has none, and changes a kept `SCREENTHEME=blue`, the earlier release's delivered default, to `paper` once; any other value is the administrator's and is kept); the IDE, SED and the debugger follow it too (the IDE falls back to paper for a name that is not a theme). A terminal with no color (a phantom, a pipe) is `mono` whatever the line says, and so is a name that is not a theme, without an error. A program that asks for a theme gets that one. A program reads the value with `config('SCREENTHEME')`. **A person's own choice wins for that person**: Ctrl-T or View > Theme on any full-screen program keeps the theme chosen as the record `theme.`*login name* of the file `&menus&` in the account they are in, and every full-screen program starts in it from then on; `SCREENTHEME` is what a person who has never chosen sees. To give someone the site's theme again, delete that record |
+| `SCREENTHEME` | unset (`mono`); `paper` in the shipped `sd.conf` | The color theme that a program using the `SCREEN` statement gets when it does not choose one: `paper`, `night`, `mono`, `classic` or `blue`. `paper` is black and dark blue text on light gray, with the menu bar and menus the other way round (light gray on black); `night` is white and yellow text on black, its menus black on light gray; `mono` uses only reverse video, underline and bold and reads on any terminal. The shipped `sd.conf` says `SCREENTHEME=paper`, so the toolkit pages and any program that opens a screen show paper on a color terminal on a fresh install; the IDE, SED and the debugger follow it too (the IDE falls back to paper for a name that is not a theme). On an upgrade that keeps the configuration, the installer adds `SCREENTHEME=paper` to a restored `sd.conf` that has no `SCREENTHEME` line, and changes a restored `SCREENTHEME=blue` (the delivered theme before W2.0-0) to `paper` once, leaving a comment line in the file that says so; set `SCREENTHEME=blue` again afterwards to keep the old look, and later installs leave it. Any other line, `mono` included, is left alone. A terminal with no color (a phantom, a pipe) is `mono` whatever the line says, and so is a name that is not a theme, without an error. A program that asks for a theme gets that one. A program reads the value with `config('SCREENTHEME')`. **A person's own choice wins for that person**: Ctrl-T or View > Theme on any full-screen program keeps the theme chosen as the record `theme.`*login name* of the file `&menus&` in the account they are in, and every full-screen program starts in it from then on; `SCREENTHEME` is what a person who has never chosen sees. To give someone the site's theme again, delete that record |
 
 ## The shell
 
@@ -136,8 +136,9 @@ every account is held to its own directory as before.
 
 **What filling it opens.** Every account without `os-on`, on every route (a
 terminal session, a phantom, the API), can then read, change, create and delete
-files in the listed directories and below them, by pathname. The Windows
-permissions of the account's own user still apply. It is a smaller thing to open
+files in the listed directories and below them, by pathname: `openseq`,
+`openpath`, `dir()`, `select.dir`, `ospath`, `deleteseq`, a print file, an `f`
+pointer in its VOC. The Windows permissions of the account's own user still apply. It is a smaller thing to open
 than `os-on`, which opens the whole machine to one account, but it is opened for
 every account at once: list only directories that hold nothing one account must
 keep from another.
@@ -158,7 +159,8 @@ directory of any registered account. An account created later inside a listed
 directory closes that entry at once. At most 16 entries are taken.
 
 **How a path is judged.** The name a program gives is resolved first, and a
-name that still holds a `.` or `..` component is refused. It is then compared
+name that still holds a `.` or `..` component is refused, and so is a name SD
+cannot resolve (a link that leads nowhere, say). It is then compared
 with each entry ignoring upper and lower case, and the whole folder name must
 match: `D:\Data\xkey` is not inside `D:\Data\x`.
 

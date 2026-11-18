@@ -354,6 +354,7 @@ Commands and VOC verbs that every account has, and the command language.
 | `delete.account` | Changed | not stopped by a file it cannot open when it looks for references <!--s 348--> |
 | `delete.account` `no.query` | Added | leaves out the confirmation, for a caller that has asked already (the accounts page's delete dialog) |
 | `delete.common all except` | Added | deletes every named common block but those listed <!--s 425--> |
+| `delete.file` | Changed | when it stops because the data or dictionary part is open, `@system.return.code` is -3021 (no exclusive access) |
 | `ed` | Changed | `l` with no text as the first command works; marks typed in input; `ev` on a compound `i`-type; line numbers show positions in edit values mode; `spool` closes the printer; external commands; automatic ids <!--s 264 268 320 331 375 446 523 305--> |
 | `fstat` | Changed | wider columns <!--s 55--> |
 | `fstat.user` | Added | file activity of each session <!--s g44--> |
@@ -373,14 +374,14 @@ Commands and VOC verbs that every account has, and the command language.
 | `oscopy` | Added | copy an operating system file; `overwrite`, `append`; `!oscopy` and `!ioscopy` (a whole tree) for programs <!--s 517 369--> |
 | `phantom` | Added | `no.msg`, `data`, `log`, `group` and `user` options; `!phlog` gives a phantom's log record; a phantom started while SD is suspended gives back its place; a grouped phantom whose parent has gone ends at once <!--s 87 137 364 483 31 385 280--> |
 | phantom and terminal lists | Added | `list.phantoms`, `list.term.types`: the phantoms and no one else; the terminal types <!--s 381 g49--> |
-| phantom that cannot start | Changed | fixed: a phantom whose process could not run SD went on as a second copy of the session that started it; it writes `phantom: cannot start a phantom from` *path* `-` *reason* to the error log and ends |
+| phantom that cannot start | Changed | the reason is written to the error log (`phantom: cannot start a phantom from <path> - <reason>`); nothing is printed on the terminal |
 | `private vocabulary` | Added | `$private.voc`: a file of commands searched after all other command sources <!--s 1--> |
 | `profiler` | Added | records what the programs of a session do and where <!--s g66 g203--> |
 | `redo` | Added | runs a command again and again, `times` and `every` <!--s 188--> |
 | saved list verbs | Changed | `save.list`, `get.list`, `delete.list`: `keep`, `deleting`, `count.sup`, a default name, a name left out, `in file` <!--s 2 384 387 401 494--> |
 | `selectindex` | Added | the command form of the statement <!--s 119--> |
 | `setptr` | Changed | `form.feed`, `inform`, `eject`, `as ... in file`; the digits of `next` <!--s 51 59 70 139 448--> |
-| `pause`, `ctrl-r` search | Changed | fixed: a session whose input ended at `pause`, or at the command editor's Ctrl-R search prompt, used all of a CPU for ever; the end of input now ends it |
+| `pause`, `ctrl-r` search | Changed | a session whose input has ended no longer spins at 100% CPU at `pause` or at the search prompt |
 | `list.readu`, `pstat`, `getlocks()`, `system(1083)` | Changed | another session's text (a lock's record id, file path or user name, a command, a program name, `@pstat`) shows a control character, `del`, bytes 128-159 and a mark character as `?` and cannot send a code to your terminal; the locks and `fileinfo(f, 1039)` are unchanged |
 | `remove.examples` | Added | administrator only: takes the shipped example programs and their compiled objects out of `examples.bp` of every account in service, or of the accounts named (a list); keeps programs the administrator added, and deletes the file only when nothing is left in it |
 | `sh` with no command | Changed | fixed: starts the interactive shell again (it said *Error 2 executing operating system command*); it still needs the `sh` switch |
@@ -415,7 +416,7 @@ compiled with until it is compiled again.
 |---|---|---|
 | AccuTerm terminal types | Removed | the eleven `-at` terminal types and AccuTerm's escape sequences |
 | `$contrib` and `$licence` | Removed | the VOC records of the contributors and the license notice; read the files `contrib` and `licence` in the system folder, as on SD Core for Linux |
-| `$mode` words that imitated other products | Removed | `prclose.default.0` (write `printer close on` *unit*), `unassigned.common` (a common variable starts as zero), `no.case.invert` (give `input` the `nocaseinvert` clause) and `optional.then.else` (a `read` takes a `then` or an `else`) are refused now with *Unrecognized mode name*; `conditional.statements`, `implied.stop` (end a program with `stop`) and `exception.save.stack` (write `saving.stack` on the `catch`) were added and removed within this release (W2.0-0), so they never shipped |
+| `$mode` words that imitated other products | Removed | `prclose.default.0` (write `printer close on` *unit*), `unassigned.common` (a common variable starts as zero), `no.case.invert` (give `input` the `nocaseinvert` clause) and `optional.then.else` (a `read` takes a `then` or an `else`) are refused now with *Unrecognized mode name*; `conditional.statements`, `implied.stop` (end a program with `stop`) and `exception.save.stack` (write `saving.stack` on the `catch`) were added and removed within W2.0-0, so they never shipped |
 | `option` words that imitated other products | Removed | `option pick` and 22 words, refused now with *Option name not recognized*: `assoc.unassoc.mv`, `pick.breakpoint`, `pick.breakpoint.u`, `pick.explode`, `pick.grand.total`, `pick.implied.eq`, `pick.null`, `pick.wildcard`, `qualified.display`, `with.implies.or`, `query.no.case`, `query.priority.and`, `ampm.upcase`, `crdb.upcase`, `no.date.wrapping`, `space.mct`, `lock.beep`, `ed.no.query.fd`, `create.file.upcase`, `select.keep.case`, `debug.rebind.keys`, `proc.a`. SD does what it did with them off: write `with city = "Reno"`, use `like` for wildcards, brackets and `or` for the order of tests, `no.case` after an operator for case; times and amounts are `am`, `pm`, `cr`, `db`; a date such as 31 February rolls into the next month; a lock wait is silent; `fd` in `ed` asks first; `create.file` names a file in lower case |
 | screen save and restore | Removed | `save.screen()` and `restore.screen`: still exist and do nothing the terminal could see |
 | `sdterm` terminal type | Removed | with SDTerm and SDConsole, and the `term display` line about them |
@@ -492,7 +493,7 @@ compiled with until it is compiled again.
 | delete.file name,part | Removed | delete.file part (each part is an ordinary file); the multifile cancel question (6133) is gone |
 | open "name,part" (BASIC) and file,part in TCL verbs | Removed | open the part by its own VOC name; a comma is part of the name, so "a,b" is only found if a VOC record is called a,b |
 | VOC field 4 (multifile component list) | Removed | none; the field is ignored and the record is read as an ordinary F-pointer |
-| PARSER$MFILE (!parser key 5) | Removed | PARSER$GET.TOKEN |
+| `parser$mfile` (`!parser` key 5) | Removed | `parser$get.token` |
 | error 3031 (component not found) and 3032 (no component name) | Removed | none; the numbers are retired |
 | the Pick style matrix in the run-time system | Removed | nothing could make one since `$mode pick.matrix` went; the matrix descriptor type, its opcode (reserved), its flag and their branches in the kernel, the debugger and the process dump are gone, with messages 1136 and 1139, `readnext` mode 0, the wait path of a remote `write`/`delete` under `autolock`, and the option-flags field of a phantom's start-up record and its seal. No program changes |
 | `grant`, `revoke` and `list.grants` | Removed | write `modify.account` *account* `add` *user* and `modify.account` *account* `delete` *user* (the same group change and the same audit lines, as on SD Core for Linux); to see who is in an account read the members of its Windows group (`net localgroup sdu_`*name*); `list.voc.removed` names the replacement |
@@ -602,7 +603,7 @@ can read a provider's key; turning the AI on sends what a person types to the pr
 | `set.ai` | Added | SDSYS chooses the provider, model and key from the prompt; `set.ai models` lists the provider's own model names, and a model it does not list is warned about |
 | `set.ai key` | Added | the key typed at the prompt shows one `*` for each character and is never shown itself; if the helper's client fails, `set.ai` says the key was not set and writes no audit line, even when an earlier key is stored |
 | `set.ai limit` | Added | SDSYS sets the limits of AI use: requests an hour (20) and tokens a day (100000) for each Windows user, seconds (30) and bytes each way (65536) for a request, and `max-tokens`, the length of an answer at the prompt and on every page (1024) |
-| `tool.ai` | Added | SDSYS page: Anthropic, OpenAI, Google, DeepSeek or custom, one provider for every account, each named provider with its address and a default model (a key is all it needs), each account's gate; S, one setup dialog: the key in a password field and the model chosen from the provider's own list |
+| `tool.ai` | Added | SDSYS page: Anthropic, OpenAI, Google, DeepSeek or custom, one provider for every account, each named provider with its address and a default model (a key is all it needs), each account's gate; S, one setup dialog that looks the same every time: the key in a password field and the model chosen from the provider's own list |
 
 ### API and client library
 
@@ -680,7 +681,7 @@ Three simple layers, with no vault and nothing on by default.
 | group size of a new file | Changed | `grpsize` is 4 (kb) in the shipped `sd.conf`, and the built-in value when it is absent; it was 2 and 1. 200,000 records had 5 to 11 percent of their groups overflowed at 2 kb and under 2 percent at 4 kb; writes 5 percent faster, reads 5 percent slower |
 | `index` and the record id | Changed | fixed: an index followed an upper-case copy of the id; it now follows the id as the file stores it |
 | index on a right justified item | Changed | a new one keeps its keys in one order, the empty key, then numbers by value, then text, so a scan and a lookup agree when the item holds both numbers and text; building it no longer loses ids under keys equal as numbers (1, 01, 001); an existing index keeps its old order until it is made again, and an older SD cannot open a file holding the new kind |
-| `sdfix`, `sdidx`, `sdconv` | Changed | fixed several faults (see the changelog); `sdidx -m` says why it cannot make the directory |
+| `sdfix`, `sdidx`, `sdconv` | Changed | fixed several faults (see the changelog); `sdidx -m` says why it cannot make the directory; `sdidx` refuses a link put in place of a file's primary subfile instead of following it |
 | record id counter | Changed | fixed: `write ... creating.seqkey` could give an id out twice after another write of the file header |
 | sort of equal or ordered keys | Changed | fixed: a long run took minutes; 100,000 equal keys took 168 seconds, now a fraction of one |
 | sort that uses work files | Changed | fixed: equal keys came out in an order that depended on `sortmem` and `sortmrg`, and a `srt$unique` sort could keep a duplicate that was not the first to arrive; it now gives what the same sort gives in memory |
@@ -796,8 +797,9 @@ Fixes that close a way round a gate, and what the gates now ask.
 | global catalog modes | Changed | SD refuses to load a program from the global catalog that other users can write, and names it |
 | `kernel(k$internal, n)` | Changed | only a program compiled in internal mode may set internal mode; reading it (`-1`) is unchanged |
 | group account folders | Changed | `C:\ProgramData\SD\group_accounts` is locked like `user_accounts`; before, a group account whose own folder failed to lock kept the access every SD user has to the data tree |
-| internal programs | Changed | the internal-mode bit in an object file is honoured only for an object from the global catalog, which only SDSYS can write, or for the administrator; for any other object it is ignored |
-| `NETDIRS` | Changed | judged when SD starts: an entry that is not absolute, not an existing directory, a drive root, the root of a network share (`\\server\share` or `//server/share`), or overlaps the SD system directory, the directory of `sd.conf`, `USRDIR`, `GRPDIR` or any account is ignored and named in the error log; at most 16; a value over 191 characters is refused by name; compared ignoring case, whole folder names; asked after the account's own directory and the `os-on` and `sd-on` gates; no longer read by `config()`; not used by API request 29 |
+| internal programs | Changed | the internal mark in a program's object code is honored only for an object from the global catalog, which only SDSYS can write, or for the administrator; any other object that carries it is an ordinary program, held to every gate |
+| `NETDIRS` | Changed | read and judged by each new session, so a change takes effect for the next session without a restart: an entry that is not absolute, not an existing directory, a drive root, the root of a network share (`\\server\share` or `//server/share`), or overlaps the SD system directory, the directory of `sd.conf`, `USRDIR`, `GRPDIR` or any account is ignored and named in the error log; at most 16; a value over 191 characters is refused by name; compared ignoring case, whole folder names; asked after the account's own directory and the `os-on` and `sd-on` gates; no longer read by `config()`; not used by API request 29 |
+| `openseq` that fails | Changed | fixed: an `openseq` that took the else branch after it had taken the lock on a record (an `overwrite` of a file whose old content could not be removed, or `creating` of a name another program made in that moment) kept the lock until SD was restarted, and `list.readu` showed it against whatever file came next; it is given back, as `closeseq` gives it back |
 | operating system paths | Changed | `dir()`, `select.dir`, `oscopy`, `!oscopy`, `!ioscopy`, `deleteseq` of a path, the `edit` and `micro` editors, `opentemp`, `digest` of a file, `setptr ... as pathname`, a print file made at a path and a VOC pointer out of the account each ask the account's `os` switch, and `sd-on` for another SD account; every session is held to it, the console included |
 | named common | Changed | fixed: a program that ended while holding objects in named common freed them twice |
 | named common with a `$` or `_` name | Changed | the system's own common blocks: only an internal program may declare or join one; any other program stops with message 12603 |
@@ -824,16 +826,18 @@ Fixes that close a way round a gate, and what the gates now ask.
 
 | Name | Change | What |
 |---|---|---|
+| compiled kernel | Changed | built with optimization (`-O2`, with `-fwrapv` and `-fno-strict-aliasing`) where it had none; `_FORTIFY_SOURCE=3` and `-fstack-protector-strong` end a session at a buffer overrun instead of letting it corrupt memory |
 | "Error 5 getting semaphores" | Changed | two lines now follow it: this Windows user is not an SD user, or was made one after signing in to Windows; an administrator makes one with `create.account`, and a user just made signs out and in again |
 | F1 at the prompt | Changed | names `C:\Program Files\SD\changelog`, where the changelog is |
 | failed start | Changed | fixed: an `sd.exe` that stopped early ("SD has not been started.") kept an internal lock, and every later session hung, using the processor |
-| kernel faults | Changed | fixed: a time conversion with negative parts or long hours overran its buffer; a prefix strip in a conversion copied over itself |
+| kernel faults | Changed | fixed: `getlocks(file, user)` with a user number out of range read outside the user table; a time conversion with negative parts or long hours overran its buffer; a prefix strip in a conversion copied over itself |
 | `sd -start` | Changed | a script that captures its output through a pipe (`$x = sd -start`) gets it and goes on; the background process kept the pipe and the script waited until `sd -stop`. A phantom gives back a pipe the same way; a file or a console window is kept |
 | `sd -status` | Changed | fixed an overrun on a server that recorded no start time |
-| `sd -stop` and `sd -restart` | Changed | an SD process still running ten seconds after the termination signal is ended with SIGKILL, and the stop says how many; before, it was left running with SD gone under it; a session reading from a pipe leaves when SD is stopped, instead of being ended after ten seconds |
+| `sd -stop` and `sd -restart` | Changed | a session still attached ten seconds after the termination signal is ended with SIGKILL, and the stop says how many; before, it was left running with SD gone under it. A session idle at a terminal or on a pipe leaves by itself |
 | `sh` whose shell cannot be started | Changed | the command ends with status 127; a copy of the session used to carry on in the background |
+| small fixes | Changed | an index file that cannot be extended is reported instead of being ignored; an empty `tmp` setting is treated as unset; `run` of a program whose path is too long says what the limit is |
 | `spooler` | Changed | the `spooler` line of `sd.conf` names the Windows printer a print job goes to when `setptr` names none; empty is the Windows default printer, as before |
-| `system(1057)` | Changed | fixed: a phantom's parent numbered above the number of table cells was reported as missing |
+| `system(1057)` | Changed | fixed: a phantom whose parent held a user number above the number of user table cells was told it had no parent; the test is now against the highest user number |
 | `term` and a damaged terminfo file | Changed | a terminfo file that is corrupt or cut short keeps the session's current terminal type; it used to leave the session with none |
 
 ### Tools and the home screen

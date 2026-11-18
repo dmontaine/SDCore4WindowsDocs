@@ -151,28 +151,6 @@ namespace - rather than a type-specific handle.
 | 4 | integer (`int`) |
 | 5 | float |
 
-## A worked sequence
-
-This starts the interpreter, runs a line of Python, reads a value back and
-makes a list:
-
-```
-$INCLUDE SDPYFUNC.H
-
-st = PY_INITIALIZE()
-if st then stop 'PY_INITIALIZE failed: ' : st
-
-rs = PY_RUNSTRING("zz_probe = 'SDPY-' : str(6*7)")
-if rs then stop 'PY_RUNSTRING failed: ' : rs
-
-vv = PY_GETATTR('zz_probe')      * vv = 'SDPY-42' - Python did the arithmetic
-ot = PY_OBJTYPE('zz_probe')      * ot = 1 (string)
-
-lc = PY_LISTCREATE('zz_list')
-if lc then stop 'PY_LISTCREATE failed: ' : lc
-lty = PY_OBJTYPE('zz_list')      * lty = 2 (list)
-```
-
 ## Error codes
 
 Every function that returns a status uses one of these, defined in
@@ -230,10 +208,23 @@ Four example programs are installed in the SDSYS account's `bp` file:
 
 | Program | What it shows |
 |---|---|
-| `PY_TEST` | starting Python, running a short script, and reading its results back: a dictionary and a list made with the functions above, the keys, values and items as field-mark lists, the size and type of each object, and a string appended to a list |
+| `PY_TEST` | starting Python, running a short script, and reading its results back: the dictionary and list the script made, a dictionary and a string made with the functions above, the keys, values and items as field-mark lists, the size and type of each object, and a string appended to a list |
 | `PY_TEST2` | the same with data read from a file: a record is stored as a Python string, read back, and compared with the original (`Match` or `Do Not Match!`). Set the file's path near the start (`xxxx` is an account name) before you run it |
-| `PY_JSON` | Python's `json` module on a file you name (its full path): the file is loaded, then walked object by object with `PY_OBJTYPE`, `PY_OBJLEN` and `PY_DICTGETKEYS`, and every key and value is printed, indented by nesting |
+| `PY_JSON` | Python's `json` module on a file you name: the file is loaded, then walked object by object with `PY_OBJTYPE`, `PY_OBJLEN` and `PY_DICTGETKEYS`, and every key and value is printed, indented by nesting |
 | `PY_TERM` | a minimal prompt that runs the Python you type: lines are collected and `!` runs them, `??` shows them, `?` gives help and `quit` ends; the up and down arrows recall earlier lines |
 
-Copy one into your own account's `bp` to compile and run it. Like any use
-of Python, it needs the account's OS switch.
+Copy one into your own account's `bp` to compile and run it. Like any use of
+Python, it needs the account's `os-on` switch. A short sequence of the same
+kind of calls:
+
+```
+$include sdpyfunc.h
+st = PY_INITIALIZE()
+if st # 0 then stop
+st = PY_RUNSTRING('countdown = {"3": "Three", "2": "Two", "1": "One"}')
+st = PY_CREATEDICT('my_dict')
+st = PY_DICTVALSETS('my_dict', 'k1', 'first value')
+crt PY_DICTVALGETS('my_dict', 'k1')    ;* first value
+crt PY_OBJLEN('countdown')             ;* 3
+keys = PY_DICTGETKEYS('countdown')     ;* the keys, separated by @fm
+```

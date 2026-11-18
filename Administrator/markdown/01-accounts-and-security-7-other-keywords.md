@@ -15,6 +15,8 @@ This page continues [Accounts and Security: Changing One Account](01-accounts-an
 | **`voc-on`** \| **`voc-off`** | may save a change to a VOC (see *The edit switches*) |
 | **`bp-on`** \| **`bp-off`** | may save a change to a program file (source or object code), and compile and catalog |
 | **`dict-on`** \| **`dict-off`** | may save a change to a dictionary |
+| **`recovery-on`** \| **`recovery-off`** | whether the `ide` keeps a recovery copy of text that was not saved (see *The recovery copy*). Not a gate; **off as delivered**; user accounts only |
+| **`xfer-on`** \| **`xfer-off`** | moving plain-text files in and out with an sftp client over the ssh login (see *File transfer*). **Off as delivered**; user accounts only; needs `XFER=1` in `sd.conf` as well |
 | **`start-menu`** \| **`start-terminal`** \| **`start-default`** | where a session on a terminal starts: the home screen, the command prompt, or the system default (see *Where a session starts*) |
 | **`pins-on`** \| **`pins-off`** | may add its own programs to the home screen (see *What the home screen shows*) |
 | **`shared-read-on`** \| **`shared-read-off`**, **`shared-write-on`** \| **`shared-write-off`** | open, and write, the files of the shared account by name (blank read means on, blank write means off; see [The Shared Account](13-the-shared-account.html)) |

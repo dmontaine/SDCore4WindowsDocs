@@ -77,7 +77,7 @@ files found matching given name(s)*.
 | `-R` | Recover disk space: shrink the primary subfile and rewrite the overflow subfile with the free blocks squeezed out. **Not combinable with `-F` or `-Q`**: `-r cannot be combined with -f or -q: run the fix first, then -r on its own`, status 1, and the file is not touched. Add `-C` or `-Z` to make it check first. |
 | `-Z` | Clear the dead space at the end of each group (implies `-C`). **Writes to the file.** |
 | `-B` | No progress bar. Use it when you log or redirect, since the bar is drawn with carriage returns. |
-| `-V` | Verbose. Changes the output of `-R` only (a line for every block it moves); it does nothing to a check. Not listed in the usage text. |
+| `-V` | Verbose. Changes the output of `-R` only; it does nothing to a check. Not listed in the usage text. |
 | `-L` | Log everything the program prints, except the banner, to `sdfix.log` in the current folder. |
 | `-Lname` | The same, to the file `name`. The rest of the word is the name, so put `-L` last in a joined word (`-BLcheck.log`). An existing log is overwritten. |
 | `-I` | Interactive mode. Refused unless the configuration file sets `DEBUG` with bit 2 on. Not listed in the usage text. See below. |
@@ -119,7 +119,7 @@ start the answers with `s`.
 
 ## A check, with nothing wrong
 ```
-> sdfix C:\sdi_demo\plain
+> sdfix -B C:\sdi_demo\plain
 [ SDFIX W2.0-0   Copyright, Ladybridge Systems, 2007.  All rights reserved. ]
 
 Processing C:\sdi_demo\plain

@@ -122,8 +122,8 @@ a lock (see "Writing and locking" below).
 `OPEN 'DICT', 'customers' TO d` opens the **dictionary** of the remote file, from the same
 server, and the same statements work on it. (The request the client sends for a dictionary
 is `dict customers` in lower case; the server opens `dict` and a name, in any case, as a
-dictionary. A client on this release against a server that has not been updated cannot
-open a dictionary, so `LIST`, `COUNT`, `SORT` and `SELECT` on a remote file stop at
+dictionary. A server that does not open `dict` and a name as a dictionary cannot be used for
+this, so `LIST`, `COUNT`, `SORT` and `SELECT` on a remote file stop at
 "Cannot open dictionary".)
 **Nothing else does.** Every other statement
 given the file variable (writes, deletes, `CLEARFILE`, locks including `FILELOCK` and

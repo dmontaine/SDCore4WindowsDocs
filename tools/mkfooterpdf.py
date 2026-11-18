@@ -213,7 +213,7 @@ def headings(page_html):
     out = []
     for m in re.finditer(r'<h([23])[^>]*>(.*?)</h\1>', page_html, re.S):
         t = html.unescape(re.sub(r'<[^>]+>', '', m.group(2))).strip()
-        t = re.sub(r'\s*[#\u00b6]$', '', t).strip()
+        t = re.sub(r'\s*[#¶]$', '', t).strip()
         out.append((int(m.group(1)), t))
     return out
 
@@ -246,7 +246,7 @@ def labels_for(pages, heads, title):
             else:
                 h3 = text
             nxt += 1
-        labels.append(h2 + (' \u00b7 ' + h3 if h2 == UNIQUE and h3 else ''))
+        labels.append(h2 + (' · ' + h3 if h2 == UNIQUE and h3 else ''))
     return labels, nxt
 
 

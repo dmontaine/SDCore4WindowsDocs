@@ -21,7 +21,7 @@ SD opens its API socket, and whether `sd` runs from any directory.
 > control** — it is never joined to `sdssh` or `sdapi`, so opening a route
 > here does not touch SDSYS at all. The administrator's own remote doors are
 > separate and shut as delivered: `remote.sdsys on` opens remote administration
-> for the account SDRADMIN over ssh ([Remote Administration over ssh](22-remote-administration.html)),
+> for the account SDRADMIN over ssh ([Remote Administration over ssh](22-remote-administration-over-ssh.html)),
 > and `remote.sdsys api on` opens SDSYS's API login for chosen addresses
 > ([Remote Administration through the API](22a-remote-administration-through-the-api.html)).
 > Administration needs a session Windows can show a consent prompt on, which

@@ -31,7 +31,7 @@ messages are in [Accounts and Security](01-accounts-and-security-4-shared-and-fi
   subroutine, execute a command or answer its prompts, enter another account,
   use sequential files, read variables, run `system()`, `trans()` or an evaluation or
   conversion, run a transaction, or open an SDNet file on a third server. Any other
-  request, and any request number this release does not know, is refused: the table
+  request, and any request number SD does not know, is refused: the table
   is an allow list.
 - A refused request is not carried out. It is answered with "This login is for files
   only: request *n* is not allowed" and written to the audit trail; the connection
@@ -113,12 +113,11 @@ what the target is willing to let that login do.
 - **The group is read at login**, from the Windows groups, so a change takes effect at the
   person's **next** login on that server, and a refusal to read the groups refuses the
   login.
-- **The consequence for existing definitions.** A server defined `write` on a client
-  stops writing the day the target runs this release, until the remote user is given
-  the group there (one `modify.account` word on the target). Reads are unaffected.
-- An installation made before this release has neither group until the installer is run
-  again; until then `files-on` and `files-write-on` say that the group does not exist
-  and change nothing.
+- **A server defined `write` on a client** writes only when the remote user has been
+  given the group on the target (one `modify.account` word there). Reads are unaffected.
+- A machine without the groups has neither until the installer is run again; until
+  then `files-on` and `files-write-on` say that the group does not exist and change
+  nothing.
 
 ## Continued in
 

@@ -44,8 +44,8 @@ fixdir file {id ...}
 
 An item of a **directory file** has a carriage return at the end of each line when
 it was written with CR LF line ends, which a program that expects LF only (a tool
-from another system, say) does not want. `fixdir` takes the carriage return off the
-end of each line of the items named; with no ids it does every item of the file.
+from another system, say) does not want. `fixdir` removes every carriage return from
+the items named; with no ids it does every item of the file.
 
 ```
 fixdir notes

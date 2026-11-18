@@ -127,10 +127,9 @@ C:\sdi_demo\zzcust is a hashed file: sdconv converts compiled programs only, not
 1
 ```
 
-`%0` and `%1` are byte for byte as before, with `-B`, with `-L` and with no
-option, and naming the file twice refuses it twice. The tool does not convert the
-header, the data groups or the index nodes of a hashed file, and it does not
-offer to.
+`%0` and `%1` are left byte for byte, with `-B`, with `-L` and with no option: the
+tool converts neither the header, the data groups nor the index nodes of a hashed
+file.
 
 **A hashed file taken to a machine of the other byte order cannot be converted by
 this tool, and this SD could not open it if it were.**

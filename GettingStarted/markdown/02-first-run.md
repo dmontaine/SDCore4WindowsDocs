@@ -1,7 +1,7 @@
 Title: Your first thirty minutes
 Subtitle: From a finished install to a working account, a file and a second user signing in over ssh.
 
-This page assumes SD Core is installed and you have never used this port
+This page assumes SD Core is installed and you have never used SD Core for Windows
 before. It is a walkthrough, not a reference — every step links to the page
 that explains it properly.
 
@@ -62,7 +62,7 @@ than that makes ordinary reports look wrapped or truncated** and the report is
 not at fault. SD's own full-screen programs (`sed`, `ced`, `ide`, the home
 screen) want a window of at least 140 columns by 43 lines, **which is the size
 SD's own window starts at**: SD always runs in a window of its own, whether
-from the Start Menu or typed at a prompt (see *Running SD*). For full screen,
+from the Start Menu or typed at a prompt (see [Running SD](03-running-sd.html)). For full screen,
 press **Alt+Enter** (in SD's window F11 goes to SD). If a report still looks
 cramped, widen the window, or
 set it for the session with `term default` — which puts the 140 × 43 back and
@@ -186,8 +186,7 @@ off
    way in is a short BASIC program that reads your exported data and writes the
    records. Then query it — the query processor is where most of the surface
    area is.
-2. **A client program against the API.** Point it at port 4247 — **not** an ssh
-   tunnel any more. It needs a client library that speaks SCRAM, because there
+2. **A client program against the API.** Point it at port 4247. It needs a client library that speaks SCRAM, because there
    is no cleartext login. **The architecture must match the
    application**, and **The DLL goes in the same directory as the application
    that loads it** — Windows searches there before `PATH`. See

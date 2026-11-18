@@ -219,7 +219,7 @@ prompt and dispatches it.
 **Terminfo** — the terminal capability database. Defines what
 sequences a terminal sends for keys and what sequences to use for
 screen control. SD ships 26 definitions compiling to 37 terminal
-names. The terminfo compiler (`sdtic.exe`) is shipped with SD Core, beside
+names. The terminfo compiler (`sdtic.exe`) is installed with SD, beside
 `sd.exe`; see [SD Terminfo](39-sd-terminfo.html).
 
 **Transaction** — a group of file updates that succeed or fail together.

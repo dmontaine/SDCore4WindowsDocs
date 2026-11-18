@@ -14,7 +14,7 @@ apply — it is what `create.account` and the installer already do:
 | | |
 |---|---|
 | Every SD account | a standard Windows account with no privileged token — see [Being a Windows administrator gets you nothing](#being-a-windows-administrator-gets-you-nothing) |
-| ssh | `ForceCommand`s straight into `sd`, no shell, no `sh`, no `OS.EXECUTE` — see [ssh access](08-ssh-access.html) |
+| ssh | `ForceCommand`s straight into `sd`, no shell reachable that way — see [ssh access](08-ssh-access.html) |
 | ssh and the API, per account | **off for a new account**; SDSYS gives each account the route it needs (`ssh`, `api`, `both`) — see [Managing accounts](05a-managing-accounts.html) |
 | `sh`, `OS.EXECUTE`, the editors, the embedded Python, and operating-system files named by path | **off for a new account**, in two independent switches (`sh-on`, `os-on`) that SDSYS turns on account by account — see [Security and the operating system](12a-security-and-the-operating-system.html#the-shell-and-operating-system-access-are-per-account-switches) |
 | Saving a change to a VOC, a program file or a dictionary (and compiling) | **off for a new account**, in three independent switches (`voc-on`, `bp-on`, `dict-on`) that SDSYS turns on account by account; reading is never stopped — see [Managing accounts](05a-managing-accounts.html) |
@@ -101,9 +101,14 @@ no UAC prompt mid-session — but that is the whole of what elevation does for
 it; every SD-level check is unchanged.
 
 **This is deliberate and total, not a special case for remote sessions.**
-SDSYS itself is refused ssh and the API outright, from this machine or any
-other — see [ssh access](08-ssh-access.html) and
-[API access](09-api-access.html). There is no "administrator, but only
+SDSYS itself is refused ssh outright. The API is shut to SDSYS from every other
+computer until the administrator opens that door for chosen addresses
+(`remote.sdsys api on` *address*), and then only SDSYS's own SD password stands
+between those addresses and the administrator; open it only for addresses you
+trust, and shut it again (`remote.sdsys api off`) when it is not needed. On
+this machine it is accepted by the local connection, from a program
+signed in to Windows as SDSYS and elevated — see [ssh access](08-ssh-access.html)
+and [API access](09-api-access.html). There is no "administrator, but only
 locally" middle case.
 
 ## Taking an account out of use without deleting it

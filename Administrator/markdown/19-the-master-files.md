@@ -57,7 +57,8 @@ pointer whose target lies **outside the account being listed**: a file pointer w
 dictionary is in another directory (the shipped ones lead to `@SDSYS/voc.dic` and the like), a
 Q-pointer to another account, a remote item, a program file that lies outside the account. A path
 is the account's when it is relative; a drive letter with either slash, or a leading slash, makes
-it absolute. The test is the kernel's own, so `..` does not make a path look inside. For a VOC entry
+it absolute. The test is the kernel's own, so `..` does not make a path look inside, and a name the
+kernel cannot resolve (a link that leads nowhere, say) is not taken as inside either. For a VOC entry
 the pointer is the account's own record and is edited like any other (change `@SDSYS/voc.dic` to
 another directory, and it is changed); what it points at is never edited from this page. A
 dictionary item marked `>` lives in another account's dictionary, SDSYS's included, and is only read

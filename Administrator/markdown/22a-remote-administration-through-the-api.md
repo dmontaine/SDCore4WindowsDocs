@@ -41,7 +41,7 @@ remote.sdsys api
 | `api on any` | opens it for every address. Only on its own, never in a list |
 | `api off` | shuts it again, as delivered |
 | `api` | says whether it is open and for which addresses, and changes nothing |
-| *(no keyword)* | says how both doors stand, ssh (SDRADMIN, [Remote Administration over ssh](22-remote-administration.html)) and the API, and changes nothing |
+| *(no keyword)* | says how both doors stand, ssh (SDRADMIN, [Remote Administration over ssh](22-remote-administration-over-ssh.html)) and the API, and changes nothing |
 
 An address is written in one of these forms:
 
@@ -58,7 +58,7 @@ anything is changed, and so is `any` together with other addresses. SD's API lis
 IPv6 address or range is accepted and kept but no client reaches SD from one.
 
 SDRADMIN's remote session over ssh can open and shut this door too, with the same words
-([Remote Administration over ssh](22-remote-administration.html)). So can an API session signed in as
+([Remote Administration over ssh](22-remote-administration-over-ssh.html)). So can an API session signed in as
 SDSYS, as it can do everything else the administrator does.
 
 The same can be done without SD, in an elevated PowerShell:

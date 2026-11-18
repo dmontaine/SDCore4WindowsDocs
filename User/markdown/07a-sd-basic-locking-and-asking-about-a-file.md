@@ -123,9 +123,7 @@ sequential.
 > `/cygdrive/c/ProgramData/...`, not `C:\ProgramData\...`. **Handing that
 > string to a Windows program does not work** — Windows reads it as a
 > drive-relative path and either fails silently or reports that the parent
-> directory does not exist. This is not a theoretical caution: it is what
-> stopped the full-screen editors working the first time they were built for
-> this port.
+> directory does not exist.
 >
 > **And the conversion function is not available to an ordinary program.**
 > The kernel can convert such a path, and `kernel()` is an internal-only

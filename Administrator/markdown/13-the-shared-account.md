@@ -116,10 +116,9 @@ with `logto shared`.
 * **Structure** means making a file by pathname inside `shared`, `clear.file`,
   `configure.file`, `create.index`, `build.index`, `delete.index`, `set.trigger`, the setters of
   `fcontrol`, resizing, renaming and deleting a file or directory. It is refused to everyone who is not the
-  administrator (SDSYS signed on at a terminal, or SDSYS over the API when the administrator has opened
-  that door), **for a program marked internal as well, whatever switches
+  administrator (SDSYS), **for a program marked internal as well, whatever switches
   the account has**: "The structure of a file in the shared account (making, clearing, configuring,
-  indexing, triggers, renaming or deleting it) can only be changed by SDSYS, signed on at a terminal".
+  indexing, triggers, renaming or deleting it) can only be changed by SDSYS, the administrator".
   Writing a record to an indexed shared file by someone who has `shared.write` still keeps the index.
 * **A maintainer who is not SDSYS** is a member of `sdg_shared` (`modify.account shared add`
   *name*) on an account where `shared-write-on` has been given to the account **`shared`** itself.

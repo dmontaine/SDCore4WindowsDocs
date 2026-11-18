@@ -72,9 +72,8 @@ takes, and the verb says them back in the same lines (`Account fred starts at: m
 `Account fred may add its own programs to the home screen: yes`); **any kind of account may have
 them**, a group or an `other` account included. Two different start words in one command are
 refused ("start-menu and start-terminal set the same access to different states ... give one of
-them") before anything is made, and so is a start word that is neither (a program that calls the
-account-making routine itself gets "Unexpected token"): the Windows user, the password and the
-directory come after, so a refused word creates **nothing**. The words that restate what an
+them") before anything is made, and so is a start word that is neither: the Windows user, the
+password and the directory come after, so a refused word creates **nothing**. The words that restate what an
 account has when they are left out, `start-default` and `pins-off`, are for `modify.account`
 only, as `shared-read-on` is. The audit line gains `pins-on` in its `gates=` list and, when a
 start word was typed, a tail `start=menu` or `start=terminal`:
@@ -82,6 +81,9 @@ start word was typed, a tail `start=menu` or `start=terminal`:
 ```
 create.account account=fred type=user gates=pins-on start=menu
 ```
+
+The `gates=` list names every access word the command was given (`ssh` and `api` included), and
+says `none` when it was given none.
 
 **One more word, for a user account only: `recovery-on`** makes the account's `ide` keep a recovery copy of
 text that was not saved (*The recovery copy*, below). It is off when the word is left out, a group or `other`

@@ -48,13 +48,14 @@ back and takes out only the parameters SD no longer has.
 An unrecognized parameter is not ignored. The parser abandons the file with
 `Unrecognized configuration parameter`, and SD does not start.
 
-That is why a name SD has dropped has to be taken out of the file. These
-thirteen parameters no longer exist (`APILOGIN`, `CODEPAGE`, `CREATUSR`,
-`EXCLREM`, `FIXUSERS`, `GDI`, `INVCASE`, `JNLDIR`, `JNLMODE`, `PORTMAP`,
-`RINGWAIT`, `TXCHAR` and `FILERULE`). The installer removes those
+That is why a name SD does not have has to be taken out of the file. These
+thirteen names are not parameters of SD: `APILOGIN`, `CODEPAGE`, `CREATUSR`,
+`EXCLREM`, `FILERULE`, `FIXUSERS`, `GDI`, `INVCASE`, `JNLDIR`, `JNLMODE`,
+`PORTMAP`, `RINGWAIT` and `TXCHAR`. The installer removes those
 lines from a `sd.conf` it restores when you keep the configuration across a
-re-install, and writes which it removed to the setup log. A file copied in by hand must have them
-taken out before SD will start.
+re-install, and says which it removed (it writes them to the setup log). A file
+copied in by hand from an older installation must have them taken out before SD
+will start.
 
 Range failures behave the same way. `GRPSIZE`, `INTPREC`, `LPTRHIGH`,
 `LPTRWIDE`, `MAXCALL`, `RECCACHE`, `SORTMRG` and `MAXIDLEN` are bounds-checked
@@ -82,14 +83,12 @@ SD accepts **59** parameters. The verb prints all of them except `APILOCAL`,
 `BACKUPDIR`, `NETDIRS` and `SDSYS`, and `DEBUG`, `FDS` and `PHANTOMS` only when
 they are set; it also prints `TIMEZONE`, which is not a file parameter.
 
-`NETDIRS` is the one to know about. It names the directories outside any
-account that an account **without** `os-on` may still open by their path (see
-[Accounts and Security](01-accounts-and-security-2-making-an-account.html#the-operating-system-switches-sh-on-and-os-on)).
-That holds for every session, a person at the console
-included. The verb will not tell you
-what it is set to, and `config('NETDIRS')` does not read it. Read it from the file. The rules for
-what it may hold are in [Configuration: The API, Printing and the
-Rest](07b-sd-admin-configuration-api-printing-and-netfiles.html#netdirs-directories-outside-an-account).
+`NETDIRS` is the one to know about. It decides what a session held to its account
+by the `os` switch, the API's included, may reach outside its own account (see
+[The API, Printing and the Rest](07b-sd-admin-configuration-api-printing-and-netfiles.html#netdirs-directories-outside-an-account)).
+The verb will not tell you what it is set to, and `config('NETDIRS')` does not read it. Read it from the file.
+
+**`config` pages its output** — press Return for more, or `Q`.
 
 The `config()` function reads one parameter from a program:
 
@@ -97,7 +96,7 @@ The `config()` function reads one parameter from a program:
 group.size = config('GRPSIZE')
 ```
 
-**57 parameters are readable this way** (the 59 that `sd.conf` accepts, and `TIMEZONE`,
+**57 parameters are readable this way** (the 59 that `sd.conf` accepts, less the three that are not, and `TIMEZONE`,
 which is not a file parameter). The three that are not are `BACKUPDIR`,
 `NETDIRS` and `SDSYS`. A name of more than sixteen characters is not found (the
 function answers an empty string and `status()` is not 0); no parameter name is
@@ -112,9 +111,9 @@ of contributors.
 
 Editing `sd.conf` and restarting SD is the durable route, and for most
 parameters it is the only one. Fourteen tuning parameters can also be changed from SD itself, with
-`set.config` or the `E` key of `tool.config` (see *Changing a parameter from SD*, below).
+`set.config` or the `E` key of `tool.config` (see [Configuration: Changing a Parameter from SD](07a-sd-admin-configuration-changing-from-sd.html)).
 
-**29 parameters can also be changed for the current session:**
+**29 settings can also be changed for the current session:**
 
 ```
 config sortmem 8192

@@ -60,14 +60,14 @@ sends after the handshake, and a half record, cost what they have used and no mo
 | answers a request after 1.5 s (a slow server inside the limit) | 1.5 s, and the record is read |
 
 These are the limits `sdclient` sets from the two settings (the connection `NETWAIT`, every
-read `NETREPLY`); the times were not measured on this port.
+read `NETREPLY`).
 
 **The silent server.** A server that completes the TLS handshake and then sends nothing at all,
 or sends half of a TLS record and stops, is given up on at `NETREPLY` seconds (and a server that
 accepts the connection and never answers the TLS hello at `NETWAIT` seconds). After the handshake
 a TLS 1.3 server sends its session tickets; the read is made without waiting and the wait is on
 the connection, for the time that is *left* of the caller's limit, so the tickets and a half
-record cost what they have used and no more. What the caller sees is what it always saw for a lost connection:
+record cost what they have used and no more. What the caller sees is what it sees for any lost connection:
 `set.netlogin` and the login of an `OPEN` say "No acknowledgement from host:port at the start of
 the session", "No reply from host:port during the login" or "The TLS handshake with host:port
 did not complete"; a request that was sent and got no answer is message 12502 (message 12514 for

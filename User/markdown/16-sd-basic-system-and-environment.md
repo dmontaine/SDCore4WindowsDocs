@@ -75,9 +75,7 @@ is in the POSIX form.
 
 **A `/cygdrive/` path handed to a Windows program does not work.** Windows
 reads it as drive-relative and either fails silently or complains that the
-parent directory does not exist. This is not theoretical: it is what stopped
-the full-screen editors working the first time they were built for this port.
-There is a conversion function in the kernel and **an ordinary program cannot
+parent directory does not exist. There is a conversion function in the kernel and **an ordinary program cannot
 call it** — see "What is not here". **Take the path from configuration rather
 than from `system()` if a Windows program is going to see it.**
 

@@ -1,5 +1,5 @@
 Title: Moving an Account
-Subtitle: Taking an account to another SD machine with backup.account and restore.account: what you need, the steps, what comes across, and the cases where the machines differ.
+Subtitle: Taking an account to another SD machine with backup.account and restore.account: what you need, the steps and what comes across. The cases where the machines differ.
 
 Moving an account is a backup on one machine, a copy of one file, and a restore on the other.
 There is no verb that does it in one go. The two verbs are described on
@@ -59,8 +59,7 @@ using them between two machines.
 
    A bare file name is looked for in the folder `set.backup.directory` saved (and asked for if
    none is). A relative path starts from SD's current folder, not yours, and gives *… does not
-   exist.* **`latest` will not find this zip**: `latest` picks the newest backup *made on this
-   computer* that holds every named account, and a zip made elsewhere names another host.
+   exist.* **`latest` will not find this zip** (see the next page).
 7. SD checks the whole zip against its manifest **before it changes anything**, says what will
    happen and asks once (Enter is no):
 
@@ -75,8 +74,8 @@ using them between two machines.
    `backup.account jack` on the new machine first.
 8. Check it. For a user account that SD created, the lines it printed say what the account was
    given (*SD routes for jack: …*, *Account jack has SH no, OS.EXECUTE no*, and the lines for the
-   edit, NET, FILES and shared switches). `settings.report` gives the same switch names as the
-   manifest, to compare with step 1. Sign in as the person and open a file.
+   edit, NET, FILES and shared switches). `settings.report` gives the same keys to compare with
+   step 1. Sign in as the person and open a file.
 
 An account that fails (a name clash, a refused password) is reported as *jack was not restored.*
 and the others in the same zip go on. The restore ends with the count of those it restored, and a
@@ -84,8 +83,9 @@ non-zero return code if any failed.
 
 ## What comes across
 
-Everything under the account's folder: files, programs and their object code, the VOC and
-dictionaries. The zip also holds a manifest, `manifest.txt`, that any zip tool will show you. It is
+Everything under the account's folder **except links** (a junction or other link inside an
+account is left out and named): files, programs and their object code, the VOC and
+dictionaries. A hashed file is copied as the files it is on disk. The zip also holds a manifest, `manifest.txt`, that any zip tool will show you. It is
 plain ASCII text: a header, then one section per account.
 
 ```
@@ -135,8 +135,8 @@ lines.
 | the files | fill the new folder | replace the folder |
 | `description`, `suspended` | set from the zip | **set from the zip**, so a suspended account comes back suspended |
 | `route.ssh`, `route.api`, `route.files` | the Windows user joins `sdssh`, `sdapi`, `sdfiles` as the zip says | unchanged |
-| `ssh.key` (ssh key sign-in) | the Windows user is put in `sdsshnokey`, so keys are **off**, unless the zip says it had them; a zip made without `ssh.key` leaves them off, and `modify.account` *name* `ssh-key-on` afterwards turns them on | unchanged |
-| `os.sh`, `os.execute`, `edit.*`, `net`, `shared.read`, `shared.write` | set as the zip says | **unchanged** (change one with `modify.account`) |
+| `ssh.key` (ssh key sign-in) | the Windows user is put in `sdsshnokey`, so key sign-in is **off**, unless the zip says it had it (`ssh.key: 1`); a zip made without `ssh.key` leaves it off, and `modify.account` *name* `ssh-key-on` afterwards turns it on | unchanged |
+| `os.sh`, `os.execute`, `edit.*`, `net`, `shared.read`, `shared.write` | set as the zip says | **unchanged** |
 | `type`, `members` | the kind of account made, and a group account's members | unchanged |
 | `gcat:` lines | the program is put in the global catalog again | same |
 
@@ -151,20 +151,6 @@ no longer matches, so it is not carried; `settings.report` lists the global cata
 the new machine's global catalog already uses for a different program is left alone and listed
 (message 13017).
 
-## When the machines differ
+## Continued in
 
-* **A different folder for the accounts.** VOC entries that hold the account's old path are
-  rewritten to the new one. A pointer to somewhere outside the account is listed, not followed.
-* **From SD Core for Linux.** The archive's `product` says which system made it, and a Linux
-  account restores onto Windows like any other full-product backup; its paths are rewritten as
-  above.
-* **From a Windows archive**, a rewritten path that does not exist with exactly that spelling is
-  listed, so a path whose case changed on the way is seen before a program trips over it.
-* **Indices kept outside the account.** A hashed file whose indices were relocated inside the
-  account is pointed at its new index path. Indices outside the account are not in the archive,
-  and the restore says so: build them again with `build.index`.
-* **The account's Windows user.** An account the new machine already has keeps its own
-  operating-system user, password and groups. One that SD creates is made as `create.account`
-  makes it, from the manifest's description, routes, members and suspension.
-
-The steps above are what the two verbs do for a move between machines and for a restore from SD Core for Linux.
+[Moving an Account: the Windows User and the Cases](17a-moving-an-account-cases.html).

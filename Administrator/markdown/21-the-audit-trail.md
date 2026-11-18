@@ -128,7 +128,8 @@ transfer or ended), `idle`, `max` or `logout`; on a close it is `done` (Enter), 
 
 **A `logto` that is refused writes `logto refused account=`*name*` reason=`*why*.** For an account
 that is suspended the reason is `suspended`; for one the person may not enter it is `not granted`;
-and for `logto sdsys` from a session that did not sign in to Windows as SDSYS it is
+for a name the register does not hold it is `not in the register` (the person is told the same as
+for an account they may not enter, so the register cannot be probed); and for `logto sdsys` from a session that did not sign in to Windows as SDSYS it is
 `logto refused account=sdsys reason=sdsys is entered by its own session only`. Add and delete are
 `modify.account add account=`*name*` to=`*user* and `modify.account delete account=`*name*` from=`*user*.
 

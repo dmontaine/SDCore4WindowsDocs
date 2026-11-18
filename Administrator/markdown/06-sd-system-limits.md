@@ -41,6 +41,7 @@ require major file-format changes.
 | Group size for a dynamic file | **4 KB** by default, maximum **8** | `GRPSIZE` |
 | Open files across all sessions | **80** | `NUMFILES` |
 | Maximum pathname length | **255** | compiled |
+| Path of a program named to `RUN` | **255** characters | compiled |
 | Sort keys in one query | **32** | compiled |
 
 Group size is expressed in 1 KB units, so the compiled maximum of 8 is 8 KB.
@@ -131,8 +132,11 @@ set's SD TCL syntax card.)
 | Parameters readable with `config()` | **57** |
 | Parameters settable for the current session | **29** |
 
-The verb displays `DEBUG`, `FDS` and `PHANTOMS` only when they are set, and `TIMEZONE`,
-which is not a file parameter. No parameter is accepted and ignored: a line
+The three parameters the verb does not display and `config()` cannot read are
+`BACKUPDIR`, `NETDIRS` and `SDSYS`; the verb does not display `APILOCAL` either, and
+`config()` reads it. The verb displays `DEBUG`, `FDS` and `PHANTOMS` only when they are
+set, and `TIMEZONE`, which is not a file parameter; `config()` reads it and a session
+can set it, and it is counted among the 29. No parameter is accepted and ignored: a line
 naming an unknown one (such as `APILOGIN`, `CODEPAGE`, `CREATUSR`,
 `EXCLREM`, `FIXUSERS`, `GDI`, `INVCASE`, `JNLDIR`, `JNLMODE`, `PORTMAP`,
 `RINGWAIT`, `TXCHAR` or `FILERULE`) stops SD from starting;

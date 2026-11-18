@@ -1,7 +1,7 @@
 Title: Giving an AI Agent an Account
 Subtitle: A recipe with no code: a Windows user and an SD account of the agent's own, so that the operating system is the wall.
 
-An AI agent that works on an SD project needs a place to work and a limit on what it can reach. Prompts, tool scopes and promises inside the agent's own software protect against mistakes and against instructions hidden in the data it reads. **They do not stop an agent that holds a person's sign-in**: with it the agent can open an interactive `sd` as that person and do whatever the person can. The wall that holds is the operating system's, and this recipe is how to build it from what SD already has.
+An AI agent that works on an SD project needs a place to work and a limit on what it can reach. Prompts, tool scopes and promises inside the agent's own software protect against mistakes and against instructions hidden in the data it reads. **They do not stop an agent that holds a person's ssh key**: with that key it can open an interactive `sd` as that person and do whatever the person can. The wall that holds is the operating system's, and this recipe is how to build it from what SD already has.
 
 > **The agent is never you.** Do not give it your password, a shared password or a window that is already signed in.
 

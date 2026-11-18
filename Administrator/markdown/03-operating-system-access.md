@@ -25,7 +25,7 @@ in lower case.
 sh command
 ```
 
-Everything after the verb is the command. It runs in the account's own
+With `sh-on`, everything after the verb is the command. It runs in the account's own
 folder, at the account's own Windows permissions:
 
 ```
@@ -81,10 +81,12 @@ shell on the machine, not a decision to give them a restricted one.
 
 ```
 :sh sd
-SD is already running in this session - type EXIT to return to it.
+SD is already running in this session - type exit to return to it.
 ```
 
-The child shell is marked, and SD checks the mark:
+A shell that SD starts, with `sh` or with `OS.EXECUTE`, is marked, and `sd` checks the mark before it
+reads anything else, so every form of the command is refused inside it (`sd -status` and `sd --version`
+too):
 
 ```
 :sh Get-ChildItem Env:SD_SESSION
@@ -93,9 +95,11 @@ Name                           Value
 SD_SESSION                     1
 ```
 
-**That is worth knowing when writing a script for `sh` to run** — anything it
-invokes inherits `SD_SESSION`, so a script that starts SD as part of its work
-will be refused, wherever it is called from.
+**That is worth knowing when writing a script for `sh` to run**: anything it
+starts inherits `SD_SESSION`, so a script that starts SD as part of its work is
+refused, wherever it is called from. It is a guard and not a boundary: the mark
+is a variable of the shell, and a person with a shell can remove it there. A
+shell you start yourself outside SD is not marked.
 
 ## Who is allowed: a switch in the account's own record
 

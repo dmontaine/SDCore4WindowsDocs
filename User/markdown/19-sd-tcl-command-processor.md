@@ -109,7 +109,7 @@ and what SDSYS alone can do is withheld by giving or withholding the VOC
 record itself**, not by a security subroutine — but the mechanism is there
 for a site that wants a verb guarded rather than absent.
 
-There are **38 internal verbs**, numbered, and the numbers are positional in the
+There are **42 internal verbs**, numbered, and the numbers are positional in the
 command processor's dispatch list. Several names share one: `off` and `quit` are
 both internal verb 1, and `clr` is internal verb 2. The `clear.data`,
 `clear.input`, `clear.prompts` and `clear.select` verbs are internal verbs 19,

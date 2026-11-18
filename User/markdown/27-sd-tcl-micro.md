@@ -23,8 +23,9 @@ in lower case. In the tables, *italics* mark something you supply and **bold**
 marks a word typed as it stands; braces mark an optional part.
 
 > **The keys below are micro's own**, read from the default bindings and the
-> help text inside the executable SD installs — **micro 2.0.15**. The SD half of
-> the page describes SD Core for Windows.
+> help text inside the executable SD installs — **micro 2.0.15**. SD installs
+> micro and calls it; it does not implement it, so where a binding differs
+> the editor is right.
 
 ## Both editors are installed with SD
 

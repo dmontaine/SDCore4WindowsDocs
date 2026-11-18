@@ -198,7 +198,7 @@ program's own text and is not cleared for it.
 holds in memory reaches it** — no `@`-variables, no unnamed common, no open
 files, no active select list. **The command string is the only thing passed**,
 through a record in SD's `$IPC` file. The session's option settings do not go
-with it: a phantom starts with every option off.
+with it: a phantom starts with every option off. (There is no `option inherit`.)
 
 **The records are sealed.** `$IPC` is a file every SD user's process can write, so a
 phantom does not believe what it finds there. `phantom` makes a secret for each

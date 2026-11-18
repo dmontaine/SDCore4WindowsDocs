@@ -85,7 +85,7 @@ wrong length (a passphrase passed straight in as the key is this), **10201** a w
 
 `sdencrypt('The quick brown fox', 'secretkey', 202)` returns nothing and sets
 `status()` to **10204**: a passphrase is not a key. The way to turn a passphrase
-into a key these functions accept is the function above that does it; `sdext()`'s
+into a key these functions accept is `sdkey()`, above; `sdext()`'s
 `SD_KEYFROMPW` is internal-only, so an ordinary program cannot call it.
 
 ## The XE conversion and the key ring
@@ -124,14 +124,13 @@ is encrypted with a fresh nonce), `total` adds cipher text, an index holds ciphe
 text and no plaintext reaches the disk, and `copy` moves the stored value. The
 User page lists each.
 
-**`encrypt.key set` refuses a passphrase of fewer than 12 characters** (message 12999) and sets no
-key: it says `The passphrase has fewer than 12 characters.  No key was set.` The
-check comes after the two typings are compared, so two different short ones are
-still reported as different. The rule for SD passwords is not applied, because
-this is not an SD password: nothing is stored or compared, and the length is the
-only test. `sdkey()` itself has no minimum: a program that calls it directly may
-pass a shorter passphrase, and a site that wants a stricter rule can write it
-into the application that asks for one.
+**`encrypt.key set` refuses a passphrase of fewer than 12 characters** (message 12999), after it has seen that the two typed copies match.
+That is its only rule. The rule for SD passwords is not applied, because this is
+not an SD password: nothing is stored or compared. `sdkey()`, the function a
+program calls, is unchanged and takes any passphrase that is not empty, so a site
+that wants a stricter or a looser rule writes it into the application that asks
+for the passphrase. A long phrase of words is a better passphrase than eight
+characters of every kind.
 
 ## The SDEXT interface
 
@@ -151,7 +150,8 @@ so the complaint is about a `dim` statement the program does not contain,
 reported at the last line rather than at the call. That behavior is covered by
 [SD Basic - Restricted Commands](10-sd-basic-restricted-commands.html) in this
 set. `$internal` needs both halves: the compiler tests for internal mode **and** for
-the administrator flag.
+the administrator flag. Internal mode alone is not enough, because only an
+internal program may set the administrator flag.
 
 ### The keys
 

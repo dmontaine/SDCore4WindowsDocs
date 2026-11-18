@@ -89,12 +89,11 @@ create.account user fred ssh ssh-key-on
 **A Windows user that `create.account` makes cannot sign in over ssh with a key, as delivered.**
 It signs in with its password, and only if the account's ssh route is on. `ssh-key-on` lets
 that one account sign in with a key as well as with its password; `ssh-key-off` takes it
-back; `create.account user` *name* `ssh-key-on` makes the account with it on. Only SDSYS may
-use the words. `ssh-key-on` does not give the ssh route: the account still needs `ssh` or
+back; `create.account user` *name* `ssh-key-on` makes the account with it on. `ssh-key-on` does not give the ssh route: the account still needs `ssh` or
 `both`. The gate matrix (`tool.gates`) has a column for it, turning it ON there asks you to
 type the account's name, and each account's own gate page shows its state, as `own` for a user
 SD did not make. After the word SD says `Account fred may sign in over ssh with a key: yes` (or
-`no`). The word is audited as `modify.account ssh-key-on account=fred`, and the audit line of a
+`no`). Only SDSYS may use the words. The word is audited as `modify.account ssh-key-on account=fred`, and the audit line of a
 `create.account` that used it ends `gates=` with `ssh-key-on` among the words.
 
 **What opening it means for security.** A key is a second way in that the account's password
@@ -134,7 +133,7 @@ on (see [Moving an Account](17-moving-an-account.html)).
 
 **What it does not do:**
 
-* **An upgrade changes no existing account.** The installer makes the group empty, so every
+* **An upgrade changes no existing account.** Every
   account that existed before keeps the key sign-in it had; only accounts made after the
   upgrade start with keys off. To shut keys for an older account, `ssh-key-off` puts it in the
   group.
@@ -143,6 +142,8 @@ on (see [Moving an Account](17-moving-an-account.html)).
 * **It does not override a rule you wrote.** A `Match` block or setting of your own in the ssh
   server's configuration that is read before SD's block and sets `PubkeyAuthentication yes`
   for the user wins: the first value the server finds is the one it uses.
+* **A backup that holds no such setting restores with it off**: `restore.account` puts the user
+  in the group; `ssh-key-on` afterwards if it should have it.
 * **The group must exist.** It fails open: if `sdsshnokey` is missing or cannot be read, the
   ssh server offers keys according to the machine's own settings, and `create.account`
   refuses to make a user until the group is there.
@@ -164,7 +165,7 @@ administrator's maintenance of a suspended account does not need `logto`: `run.i
 (`basic`, `catalog`, `decatalog`, `delete.catalog`, `debug`, `compile.dict`) still works in
 one, and `modify.account fred unsuspended` lifts the suspension.
 
-### Who may enter an account: `modify.account add` and `delete`
+### `add`/`delete` is the grant
 
 ```
 modify.account account add user
@@ -172,11 +173,11 @@ modify.account account delete user
 ```
 
 **`add` and `delete` are the grant.** There is no separate `grant`, `revoke` or
-`list.grants` verb: they were removed in 2.0-0, and `list.voc.removed` names
-`modify.account` as what replaces them. **The grant is Windows group membership and nothing is written to the
-account record.** Every SD account has a Windows group — `sdu_`*name* for a
-user account, `sdg_`*name* for a group account — and entry to the account
-**is** membership of that group. `add` puts a Windows user into that group and
+`list.grants` verb: `modify.account` replaces them. **The grant is Windows
+group membership and nothing is written to the account record.** Every SD
+account has a Windows group — `sdu_`*name* for a user account, `sdg_`*name* for
+a group account — and entry to the account **is** membership of that group (the
+test `logto` makes). `add` puts a Windows user into that group and
 `delete` takes one out.
 
 | | |
@@ -225,11 +226,11 @@ than ignored:**
 A password is never given on the command line; modify.password prompts for it
 ```
 
-**That refusal is the point of the verb's design.** The older behavior set
-the password from the prompt and threw the extra word away without a word,
-so every visible sign said it had worked — while the password had already
-reached SD's command stack, and a shell's history and process list if the
-verb was reached from one. Refusing does not put it back, but it says so.
+**That refusal is the point of the verb's design.** A verb that threw the
+extra word away without a word would look as if it had worked, while the
+password had already reached SD's command stack, and a shell's history and
+process list if the verb was reached from one. Refusing does not put it back,
+but it says so.
 
 The prompts are hidden, and the account must already exist in
 the register. **The rule is checked before the repeat is asked for**, and

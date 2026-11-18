@@ -156,9 +156,8 @@ other accounts off on purpose; where members need to save to a VOC, a program
 file or a dictionary there, SDSYS gives it with `modify.account` *name*
 `voc-on` / `bp-on` / `dict-on`.
 
-**On an existing machine.** The installer's `upgrade_editgates` step switches
-all three on, **once**, for every *user* account in the register whose field is
-blank, so that no such account loses what it had; group and other accounts,
+**On an existing machine.** The upgrade switches all three on, **once**, for
+every *user* account in the register whose field is blank, so that no such account loses what it had; group and other accounts,
 and accounts made afterwards, start with all three off. The installing user's
 own account is made with all three off like any other, unless the installer's box
 "Open every access gate" was ticked. The switches are kept
@@ -206,10 +205,7 @@ and restores the account with it off.
 must also be named in the *allowed accounts* of the server it wants, and
 SDSYS puts it there with `set.server ... accounts` ([SDNet](12-sdnet.html)). Two
 lists, both empty until SDSYS writes to them: the switch says the account may use
-SDNet at all, the list says which servers it may use. The same switch guards the
-API's request 29, "open an SDNet file" (see [SD Admin
-Configuration](07-sd-admin-configuration.html)).
-
+SDNet at all, the list says which servers it may use.
 ## Continued in
 
 [Accounts and Security: The Shared Account and the Files-only Route](01-accounts-and-security-4-shared-and-files-only.html) — the shared account's switches and the files-only route.

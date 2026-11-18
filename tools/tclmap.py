@@ -169,8 +169,8 @@ DOCS = [
  # arriving from the other direction: the name is on the page and the
  # explanation is not.  Each verb is assigned where it is actually explained.
  ('Administrator', '01a-account-maintenance.md', """
-   backup.account clean.account config delete.account restore.account set.backup.directory
-   set.date settings.report tool.backups update.accounts
+   backup.account clean.account config delete.account load.examples remove.examples
+   restore.account set.backup.directory set.date settings.report tool.backups update.accounts
  """),
  ('Administrator', '02-sessions-and-locks.md', """
    clear.locks list.locks list.readu listu lock logout tool.sessions unlock
@@ -244,13 +244,10 @@ DOCS = [
  ('Administrator', '02-sessions-and-locks.md', """
    inhibit.login lock.tracer
  """),
- # Windows: the example-record verbs load.examples and remove.examples are on the maintenance page.
  ('Administrator', '01a-account-maintenance.md', """
-   list.voc.removed load.examples remove.examples restore.voc
+   list.voc.removed restore.voc
  """),
- # Windows: remote administration goes through the API and the SDRADMIN account,
- # so its page is not Linux's 22-remote-administration-over-ssh.
- ('Administrator', '22-remote-administration.md', """
+ ('Administrator', '22-remote-administration-over-ssh.md', """
    remote.sdsys
  """),
  ('Administrator', '19-the-master-files.md', """
@@ -291,10 +288,11 @@ SPLITS = {
         '12a-sdnet-servers.md', '12b-sdnet-logins.md', '12c-sdnet-files-only-route.md',
         '12d-sdnet-administration-group-and-read-only-files.md',
         '12e-sdnet-writing-and-locking.md', '12f-sdnet-waits-and-audit.md'],
+    ('Administrator', '17-moving-an-account.md'): ['17a-moving-an-account-cases.md'],
     ('Administrator', '19-the-master-files.md'): [
         '19a-the-master-files-global-change.md', '19b-run-in.md'],
     ('Administrator', '20-the-ai-helper.md'): ['20a-the-ai-helper-set-ai-and-the-key.md'],
-    ('Administrator', '22-remote-administration.md'): ['22a-remote-administration-through-the-api.md'],
+    ('Administrator', '22-remote-administration-over-ssh.md'): ['22a-remote-administration-through-the-api.md'],
     ('User', '07-sd-basic-file-handling.md'): ['07a-sd-basic-locking-and-asking-about-a-file.md'],
     ('User', '12a-sd-basic-the-screen-statement.md'): [
         '12b-sd-basic-the-screen-statement-forms.md',

@@ -7,7 +7,7 @@ document the removed features themselves.**
 
 Everything here was in OpenQM, in ScarletDME, or in upstream `sdb64`, and is not
 in SD Core for Windows. **Most of these removals were made independently on SD
-Core for Linux too, for the same reasons** — see that port's own version of this
+Core for Linux too, for the same reasons** — see its own version of this
 page — which is worth knowing if you come across a decision recorded on one side
 and wonder whether it binds the other.
 
@@ -213,7 +213,7 @@ with a message saying why, and there is no switch to override it. Installing
 ends by asking for a password, and a silent install has nobody to ask: it would
 finish with **no password on any account**. Unattended deployment is not supported.
 
-**scp AND sftp DO NOT WORK INBOUND ONCE SD HAS CONFIGURED THE ssh SERVER**,
+**`scp` and `sftp` do not work inbound once SD has configured the ssh server**,
 for anybody, administrators included. This is the accepted cost of putting
 every ssh session straight into SD. **Pull files rather than pushing them**, or use
 `receive` and `send`, which move plain-text files over the same login once the

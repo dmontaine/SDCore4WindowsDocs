@@ -199,11 +199,11 @@ That answer is about the **whole system**, not about you. With locks held:
 ```
 User File Path........................... Type Id..............................
   23    1 /cygdrive/c/ProgramData/SD/user RU   R1
-          _accounts/fred/ZZLK31A
+          _accounts/fred/zzlk31a
   19    4 /cygdrive/c/ProgramData/SD/user RU   zzlock31
           _accounts/fred/voc
   23    1 /cygdrive/c/ProgramData/SD/user RL   R2
-          _accounts/fred/ZZLK31A
+          _accounts/fred/zzlk31a
 ```
 
 | | |
@@ -226,7 +226,7 @@ A file lock has no id:
 ```
 User File Path........................... Type Id..............................
   23    1 /cygdrive/c/ProgramData/SD/user FX
-          _accounts/fred/ZZLK31A
+          _accounts/fred/zzlk31a
 ```
 
 **The PATH is the POSIX one and that is not a display fault.** SD holds file
