@@ -179,7 +179,9 @@ account's backup holds that account's own entries and the rest are only here.
 `update.accounts`, `load.examples`, `remove.examples`, `config`, `backup.account`,
 `restore.account`, `set.backup.directory`, `settings.report`. An ordinary account
 has none of these names at all — this is not a permission it lacks, the verbs are
-simply not in its VOC.
+simply not in its VOC. **Who may enter an account is changed in one place**,
+`modify.account` *name* `add` / `delete`; see [Accounts and Security: The Home
+Screen, ssh Keys and Passwords](01-accounts-and-security-8-home-screen-ssh-keys-passwords.html).
 
 ## See also
 

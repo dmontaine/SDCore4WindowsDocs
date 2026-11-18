@@ -39,6 +39,29 @@ for less than ten bytes), so a server whose key you have pinned, and which has t
 can still announce a large length in a login reply and send slowly, for `NETREPLY` seconds a
 read; the pin is what you trust it with.
 
+**How the limits apply.** With `NETWAIT=2` and a listener that never answers,
+`set.server ... connect`, `set.netlogin` and the connection that a remote file's client makes
+each give up in about two seconds more than a refused connection costs. With `NETREPLY=3`, a
+server that sent its acknowledgement byte, read the first login message and then said nothing
+is given up on in about three seconds.
+
+A server that completes the TLS handshake and then sends nothing at all, or that stops in the
+middle of a TLS record, is waited for no longer than the caller's limit: the wait is on the
+connection, for the time that is *left* of the limit, so the session tickets a TLS 1.3 server
+sends after the handshake, and a half record, cost what they have used and no more. With
+`NETREPLY=3` and `NETWAIT=2`, the time a caller waits is:
+
+| the server | the caller waits |
+|---|---|
+| completes the handshake, never sends the acknowledgement byte | about 3 s (`NETREPLY`) |
+| accepts the connection and never answers the TLS hello | about 2 s (`NETWAIT`) |
+| sends the acknowledgement byte as half of a TLS record | about 3 s (`NETREPLY`) |
+| answers the first login message with half of a TLS record | about 3 s (`NETREPLY`) |
+| answers a request after 1.5 s (a slow server inside the limit) | 1.5 s, and the record is read |
+
+These are the limits `sdclient` sets from the two settings (the connection `NETWAIT`, every
+read `NETREPLY`); the times were not measured on this port.
+
 **The silent server.** A server that completes the TLS handshake and then sends nothing at all,
 or sends half of a TLS record and stops, is given up on at `NETREPLY` seconds (and a server that
 accepts the connection and never answers the TLS hello at `NETWAIT` seconds). After the handshake
@@ -54,9 +77,6 @@ a change, and **a change that got no answer is never sent again**). A reply that
 still waited for one read at a time; the limit is for each read, not for a whole reply.
 
 `OPEN.SOCKET` takes the number of seconds to wait for the connection as its fourth argument
-(`NETWAIT` for every SDNet caller); see the User set's page on sockets.
-
-`open.socket` takes the number of seconds to wait for the connection as its fourth argument
 (`NETWAIT` for every SDNet caller); see the User set's page on sockets.
 
 ## What is audited

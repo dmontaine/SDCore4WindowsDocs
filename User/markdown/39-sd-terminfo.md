@@ -119,6 +119,12 @@ your own, and compile them with `sdtic` as described below. The start functions 
 `C:\Program Files\SD\usr\bin`, beside `sd.exe`. Nothing needs building and
 nothing needs downloading.
 
+**The installer compiles nothing.** The release is built with the definitions in
+`terminfo.src` already compiled, and the installer copies the compiled `terminfo`
+directory, `terminfo.src` and `sdtic.exe` into place; an upgrade replaces all three.
+**It does not look for a file of your own**, so a definition you keep in a file of
+your own (not in `terminfo.src`) is compiled again with `sdtic` after every upgrade.
+
 ```
 sdtic {options} src...
 ```
