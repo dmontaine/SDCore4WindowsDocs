@@ -130,12 +130,19 @@ the switch (and, unlike `sh-on` and `os-on`, it is read at sign-on only), and a
 change reaches the person the next time they sign on. A refusal names the
 switch: "A program file can only be changed by an account that has bp.edit
 (SDSYS can give it: modify.account *name* bp-on)". The editors `sed` and `ide`
-show that in their message line; every other verb prints it. See the
-*Administrator* set's *Accounts and security* chapter for which files and which
-commands are covered, and for what is not stopped.
+show that in their message line; every other verb prints it.
 
-**`modify.password` is now the whole of what `set.password` used to be.**
-Same verb, same behavior under either name; every account has a password
+When the installer is run over accounts that already exist, the upgrade
+switches all three on, once, for the *user* accounts in the register. Group and
+other accounts are left off on purpose, and a member who signs on to one
+directly (`sd -A`*name*, a batch job, or the API) gets that account's own
+switches, so give them there with `voc-on`, `bp-on` and `dict-on` where members
+need them. `restore.account` gives the switches back only to an account it has
+to create; an existing account keeps what it has. See the *Administrator* set's
+*Accounts and security* chapter for which files and which commands are covered,
+and for what is not stopped.
+
+**`modify.password` changes a password.** Every account has a password
 from the moment it is made, so there is nothing to *set* for the first time.
 Run with no argument it changes your own; SDSYS may change any account's,
 naming it — see [Administrator commands](06-administrator-commands.html).

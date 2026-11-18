@@ -1,9 +1,10 @@
 Title: Lower case
 Subtitle: Commands, file names, record ids and account names are lower case now — and nothing you type has to change.
 
-**Everything that can be lower case is lower case.** SD used to be inconsistent
-about it: BASIC source is free-form and usually written lower case, while file
-names, field names and account names were forced up.
+**Everything that can be lower case is lower case, completely — no name
+exists in two casings.** SD used to be inconsistent about it: BASIC source
+is free-form and usually written lower case, while file names, field names
+and account names were forced up.
 
 **What you type does not change.** `LIST`, `list` and `List` all run the same
 verb, and so does every keyword — `with`, `by`, `no.page` and the rest.
@@ -22,17 +23,18 @@ name that exists in **no** case is still reported as not found.
 This order is used everywhere: the parser, the query processor, `run`,
 the `login` paragraph lookup, and `set.file`'s default `qfile` pointer.
 
-## What is spelled in lower case now
+## What is spelled in lower case, and that is the whole of it
 
 | | |
 |---|---|
-| Commands in the VOC | **`list`**, `count`, **`select`**, **`create.file`**, **`setptr`** … and that is how they appear in `list voc` and `ct voc` |
-| System files on disk | `accounts`, `bp`, `bp.out`, `gpl.bp.out`, `messages`, `newvoc`, `pcode.out`, `syscom`, `voc`, `voc.dic` and the rest |
-| The `BP` VOC entry | `bp` |
+| Commands in the VOC | **`list`**, `count`, **`select`**, **`create.file`**, **`setptr`** … 386 of 386 `newvoc` records, 448 of 448 `voc_template` records — and that is how they appear in `list voc` and `ct voc` |
+| BASIC source and include records | the records of `gpl.bp` and `syscom` — all of them |
+| System files on disk | `accounts`, `bp`, `bp.out`, `gpl.bp`, `gpl.bp.out`, `messages`, `newvoc`, `pcode.out`, `syscom`, `voc_template` and the rest under `sdsys` |
+| The `bp` VOC entry | `bp` |
 | The hold file | `$hold` |
 | The saved select list file | `$savedlists` |
 | The command stack record | `$command.stack` |
-| Account names on disk | `sdsys\accounts\don`, matching the account's own directory in `user_accounts` |
+| Account names on disk | `sdsys\accounts\sam`, matching the account's own directory in `user_accounts` |
 | Files in a new account | created with lower-case names on disk |
 
 **Renaming these is cosmetic for resolution** — NTFS matches without being
@@ -59,8 +61,8 @@ left. The mechanics are in [Upgrading and uninstalling](01a-upgrading-and-uninst
 
 ## One correction worth reading
 
-**`list` and `ct` used to disagree about the same name.** `list voc $HOLD`
-answered *"'$HOLD' not found"* on the very record `ct voc $HOLD` had just shown
+**`list` and `ct` used to disagree about the same name.** `list voc $hold`
+answered *"'$HOLD' not found"* on the very record `ct voc $hold` had just shown
 you. `list`, `sort`, `select` and the rest of the query language now use the
 same as-typed → lower → upper order as everything else.
 
@@ -69,19 +71,9 @@ same as-typed → lower → upper order as everything else.
 **Account names have never been case sensitive and still are not.**
 **`create.account`**, **`logto`** and the rest accept whatever case you type.
 
-What changed is only how the register file is named on disk: new accounts are
-recorded in lower case, so `sdsys\accounts\don` matches the account's own
-directory. **Existing accounts keep the names they already have.**
-
-## Existing accounts are not touched
-
-**An account created before this keeps the upper-case names in its VOC and goes
-on working. there is nothing to migrate.** An account you create now, or one
-you refresh with **`update.accounts`**, gets the new spelling.
-
-Because SD only ever *adds* VOC records at an update, an old account will end
-up holding both spellings after **`update.accounts`**. That is harmless — they
-dispatch to the same programs.
+What changed is how the register file is named on disk: accounts are
+recorded in lower case, so `sdsys\accounts\sam` matches the account's own
+directory on disk.
 
 ## Two related refusals that no longer depend on case
 

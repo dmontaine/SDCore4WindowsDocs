@@ -61,8 +61,8 @@ transaction does.
 recordlocked(file.variable, record.id)
 ```
 
-Every one of the seven codes below was produced deliberately, three of them by
-a second session holding the lock:
+There are seven codes below; three of them come from a second session holding
+the lock:
 
 | Code | Meaning |
 |---|---|
@@ -311,8 +311,7 @@ transaction starts and decremented only on the paths that end in a rollback, so
 **every committed transaction leaves the count one too high for the rest of the
 session.** In a run of four unnested transactions the first reports level 1
 and the fourth reports level 2. **Do not test `system(1008)` to
-find out whether you are in a transaction — test `system(1007)`.** This is
-inherited from the upstream `sdb64` code.
+find out whether you are in a transaction — test `system(1007)`.**
 
 ### Do not nest transactions
 
@@ -344,7 +343,9 @@ commit writes. For one nested inside another, the commit **writes nothing**:
 the records the nested transaction changed and deleted, and the locks it holds,
 are handed to the transaction around it, which alone writes them when it commits
 or throws them away with its own work when it aborts. Afterwards the enclosing
-transaction is the running one again. The table compares a program compiled with the directive and one without it:
+transaction is the running one again. With the same program compiled
+with and without the directive, the nested transaction taking its own records and
+the parent taking its own:
 
 | | with the directive | without it |
 |---|---|---|

@@ -136,16 +136,22 @@ These four set up the machine's own remote-access surface rather than any
 one account's — see [ssh access](08-ssh-access.html) and
 [API access](09-api-access.html) for what each one does.
 
-## The shell escape — `sh`
+## The shell — `sh`
 
-**Who may use `sh` is a switch on each account, not a matter of elevation.**
-`sh` is in every ordinary account's VOC; whether it *does* anything is
-a separate permission, **kept in the account's own record and off for a new
-account.**
+**A new account cannot use `sh` or `OS.EXECUTE` until you say so.**
+Each is a per-account switch, off at creation, that SDSYS turns on and off
+with `modify.account` *name* `sh-on` / `sh-off` (the `sh` verb) and
+`os-on` / `os-off` (`OS.EXECUTE`, the editors `edit` and `micro`, the
+embedded Python, and operating-system files by path outside the account's
+own directory). The two are independent, and each reports where the account
+now stands ("Account fred has SH yes, OS.EXECUTE no"); a change reaches the
+account the next time it is entered. **What the shell can then do is exactly
+what that account's Windows user may do** — it runs with that user's own
+rights, never elevated. SDSYS is never refused. See the *Administrator*
+set's *Accounts and security* chapter, "The operating-system switches:
+`sh-on` and `os-on`".
 
 ### How you grant it
-
-**Four keywords on `modify.account` do it:**
 
 ```
 modify.account fred sh-on      the sh verb at the prompt
@@ -156,15 +162,11 @@ modify.account fred os-off
 ```
 
 **They are four switches over two fields**, not four names for one state,
-so `sh-off` leaves `OS.EXECUTE` alone — and the verb prints the resulting
-state, both fields, every time (`Account fred has SH yes, OS.EXECUTE no`).
-**Both default to off**, for every account `create.account` makes, and
-`create.account user fred sh-on os-on` gives them at creation.
-
-**The switch follows the account, not the person.** It is read when a session
-signs in or `logto`s into the account, so a change reaches the account the next
-time it is entered; to take a grant from somebody who is signed in now, change
-it and end their session.
+so `sh-off` leaves `OS.EXECUTE` alone. **Both default to off**, for every
+account `create.account` makes, and `create.account user fred sh-on os-on`
+gives them at creation. **The switch follows the account, not the person**: to
+take a grant from somebody who is signed in now, change it and end their
+session.
 
 | What you want an account to have | `sh-on` | `os-on` |
 |---|---|---|
@@ -186,10 +188,8 @@ only for the routes the wording names.
 
 ### Both switches are enforced
 
-`OS.EXECUTE` used to be unchecked entirely, so **any account that could
-write a program had the operating system** and the **`sh`** restriction
-could be walked around by anyone able to type BASIC. `os-on` is what decides
-whether `OS.EXECUTE` may run. The refusal reads *`<name>` is not permitted to
+`os-on` is what decides whether `OS.EXECUTE` may run, so **an account that can
+write a program does not thereby have the operating system.** The refusal reads *`<name>` is not permitted to
 use OS.EXECUTE*; the one for `sh` reads *`<name>` is not permitted to use the
 operating system shell*.
 
@@ -202,8 +202,8 @@ os-on only        sh refused    OS.EXECUTE RUNS      <- programs may shell
 SDSYS             sh runs       OS.EXECUTE RUNS
 ```
 
-SD's own system programs are exempt, so **`create.account`** and the
-**`sh`** verb work as before.
+SD's own system programs are exempt from the switches, so **`create.account`**
+works whatever they say.
 
 ### Two rules that go with it
 
@@ -213,7 +213,7 @@ newline — for every account, SDSYS included, switch or no switch. (A bare `sh`
 with nothing after it, is not a command, so it is not filtered: it starts an
 interactive shell for an account that has `sh-on`, and `exit` brings you back.)
 Write the work into a script and run the script:
-`sh powershell -File .\nightly.ps1`.
+`sh powershell -File nightly.ps1`.
 
 **`os-on` is also what lets an account name a file outside its own
 directory.** Without it, opening a file by its path, `dir()`, `select.dir`,

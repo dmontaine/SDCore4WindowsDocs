@@ -140,8 +140,11 @@ sequential.
 > present and `1` again after `clearfile`. To count records, `select` the file
 > and read `selectinfo(list, 3)`, or count in a `readnext` loop.
 
-`dir(pathname)` lists an operating-system directory as a dynamic array — name,
-size and modification time per entry.
+`dir(pathname)` lists an operating-system directory as a dynamic array - one field
+per entry, with the name, `F` or `D` and the size in bytes as its values. **An entry
+is `F` only when it is a plain file and `D` only when it is a directory** (a link is
+judged by what it leads to): a socket, a device or a pipe is
+left out.
 
 ## Reaching another file's data
 

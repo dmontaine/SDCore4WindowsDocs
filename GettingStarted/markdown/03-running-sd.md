@@ -2,7 +2,7 @@ Title: Running SD
 Subtitle: The service, starting and stopping, and what to do when the last shutdown was not a clean one.
 
 **SD is a Windows service and it is already running.** Nobody types
-`sd -start` any more.
+`sd -start` after every restart.
 
 | | |
 |---|---|
@@ -12,13 +12,10 @@ Subtitle: The service, starting and stopping, and what to do when the last shutd
 | Created by | the installer, which also starts it |
 | Removed by | the uninstaller |
 
-This is a change from the Linux original, where `sd -start` had to be typed
-after every restart.
-
 ## Starting and stopping
 
-**Stopping the service stops SD and ends every session on the machine**, which
-is exactly what `sd -stop` has always done. Either is fine:
+**Stopping SD ends every session on the machine**, which is exactly what
+`sd -stop` has always done. Either is fine:
 
 ```
 Stop-Service SD
@@ -30,29 +27,28 @@ sd -stop
 sd -start
 ```
 
-## `sd -start` and `sd -stop` tell the truth now
+## `sd -start` and `sd -stop` check the real process, not just the segment
 
-**Before this port, both answered from the shared memory segment**, which
-outlives the daemon — so both could report success while doing nothing. Four
-things changed, and each is a state you may hit while testing.
+SD's shared state lives in a shared memory segment, which — unlike a file — can
+outlive the daemon process that created it if SD is killed rather than stopped
+cleanly. `sd -start` and `sd -stop` validate the daemon's actual process id
+rather than trusting the segment's mere existence:
 
-**"SD is already started" IS NOW ONLY SAID WHEN THE DAEMON REALLY IS
-RUNNING**, and it tells you the process id — the Windows one, the number Task
+**"SD is already started" is only said when the daemon really is
+running**, and it names the process id — the Windows one, the number Task
 Manager and `Stop-Process` use.
 
-**IF THE SEGMENT IS THERE BUT THE DAEMON IS NOT — what a killed or crashed SD
-leaves behind — `sd -start` says so and tells you to run `sd -stop` first.**
-It used to say *"SD is already started"* and do nothing, **leaving the system
-unusable while the command that would fix it reported success.**
+**If the segment is there but the daemon is not** — what a killed or
+crashed SD leaves behind — `sd -start` says so and tells you to run `sd -stop`
+first, rather than silently reporting success against a segment nothing is
+actually serving. It does **not** clear the wreckage for you: that would end
+any sessions still attached to the segment. The count of those is printed so you
+can decide.
 
-It does **not** clear the wreckage for you: that would end any sessions still
-attached to the segment. **The count of those is printed so you can decide.**
-
-**`sd -stop` now checks that the daemon actually stopped.** A daemon started
+**`sd -stop` checks that the daemon actually stopped.** A daemon started
 from an elevated session cannot be stopped from an ordinary one — Windows
-refuses the signal — and that used to be silent, leaving a daemon running
-against a segment nothing else could see. You now get a warning naming the
-process id and the command to stop it with.
+refuses the signal — so you get a warning naming the process id and the command
+to stop it with.
 
 > **Known limit.** If the segment has already gone, `sd -stop` has nowhere
 > left to read the daemon's process id from and cannot report on it at all.
@@ -79,17 +75,9 @@ return at once.
 ## After an unclean shutdown
 
 If SD is stopped abruptly — the power goes, or the process is killed — it
-leaves a shared memory segment behind. **On Windows that survives a reboot,
-where on Linux it would not.**
-
-**Earlier builds of this port refused to start on the next boot** and said
-*"Run sd -stop to clear it"*, so **the machine came up with SD unavailable to
-everybody** until somebody logged in and typed it by hand. There was no Linux
-behavior to inherit here: on Linux the segment does not survive the reboot at
-all.
-
-Nothing from before a restart can still be using that segment, so SD now
-discards it and starts normally, printing:
+leaves a shared memory segment behind. **On Windows that survives a reboot.**
+Nothing from before a restart can still be using that segment, so SD discards
+it at the next start and starts normally, printing:
 
 ```
 Discarding the shared segment left by the previous boot -
@@ -108,7 +96,7 @@ returns you to the session you already have.
 Worth knowing alongside it: **`sh` itself needs the account's `sh-on` switch
 (or SDSYS)**, which is off for a new account, so an ordinary account cannot
 leave SD this way until an administrator turns it on for it. See
-[Administrator commands](06-administrator-commands.html#the-shell-escape-sh).
+[Administrator commands](06-administrator-commands.html#the-shell-sh).
 
 ## The command line
 
@@ -122,6 +110,10 @@ sd -u               list current users
 sd -k <n> | -k all  log out user n, or everybody
 sd -start           start the system
 sd -stop            stop the system
+sd -suspend         suspend updates   -- elevated only
+sd -resume          resume updates    -- elevated only
+sd -d               diagnostic dump   -- elevated only
+sd -m               dump shared memory -- elevated only
 sd --version        report the version
 sd --help           this summary
 ```
@@ -130,7 +122,7 @@ sd --help           this summary
 
 **`sd -a<name>` is refused unless `<name>` is your own account.** An
 administrator no longer opens somebody else's account without ever being in
-their own — they arrive in their own and reach the rest with **`logto`**, which is
+their own — they arrive in their own (`sdsys`) and reach the rest with **`logto`**, which is
 where SD checks whether they are allowed in.
 
 **`sd <command>` needs an elevated session**, or an entry for that account in
@@ -139,6 +131,12 @@ VOC now, so there is nothing about the account to consider here; SDSYS's own
 `batch.jobs` list is what decides what may run. That is what makes scheduled
 jobs possible without giving them SDSYS's own rights — see
 [Scheduled jobs](04-scheduled-jobs.html).
+
+**`sd -suspend`, `sd -resume`, `sd -d` and `sd -m` need an elevated session**, as
+`-start`, `-stop`, `-restart` and `-k` do, and otherwise answer "This command
+needs an elevated session". `-suspend` stops every update on the system and the
+two dumps show every session and the configuration, so they are not for
+ordinary users. `sd -cleanup` and `sd -u` need one too.
 
 **`sd <command>` runs and exits, and is never asked to set a password.** Nor
 is any session with no terminal — a scheduled task, or a piped script. **Only

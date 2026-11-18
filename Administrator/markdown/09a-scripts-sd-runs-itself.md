@@ -82,7 +82,7 @@ not for typing either**: each prints the closing lines the verb reads.
 | `sd-jobs.ps1` | `set.job`, and `tool.jobs` through it - the job helper: makes, changes, deletes, starts and lists the administrator's scheduled jobs, each a Task Scheduler task `\SD\sdcore-job-`*name* with its definition in `C:\ProgramData\SD\sd-jobs`. It refuses any caller but the Windows account SDSYS, elevated. Exit 0 done, 1 refused or failed |
 
 See [Backing Up and Restoring Accounts](01b-backup-and-restore.html) and
-[Scheduled Jobs](17-scheduled-jobs.html) for the verbs.
+[Scheduled Jobs](23-scheduled-jobs.html) for the verbs.
 
 ## The ones the uninstaller runs
 

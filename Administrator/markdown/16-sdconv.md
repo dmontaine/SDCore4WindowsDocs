@@ -7,33 +7,30 @@ Subtitle: A tool for turning compiled program files between big-endian and littl
 
 `sdconv` was written to move SD files between computers that store numbers in
 opposite byte orders. SD Core for Windows runs on little-endian machines
-(x86-64). Nothing on this page can say whether a result would run on a
-big-endian machine.
+(x86-64), and so does SD Core for Linux, so a conversion between the two is never
+needed. Whether a converted file would run on a big-endian machine is not
+something this page can say.
 
 > **Read this first: `sdconv` does not convert hashed files.** Given one it says
 > so, changes nothing and exits 1. It converts **compiled program files** only,
-> and only the header of each. The
-> routine that converts a hashed file's subfiles is in the source, but the
-> program does not call it, and this SD cannot open a big-endian hashed file, so
-> a converted file would be of no use here. Windows and Linux are both
-> little-endian.
+> and only the header of each. This SD cannot open a big-endian hashed file, so a
+> converted file would be of no use here.
 
 ## The short version
 
 * **You almost certainly do not need it.** SD loads a program whose header is in
   the other byte order and swaps the header in memory; the file is left as it is.
-  *Run*: a program converted with `-B` ran correctly (it filled a file with 40
-  records), and its first byte was still `65` afterwards. Only the header was
-  converted there, so this shows that SD tolerates a flipped header, not that a
-  program compiled on a big-endian machine would run.
+  A program converted with `-B` runs correctly, and the file is still
+  big-endian afterwards. Only the header is converted, so this shows that
+  SD tolerates a flipped header, not that a program compiled on a big-endian
+  machine would run.
 * **Every conversion rewrites the file in place with no copy.** Take your own
   copy first.
-* **It rewrites even a file that needs no conversion.** *Run*: a program already
-  in the right order had its modified time changed by `sdconv -L`.
+* **It rewrites even a file that needs no conversion.** A program already
+  in the right order has its modified time changed by `sdconv -L`.
 * **A hashed file is refused: a message, the file untouched, exit status 1.**
 * **A path that is neither a hashed file nor a program object is skipped with no
-  message and the exit status is 0**, including a path that does not exist, a
-  folder, and a file it cannot write.
+  message and the exit status is 0**, including a path that does not exist.
 
 ## Where it is and who can run it
 
@@ -55,13 +52,13 @@ sdconv {options} pathname ...
 |---|---|
 | `-B` | Convert to big-endian. |
 | `-L` | Convert to little-endian. |
-| `-D` | Debug. It is accepted, is not listed in the usage text, and **does nothing** for a program file: the progress it would print belongs to the hashed-file routine that is not called. *Run*: no extra output. |
+| `-D` | Debug. It is accepted, is not listed in the usage text, and **does nothing** for a program file: the progress it would print belongs to the hashed-file routine that is not called. |
 | (neither `-B` nor `-L`) | Convert to the byte order of the machine it is run on, which here is little-endian, so the same as `-L`. |
 
 Options may be joined in one word (`-BD`) and are not case sensitive. If both
 `-B` and `-L` appear, the last one wins. Several pathnames may follow. The
 program does not descend into a folder, and **a wildcard is not expanded by
-anything**: `sdconv -B bp.out\*` converted nothing and exited 0, from PowerShell
+anything**: `sdconv -B bp.out\*` converts nothing and exits 0, from PowerShell
 and from `cmd` alike. Name the files, in PowerShell with
 `sdconv -B (Get-ChildItem bp.out).FullName`. With no pathname, or an option it
 does not know, it prints the usage text and exits 1.
@@ -94,15 +91,14 @@ seek or write error naming the file, and *Cannot allocate memory for name*, and
 only for a file it had already recognized as a program object.
 
 ## What it converts: compiled program files
-A compiled program is a plain file that begins with a one-byte marker, `0x64` for
-little-endian and `0x65` for big-endian. SD keeps them in:
+A compiled program is a plain operating system file that begins with a one-byte
+marker, `0x64` for little-endian and `0x65` for big-endian. SD keeps them in:
 
-* the `.out` folder beside each program file (`bp.out` holds the compiled form of
-  the programs in `bp`, in each account; `gpl.bp.out` and `pcode.out` are
-  others), and
-* the global catalog, `gcat`, a folder in the SDSYS folder
+* the `.out` folder beside each program file (`bp.out` holds the compiled
+  form of the programs in `bp`; `gpl.bp.out` and `pcode.out` are others), and
+* the global catalog, `gcat` in the SDSYS folder
   (`C:\ProgramData\SD\sdsys\gcat`). An account's own `cat` folder is the local
-  catalog.
+  catalog; `sdconv` does not look at it.
 
 A file whose first byte is neither value, or that is shorter than the 165-byte
 header, is not touched.

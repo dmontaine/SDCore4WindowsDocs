@@ -15,7 +15,7 @@ SD folds case, so a query may be typed in either case. Commands and keywords are
 shown here in lower case. In the tables, *italics* mark something you supply and
 **bold** marks a word typed as it stands; braces mark an optional part.
 
-> The file queried on this page is `voc`, because it is the one file
+> The file queried in the listings is `voc`, because it is the one file
 > every account has and it is interesting enough to ask real questions of.
 
 ## The shape of a query
@@ -32,10 +32,10 @@ count voc
 ```
 
 ```
-418 record(s) counted
+448 record(s) counted
 ```
 
-**That number is particular to the account it is run in.** Every account has
+**That number is particular to the account it was run in.** Every account has
 a `voc`, and no two need hold the same records — every ordinary account
 starts with the same set as every other, but local additions can differ, and
 `SDSYS`'s is larger to begin with. The counts on this page came from SDSYS.
@@ -92,7 +92,7 @@ spellings in a row return identical counts on the same data.
 | is in a list | `in` |
 | is not in a list | `not.in` |
 
-Both spellings of *not equal* (`ne` and `<>`) returned **331** on the same query, and
+All three spellings of *not equal* returned **331** on the same query, and
 `<` and `lt` both returned **381**. (The words `before`, `after`, `equal`,
 `greater`, `less`, `matches`, `matching`, `not.matching` and `spoken` were removed in 2.0-0:
 in a query they are taken as record ids.)

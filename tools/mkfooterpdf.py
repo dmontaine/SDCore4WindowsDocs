@@ -262,7 +262,8 @@ def footer_template(label, date):
 
 
 def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('html')
     ap.add_argument('pdf')
     today = datetime.date.today()
@@ -348,7 +349,8 @@ def main():
         for k, (a, b, lab) in enumerate(runs):
             piece = os.path.join(work, 'p%03d.pdf' % k)
             printed(piece, displayHeaderFooter=True, headerTemplate='<span></span>',
-                    footerTemplate=footer_template(lab, args.date), pageRanges='%d-%d' % (a, b))
+                    footerTemplate=footer_template(lab, args.date),
+                    pageRanges='%d-%d' % (a, b))
             pieces.append(piece)
             sys.stdout.write('  pages %3d-%-3d  %s\n' % (a, b, lab))
         from pypdf import PdfWriter
@@ -370,7 +372,8 @@ def main():
             proc.wait(timeout=5)
         except subprocess.TimeoutExpired:
             proc.kill()
-        if not os.environ.get('MKFOOTERPDF_KEEP'):
+        keep = os.environ.get('MKFOOTERPDF_KEEP')
+        if not keep:
             shutil.rmtree(work, ignore_errors=True)
 
     n_out = page_count(pdf_path)
@@ -382,8 +385,7 @@ def main():
         if not any(args.date in ln for ln in out_pages[idx]):
             sys.stderr.write('mkfooterpdf: page %d of the result has no footer with the date %r\n' % (idx + 1, args.date))
             return 1
-    sys.stdout.write('mkfooterpdf: wrote %s (%d pages; the date %r read back from pages 1 and %d)\n'
-                     % (pdf_path, n_out, args.date, n_out))
+    sys.stdout.write('mkfooterpdf: wrote %s (%d pages; the date %r read back from pages 1 and %d)\n' % (pdf_path, n_out, args.date, n_out))
     return 0
 
 

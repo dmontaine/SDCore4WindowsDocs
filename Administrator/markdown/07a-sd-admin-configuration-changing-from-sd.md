@@ -48,8 +48,9 @@ parameter is not changed from SD, and the exact line to add by hand, as an admin
 `[sd]` section of the file SD reads.
 
 **The 14 parameters** are the tuning ones: capacity, performance, timeouts and the printer's defaults.
-Each is range-checked by SD and each only sizes or times something SD does; none is a door, a path, a
-command, a log or a security setting:
+Each is range-checked by SD and each only sizes or times something SD does (how many locks a
+process may hold, how deep a program may call, how long a sign-on waits for a user number, the cache
+sizes, the printer's defaults); none is a door, a path, a command, a log or a security setting:
 
 | Parameter | Range | Takes effect |
 |---|---|---|
@@ -93,7 +94,7 @@ its box:
 | `INTPREC` | Changes the results of arithmetic in programs that already exist. |
 | `MAXIDLEN` | Structural: the longest record id of the whole system, which reaches every file and program. |
 | `MUSTLOCK` | Makes a write fail unless the record is locked first, which can stop programs that exist. |
-| `NETDIRS` | A door: it widens what an API session may reach beyond its own account. |
+| `NETDIRS` | A door: it widens what an account without os-on may reach beyond its own directory. |
 | `NETFILES` | A door: bit 2 gates API request 29, a remote open of an account. |
 | `NUMFILES` | Sizes the open file table in shared memory; SD checks no range. |
 | `NUMUSERS` | Sizes the user table, which bounds who can sign on; SD checks no range. |
@@ -138,19 +139,28 @@ useful that would be; such a parameter joins the list when SD itself checks it.
 | `NUMLOCKS` | 100 | Maximum record locks across all sessions. Range 1 to 32767 (the lock table's cells are 16 bits; a value outside it stops SD starting) |
 | `MAXCALL` | 10000 | Maximum subroutine call depth. Range 10 to 1000000 |
 | `CMDSTACK` | 99 | Depth of the command stack |
-| `NETWAIT` | 5 | Seconds to wait for a connection to a server defined for SDNet (`set.server`, `set.netlogin`, a file opened through an `N` pointer): the TCP connection, then the TLS handshake, each. 1 to 3600; zero is refused |
-| `NETREPLY` | 30 | Seconds to wait for each reply of such a server. 1 to 3600; zero is refused. `config('NETWAIT')` and `config('NETREPLY')` read them. See [SDNet](12a-sdnet.html) |
 | `FDS` | unset | Limit on file descriptors. No limit when unset |
 | `USERPOOL` | 1023 | The highest user number handed out; user numbers rotate through 1 to this, 0 always takes the lowest free one |
 | `USPLIT` | 0 | `1`: interactive sessions take the lowest free user number and every other process (a phantom, an API session) the highest free one in 1 to `NUMUSERS`, so the two never meet. `PHANTOMS` and `USERPOOL` are ignored while it is on. `config('USPLIT')` reads it |
 | `PHANTOMS` | unset | `base,range` — user numbers kept for phantoms started with `phantom user n`. Nobody else is given one: not a session, not an API session, not a phantom started without `user`. It must lie between 1 and the highest user number, or SD will not start. `config('PHANTOMS')` reads it as `base,range`, null when none are kept |
 | `CLEANUP` | 300 | Seconds between the checks that look for sessions that ended without logging out (a killed terminal, a lost connection) and clear them from the user table. 30 to 3600. The daemon wakes every ten seconds, so an interval is kept to within ten seconds; a very short one costs a pass over the user table that often. `config('CLEANUP')` reads it |
 
+## Other SD servers (SDNet)
+
+| Parameter | Default | Effect |
+|---|---|---|
+| `NETWAIT` | 5 | Seconds to wait for a connection to another SD server: `set.server ... connect`, `set.netlogin` and the first use of a defined server. It bounds the TCP connect and then, again, the TLS handshake. 1 to 3600; **0 is refused and SD does not start with it** (openQM reads 0 as "wait for ever") |
+| `NETREPLY` | 30 | Seconds to wait for each reply from another SD server once connected. 1 to 3600, 0 refused. A server slower than this is treated as lost, whatever it has sent meanwhile (the TLS session tickets, or half a record, do not use the wait up), and a change that got no answer is never sent again. A `CLEARFILE` waits the longer of 300 seconds and this |
+| `NETFILES` | 0 | Not read by SDNet. Bit 2 gates one old API request, number 29 (below). Leave it at 0 |
+
+Both waits are per computer. See [SDNet](12f-sdnet-waits-and-audit.html#the-two-waits-netwait-and-netreply) for what they bound and
+the check on the length a reply announces.
+
 ## Files and locking
 
 | Parameter | Default | Effect |
 |---|---|---|
-| `GRPSIZE` | 4 | Default group size for a new dynamic file, in 1 KB units. Read by `create.file` and `configure.file` when no group size is given. **4**: Linux measured 200,000 records of 130 bytes with 5 to 11 percent of their groups overflowed at 2 KB and under 2 percent at 4 KB. A system that is already installed keeps the `sd.conf` it has, and so keeps 2 until you change it; a file keeps the size it was made with |
+| `GRPSIZE` | 4 | Default group size for a new dynamic file, in 1 KB units. Read by `create.file` and `configure.file` when no group size is given. **4** is the shipped value: 200,000 records of 130 bytes had 5 to 11 percent of their groups overflowed at 2 KB and under 2 percent at 4 KB. A system whose `sd.conf` says 2 keeps 2 until you change it; a file keeps the size it was made with |
 | `MAXIDLEN` | 63 | Maximum record id length. 63 is also the lower bound |
 | `MUSTLOCK` | 0 | When 1, a `write` or `delete` requires the record to be locked first |
 | `DEADLOCK` | 0 | When 1, SD traps deadlocks |

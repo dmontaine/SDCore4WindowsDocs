@@ -3,112 +3,120 @@ Subtitle: Writing accounts to a zip file, putting them back, remembering the bac
 
 This page continues [Account Maintenance](01a-account-maintenance.html).
 
-## Who has these verbs
-
-**All four are SDSYS's** — `backup.account`, `restore.account`,
-`set.backup.directory` and `settings.report`. They are in SDSYS's VOC and in
-no other account's, so an ordinary account does not have a permission it lacks;
-it simply has no such verbs.
-
-## The backup folder: `set.backup.directory`
+## Backing up and restoring accounts: `backup.account`, `restore.account`
 
 ```
-set.backup.directory folder
-set.backup.directory
+backup.account name {name ...} {to directory}
+backup.account all {to directory}
+restore.account archive name {name ...} {no.query}
+restore.account archive all {no.query}
 ```
 
-With a folder, the verb makes it if it does not exist, proves SD can write in
-it, and remembers it in `sd.conf` as `BACKUPDIR=`. With no folder it shows the
-one that is remembered and changes nothing.
+`backup.account` writes **one zip file**, named for the machine, the accounts
+and the time. It holds each account's files and a plain-text **manifest** of how
+the account was set up: its type, description, suspension, remote access and
+group members. `restore.account` puts accounts back — over an account that
+exists, or onto a machine that has never had it. A restored account's paths are
+corrected to where it now lives, and programs it had in the global catalog are
+cataloged again. **Backups made here restore on SD Core for Linux, and the
+other way round**; a backup of the full product restores only to a full system
+(SD Core Solo's only to Solo).
 
-**The folder must be a full path**, such as `C:\Backups`. A path that depends on
-the current folder is refused, because the setting would then mean something
-different every time it was used.
-
-**You do not have to run it first.** If no folder is remembered,
-`backup.account` and `restore.account` ask for one and remember the answer
-exactly as this verb would. `restore.account` with `no.query` has nobody to ask
-and refuses instead.
-
-**An SD older than this release will not start on an `sd.conf` that carries a
-`BACKUPDIR` line.** SD stops at start-up on any key it does not know. Remove the
-line before going back to an older release.
-
-## Backing up: `backup.account`
+**`restore.account latest` restores the most recent backup without your naming
+it:**
 
 ```
-backup.account name {name ...} {to folder}
-backup.account all {to folder}
-```
-
-Writes the named accounts, or every account except SDSYS, to **one zip file**
-in the folder. The file is named after the computer, the accounts and the time,
-for example `SD-ace-sduser-20261001-144419.zip`.
-
-* **Without `TO`** the remembered folder is used. **With `TO`** the folder is used
-  for that one backup only; nothing is remembered.
-* The zip holds each account's files and what is needed to make the account
-  again: its type, routes, description, groups, its `sh`, `os`, edit-switch,
-  `net`, shared-account and files-route settings, and its globally cataloged
-  programs. (`restore.account` gives the switches back only to an account it has
-  to create; an account that already exists keeps its own. `sd-on` is not
-  carried.)
-* **No password is in it.** SDSYS, the configuration and the credentials are not
-  backed up; use `settings.report` for the system's settings.
-* **Each account is counted before it is packed** and the counts are written in
-  the zip. If what was written differs from what was counted, the zip is deleted
-  and the verb says which account was short and by how much. A backup that
-  reports success has been checked against the account.
-
-**While a backup runs, nobody else may be signed in to SD**, and new sign-ins are
-refused until it finishes.
-
-## Restoring: `restore.account`
-
-```
-restore.account zipfile name {name ...} {no.query}
-restore.account zipfile all {no.query}
 restore.account latest name {name ...} {no.query}
 restore.account latest all {no.query}
 ```
 
-Puts accounts back from a backup.
+`latest` stands where the archive name goes. SD looks in the directory saved by
+`set.backup.directory` and picks **the newest backup made on this computer that
+really holds every account you named**. It decides by *looking inside*: a backup
+is called `SD-<computer>-<accounts>-<yyyymmdd-hhmmss>.zip`, but one made with
+`all`, or of many accounts, carries no account names, so SD opens each backup
+the name might fit and reads its list of accounts (nothing is unpacked). It
+prints which backup it chose (*The most recent backup is …*) and then restores
+from it exactly as if you had typed its name.
 
-* **A bare file name** is looked for in the remembered folder. A name that
-  includes a folder is used as given.
-* **`latest` takes the place of the file name** and chooses the newest backup in
-  the remembered folder that was made **on this computer** and **holds** every
-  account you named. It finds the computer and the time from the file name, then
-  opens each candidate and reads its record of the accounts it holds (nothing is
-  unpacked), so a backup renamed by hand may not be found. It says which file it
-  chose before it asks. If a newer backup made on this computer does not hold the
-  account, or cannot be read, it says so and names both files. If no backup holds
-  the account it says so and changes nothing. With `ALL` it takes the newest backup
-  that was made with `ALL`, by file name. The zip is still checked against its own
-  counts, below, before anything changes.
-* **Only the accounts you name are restored**, from a file name or from `latest`.
-  Other accounts in the same zip are left as they are. A named account that is not
-  in the zip stops the restore with nothing changed. Only `ALL` restores every
-  account in the zip.
-* **The zip is checked against its own counts before anything is changed.** The
-  product (a full SD Core backup restores only into a full SD Core), the number
-  of accounts, and every account's files, bytes and directories must match what
-  was unpacked. Any difference stops the restore with nothing changed.
-* **It says which accounts will be replaced and which will be made, and asks
-  once.** The default answer is no. `no.query` skips the question.
-* **An account that exists is replaced**, and keeps its Windows user, password
-  and groups.
-* **An account that does not exist is made first**, from the type, routes,
-  description and groups in the backup, and asks for a new password, because a
-  password is never in the zip.
-* **Globally cataloged programs are cataloged again** from the restored object
-  files. A name that is already cataloged in the global catalog as a different
-  program is left alone and listed.
-* A VOC entry that holds the account's old path is rewritten to the new one. A
-  pointer to somewhere outside the account is listed, not followed.
+**If a newer backup made on this computer does not hold the account** — or
+cannot be read — SD says so before it asks you to go ahead: *The most recent
+backup made on this computer, …, does not hold … (or cannot be read). The newest
+backup that does is …*. You are then not restoring your latest backup, and you
+can still answer `n`. If **no** backup holds the account it says *No backup of …
+made on this computer was found in …* and changes nothing.
 
-**While a restore runs, nobody else may be signed in to SD**, and new sign-ins
-are refused until it finishes.
+`latest all` takes the newest backup that was made with `all`, by its name, and
+does not warn about a newer backup of one account. Whichever backup is picked is
+still checked against its own manifest, in full, before anything is changed, and
+only the accounts you named are restored from a backup of several. A backup made
+on another computer is never picked. An archive name always ends in `.zip`, so
+`latest` cannot be mistaken for one.
+
+**`latest` only considers backups SD named itself**, `SD-<computer>-<accounts or
+all>-<yyyymmdd-hhmmss>.zip`, and it passes over one whose name lists other
+accounts without opening it. A backup you have renamed is never picked: restore
+it by giving its name (`restore.account myfile.zip name`). A bare name is looked
+for in the saved directory; a name with a directory in it is used as given.
+
+**Both are SDSYS's.** A backup or restore starts only when every other session
+has logged out, says who is still logged in if any are, and **no one can log in
+— at the terminal, over ssh or through the API — until it has finished.**
+
+**Every backup is checked as it is made.** The files, bytes and directories of
+each account are counted before it is packed and compared with what was
+written, and a backup that does not match is **deleted rather than kept**. **A
+backup never overwrites a file:** if the name is taken, SD says so and writes
+nothing. A restore checks the whole archive against its manifest **before it
+changes anything**, lists what it will replace and create, and asks first. **An
+archive that lies is refused with nothing changed** — counts that disagree with
+the manifest, an entry path with `..` in it or an absolute path, no manifest or
+two of them.
+
+**A restored account comes back as it was:** an account that already exists
+keeps its Windows user, its password and its groups, **and its own switches**:
+the manifest's switches are used only for an account that has to be created
+(`sd-on` is not carried). **Moving an account to another machine** is covered by
+[Moving an Account](17-moving-an-account.html).
+
+**What it does not do:**
+
+- It does not back up SDSYS or the system's configuration (`settings.report`,
+  below, records that for reference only).
+- It carries **no passwords**: an account restored onto a machine that never
+  had it asks for a new one, and an account that exists keeps its own.
+- A program recompiled after it was cataloged globally is not recognized as the
+  account's and is not cataloged again. Such a program is listed by
+  `settings.report`, which is why it is missing from a backup.
+
+## Saying where backups go: `set.backup.directory`
+
+```
+set.backup.directory directory
+set.backup.directory
+```
+
+Saves the directory that `backup.account` writes to and `restore.account` reads
+from, so it need not be typed each time. It **creates the directory if it is not
+there**, checks that it can be written to, and keeps it in `sd.conf`
+(`BACKUPDIR=`), where it takes effect at once — no restart. On its own it shows
+the saved directory and changes nothing.
+
+With a directory saved, `backup.account` no longer needs `to`; with none saved
+it asks for one and saves the answer exactly as this verb would.
+`restore.account` does the same for an archive named without a directory;
+with `no.query` it has nobody to ask and refuses instead.
+`to directory`, or an archive name that carries a directory, still works and
+changes nothing that is saved.
+
+**The directory must be a full path**, such as `C:\Backups` — a relative one is
+refused, because a setting that meant different places depending on where you
+were standing would be a trap. **A directory that already exists is used as it
+is**, wherever it is (a USB drive, the pCloud folder), and nothing about it is
+changed.
+
+> An earlier release refuses to start if `sd.conf` holds a `BACKUPDIR` line, so
+> take the line out before going back to one.
 
 ## Backups and restores on one screen: `tool.backups`
 
@@ -116,49 +124,68 @@ are refused until it finishes.
 tool.backups
 ```
 
-A full-screen page in SDSYS's VOC only (a window of 140 columns by 43 lines or
-more). The top box names the saved backup folder, says how many archives it
-holds, and says **whether anyone else is signed in**: `backup.account` and
-`restore.account` both run only when every other session has logged out, so the
-page lists the other sessions and **shows no box for a command while any is
-there**. The list is the archives in the folder (the files
-`SD-host-what-yyyymmdd-hhmmss.zip`), newest first: when each was made, its size,
-and how many accounts it holds. The box at the foot shows the manifest of the
-one under the cursor, read without unpacking anything.
+A full-screen page in SDSYS's VOC only (a window of 140 columns by 43 lines or more). The top box
+names the saved backup directory, says how many archives it holds, and says **whether anyone else is
+signed on**: `backup.account` and `restore.account` both run only when every other session has logged
+out, and LOGIN refuses new ones while either runs, so the page lists the other sessions (the same
+check the verbs make) and **shows no box for a command while any is there**. The list is the archives
+of the directory (the files `SD-host-accounts-yyyymmdd-hhmmss.zip`), newest first: when each was made
+(from its name), its size, how many accounts it holds and for which product (from its manifest). The
+box at the foot shows the manifest of the one under the cursor, read without unpacking anything:
+the product, the SD version, the host and the date, and each account with its files, bytes and
+directories.
 
 | Key | Runs |
 |---|---|
 | `B` | `backup.account all` |
-| `A` | `backup.account name ...`, for the account names you type |
+| `A` | `backup.account name ...`, for the account names you type (a-z, 0-9, dot, dash, underscore; up to 20) |
 | `R` | `restore.account archive all no.query`, the archive under the cursor |
 | `D` | `set.backup.directory path`, for the absolute path you type |
 
-Each shows its command in a box answered Run or Cancel, **and Cancel is what
-Enter chooses**. The page runs those four commands and no other; the verbs ask
-for the administrator again and write their own audit lines. **A restore
-replaces every account the archive holds**, so its box lists them and wants the
-word `restore` typed (in either case); the page then gives `no.query`, because the verb's own
-question cannot be answered through a page. **A restore that would have to make
-an account is refused by the page**, because a new account asks for a password:
-restore such an archive at the prompt.
+Each shows its command and what it does in a box answered Run or Cancel, **and Cancel is what Enter
+chooses**. The page runs those four commands and no other, through the routine all the toolkit pages
+use; the verbs ask for the administrator again and write their own audit lines. **A restore replaces
+every account the archive holds** with the account of the same name, so its box lists them, from the
+manifest, and wants the word `restore` typed (in either case). The verb's own
+question (Enter is No) cannot be answered through a page, so the page gives `no.query` after its box
+has asked; it does not give it any other way. **A restore that would have to make an account is
+refused by the page**: a new user account asks for a password, and that question cannot be answered
+through a page, so the page checks that every account the archive holds is registered here already,
+and says which are not. Restore such an archive at the prompt.
 
-The packing is done by SDSYS, which runs elevated. `F5` reads the folder, the
-archives and the sessions again, `F1` explains the page and `Ctrl-Q` leaves.
-Opening the page writes the audit line `tool start app=tool.backups`.
+The packing of a backup and the placing of a restored account are done by SDSYS, which runs elevated;
+where they cannot be done, the verb says why and the page
+shows its last line on the status line. `F5` reads the directory, the archives and the sessions again,
+`F1` explains the page and `Ctrl-Q` leaves. Opening the page writes the audit line
+`tool start app=tool.backups`.
 
-## What the system looks like: `settings.report`
+## Recording the settings: `settings.report`
 
 ```
-settings.report {folder}
+settings.report {directory}
 ```
 
-Writes a text report of the system's settings for you to keep. **Nothing reads it
-back**: it is a record for an administrator, not something that can be restored.
-It also lists any globally cataloged program that no longer matches an
-account's object file, which is why such a program is missing from a backup.
+Writes, or shows, a **plain-text record** of the system's settings — `sd.conf`,
+ssh and API access, the accounts — for an administrator to keep. It is for
+reference only: nothing reads it back. **It never contains a password or a
+private key.**
+
+## Who has these verbs
+
+**All of them are SDSYS's** — `create.account`, `modify.account`,
+`modify.password` for another account, `delete.account`, `clean.account`,
+`update.accounts`, `load.examples`, `remove.examples`, `config`, `backup.account`,
+`restore.account`, `set.backup.directory`, `settings.report`. An ordinary account
+has none of these names at all — this is not a permission it lacks, the verbs are
+simply not in its VOC.
 
 ## See also
 
-[Account Maintenance](01a-account-maintenance.html) ·
-[SD Admin Configuration](07-sd-admin-configuration.html) for `BACKUPDIR` ·
-[Features the Developers Could Not Test](11-features-the-developers-could-not-test.html).
+[Sessions and Locks](02-sessions-and-locks.html) ·
+[Operating System Access](03-operating-system-access.html).
+
+**In the user documentation**, which does not repeat any of this: *SD TCL - The
+Command Processor* for how a verb is dispatched and what a VOC record holds, and
+*SD Basic - System and Environment* for what a program can read about its own
+session. Those pages are in a different set and are deliberately not linked from
+here — see the note at the top.

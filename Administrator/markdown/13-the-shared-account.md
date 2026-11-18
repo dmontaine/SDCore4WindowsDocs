@@ -13,24 +13,9 @@ pointer to make in the account's VOC, and `list`, `sort`, `select`, `count` and 
 > (`modify.account` *name* `shared-read-off`) from an account that should not have it **before**
 > you fill the account. Writing is the other way: it is off until you turn it on.
 
+The switches, the words and the upgrade rule are in
+[Accounts and Security](01-accounts-and-security-4-shared-and-files-only.html#the-shared-account-shared-read-on-shared-read-off-shared-write-on-and-shared-write-off).
 This page is the full description.
-
-## The switches
-
-| word | on `modify.account` *name* | on `create.account user` *name* |
-|---|---|---|
-| `shared-read-off` | withdraws the right to open the shared files by name | starts the account without it |
-| `shared-read-on` | gives it back | not needed (it is the default) |
-| `shared-write-on` | lets the account save, delete and clear records in the shared files | starts the account with it |
-| `shared-write-off` | takes it away | not needed (it is the default) |
-
-The two switches are fields 13 and 14 of the account's register record, written as `yes` or `no`
-for an account made from this release on. **A blank `shared.read` means ON; a blank `shared.write`
-means off.** So an account that existed before this release can open the shared files by name and
-cannot write them, and nothing is written to the existing accounts when SD is upgraded. A group or
-other account takes the words as well. After a change the report line is
-"Account *name* has shared.read yes, shared.write no". A switch takes effect at the person's next
-entry to an account: at sign-on, at `logto` and at each API entry.
 
 ## What it is, on disk
 
@@ -82,8 +67,8 @@ An `open` of a name looks, in this order, at:
 3. **The shape of the name.** 1 to 63 characters; the first a letter or a digit, the rest letters,
    digits or one of `. _ - $`. **A name that begins with `$ & ! * _` or `%` is never looked
    up**, which keeps `$savedlists`, `$hold` and every `&...&` file each account's own.
-4. **The standard VOC.** A name that is in the standard VOC (`syscom`, `sd.accounts` and the like) is
-   never looked up.
+4. **The standard VOC.** A name that is in the standard VOC (`syscom`, `$acc` and the like) is never
+   looked up.
 5. **The register record of `shared`.** It must exist, must not be suspended, and must hold an
    absolute path. A suspended or missing `shared` shares nothing.
 6. **`shared`'s own VOC.** It must hold the name as an **F** entry (a file pointer); a value in
@@ -99,8 +84,8 @@ An `open` of a name looks, in this order, at:
 A refusal at any step is not a message: the name is simply not there, and the `open` takes its
 `else` branch as it would for any missing file. Files are locked exactly as in any account, so two
 accounts opening the same shared file see each other's record locks. A session that came in over the
-network (the API) is held by the kernel to its own account's folder as well; the shared folder is the
-one other place it is let into, when it has `shared.read`.
+network (the API) has the same `shared.read` and `shared.write` gates
+loaded when it enters its account.
 
 ### What is not shared
 
@@ -118,6 +103,7 @@ with `logto shared`.
 | `shared.read` and `shared.write` on | yes | yes | only if `dict-on` too | no |
 | `shared.read` off | not found | — | — | no |
 | the SDSYS session (`logto shared`, signed on at a terminal) | — | yes | yes | **yes** |
+| SDSYS over the API, when the administrator has opened that door | — | yes | yes | yes |
 | a member of `sdg_shared`, in `logto shared` | — | only if the account `shared` has `shared-write-on` | likewise | no |
 
 * **A record write** — `write`, `writev`, `matwrite`, `delete`, `clearfile`, and the verbs that save
@@ -129,7 +115,7 @@ with `logto shared`.
   without `dict-on`, for the dictionary.
 * **Structure** means making a file by pathname inside `shared`, `clear.file`,
   `configure.file`, `create.index`, `build.index`, `delete.index`, `set.trigger`, the setters of
-  `fcontrol`, renaming and deleting a file or directory. It is refused to everyone who is not the
+  `fcontrol`, resizing, renaming and deleting a file or directory. It is refused to everyone who is not the
   administrator signed on at a terminal, **for a program marked internal as well, whatever switches
   the account has**: "The structure of a file in the shared account (making, clearing, configuring,
   indexing, triggers, renaming or deleting it) can only be changed by SDSYS, signed on at a terminal".
@@ -139,7 +125,7 @@ with `logto shared`.
   Inside `logto shared` the switches are the account `shared`'s own record; a blank means write
   off. A maintainer changes records, never structure.
 * **The local administrator** is never refused a record write or a structure change, and is not
-  given the by-name lookup (it uses `logto shared`). SDSYS's own `open` does not follow `shared`.
+  given the by-name lookup (it uses `logto shared`).
 * **`basic`** writes an object file by name, so compiling a source that lies in `shared` needs the
   rights to write there; without `shared.write` the compile is refused and nothing is written.
 
@@ -167,7 +153,8 @@ name: 3". A name is listed only if the lookup above would accept it. It changes 
 audit line. It is in SDSYS's set, not in an ordinary account's VOC; if it is put in one, an account
 with `shared.read` off is told "Account *name* has shared.read off, so it cannot open the files of
 the shared account by name" and sees nothing. When there is no `shared` account in service, or it
-is suspended, it says "There is no shared account in service".
+is suspended, it says "There is no shared account in service". Run by SDSYS it shows what accounts
+with the right can reach (SDSYS's own `open` does not follow `shared`).
 
 ## Cautions
 
@@ -207,5 +194,6 @@ is suspended, it says "There is no shared account in service".
 
 ## See also
 
-[Accounts and Security](01-accounts-and-security.html) for the other per-account switches and for
-the audit trail.
+[Accounts and Security](01-accounts-and-security.html) for the switches, the words and the report
+lines beside the other per-account switches, and for the audit trail. [SDNet](12-sdnet.html) for files on
+other SD servers, which use a pointer of their own.

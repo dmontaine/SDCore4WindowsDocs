@@ -247,7 +247,7 @@ the example.
 **Equal keys.** Keys that compare as equal come out newest first, and with
 `srt$unique` the duplicate that arrived first is the one kept. That holds
 whether the sort stays in memory or is large enough to spill to work files (the
-`SORTMEM` setting), and however many files `SORTMRG` merges at once. The one
+`SORTMEM` setting), and however many files `SORTMRG` merges at once. The order does not depend on `SORTMEM` or `SORTMRG`. The one
 exception is a right justified key that holds numbers and text together: the
 comparison of a number with text is not consistent, so there the order depends on
 how the sort was cut into runs. Do not rely on the order of equal keys beyond

@@ -19,8 +19,12 @@ record. The record id is the file name.
 | Record ids | matched case insensitively |
 
 The `bp` file is a directory file. VOC, `batch.jobs`, and the dictionaries
-are all directory files. (`os.users` was one until it was retired; an upgraded
-machine keeps the old file, unread.)
+are all directory files.
+
+**A file put in the directory from outside** under a name SD's own naming cannot produce (a
+bare `%`, say) is a record SD cannot read by its name: `list`, `count` and `reformat`
+report it as *'name' invalid name*, where they used to say *not found*. A name holding a slash, and
+`.` and `..`, are still *not found*, and SD does not look outside the file's own directory.
 
 **`dir_dict`**, in the SDSYS directory, is a ready-made dictionary for a directory file whose records are
 plain text. Make the file without a dictionary (or `delete.file` its dictionary), then set field 3 of its VOC

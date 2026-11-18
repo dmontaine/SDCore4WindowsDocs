@@ -1,83 +1,80 @@
-Title: Accounts and Security: Gates, Recovery, Transfer and Start
-Subtitle: tool.gates, the recovery copy, file transfer and where a session starts.
+Title: Accounts and Security: The Other Keywords
+Subtitle: The recovery copy, file transfer, where a session starts, and the other modify.account words.
 
-This page continues [Accounts and Security: Changing One
-Account](01-accounts-and-security-4-modify-account.html).
+This page continues [Accounts and Security: Changing One Account](01-accounts-and-security-6-modify-account.html).
 
-### Every account against every gate: `tool.gates`
+### The other keywords
 
-```
-tool.gates
-```
-
-**The gate matrix** is a full-screen page for the administrator (SDSYS's VOC only;
-it is refused, before anything is read, to anyone else: in every other account the
-same verb is the account holder's read-only "what my account may do" page,
-described in the User set under *What this account may do*). One row for each
-registered account but SDSYS, one column for each gate the system has, in the
-order `modify.account` carries them out: `ssh api sh os sd voc bp dict net sh-rd
-sh-wr files f-wr f-adm ai home sock key`. **`home`** is where a session of the account
-starts: ON is the home screen, off the command prompt (the words `start-menu` and
-`start-terminal`). **`key`** is ssh key sign-in (the words `ssh-key-on` and `ssh-key-off`,
-[Signing in over ssh with a
-key](01-accounts-and-security-7-files-only-ai-and-passwords.html#signing-in-over-ssh-with-a-key-ssh-key-on-and-ssh-key-off)):
-for a user account whose Windows user SD made, off as delivered, and turning it ON asks you to
-type the account's name; a dash for any other account, including a user account whose Windows
-user SD did not make (its keys are its own). With this column an account's name is cut to ten
-characters in the matrix and shown in full in the box below it. A cell says **ON**, **off**, a **dash** (the gate
-does not apply to this kind of account: ssh, api, files and ai are routes for a
-person, and a group or other account has no Windows user of its own) or **plan**
-(not built yet; sockets). A star after a cell is a change you have queued; the
-cell shows the state it would have. Under the matrix a box says, for the cell
-under the cursor, what the gate is: its two words, what ON allows, what OFF still
-allows, when a change reaches the person, whether it reaches beyond SD and what it
-is as delivered. A second box lists the accounts that have a gate on which reaches
-beyond SD, and a third the live sessions of the account under the cursor.
-
-| Key | What it does |
+| | |
 |---|---|
-| arrows, a click | move over the cells |
-| Enter or the space bar | queue the opposite state for the cell; again takes it back |
-| R | run the queued changes of the account on the cursor's row |
-| U | drop them |
-| T | queue OFF for every gate of that account that is off as delivered and on now |
-| F | change which accounts are shown: all, accounts of persons, accounts with a gate on that reaches beyond SD |
-| F5 | read the machine again (a queued change is kept) |
-| F1, `?`, a click on the `[?]` | explain the matrix |
-| Ctrl-Q | leave |
+| **`ssh`** \| **`api`** \| **`both`** \| **`none`** | what the account's remote access **is**. Absolute: `api` takes ssh away |
+| **`ssh-key-on`** \| **`ssh-key-off`** | ssh sign-in with a key, for a user account whose Windows user SD made (see [Signing in over ssh with a key](01-accounts-and-security-8-home-screen-ssh-keys-passwords.html#signing-in-over-ssh-with-a-key-ssh-key-on-and-ssh-key-off)). **Off as delivered**; independent of `ssh`: the account still needs its ssh route |
+| **`sh-on`** \| **`sh-off`** | the `sh` verb |
+| **`os-on`** \| **`os-off`** | `OS.EXECUTE`, the screen editors, the embedded Python, and operating-system paths outside the account's own directory (see above) |
+| **`sd-on`** \| **`sd-off`** | may reach files under the directory of an account the person could `logto` (also allowed on a group account) |
+| **`voc-on`** \| **`voc-off`** | may save a change to a VOC (see *The edit switches*) |
+| **`bp-on`** \| **`bp-off`** | may save a change to a program file (source or object code), and compile and catalog |
+| **`dict-on`** \| **`dict-off`** | may save a change to a dictionary |
+| **`start-menu`** \| **`start-terminal`** \| **`start-default`** | where a session on a terminal starts: the home screen, the command prompt, or the system default (see *Where a session starts*) |
+| **`pins-on`** \| **`pins-off`** | may add its own programs to the home screen (see *What the home screen shows*) |
+| **`shared-read-on`** \| **`shared-read-off`**, **`shared-write-on`** \| **`shared-write-off`** | open, and write, the files of the shared account by name (blank read means on, blank write means off; see [The Shared Account](13-the-shared-account.html)) |
+| **`net-on`** \| **`net-off`** | may use SDNet: open a file on another SD server (see [The NET switch](01-accounts-and-security-3-edit-switches.html#the-net-switch-net-on-and-net-off)) |
+| **`files-on`** \| **`files-off`**, **`files-write-on`** \| **`files-write-off`**, **`files-admin-on`** \| **`files-admin-off`** | may log in over the API for files only, and, with the second pair, change files there, and, with the third, administer them there (see [The files-only route](01-accounts-and-security-4-shared-and-files-only.html#the-files-only-route-files-on-and-files-off)) |
+| **`ai-on`** \| **`ai-off`** | may use the AI the administrator has chosen: the `ai` verb and the AI line of the pages and editors (see [The AI](01-accounts-and-security-5-files-write-ai-pointers.html#the-ai-ai-on-and-ai-off)) |
+| **`add`** \| **`delete`** *user* | put a Windows user in, or out of, the account's group |
 
-**The page writes nothing itself.** The queued changes of one account become ONE
-command, `modify.account name word word ...`, shown with its effect in a box that
-is answered Run or Cancel (Enter alone is Cancel). The verb reads every word
-before it changes anything, so a conflict is refused whole. After the command the
-page reads the machine again and shows the verb's own words, so a cell changes
-because the system changed, never because the page said so. Every change is
-audited by the verb as if you had typed it.
+**The first group is absolute and the second is not.** `ssh`/`api`/`both`/
+`none` are four names for one state, so whatever is not named is
+withdrawn. `sh-on` and `os-on` are two independent switches over two
+separate settings, so **`sh-off` says nothing about `OS.EXECUTE`** and
+leaves it alone.
 
-* **There is no key that queues everything ON.** **T** is the only "all": it
-  queues OFF for what is on and off as delivered (`shared-read`, which is on as
-  delivered, is left alone).
-* **Turning ON a gate that is off as delivered says so**, and says that leaving
-  it off is the tighter choice. **Turning ON a gate that reaches beyond SD**
-  (ssh, api, ssh-key, sh, os, sd, net, files, files-write, files-admin, ai) **asks for the
-  account's name to be typed**; turning anything OFF does not.
-* **ssh and api are one setting** in the verb: the words `ssh`, `api`, `both` and
-  `none` SET the pair. The page therefore sends the one word that gives the pair
-  of states you queued, and its box says which.
-* **files-write needs files, and files-admin needs files-write.** A queue that
-  breaks that is refused by the page before the box opens, and the verb refuses
-  it again.
-* **A group or other account cannot have `sh` or `os`:** the verb refuses them in
-  both directions. The page says so instead of queueing them.
-* **A change does not reach a session that is already running.** The box says when
-  it reaches the person: the next sign-on (voc, bp, dict), the next account entry
-  (sh, os, sd, net, shared), the next login (ssh, api, files) or the next
-  request (ai).
-* **Home-screen settings are not gates and are not on this page:** `pins-on` /
-  `pins-off` and the three start words are managed on the menu management page
-  (`tool.menus`, below).
+**Every keyword on this page refuses `SDSYS` as the target account,
+outright, before the keyword itself is even read** — *"Remote access is
+never available to SDSYS"* is the message whatever you asked for. SDSYS's
+own routes are not a setting; see [Read this before anything
+else](01-accounts-and-security.html#read-this-before-anything-else-being-sdsys-is-the-whole-of-it). A
+group account is refused too, for the `sh-on`/`sh-off`/`os-on`/`os-off`
+forms: it has no Windows user, and a shell is a fact about a person.
 
-The page needs a window of at least 140 columns by 43 lines.
+After `sh` or `os` SD says where the account **now** stands, both fields at
+once, so that a command that did only what it named is plain to see:
+
+```
+:modify.account fred sh-on
+Account fred has SH yes, OS.EXECUTE no
+:modify.account fred os-on
+Account fred has SH yes, OS.EXECUTE yes
+:modify.account fred sh-off
+Account fred has SH no, OS.EXECUTE yes
+```
+
+Asking for what is already so changes nothing and says so ("fred already had
+that access; nothing changed"). A route word reports the route in the same way
+("fred has no remote access: not ssh, not the API").
+
+**A change takes effect the next time the account is entered.** The setting is
+read when a session signs in, and for `sh`, `os`, `sd`, `net` and the two
+`shared` switches again when it `logto`s into the account (the three edit
+switches are read at sign-on only), so a session already open keeps what it
+started with. To take a grant away from somebody who is signed in now, change
+the setting and then end their session.
+
+**Every one of these words is written to the audit trail** (`modify.account
+sh-on account=fred` and its siblings), in lower case.
+
+**Upgrading keeps what accounts have.** The installer's `upgrade_gates` step
+copies `sh` and `OS.EXECUTE` into the register once, from what `os.users` said
+(see *The operating-system switches*); `upgrade_editgates` switches `voc-on`,
+`bp-on` and `dict-on` on, once, for every user account whose field is blank.
+Ssh and the API are left exactly as they were. Group and other accounts are
+left off on purpose. **`net-on` is not part of it**: nothing used SDNet before,
+so every existing account has it off. **The `shared` switches are not part of it
+either**: a blank field already reads as `shared.read` on and `shared.write`
+off, which is how they are delivered. **Neither is `files-on`**: the `sdfiles`
+group is made empty, and nobody is in it until you say so. You can then turn
+them off one account at a time, and a later install does not turn them back
+on. Only accounts made after the upgrade start with everything off.
 
 ### The recovery copy: `recovery-on` and `recovery-off`
 
@@ -212,6 +209,4 @@ set.start.default                        says which it is now
 
 ## Continued in
 
-[Accounts and Security: Home Screen, Shared Account and
-NET](01-accounts-and-security-6-home-screen-shared-account-and-net.html) —
-set.tile, pins-on, the shared account and the NET switch.
+[Accounts and Security: The Home Screen, ssh Keys and Passwords](01-accounts-and-security-8-home-screen-ssh-keys-passwords.html) — the home screen's tiles, ssh keys, suspension, the grant and passwords.

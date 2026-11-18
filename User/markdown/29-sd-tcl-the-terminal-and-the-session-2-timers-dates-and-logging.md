@@ -59,7 +59,7 @@ ten minutes in which it sent nothing, and its next request fails at once
 (see [SD Client API](37-sd-client-api.html)). The setting belongs to the one session that gave it.
 
 **It works in the full-screen programs too.** The screen library, `ide`, the
-home screen and every tool page wait for a key one second at a time. SD adds up the time
+home screen and every tool page wait for a key one second at a time, and SD adds up the time
 spent waiting across such short waits: only a key actually typed (or the break key) starts the period
 again, and the logout is the same as at the prompt. A page left open without typing, `tool.sessions`
 included, is therefore logged out like any other session. A program that waits for a key with no time

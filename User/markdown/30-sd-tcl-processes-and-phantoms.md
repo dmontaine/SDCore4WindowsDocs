@@ -53,7 +53,7 @@ and the address in hexadecimal.
 For a process that is **waiting for a lock**, `pstat` also shows when the wait
 began, as `list.readu detail` already did.
 
-**What `pstat` prints is another session's text, and it is made safe first**.
+**What `pstat` prints is another session's text, and it is made safe first.**
 The command, the record it waits for, its program names and its account are shown with each control
 character, `del`, byte from 128 to 159 and mark character as `?`, so that a session cannot send a code to
 your terminal by what it types or locks. The text of `@pstat` (below) gets the same treatment, except that
@@ -131,7 +131,10 @@ never started.
 | *Phantom processes cannot be started within a transaction* | inside `begin transaction` |
 | *Failed to create phantom process* | the operating system would not create the process |
 
-**A phantom that is created and then cannot start** (the operating system would not run SD for it) has no terminal to say so. It writes one line to the error log, `phantom: cannot start a phantom from` *path* `-` *reason*, and ends; it does not go on as a second copy of your session.
+**A phantom that is created and then cannot run SD's program ends without a word on your
+terminal**, and `phantom` returns as it always did. The reason is written to SD's error
+log, for the administrator to read, as a line beginning `phantom: cannot start a phantom
+from` and the path, then the reason.
 
 > **A phantom cannot be started from a scripted session, and this is the one
 > to know.** When SD is fed commands down a pipe, the phantom child inherits
@@ -142,8 +145,9 @@ never started.
 > piped script.** The listings above are quoted from the verb's own message
 > texts for that reason.
 
-**A phantom is not a scheduled job.** It runs once, now. Recurring work is a
-Windows scheduled task that starts SD, and that is a different subject.
+**A phantom is not a scheduled job.** It runs once, now. Recurring work is
+a Windows scheduled task that starts SD, and that is a different
+subject, covered under *Scheduled jobs* in the **Getting Started** set.
 
 ### A phantom that ends with its parent: `phantom group`
 
@@ -179,29 +183,6 @@ any order, and `phantom` returns the number as it always does.
 | *user number n is already in use* | a phantom (or anybody) has it now; no phantom is made |
 
 With `USPLIT=1` the numbers are not kept from other processes, but `user n` still takes a free one.
-
-### `@pstat`: what `pstat` shows about the program
-
-`@pstat` is an `@` variable a program **may assign to**. Whatever text it holds when
-another session runs `pstat` (or `pstat user n`) is printed as an extra line under the
-process's last command and location, so a long-running program or a phantom can say what
-it is doing — `@pstat = 'Posting batch ' : n` — without a terminal to say it on. It is the
-program's own text and is not cleared for it.
-
-### A phantom that ends with its parent: `phantom group`
-
-```
-phantom group command
-```
-
-A phantom started with the word `group` is **grouped with the process that started it**:
-when that process ends — it logs out, or is logged out — SD logs the grouped phantoms
-out too, where an ordinary phantom would go on until its command finished. It is for a helper that has no purpose without you. `listu` shows a
-grouped phantom with a **`G`** after its parent's number, and `system(1073)` in the
-parent gives the user numbers of the phantoms grouped with it, field mark delimited
-(`system(1058)` gives all its child phantoms, grouped or not, and `system(1052)` counts
-them). A phantom that has not yet finished starting when its parent ends is still
-logged out.
 
 ### `@pstat`: what `pstat` shows about the program
 
@@ -373,9 +354,50 @@ debugger on.
 The debugger itself — the commands it takes once it is attached — is in
 [SD Basic - Debugging](17-sd-basic-debugging.html).
 
+## Where the work goes: `profiler`
+
+```
+profiler on {user n} {event ...}      start logging
+profiler off {user n}                 stop logging and keep what was logged
+profiler {display} {user n}           show it
+```
+
+The kernel of the process being profiled counts its events: what it called,
+what it opened, read, wrote and deleted, and what it executed. `on` starts the
+count, `off` stops it and keeps the table, `display` (the default) shows it.
+The events are `call` `open` `read` `write` `delete` `openseq` `readseq`
+`writeseq` `execute` and `object`; none named means all of them. Without
+`user` the verb profiles your own session.
+
+**The table is kept in SD's `$ipc` file under the user number, so no file is
+left on the disk.** A profile outlives the session that made it.
+
+`profiler` (or `profiler display`) then shows it. With several profiles it
+lists them and asks which to open (*Profiles available (user number, events,
+entries):*, then *User number to open, or Q to quit:*). With exactly one
+profile it opens that one without asking, and `profiler display user 28` names
+one. There are four levels, and you go down by typing the number of a line and
+up with `b`; `q` leaves:
+
+| Level | Shows |
+|---|---|
+| 1 | the types of event, with a count of each |
+| 2 | what the events of that type were on: a file, a subroutine, a command |
+| 3 | the programs that did them |
+| 4 | the lines of the program, with the count at each |
+
+A program with no line table (an I-type) has none to show at level 4 (*No line
+numbers were recorded for this program*), and a profile that filled up says how
+many events it did not log. A profile that is not there is *There is no profile
+for user 1 - use profiler on, run the programs, then profiler off*. **Another
+user's process can be profiled by the administrator only**, because a profile
+holds the files that user's programs open and the commands they execute (*Only
+the administrator can profile another user's process*).
+
 ## Who has these verbs
 
-**Every account has `status`, `phantom`, `pstat`, `pdebug` and `pdump`** —
+**Every account has `status`, `phantom`, `pstat`, `pdebug`, `pdump`,
+`list.phantoms` and `profiler`** —
 there is no withheld set any more.
 
 **`pdump` still has a gate, and it is not about having the verb.** `pdump`

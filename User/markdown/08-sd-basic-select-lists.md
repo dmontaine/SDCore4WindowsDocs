@@ -40,8 +40,8 @@ formlist array {to list}
 | `selectv` | the list into a **variable** rather than a numbered list |
 | `sselectv` | the sorted ids into a **variable**: `sselect` and `selectv` in one. The file may be a dynamic array instead, and `to` is required |
 
-`selectv f` and `sselectv f` with no `to` are a compile error. There is no
-`$mode` that makes `to` optional.
+`selectv f` and `sselectv f` with no `to` are a compile error. (There is no
+mode that makes `to` optional.)
 
 The sort clauses of the sorted forms may come before or after `to`.
 **`right.aligned`** sorts numeric ids as numbers (1, 9, 10, 100) instead of as

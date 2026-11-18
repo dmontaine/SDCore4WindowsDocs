@@ -1,7 +1,8 @@
 Title: Account Maintenance
 Subtitle: Emptying scratch files, refreshing a VOC, keeping local versions of records, configuration, the system date, and deleting an account.
 
-This page continues [Accounts and Security](01-accounts-and-security.html).
+This page continues [Accounts and Security: The Home Screen, ssh Keys and
+Passwords](01-accounts-and-security-8-home-screen-ssh-keys-passwords.html).
 
 ## Emptying an account's scratch files: `clean.account`
 
@@ -296,6 +297,7 @@ config contrib             display the contributors
 :config
 Virtual Machine Version Number W2.0-0
 APIPORT   4247
+CLEANUP   300 seconds
 CMDSTACK  99
 DEADLOCK  0
 DUMPDIR   C:\ProgramData\SD\sdsys\dumps
@@ -350,11 +352,12 @@ and anything it does not is refused:
 one `sd` process that ran the command, and adds it wherever that process reports
 the date — `DATE()` and `TIMEDATE()` in BASIC, and so the `date` verb. Nothing
 else sees it: other sessions, other users, the operating system, file timestamps
-and scheduled jobs all keep the real date. The time of day is unchanged; only
-the day moves.
+and scheduled jobs all keep the real date, and no administrator right on
+Windows is involved. The time of day is unchanged; only the day moves.
 
-**There is no confirmation, and it lasts until the session ends.** The next
-session starts from the real date.
+**It lasts until the session ends.** To go back sooner, run `set.date` again
+with today's date. Its use is testing date-dependent programs — month-end or
+year-end processing — without touching the machine's clock.
 
 ## Deleting an account: `delete.account`
 
@@ -399,22 +402,8 @@ the one most people meet.)*
 > the prompt will eat the commands that follow it as its answers, and the
 > session will then wait for ever.
 
-## Who has these verbs
+## Continued in
 
-**All of them are SDSYS's** — `create.account`, `modify.account`,
-`modify.password` for another account, `delete.account`, `clean.account`,
-`update.accounts`, `load.examples`, `remove.examples`, `config`. An ordinary
-account has none of these names at all — this is not a permission it
-lacks, the verbs are simply not in its VOC.
-
-## See also
-
-[Backing Up and Restoring Accounts](01b-backup-and-restore.html) ·
-[Sessions and Locks](02-sessions-and-locks.html) ·
-[Operating System Access](03-operating-system-access.html).
-
-**In the user documentation**, which does not repeat any of this: *SD TCL - The
-Command Processor* for how a verb is dispatched and what a VOC record holds, and
-*SD Basic - System and Environment* for what a program can read about its own
-session. Those pages are in a different set and are deliberately not linked from
-here — see the note at the top.
+[Backing Up and Restoring Accounts](01b-backup-and-restore.html) —
+backup.account, restore.account, set.backup.directory, tool.backups and
+settings.report.

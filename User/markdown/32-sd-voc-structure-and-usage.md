@@ -38,7 +38,7 @@ load-bearing and the remaining thirty are not.**
 | `X` | text | miscellaneous data — not a command |
 | `D` | descriptor | a data descriptor, which is what dictionary records are |
 
-**`PQ` is a valid type and is refused.** PROC was removed from this port.
+**`PQ` is a valid type and is refused.** PROC is not supported in SD.
 A record of type `PQ` is reported as *"PROC is not
 supported"* rather than being dispatched, because the record itself is
 valid PROC and it is the interpreter that is gone.
@@ -60,22 +60,19 @@ VOC, 448 records, by each record's own field-1 type character:
 
 **The `V` count here is the literal type character, not the dispatchable
 total.** `break`, `count`, `display` and `off` are type `K` — the four
-keyword-verbs described below — so the 213 figure used elsewhere (on the
-syntax card) for "everything the command processor can run as a verb" is this
-209 plus those four. No `R` record is shipped.
+keyword-verbs described below — so the 213 figure used elsewhere on this page
+(and on the syntax card) for "everything the command processor can run as a
+verb" is this 209 plus those four. No `R` record is shipped.
 
 **An ordinary account's `newvoc` holds 386** — the same shape of table,
 smaller only because it lacks SDSYS's own administration verbs and a few
 system file pointers; it is not a *different kind* of VOC, and every
 ordinary account's copy is identical.
 
-> **`edit` used to be exactly this kind of trap** — a record present in the
-> VOC whose old type field read `Verb - Full screen editor` rather than `V`,
-> so it looked callable and refused at dispatch with *"Full screen editor is
-> no longer supported."* **That is history, not current behavior**: `edit`
-> is a real `V` record and works. The lesson
-> stands even though the example does not: **being in the VOC is not
-> evidence a command works** — check the type field, not just the name.
+> **Being in the VOC is not evidence a command works.** A record whose type
+> field does not read `V` (a record whose type field read `Verb - Full screen
+> editor`, say) looks callable and is refused at dispatch. `edit` is a real `V`
+> record and works. Check the type field, not just the name.
 
 ## The F record — a file
 
@@ -144,7 +141,7 @@ target, and the remaining fields carry options.
 | Field 2 | Field 3 | What it does |
 |---|---|---|
 | `CA` | *catalog name* | a cataloged program — 170 of the shipped verbs |
-| `IN` | *number* | internal verb *n*, handled by the command processor itself — 38 verbs |
+| `IN` | *number* | internal verb *n*, handled by the command processor itself — 37 verbs |
 | `OS` | *text* | an operating-system command — `sh`, and nothing else |
 | `CS` | *path* | a locally cataloged function |
 
@@ -266,7 +263,7 @@ in the command instead.
 002  26
 ```
 
-This is a keyword record. Field 2 is the keyword number the query
+This is `ne`, the not-equal keyword. Field 2 is the keyword number the query
 processor uses. Keywords are not commands in their own right; they are
 the words the query processor — `LIST`, `SELECT`, `SORT` and the rest —
 recognizes inside a command line. `all` is `K` with number 5; `and` is `K`.

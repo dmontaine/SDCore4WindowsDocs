@@ -9,14 +9,14 @@ This section is about the server being **reached**, the one whose administrator 
 giving somebody a login. (The same machine is that server for others and the client
 for its own people, so both halves can be yours.)
 
-The only way to log in to a server's API used to be membership of the Windows
+The way to log in to a server's API is membership of the Windows
 group `sdapi`, which gives everything the API offers: execute commands, call
 subroutines, enter other accounts with `logto`, work with sequential files and files.
 A stored SDNet login on that route, taken from a machine, would give whoever took it
 all of that. **So there is a second route, the Windows group `sdfiles`: a login that is
 in `sdusers` and `sdfiles` and not in `sdapi` is let in "files only".** The rest of
 the rules, the table of what is allowed and refused and why, the words and the
-messages are in [Accounts and Security](01-accounts-and-security-7-files-only-ai-and-passwords.html#the-files-only-route-files-on-and-files-off); in short:
+messages are in [Accounts and Security](01-accounts-and-security-4-shared-and-files-only.html#the-files-only-route-files-on-and-files-off); in short:
 
 - **`sdapi` wins.** A remote user who is in both groups has the whole API.
 - **A user in neither group is refused**, as before. Both groups are empty for a new
@@ -102,8 +102,7 @@ what the target is willing to let that login do.
 - **The refusal is in the audit trail of the target**, in lower case:
   `api refused request=16 route=sdfiles write=off admin=off user=name`, and a login by this route is
   written `api login route=sdfiles write=on admin=off user=name` (`write=off` for a login without the
-  group; the `admin=` word is the administration group, next section, and is new in this
-  release - before it the lines ended `write=on user=name`). **The person at the client is told why**: a program that does not trap the error
+  group; the `admin=` word is the administration group, next section). **The person at the client is told why**: a program that does not trap the error
   with `ON ERROR` stops with message 12505, "Server *name* answered *write* with an error:
   This login cannot change or lock files here: ask the administrator for files-write-on
   (request 16)". A program that traps the error with `ON ERROR` sees `STATUS()` 7000. The

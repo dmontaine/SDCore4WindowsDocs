@@ -1,5 +1,5 @@
 Title: Configuration: The API, Printing and the Rest
-Subtitle: The parameters for the API, file transfer, printing, sorting, diagnostics, the screen, the shell, and NETFILES.
+Subtitle: The parameters for the API, file transfer, printing, sorting, diagnostics, the screen, the shell, NETDIRS and NETFILES.
 
 This page continues [Configuration: Changing a Parameter from
 SD](07a-sd-admin-configuration-changing-from-sd.html).
@@ -86,9 +86,9 @@ None of them can be changed from `tool.config` or `set.config`; edit
 | `OBJECTS` | 0 (no limit) | Compiled programs held in memory at once |
 | `OBJMEM` | 0 (no limit) | Memory those programs may occupy, in KB |
 
-`STARTUP` (a command run when SD starts) was removed in W1.1-3. It never ran. A
-line that still has it stops SD from starting, with a message that says to remove
-the line.
+SD Core for Windows has no `STARTUP` parameter (a command run when SD starts, on
+SD Core for Linux). A line that names it stops SD from starting, with a message
+that says to remove the line.
 
 ## The screen
 
@@ -107,7 +107,7 @@ Both are full paths on a real install:
 
 ```
 SH        C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NoLogo
-SH1       C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -Command
+SH1       C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command
 ```
 
 **Both run at the account's own Windows permissions, and only for an account
@@ -184,7 +184,7 @@ when it opens the file, the connection's containment applies: only the account
 the session stands in and the shared `SDSYS` entries (read only). **`NETDIRS` does not widen
 this request**: a pointer followed there must still lead inside the account, whatever
 `NETDIRS` lists. The SDNet **client** (`set.server`, `set.netlogin`, a VOC
-pointer of type `N`; see [SDNet](12a-sdnet.html)) does not read `NETFILES`.
+pointer of type `N`; see [SDNet](12-sdnet.html)) does not read `NETFILES`.
 
 There is no `FILERULE` parameter. **The
 `account:file` form of a file name is always available** (for programs moved from openQM): a name that is in no VOC record and has one colon,

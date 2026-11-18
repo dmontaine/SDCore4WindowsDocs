@@ -3,7 +3,7 @@ Subtitle: G, the change of every row shown, and U to put it back.
 
 This page continues [The Master Files](19-the-master-files.html).
 
-## A global change of every row shown: `G`, and `U` to put it back
+### A global change of every row shown: `G`, and `U` to put it back
 
 **`G` makes one change to every row the page shows, in every account the rows come from.** The rows
 are exactly those on the screen: the hits of a find (`F`, every account) or the entries a filter
@@ -29,8 +29,7 @@ The texts are printable characters only, up to 120 of them. **One box** (titled 
 records?*) then shows the change, and each account with how many records would change, the first
 ids, how many are as they are already and how many would be refused, with the first reasons. **Run
 or Cancel is all it asks** (Cancel is the default): no name or count is typed. This is looser than
-`D`, which asks for the id; it is deliberate, and
-it is how the page is delivered.
+`D`, which asks for the id; that is how the page is delivered.
 
 Run writes **account by account**. Each account is judged again (it must still be in the register),
 and each file by **the pointer rule** before it is opened for writing: the path, what the kernel

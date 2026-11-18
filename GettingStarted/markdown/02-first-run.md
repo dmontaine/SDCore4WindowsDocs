@@ -53,8 +53,8 @@ term
 
 **If `term` says something else and your arrow keys do not work**, run
 `term windows` for this session and see
-[Other hardening](13-hardening.html#the-terminal). An account created before
-the `WINDOWS` definition shipped keeps its old setting until **`update.accounts`**.
+[Other hardening](13-hardening.html#the-terminal). An account keeps the
+terminal setting in its VOC until **`update.accounts`** updates it.
 
 **`term` also reports the page size, and SD's default is 140 × 43 — not
 80 × 24.** **A console window narrower
@@ -80,7 +80,7 @@ ed customers 1001
 **`ed`** is the **line** editor, and it needs nothing installed. If you would
 rather have a full screen, **`edit`** opens the same record in Microsoft Edit
 and **`micro`** opens it in micro — see
-[Programmer commands](07-programmer-commands.html#editors). The old
+[Development and file commands](07-programmer-commands.html#editors). The old
 full-screen editors `update.record` and `modify` are gone; `sed` is back, and
 runs inside SD with no operating-system permission — see *The SED Screen
 Editor* in the User set, and [Not in SD Core](14-not-in-sd-core.html).
@@ -107,7 +107,7 @@ count customers
 ```
 
 **Commands are lower case now**, and so are the VOC records behind them. Typing
-`LIST` still works — SD tries what you typed, then lower case, then upper. See
+`LIST` still works — SD converts it. See
 [Lower case](11-lower-case.html).
 
 **THIS IS THE POINT AT WHICH MOST THINGS SHOULD FEEL LIKE OpenQM.** If
@@ -212,4 +212,4 @@ off
 question — they are not interchangeable.
 
 **When you report something, say which build.** The release stamp is on the
-sign-on banner and in `C:\Program Files\SD\changelog`.
+sign-on banner and in `sd --version`.

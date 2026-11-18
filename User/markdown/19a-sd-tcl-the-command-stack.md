@@ -147,6 +147,18 @@ administrator means signing in to Windows as the `sdsys` account itself and
 starting a fresh session — see the *Administrator* set's *Accounts and
 Security* chapter.
 
+**`logto` takes the name of a registered account and nothing else.** A name the register
+does not hold, a pathname included, is refused with "User not allowed in requested
+account" — the same answer as for an account you may not enter — and the session stays in
+the account it was in. A directory that should be an account is registered first
+(`create.account other` *name* *path*) and then entered by its name. An API session's
+account is chosen the same way.
+
+**A suspended account is refused to every session, the administrator's included**:
+"Account *name* is suspended", and the session stays where it was. This is what signing
+on to a suspended account has always given everyone. The administrator maintains such an
+account with `run.in` and lifts the suspension with `modify.account` *name* `unsuspended`.
+
 ### `logto … reset` and `logto … reset all`
 
 When a program runs `logto` with `execute`, the session is several command levels deep: the

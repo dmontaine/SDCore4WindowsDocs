@@ -160,7 +160,7 @@ service is not running a session appends to the file itself, and such a line's `
 and drops the rest; when that user's minute is over it writes one line saying how many were dropped. The figure is
 fixed when SD is built, not a setting. **The service rotates the file:** at one megabyte it renames it to
 `audit.yyyymmdd-hhmmss` and starts a new one with the same permissions, with no restart of SD. SD deletes nothing;
-pruning the old files is yours. [The Audit Trail](20-the-audit-trail.html) has the rest.
+pruning the old files is yours. [The Audit Trail](21-the-audit-trail.html) has the rest.
 
 ### What this does not close
 
@@ -210,11 +210,6 @@ covered under *Remote access and the machine* in this set.
 **Every account's VOC is refreshed.** The installer runs `update.accounts all`,
 which walks every registered account so that a verb this release adds can be
 typed in accounts that already existed.
-
-This is newer than it sounds and is worth stating plainly: before W1.0-0 an
-upgrade replaced the shipped files and **no existing account, including SDSYS,
-ever gained a new verb**. A fix that added a VOC record reached only accounts
-created afterwards.
 
 **The dictionaries are reapplied.** The definitions the release ships are added
 and updated, and any you added are left alone. If that step cannot run, the

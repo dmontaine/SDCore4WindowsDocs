@@ -1,19 +1,15 @@
 Title: API access
 Subtitle: The client API, the port it answers on, the login that replaced the old one, and what a remote session may reach.
 
-**The API is a normal way for any account to use SD.** A person running a
+The client API is a normal way for any account to use SD. A person running a
 custom GUI program that talks to SD needs API access and may need nothing
-else — no ssh, no terminal. An account with `api` access is an ordinary
-thing to create, and probably the commonest shape a deployed system will
-have:
+else — no ssh, no terminal. **An account has it only if SDSYS gave it — a new
+account has none, and `api` (or `both`) gives it:**
 
 ```
 create.account user jane api
 modify.account jane api
 ```
-
-**An account has it only if SDSYS gave it — a new account has none, and `api`
-(or `both`) gives it.**
 
 Your application code does not change. `SDConnect()` and `SDConnectLocal()`
 take the same arguments and return the same things. **What changed is
@@ -82,8 +78,6 @@ never did.
 in TLS 1.3 before SD sends anything**, and the login is bound to that encrypted
 connection. A machine sitting between a client and the server cannot read the
 traffic or log in on the client's behalf, even by pretending to be the server.
-Until W1.1-0 only the login was protected: the password never crossed the
-network, but every command, record and result after it did, as plain text.
 
 **The client libraries do this automatically.** `sdclilib`, `sdclient` and the
 BASIC `!sdclient` class all negotiate TLS themselves. A program linked against
@@ -134,8 +128,8 @@ reinstalled.
 
 ## The port
 
-**The API port is 4247, and nothing can change it.** It used to be 4243, which
-OpenQM and ScarletDME also use. `sd.conf`'s `APIPORT` now only switches the API
+**The API port is 4247, and nothing can change it.** (OpenQM and ScarletDME
+use 4243.) `sd.conf`'s `APIPORT` now only switches the API
 on: any number above zero means on, and SD listens on 4247 whatever the number
 is. A file that says `APIPORT=4243` keeps working and means 4247. A program that
 names port 4243 must name 4247 instead; one that names no port needs no change.

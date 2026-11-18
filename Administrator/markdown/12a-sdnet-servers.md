@@ -1,7 +1,7 @@
 Title: SDNet: Servers
 Subtitle: Defining a server, removing it, and listing the servers.
 
-This page continues [SDNet](12a-sdnet.html).
+This page continues [SDNet](12-sdnet.html).
 
 ## Defining a server: `set.server`
 
@@ -18,9 +18,9 @@ mode and account list are converted. Words are split at spaces, so nothing can b
 quoted.
 
 ```
-:set.server hq2 192.168.1.40 4247 sduser 5f29e23fd38c423996bef4450ba56aa16e11f06e926ddb0828b5d9649064b9b9
-Server hq2 (192.168.1.40:4247) is defined
-No account is listed, so no account may use server hq2 yet.  Set it again with accounts, and give each account the NET gate (modify.account name net-on)
+:set.server solo2 192.168.1.40 4249 sduser 5f29e23fd38c423996bef4450ba56aa16e11f06e926ddb0828b5d9649064b9b9
+Server solo2 (192.168.1.40:4249) is defined
+No account is listed, so no account may use server solo2 yet.  Set it again with accounts, and give each account the NET gate (modify.account name net-on)
 ```
 
 (The pin above is an example value, not a real server's.) The last line is there
@@ -28,16 +28,16 @@ on purpose: a definition with an empty *accounts* list is complete and harmless,
 and nobody may use it. To name accounts, give them with the definition:
 
 ```
-:set.server hq2 192.168.1.40 4247 sduser 5f29e23fd38c423996bef4450ba56aa16e11f06e926ddb0828b5d9649064b9b9 read accounts fred,jane
-Server hq2 is already defined (192.168.1.40:4247).  Replace it (y/<n>)?y
-Server hq2 (192.168.1.40:4247) was replaced
+:set.server solo2 192.168.1.40 4249 sduser 5f29e23fd38c423996bef4450ba56aa16e11f06e926ddb0828b5d9649064b9b9 read accounts fred,jane
+Server solo2 is already defined (192.168.1.40:4249).  Replace it (y/<n>)?y
+Server solo2 (192.168.1.40:4249) was replaced
 ```
 
 Fewer than six words (the verb, then name, host, port, account and pin or
 `connect`) print the usage and a reminder of where the pin comes from, and stop:
 
 ```
-:set.server hq2 192.168.1.40 4247 sduser
+:set.server solo2 192.168.1.40 4249 sduser
 Usage: set.server name host port account {pin | connect} {read | write} {accounts a,b,c} {no.query}
 The pin is the server's public key hash: 64 hexadecimal digits from its administrator (nothing is dialled), or the word connect to see the hash the server presents and confirm it.  no.query never skips that question.
 ```
@@ -46,7 +46,7 @@ The pin is the server's public key hash: 64 hexadecimal digits from its administ
 gets a message of its own**, so one run shows all of them:
 
 ```
-:set.server hq2 -bad 99999 sduser abc
+:set.server solo2 -bad 99999 sduser abc
 Host -bad is not valid: 1 to 253 letters, digits, dots, hyphens or colons, not starting with a hyphen or a dot
 Port 99999 is not valid: a whole number from 1 to 65535
 The pin is not valid: it must be exactly 64 hexadecimal digits
@@ -141,10 +141,9 @@ being defined asks that server for it. On a Windows SD Core server, `settings.re
 `public key sha256: ` followed by the 64 digits in the `[api]` section of its report.
 It decodes the certificate in `C:\ProgramData\SD\sd-tls\api.pem` and never prints the
 private key that is in the same file. If that section says
-`certificate: not yet generated`, the server has no key to show yet. The line was
-added to the report for this purpose and its figure has not yet been compared with
-the one `set.server ... connect` shows for the same server (see "What has and has not
-been run").
+`certificate: not yet generated`, the server has no key to show yet. The figure
+in that line and the one `set.server ... connect` shows for the same server
+should agree. If they do not, trust neither until you know why.
 
 **When it does not work, nothing is written.** There is a message for each case:
 
@@ -155,9 +154,7 @@ been run").
 | `host:port completed the handshake but gave no public key hash.  Nothing was written` | a TLS session was made but no hash could be read from it |
 
 The first two are told apart by the operating system's error number, which is
-zero for a handshake that failed after the connection was made. That is read off
-the source and has not been tried against a closed port, a port that is not TLS
-and an address that does not answer.
+zero for a handshake that failed after the connection was made.
 
 **One thing to know about the lock.** The definitions are locked from the time
 they are read until the answer is acted on, which includes the connection (up to
@@ -172,12 +169,12 @@ delete.server name
 ```
 
 ```
-:delete.server hq2
-Server hq2 was deleted
+:delete.server solo2
+Server solo2 was deleted
 ```
 
 It does not ask: a definition is one line and `set.server` makes it again. A name
-that is not defined gets "No server is defined with the name hq2".
+that is not defined gets "No server is defined with the name solo2".
 
 ## Showing them: `list.servers`
 
@@ -191,7 +188,7 @@ allowed (the word `none` when there are none).
 
 ```
 :list.servers
-hq2  192.168.1.40:4247  sduser/read  5f29e23fd38c4239...  fred,jane
+solo2  192.168.1.40:4249  sduser/read  5f29e23fd38c4239...  fred,jane
 hq  hq.example.com:4247  reports/read  90b7bd01319812c2...  none
 ```
 

@@ -47,11 +47,12 @@ Group size is expressed in 1 KB units, so the compiled maximum of 8 is 8 KB.
 
 **A sort that outgrows `SORTMEM` is written to work files, and an item or a key may be of any
 length SD can hold.** The lengths in a work file are 32 bits, so an item or a key of
-32 KB or more is handled correctly when a sort spills to disk.
+32 KB or more is sorted correctly when a sort spills to disk.
 
-**A split of a dynamic file stops before it changes the file when the disk cannot take it**. A dynamic file grows by splitting its groups. The split writes the new, empty group first and
+**A split of a dynamic file stops before it changes the file when the disk cannot take it.** A dynamic file grows by splitting its groups. The split writes the new, empty group first and
 only then advances the file's modulus; it does nothing if that write cannot be made, or if the file
-system holds less than 1 MB, and writes a line to the log. **A split that
+system holds less than 1 MB, and writes a line to the log, so a full disk does not leave the modulus advanced
+with no group behind it. **A split that
 fails after the new group has begun to be used still cannot be undone**: it logs the failure and
 writes the file's header, and the file needs a file check (`sdfix`, described in
 [sdfix, the File Check Tool](14-sdfix.html)).
@@ -110,7 +111,7 @@ records that exist only in `voc_template`.
 
 | | VOC records |
 |---|---|
-| An ordinary account (`newvoc`) | **384** |
+| An ordinary account (`newvoc`) | **386** |
 | SDSYS (`voc_template`) | **448** |
 
 **These are record counts, not verb counts** — a VOC record may be a verb, a
@@ -125,12 +126,12 @@ set's SD TCL syntax card.)
 
 | | |
 |---|---|
-| Parameters accepted in `sd.conf` | **51** |
-| Parameters the `config` verb displays | **49** |
-| Parameters readable with `config()` | **48** |
-| Parameters settable for the current session | **23** |
+| Parameters accepted in `sd.conf` | **59** |
+| Parameters the `config` verb displays | **56** |
+| Parameters readable with `config()` | **56** |
+| Parameters settable for the current session | **28** |
 
-The verb displays `DEBUG` and `FDS` only when they are set, and `TIMEZONE`,
+The verb displays `DEBUG`, `FDS` and `PHANTOMS` only when they are set, and `TIMEZONE`,
 which is not a file parameter. No parameter is accepted and ignored: a line
 naming an unknown one (such as `APILOGIN`, `CODEPAGE`, `CREATUSR`,
 `EXCLREM`, `FIXUSERS`, `GDI`, `JNLDIR`, `JNLMODE`, `PORTMAP`, `RINGWAIT` or

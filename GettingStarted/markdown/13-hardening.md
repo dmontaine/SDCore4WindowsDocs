@@ -12,7 +12,7 @@ whichever way you ask for it.**
 
 This matters because the system-wide catalog holds the programs SD runs for
 everybody, `$login` among them. **Replacing one runs your code in every session
-on the machine, administrators included; deleting one stops everybody signing
+on the machine, SDSYS included; deleting one stops everybody signing
 in.**
 
 **Nothing changes for local and private cataloging**, which is what
@@ -40,8 +40,8 @@ It is readable by SD users and writable only by administrators, so that no SD
 user can replace what everybody else's session executes, including an
 administrator's. Nothing
 needs to write it after an install — only the process that starts SD reads it,
-and that is already elevated. **If you have anything that writes into
-`<sysdir>\bin`, it will now be refused and will need to run elevated.**
+and that is already elevated. **Anything that writes into
+`<sysdir>\bin` is refused unless it runs elevated.**
 
 ## Scheduled jobs
 
@@ -74,7 +74,7 @@ one.
 
 **It is a diagnostic, not the audit trail.** For *who obtained privilege and
 when*, read `audit`. This file answers *"the account was not created — what
-actually happened"*, which previously had no answer at all.
+actually happened"*.
 
 **If the file is missing, nothing is logged and SD does not create one.** That
 is deliberate: a log created on the fly would inherit permissions letting every
@@ -87,7 +87,7 @@ Every accepted API connection adds a line naming the Windows process and
 account at the other end:
 
 ```
-API connection from 127.0.0.1:59314 - pid 11448, GITORLI\don
+API connection from 127.0.0.1:59314 - pid 11448, DESKTOP-1\sam
 ```
 
 **Nothing is refused on the strength of it.** This records who connected; it
@@ -112,45 +112,36 @@ normally.
 
 ### Two things about error-log trimming
 
-**`ERRLOG` now applies to these lines too.** The background daemon used to
-append without ever trimming — it only wrote at start-up and on failure, so it
-never grew. Now that it writes per connection, it discards the oldest part of
-the log on reaching the `ERRLOG` size in `sd.conf`. **If you have set `ERRLOG`
+**`ERRLOG` applies to these lines too.** The background daemon writes an entry
+per connection, and discards the oldest part of the log on reaching the
+`ERRLOG` size in `sd.conf`. **If you have set `ERRLOG`
 unusually large, consider what an entry per connection adds to it.**
 
 **After the log is trimmed, its first line may have no timestamp.** An entry
 is two lines — a timestamped header and the message indented below it — and
 trimming restarts the file at a **line**, not at an entry, so the first message
 can be left without its header. **This is not damage** and no entry after it is
-affected. SD has always trimmed this way; it is only visible now because the
-log turns over more often.
+affected.
 
 ## Line endings
 
-Both halves are fixed, and they were fixed separately.
+Reading and writing follow separate rules.
 
 ### Reading — files edited in Notepad or saved from Excel
 
 Directory files exist so you can edit their records with an ordinary Windows
-editor, and Windows editors end each line with CR+LF. **SD only ever looked for
-the LF, so it kept the CR — and put it on the end of the data.**
+editor, and Windows editors end each line with CR+LF. **SD takes the CR+LF
+pair as the end of a line**, so the CR is not left on the end of the data: a
+CSV saved by Excel reads cleanly in its last column, and `READCSV`, `READSEQ`
+and reading a directory file record all behave the same way.
 
-You would have seen it as an invisible extra character at the end of every
-line: comparisons failing for no visible reason, a name that would not match, a
-trailing space that was not a space.
-
-**Reading a CSV saved by Excel is the clearest case.** The last column of
-every row picked up the stray character, because a comma ended the other
-columns and the line ending only ever touched the last one. `READCSV`,
-`READSEQ` and reading a directory file record are all corrected.
-
-**A CR on its own is still data** and is left exactly as it is. Only the CR+LF
+**A CR on its own is data** and is left exactly as it is. Only the CR+LF
 pair that ends a line is treated as a line ending, so this cannot alter data
 that happens to contain a CR.
 
 ### Writing
 
-Anything SD writes that an ordinary Windows program can open now ends its lines
+Anything SD writes that an ordinary Windows program can open ends its lines
 with CR+LF: records in a directory file, `WRITESEQ` and `WRITECSV` output,
 command output captured with `COMO`, printer output sent to a file, and the
 error log.
@@ -161,32 +152,26 @@ asks for CR+LF.**
 **Dynamic files are unaffected** — they are stored in SD's own format and are
 not readable by other programs.
 
-**Existing files are left alone**, so a file can contain both endings. SD
-reads either, so this is untidy rather than a problem.
+**A file can contain both endings**, because SD does not rewrite what is
+already there. SD reads either, so this is untidy rather than a problem.
 
 ## The terminal
 
-**The default terminal type is now `WINDOWS`.** `TERM` on its own should say
+**The default terminal type is `windows`.** `term` on its own should say
 `Device : windows`.
 
-**THE ARROW KEYS DID NOTHING in cmd, PowerShell or Windows Terminal** on
-earlier builds. A terminal has two spellings for an arrow key: in its ordinary
-state it sends `ESC [ D` for Left, and the other spelling `ESC O D` only after
-the application asks it to switch — **which SD never does.** The `vt100`
-definition SD was defaulting to lists only the second spelling, so SD was
-listening for a key no Windows console ever sends.
+A terminal has two spellings for an arrow key: in its ordinary state it sends
+`ESC [ D` for Left, and the other spelling `ESC O D` only after the application
+asks it to switch — **which SD never does.** The shipped `windows` definition
+lists the first spelling, the one cmd, PowerShell and Windows Terminal send; it
+is an exact copy of `linux`, because what matters is the byte protocol, not the
+name of an operating system.
 
-The shipped `WINDOWS` definition is an exact copy of `LINUX`, which had this
-right all along — its name describes an operating system, but what matters is
-the byte protocol.
-
-**Existing accounts keep their old setting** until their VOC is updated. An
-upgrade now does that for every account, and **`update.accounts`** does it on
-demand.
-Until then, `term windows` sets it for the session. **51 definitions ship,
-compiling to 83 terminal names** — the extra names are variants such as
-`vt100-w` — so `term wyse60` still works. (The `-at` types of AccuTerm and
-SDTerm's `sdterm` were removed: SD does not support those terminal programs.)
+**An account keeps the terminal setting in its VOC** until that VOC is updated;
+an upgrade runs `update.accounts` for you, and you can run it yourself. Until
+then, `term windows` sets it for the session. **26 definitions ship, compiling
+to 37 terminal names** — the extra names are aliases such as `vt200` and
+`wyse60` — so `term wyse60` still works.
 
 **A name that is not installed is refused and your current type is kept** —
 *"Unrecognized terminal name"* — so a typo costs you nothing. **`term` with no
@@ -223,23 +208,16 @@ phantom or a piped script.
 
 > **`term default` restores it, and it prints nothing when it does.** It sets
 > the same 140 × 43 the login path falls back to and returns silently, so run a
-> bare `term` after it to see the result.
->
-> **If you have notes from an earlier build, this is one of the things that
-> changed**: `term default` used to set 20 × 24 — the *minimum* width and a
-> fixed depth rather than the defaults — so it made the display worse instead of
-> putting it back.
+> bare `term` after it to see the result. `term 120,36` does the same by hand
+> for the old size.
 
 ## Paths
 
-**A Windows PATH typed at the command prompt is no longer cut off at the first
-backslash.** Typing `C:\Data\Sales` was read as just `C:`, with the rest
-treated as a second, separate thing. `create.account other`, which is given a
-folder to put the account in, was the command most likely to show it — the
-account went to the wrong place, or the command failed for a reason that made
-no sense from what you had typed.
+**A Windows PATH typed at the command prompt is read whole.** `C:\Data\Sales`
+is one path, so `create.account other`, which is given a folder to put the
+account in, puts it there.
 
-Forward slashes always worked and still do. **Both are now read the same way.**
+Forward slashes work too. **Both are read the same way.**
 
 ## PowerShell execution policy — leave it alone
 
@@ -273,17 +251,15 @@ Scripts page in the Administrator set has the detail.**
 | | |
 |---|---|
 | The service | **String Database (SD)** |
-| After an unclean shutdown | SD now starts anyway, rather than refusing because the last stop was abrupt |
+| After an unclean shutdown | SD starts anyway, rather than refusing because the last stop was abrupt |
 | Nested sessions | SD will not start a second time inside itself |
 | `sd <command>` | needs an elevated session, or an entry in `batch.jobs` — see above |
 
 ## Setting no password
 
-Earlier builds of this port had both the end of the installer and SD's own
-prompt say that without a password you could not use ssh or the API, and stop
-there. **That was true and easy to read as "some things will not work".**
-
-**It is stronger than that, and both now say so:** with no password the
+The end of the installer and SD's own prompt say what no password costs.
+Without a password you cannot use ssh or the API, **and that is stronger than
+"some things will not work":** with no password the
 account can be used **only at that computer** — at the keyboard, or through
 Remote Desktop or similar remote-control software — **and only from a session
 run as administrator.**

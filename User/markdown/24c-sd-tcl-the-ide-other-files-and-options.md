@@ -134,7 +134,7 @@ that**, so a record kept for SED goes on working.
 | Word | What the IDE starts with |
 |---|---|
 | `CASE_ON` · `CASE_OFF` | the find options' match case on (as delivered) or off |
-| `WORD` · `BWORD` | the find options' whole words on; a word is letters, digits and `.` `_` `$` `%`, which is what SED's BWORD was |
+| `WORD` · `BWORD` | the find options' whole words on; a word is letters, digits and `.` `_` `$` `%` |
 | `INDENT` | auto-indent on |
 | `OVERLAY` | overwrite mode on |
 | `TABS` *n* | a tab width of *n*, 1 to 99 (field 5 can hold the number instead) |

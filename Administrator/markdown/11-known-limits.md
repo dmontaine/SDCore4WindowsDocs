@@ -1,0 +1,210 @@
+Title: Known Limits
+Subtitle: Parts of SD Core for Windows whose behavior depends on your environment, and what to check before an application relies on them.
+
+Nothing on this page is known to be broken. Each entry is a place where what
+happens depends on conditions SD cannot establish for itself: the load on
+your machine, the network between two servers, the program you run beside
+SD. Treat the page as a list of things to try on your own system before an
+application depends on them.
+
+> This document is separate so that it can be withheld. It links to nothing
+> outside the administrator set. Where a page in another set is worth naming,
+> it is named in words.
+
+## How to read an entry
+
+| | |
+|---|---|
+| **What to expect** | how the feature behaves, as far as SD controls it |
+| **Check before relying on it** | what to try, on your own system |
+
+## Sessions and terminals
+
+### Interactive SD over ssh, at a real terminal
+
+**What to expect.** An ssh session lands inside SD, and SD's terminal layer
+drives a Windows console. Screen handling, cursor positioning and the editing
+keys all go through that layer, and over ssh the pseudo-terminal belongs to the
+ssh server rather than to the Windows console host.
+
+**Check before relying on it.** Start one interactive session from a second
+machine, and drive a full-screen operation and the arrow keys.
+
+## Locking and contention
+
+### Semaphores under heavy contention
+
+**What to expect.** A semaphore is used on every record lock, so ordinary use
+exercises it all the time.
+
+**Check before relying on it.** If an application will have many sessions
+waiting for the same lock, try that load on your own machine first and watch
+how long the waiters wait.
+
+### A lock held by a terminal session and wanted by an API connection
+
+**What to expect.** Two local sessions compete correctly: record, update and
+file locks are reported against the right holder, a waiting read is released
+when the holder lets go, and a task lock refuses a second taker. The API's own
+session-confinement gate is described in *API access* in the **Getting
+Started** set.
+
+**Check before relying on it.** If an application mixes terminal sessions and
+API clients on the same records, try an API client and a terminal session
+competing for one record.
+
+### Task locks taken twice by the same session
+
+**What to expect.** Taking a task lock you already hold succeeds, and one
+`unlock` releases it however many times you locked it: the test is "unowned
+or mine", and `unlock` clears the slot outright. A program that takes the same
+lock twice and expects to hold it after one `unlock` will be wrong.
+
+## Application data
+
+### Large and long-established data
+
+**What to expect.** SD creates, writes, reads and deletes files, records,
+indexes, select lists and sequential files, and the system files it starts
+with are ordinary files of the same kind.
+
+**Check before relying on it.** Before moving a production application, restore
+a copy of its account on SD Core for Windows and run it: a file of hundreds of
+thousands of records, a deep dictionary or a schema built over years by
+someone else is the case worth trying first.
+
+## Sockets
+
+### UDP and ICMP
+
+**What to expect.** TCP is the supported protocol: listening, connecting,
+accepting, reading, writing, the blocking and non-blocking modes and the error
+codes. The flags `0x00010000` and `0x00020000` for UDP and ICMP exist in the
+language, but SD makes no promise about sockets opened with them.
+
+**Check before relying on it.** Use TCP. If you need a datagram socket, try a
+datagram to a listener and back first.
+
+## Account backup and restore
+
+### `backup.account`, `restore.account` and `set.backup.directory`
+
+**What to expect.** The folder prompt remembers its answer, a backup writes a
+zip whose counts match the account's, a second backup uses the remembered folder,
+and a restore takes a bare file name. SD writes `BACKUPDIR` in
+`C:\ProgramData\SD\sd.conf` through the elevated route, replaces an account that
+exists, and makes one that does not (with its password prompt).
+
+**Check before relying on it.** On a test install, back up one account, change
+it, restore it by bare file name, and check that the changes are gone. Then
+restore it under a name that does not exist.
+
+## Scheduled jobs
+
+### Task Scheduler with an account that `create.account` made
+
+**What to expect.** Scheduled SD jobs work when the task runs as a Windows
+account you already had. Accounts that `create.account` creates are denied
+interactive logon at this machine on purpose, and Task Scheduler may refuse one
+of them as the identity a task runs as.
+
+**Check before relying on it.** Create an account, point a scheduled task at it,
+and see whether the task page accepts it.
+
+### An administrator's scheduled job
+
+**What to expect.** The run Task Scheduler makes of SDSYS, with no stored
+password, is recognized as [Scheduled Jobs](23-scheduled-jobs.html) describes,
+and the next and last run that `set.job` and `tool.jobs` show come from Task
+Scheduler.
+
+**Check before relying on it.** As SDSYS, `set.job add test backup-all every 5
+minutes`, then `set.job run test`; read the audit trail for `reason=scheduled
+job job=test`, then `set.job delete test`. Check that the uninstaller removes
+the jobs.
+
+## SDNet: remote files between SD servers
+
+### Anything between two machines
+
+**What to expect.** The route works between a client and a server: a TLS 1.3
+handshake, the pinned key, the SCRAM login from the stored keys, and reads,
+writes, locks and deletes through the `sdfiles` route and the write group.
+`NETWAIT` and `NETREPLY` bound how long a call waits for a server that never
+answers or goes silent after its acknowledgement.
+
+**Check before relying on it.** A firewall in between, a name that has to be
+resolved, real network latency, a connection that a router drops, and the key
+hash carried from one screen to the other are conditions of your own network.
+Set up the server and a client on two machines and try each of them,
+including a server that hangs, before depending on remote files in production.
+
+### Changing the `sdfiles` groups
+
+**What to expect.** `modify.account` `files-on`, `files-off`, `files-write-on`,
+`files-write-off`, `files-admin-on` and `files-admin-off` change the groups
+through the elevated helper. When a removal fails part way, the screen and the
+audit trail say which group was changed and which was not.
+
+**Check before relying on it.** After any change, look at the real group
+(`Get-LocalGroupMember sdfiles`, `sdfileswrite`, `sdfilesadmin`) and sign in as
+that account to see what it can do: create, index and delete a file on the
+server, and be refused without the group. Check the same after an installation
+over an older one that has `sdfiles` and not `sdfileswrite`.
+
+### `MUSTLOCK` on a remote file
+
+**What to expect.** With `MUSTLOCK=1` a write to a file needs the record lock
+to be held first, and a remote file follows the same rule.
+
+**Check before relying on it.** `MUSTLOCK` applies to every session, so set it
+on a scratch installation first, with a write to a remote file with and without
+the lock held.
+
+## SD BASIC statements that depend on something outside SD
+
+| | needs |
+|---|---|
+| `sendmail` | a mail relay configured on the machine |
+| `chgphant()` | a phantom process to change |
+| `ccall()` | a C function registered into the executable |
+
+**What to expect.** All three compile in an ordinary account, and none of them
+does anything useful without what it needs. Nothing else in the documentation
+depends on them.
+
+**Check before relying on it.** Try each with what it needs, on your own
+system.
+
+## The terminal editors' key bindings
+
+**The key bindings of Microsoft Edit are the editor's own, unmodified.** SD
+only installs it and launches it. If a binding surprises you, that is the
+program's own documented behavior.
+
+## The agent account
+
+### The recipe in The Agent Account
+
+**What to expect.** [The Agent Account](18-the-agent-account.html) describes an
+account made as it says, an agent signed in over ssh with its password, and
+then with a key after `ssh-key-on`, and each refusal of step 4 in the guide's
+words. Each piece has its own checks.
+
+**Check before relying on it.** Follow the recipe once, end to end, on a test
+install before giving an agent an account on a production one.
+
+## What is not on this page
+
+The places where SD Core for Windows deliberately differs from OpenQM,
+ScarletDME or SD Core for Linux are documented as differences, in the pages
+that describe the feature. This page is only about behavior that depends on
+your own environment.
+
+## See also
+
+[Sessions and Locks](02-sessions-and-locks.html) covers the locking model that
+some of the entries above qualify.
+[Installation and the service](08-sd-installation.html) covers scheduled jobs
+and the account model behind the Task Scheduler entry.
+[SD System Limits](06-sd-system-limits.html) states the figures SD works within.

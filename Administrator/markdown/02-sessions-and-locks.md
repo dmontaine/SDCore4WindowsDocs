@@ -33,9 +33,9 @@ listu {no.page} {lptr {n}}
 ```
 :listu
   User  Pid          Puid  Login time    Origin : Username
-    12  1789               27 Aug 13:14  : don
-    19  1808               27 Aug 13:53  : don
-*   27  1828               27 Aug 13:59  : don
+    12  1789               27 Aug 13:14  : fred
+    19  1808               27 Aug 13:53  : fred
+*   27  1828               27 Aug 13:59  : fred
 ```
 
 | | |
@@ -77,9 +77,9 @@ reads `Phantom` for a phantom and an IP address for a network client.
 `SDNet` is also among the values it can print, and you will not normally see
 it. The mark behind it is set in only one place, the API server's request 29,
 "open an SDNet file", which is refused unless `NETFILES` has bit 2 set (see
-*Configuration*). The SDNet described in this set ([SDNet](12a-sdnet.html)),
-where a program opens a file on another SD server, does not use request 29, so a
-session that comes from it shows an address like any other API session.
+*Configuration*). The SDNet described in this set, where a program opens a file
+on another SD server, does not use request 29, so a session that comes from it
+shows an address like any other API session.
 
 **`(logout pending)`** after the name means somebody has asked that session to
 end and it has not gone. See below.
@@ -118,10 +118,10 @@ group and task lock the session still held**, and says so (then the text of
 message 10167, *User n was not running, so there was nothing to log out*):
 
 ```
-LOGOUT reaped user 43 (pid 1799435, don) - process was gone.
+LOGOUT reaped user 43 (pid 1799435, fred) - process was gone.
 ```
 
-For a session killed from outside while it held a record lock,
+For a session killed from outside (with `Stop-Process -Force`, say) while it held a record lock,
 `logout 43` prints the line above, and afterwards `listu` does not list the user
 and `list.readu` does not show the lock. The entry matters because **it holds a slot and an exclusive-access
 claim**: `NUMUSERS` counts it, and any verb that wants a file to itself —
@@ -130,7 +130,7 @@ clear a dead session is `logout` *n*.**
 
 A session that is **alive and does not answer the signal** is the other case,
 and it keeps its entry with **`(logout pending)`** beside it; asking again
-signals it again. `sd -cleanup`, run elevated (and a restart of the SD service
+signals it again. `sd -cleanup`, run elevated as SDSYS (and a restart of the SD service
 if that does not take it), is the remaining way to clear entries of sessions
 that are not going to end.
 
@@ -138,7 +138,8 @@ that are not going to end.
 answers *(Not responding)* for a session with nothing behind it — it asks the
 process and waits about four seconds — and that is the difference between a dead
 entry and a busy one. `pstat` is a programmer verb and is documented in the user
-set.
+set. (`logout` itself only clears an entry whose process is not there; it
+signals a live one.)
 
 ## Keeping new sessions out while you work: `inhibit.login`
 
@@ -170,7 +171,7 @@ The record is the file `login.inhibit` in the SDSYS directory (user number,
 process id, login name, date, time). **It is not the same thing as the hold that
 `backup.account` and `restore.account` take**, which keeps *everybody* out,
 the administrator's new sessions included, while they run. That hold also lapses
-when the session that took it is killed.
+when the session that took it is killed, without waiting for `sd -cleanup` to remove the dead session's entry.
 
 ## The paragraph every session runs first: `MASTER.LOGIN`
 
@@ -178,8 +179,7 @@ A VOC record named `MASTER.LOGIN` in the SDSYS account, if it is a paragraph (it
 line is `PA`), is run **once by every new session, before the account's own `LOGIN`
 paragraph**: an interactive session, a phantom, and an **API session**, which runs it
 when it first enters an account. Entering another account with `logto` runs the new
-account's `LOGIN` only, **except when you are the administrator: a `logto` made in an administrator session runs no `LOGIN` paragraph and does not open the home screen, so you land at the prompt and none of the account's own start-up code runs in your session** (which keeps its Windows administrator rights; SD says so at the prompt). A session shows what it is by `@tty` (`apisrvr` for the API).
-There is none unless you write one, so nothing runs by default. It runs in the
+account's `LOGIN` only, **except when you are the administrator: a `logto` made in an administrator session runs no `LOGIN` paragraph and does not open the home screen, so you land at the prompt and none of the account's own start-up code runs in your session** (the session keeps its Windows administrator rights, and SD says so at the prompt); `logto sdsys` is refused (SDSYS is reached only by signing in to Windows as `sdsys`). There is none unless you write one, so nothing runs by default; a session shows what it is by `@tty` (`apisrvr` for the API). It runs in the
 account just entered, **under that account's own switches**: it can do no more there
 than the account's users can.
 
@@ -199,11 +199,11 @@ That answer is about the **whole system**, not about you. With locks held:
 ```
 User File Path........................... Type Id..............................
   23    1 /cygdrive/c/ProgramData/SD/user RU   R1
-          _accounts/don/ZZLK31A
+          _accounts/fred/ZZLK31A
   19    4 /cygdrive/c/ProgramData/SD/user RU   zzlock31
-          _accounts/don/voc
+          _accounts/fred/voc
   23    1 /cygdrive/c/ProgramData/SD/user RL   R2
-          _accounts/don/ZZLK31A
+          _accounts/fred/ZZLK31A
 ```
 
 | | |
@@ -214,12 +214,19 @@ User File Path........................... Type Id..............................
 | **`Type`** | `RU` update · `RL` read · `FX` exclusive file lock · `SX` shared file lock · `WAIT` a session waiting for one |
 | **`Id`** | the record id; blank for a file lock |
 
+**An id is another user's text, and it is shown safely.** Any user may lock a record
+whose id holds an escape sequence, and the listing, the deadlock report and `tool.sessions` would have sent that
+sequence to **your** terminal, the administrator's. Now a control character, `del`, a byte from 128 to 159 and a
+mark character in an id, a path or a user name are each shown as `?`. The same holds for `getlocks()` and
+`system(1083)` in a program. The locks themselves are not changed (`unlock` and `release` act on the real id),
+and `fileinfo(f, 1039)` still gives a program its own ids exactly.
+
 A file lock has no id:
 
 ```
 User File Path........................... Type Id..............................
   23    1 /cygdrive/c/ProgramData/SD/user FX
-          _accounts/don/ZZLK31A
+          _accounts/fred/ZZLK31A
 ```
 
 **The PATH is the POSIX one and that is not a display fault.** SD holds file
@@ -239,7 +246,7 @@ There are no active file, read or update locks held by any user
 **`Peak` is the one to watch.** `Current` describes this instant, which is
 rarely the instant that mattered. A peak near the limit is how you find out
 `NUMLOCKS` needs raising **before** a program fails with the lock table full.
-`config` reports the configured limit.
+`config` reports the configured limit, see [Configuration](07-sd-admin-configuration.html).
 
 **A user number** restricts the listing to one session. **`wait`** adds the
 sessions *waiting* for a lock, as `WAIT` rows — left out by default, so the

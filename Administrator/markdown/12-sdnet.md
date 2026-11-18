@@ -9,15 +9,14 @@ password), and a VOC pointer of type `N` that opens a file on a defined server: 
 reading, selecting and querying, and, only for a server defined `write` whose
 administrator has also put the remote user in the Windows group `sdfileswrite`, for
 writing and locking.** On the server side there is a second, narrower API route,
-`sdfiles`, which lets a login work with files and do nothing else. **Nothing of
-SDNet has been run from end to end on Windows yet** (see "What has and has not been
-run" at the end of this page). The pieces that are not there are listed under "What
-does not exist yet".
+`sdfiles`, which lets a login work with files and do nothing else. The pieces that are
+not there are listed under "What does not exist yet". Behavior that depends on your own
+network is listed in *Known Limits*.
 
-An earlier SDNet was removed (a `server;file` VOC entry over port 4245, with each
-server's password in `sd.conf`, which any local user could read). **This is not
-that.** Nothing from it is back: there is no `;` in a path, no port 4245 and no
-password in any file.
+SD has no `server;file` VOC entry over
+port 4245 with each server's password in `sd.conf`, which any local user could
+read. **This is not that.** Nothing of that kind exists: there is no `;` in a path, no
+port 4245 and no password in any file.
 
 ## What SDNet is
 
@@ -26,17 +25,17 @@ password in any file.
   *target* must also allow writing for that remote user (`sdfileswrite`).
 - **The same channel as the API.** The connection is the target server's own API port,
   TLS 1.3 with the SCRAM login bound to the TLS session, and no new listener. A full
-  SD Core listens for the API on 4247.
+  SD Core listens for the API on 4247; a Solo on 4249.
 - **Delivered off, and loosened by SDSYS.** The switch is off for every account,
   the list of accounts allowed to use a server is empty, and a server is
   `read` unless SDSYS says otherwise. SDSYS turns each on, one account and
   one server at a time.
 
-## What is in this release
+## What is in SDNet
 
 | | |
 |---|---|
-| the **NET switch** | `modify.account` *name* `net-on` / `net-off`, and `net-on` in `create.account user`. See [Accounts and Security](01-accounts-and-security-6-home-screen-shared-account-and-net.html#the-net-switch-net-on-and-net-off) |
+| the **NET switch** | `modify.account` *name* `net-on` / `net-off`, and `net-on` in `create.account user`. See [Accounts and Security](01-accounts-and-security-3-edit-switches.html#the-net-switch-net-on-and-net-off) |
 | the **server definitions** | one file, `netservers`, in the `gcat` folder of the SDSYS directory |
 | **`set.server`** | adds a definition, or replaces one |
 | **`delete.server`** | removes one |
@@ -70,36 +69,35 @@ gates they ask are described below. Commands are shown here in lower case.
 - **A way to make the client use only the files-only route.** The server has the route
   (below), the client that opens remote files asks only for requests the route allows,
   and the person who runs the other server can give the remote user `files-on` instead
-  of `api`. But `set.netlogin` does not require it. A remote user who is in `sdapi`
-  still has the whole API, and so does a stored login made for that user: whoever
-  holds the file can do on that server what that remote user can do over the API.
-  Give the remote user `files-on` and not `api`, or choose the remote user with that
-  in mind. **A files-only login is read only on the server unless the remote user is
-  also in the Windows group `sdfileswrite`** (`modify.account` *name* `files-write-on`,
-  below): without it the server refuses every write, delete, record lock, file lock
-  and clear, and the locking forms of a read, whatever the client's definition says.
-  The definition's `mode` on the *client* is still enforced there, but it is no longer
-  the only thing between a stored login and a write: **a target's administrator
-  decides whether a login may change anything on that target.**
+  of `api`. But `set.netlogin` does not require it, and **the only client use of a stored
+  login is opening a remote file**. A
+  remote user who is in `sdapi` still has the whole API, and so does a stored login
+  made for that user: whoever holds the file can do on that server what that remote
+  user can do over the API. Give the remote user `files-on` and not `api`, or choose
+  the remote user with that in mind. **A files-only login is read only on the
+  server unless the remote user is also in the Windows group `sdfileswrite`**
+  (`modify.account` *name* `files-write-on`, below): without it the server refuses every
+  write, delete, record lock, file lock and clear, and the locking forms of a
+  read, whatever the client's definition says. The definition's `mode` on the
+  *client* is still enforced there, but it is no longer the only thing between a
+  stored login and a write: **a target's administrator decides whether a login may
+  change anything on that target.**
 - **Remote files.** A VOC pointer of type `N` opens a file on another server for
   reading, selecting and querying (see "Remote files, read only" below), and, only
   for a server defined with `write`, for writing and locking (see "Writing and
-  locking"). The index queries (`INDICES`, `SELECTINDEX`, `SETLEFT`, `SETRIGHT`,
-  `SELECTLEFT`, `SELECTRIGHT`) work on any remote file, read definition or write. Changes
-  to an index, `WRITE ... CREATING.SEQKEY`, `FCONTROL`, `CONFIGURE.FILE`, `ANALYZE.FILE`
-  and making or deleting a remote file need the administration group (see "The
-  administration group"). Not there at all: the statements that read or change the tree
-  of an index (`AKREAD`, `AKWRITE`, `AKDELETE`, `CLEAR.AK`, `AKENABLE`, `AKMAP`), which stop
-  with message 12516 and nothing is sent.
+  locking"). The index queries (`INDICES`, `SELECTINDEX`, `SETLEFT`, `SETRIGHT`, `SELECTLEFT`,
+  `SELECTRIGHT`) work on any remote file, read definition or write. Changes to an index and anything
+  that makes or deletes a file need the administration group (see "Writing and locking").
 - **`NETFILES`** in `sd.conf` is not what this uses. Opening a remote file through an
   `N` pointer does not read it. The one thing that does is the API server's old request
-  29, "open an SDNet file": it needs bit 2 of `NETFILES` and the same account rules as
-  `logto` and the account's NET switch, and a files-only login can never make it. It also refuses a
+  29, "open an SDNet file": it needs bit 2 of `NETFILES`, the same account rules as `logto`
+  and the account's NET switch, and a files-only login can never make it. It also refuses a
   VOC pointer that leads out of the account unless the account holds `os-on` (status 3035,
   audit line `api refused request=29 reason=os gate off ...`) (see
   [SD Admin Configuration](07-sd-admin-configuration.html)
-  and the VOC pointers section of [Accounts and Security](01-accounts-and-security.html)). What you can set in
-  `sd.conf` for SDNet is the two waits, `NETWAIT` and `NETREPLY` (below).
+  and the VOC pointers section of [Accounts and Security: File Writing, the AI and VOC Pointers](01-accounts-and-security-5-files-write-ai-pointers.html)).
+  What you can set in `sd.conf` for SDNet is the two waits, `NETWAIT` and `NETREPLY`
+  (below).
 
 ## The security model
 
@@ -144,7 +142,7 @@ defines a server is the elevated one, which is what can write there.
 |---|---|
 | **name** | a lower case letter, then up to 15 lower case letters or digits. Capitals typed are converted |
 | **host** | 1 to 253 letters, digits, dots, hyphens or colons: a DNS name, an IPv4 address or an IPv6 literal. It does not start with a hyphen or a dot. Capitals are converted |
-| **port** | a whole number from 1 to 65535: the port **of the server you are defining**, chosen when you define it (4247 for a full SD Core). SD does not insist on a number. `04247` is stored as 4247 |
+| **port** | a whole number from 1 to 65535: the port **of the server you are defining**, chosen when you define it (4247 for a full SD Core, 4249 for a Solo). SD does not insist on either number. `04249` is stored as 4249 |
 | **account** | the account to enter on the remote server: 1 to 32 letters, digits, dots, underscores or hyphens. Kept as typed, because the other server's names are its own |
 | **pin** | the SHA-256 hash of the server's public key: exactly 64 hexadecimal digits, stored in lower case. A new certificate with the same key keeps the same pin |
 | **mode** | `read` or `write`. `read` unless `write` is given. What a program may do with the server's files, once it can open them |

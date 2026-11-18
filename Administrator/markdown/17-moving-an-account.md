@@ -55,18 +55,28 @@ using them between two machines.
    restore.account C:\SDBackups\SD-oldbox-jack-20261018-114948.zip jack
    ```
 
-   A bare file name is looked for in the folder `set.backup.directory` saved. **`latest` will not
-   find this zip**: `latest` picks the newest backup *made on this computer* that holds every
-   named account, and a zip made elsewhere names another host.
-7. SD checks the whole zip against its manifest **before it changes anything**: the format, the
-   product, the number of accounts, and every account's files, bytes and directories. Any
-   difference stops it with nothing changed. Then it says which accounts will be **created** and
-   which **replaced** (with what they hold now), and asks once (Enter is no).
-   **Replaced means the account's folder is swapped for the zip's and the old one is removed.**
+   A bare file name is looked for in the folder `set.backup.directory` saved (and asked for if
+   none is). A relative path starts from SD's current folder, not yours, and gives *… does not
+   exist.* **`latest` will not find this zip**: `latest` picks the newest backup *made on this
+   computer* that holds every named account, and a zip made elsewhere names another host.
+7. SD checks the whole zip against its manifest **before it changes anything**, says what will
+   happen and asks once (Enter is no):
+
+   ```
+     jack will be CREATED.
+   Restore these accounts (y/<n>)? y
+   ```
+
+   An account the machine already has says *jack will be REPLACED. It now holds 11 files, 45332
+   bytes.* **Replaced means its folder is swapped for the zip's and the old one is removed.**
    Whatever was made in it since is gone, and nothing is kept to undo it. If that matters, run
-   `backup.account` on the new machine first.
+   `backup.account jack` on the new machine first.
 8. Check it: sign in as the person and open a file. `settings.report` gives the same switch names
    as the manifest, to compare with step 1.
+
+An account that fails (a name clash, a refused password) is reported as *jack was not restored.*
+and the others in the same zip go on. The restore ends with the count of those it restored, and a
+non-zero return code if any failed.
 
 ## What comes across
 

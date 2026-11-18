@@ -1,7 +1,7 @@
 Title: The AI Helper: set.ai, the Key and Troubleshooting
 Subtitle: The set.ai verb, the standing text, the gate for each account, the key, Custom, the audit trail and troubleshooting.
 
-This page continues [The AI Helper](21-the-ai-helper.html).
+This page continues [The AI Helper](20-the-ai-helper.html).
 
 ## The verb: `set.ai`
 
@@ -33,7 +33,7 @@ The limits, and what they are as delivered:
 | `timeout` | 30 | seconds to wait for the provider (at most 300) |
 | `bytes-request` | 65536 | the most that may be sent in one request |
 | `bytes-reply` | 65536 | the most that may come back |
-| `max-tokens` | 1024 | the longest answer asked for, at the prompt (`ai`) and on every page: raise it for longer answers, lower it for shorter ones (a provider may refuse a figure above its model's own limit) |
+| `max-tokens` | 1024 | the longest answer, at the prompt and on every page: raise it for longer answers (the helper never asks a provider for more) |
 
 ## The standing text
 
@@ -68,7 +68,7 @@ The backup of an account records the gate (`route.ai`) and a restore puts it bac
 
 The key is typed at the helper's own prompt (`set.ai key anthropic`) or in the setup dialog on the page. At the prompt it goes from your console straight to the helper's client and SD never sees it; the prompt shows one `*` for each character you type or paste (Backspace takes one back, Ctrl-U clears the line), so a long key shows that it arrived, and the key itself is never shown (the number of stars is its length, which anyone looking at the screen can count). From the dialog it passes through SD's memory and a hand-over file only SDSYS and SYSTEM can reach, which is removed at once (see above). Either way the helper encrypts it with DPAPI for its own account and writes it to `C:\ProgramData\SD\ai\keys\anthropic`, open only to the service and SYSTEM; SD does not keep it, print it or put it in the audit trail, and the page and the verb read back only whether it is **set**. `set.ai key anthropic clear` removes it. A key is never an argument of a command, so it is in no process list and no history.
 
-**The encryption protects a copy, not this machine.** A backup, a copied disk or a key file carried to another machine cannot be opened. On this machine an administrator can obtain the key (see [Security warning](21-the-ai-helper.html#security-warning)).
+**The encryption protects a copy, not this machine.** A backup, a copied disk or a key file carried to another machine cannot be opened. On this machine an administrator can obtain the key (see [Security warning](20-the-ai-helper.html#security-warning)).
 
 If a key is lost or shown to someone, clear it and ask the provider for a new one: SD cannot tell you who has seen it.
 
@@ -111,7 +111,7 @@ Start with the service. In an ordinary or an elevated prompt:
 sc.exe query sd-ai
 ```
 
-A `STATE` line that ends `RUNNING` is what you want. `The specified service does not exist as an installed service` means it was never set up: see `install-aihelper.log` (see [Setting the service up again](21-the-ai-helper.html#setting-the-service-up-again)). A service that is stopped and will not start writes the reason to the **Application** event log with the source **`sd-ai`** (Event Viewer, *Windows Logs*, *Application*), for example when a pipe of its name was already made by someone else. The installer's record of setting it up is `C:\ProgramData\SD\install-aihelper.log`, and the helper's own record of each request is `C:\ProgramData\SD\ai\sd-ai.log`.
+A `STATE` line that ends `RUNNING` is what you want. `The specified service does not exist as an installed service` means it was never set up: see `install-aihelper.log` (see [Setting the service up again](20-the-ai-helper.html#setting-the-service-up-again)). A service that is stopped and will not start writes the reason to the **Application** event log with the source **`sd-ai`** (Event Viewer, *Windows Logs*, *Application*), for example when a pipe of its name was already made by someone else. The installer's record of setting it up is `C:\ProgramData\SD\install-aihelper.log`, and the helper's own record of each request is `C:\ProgramData\SD\ai\sd-ai.log`.
 
 | What you see | What it means |
 |---|---|
@@ -121,10 +121,11 @@ A `STATE` line that ends `RUNNING` is what you want. `The specified service does
 | `This account may not use the AI: the administrator can allow it with modify.account NAME ai-on` | the account's Windows user is not in `sdaiusers`, or the session runs as one of Windows' service accounts |
 | `The AI did not answer: limit (...)` | one of the limits above is used up; wait, or raise it |
 | `The AI did not answer: net (...)` or `timeout` | the provider could not be reached; check the address, the certificate, the clock, and whether the machine needs a proxy to reach the internet (the helper uses none) |
+| `The AI did not answer: refused (the provider refused the request (HTTP 400): ...)` | the provider's own words follow the status: often a model it does not have; choose one from its list with S |
 
 ## See also
 
 [Accounts and Security](01-accounts-and-security.html) ·
 [Giving an AI Agent an Account](18-the-agent-account.html) ·
 [Operating system access](03-operating-system-access.html) ·
-[The Audit Trail](20-the-audit-trail.html).
+[The Audit Trail](21-the-audit-trail.html).

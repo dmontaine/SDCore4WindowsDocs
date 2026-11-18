@@ -76,10 +76,18 @@ if len(roster) < 100:
 # ------------------------------------------------------------ the assignment
 #
 # Each entry is (set, markdown filename, verbs).  Keep it in page order.
+# The page names and the layout are the Linux template's (audit round 2); a
+# verb that only Windows has, or that Windows explains on another page, is
+# marked with the reason.
 
 DOCS = [
+ # nls is explained with getnls() and setnls, on the data-conversion page, where the
+ # three keys it sets are the point.
+ ('User', '06-sd-basic-data-conversion.md', """
+   nls
+ """),
  ('User', '19-sd-tcl-command-processor.md', """
-   abort clear.data clear.input clr
+   abort clear.data clr
    display go if message off pause quit redo report.src stop break
  """),
  # The command stack, the @-variables and the session verbs left 19 for 19a
@@ -91,9 +99,9 @@ DOCS = [
  """),
  ('User', '20-sd-tcl-files-and-records.md', """
    analyze.file clear.file cname compare.files configure.file
-   convert.data copy create.file ct delete delete.file dump file.stat find.file fixdir fstat
-   fstat.user hsm import.csv import.json import.xml list.files list.triggers profiler
-   set.file set.trigger oscopy
+   convert.data copy create.file ct delete delete.file dump fixdir fstat
+   hsm import.csv import.json import.xml list.files list.triggers oscopy
+   set.file set.trigger
  """),
  ('User', '21-sd-tcl-query-processor.md', """
    count list list.item list.label reformat scan search show sort sort.item
@@ -101,69 +109,57 @@ DOCS = [
  """),
  ('User', '22-sd-tcl-select-lists.md', """
    clear.select copy.list delete.list form.list get.list
-   execute.list merge.list move.list nselect
-   qselect save.list select select.dir show.list sort.list sselect
+   merge.list nselect qselect save.list select
+   select.dir sort.list sselect
  """),
  ('User', '23-sd-tcl-alternate-key-indexes.md', """
-   analyse.index build.index create.index delete.index disable.index list.index
+   build.index create.index delete.index list.index
    rebuild.all.indices selectindex
  """),
  ('User', '24-sd-tcl-programs-and-the-catalogue.md', """
-   basic catalog decatalog delete.catalog map run
- """),
- # 13 Nov 26 (RELEASE_1.1 269): 24 was cut in two; the program-development verbs and the IDE are explained on 24a.
- # 17 Nov 26 (coordinator, D8): Linux's own page 24 is over the 14,000-character limit, so the split stays.
- ('User', '24a-sd-tcl-find-program-dictionaries-and-the-ide.md', """
-   compile.dict debug delete.common find.program format generate ide list.common
+   basic catalog compile.dict debug decatalog delete.catalog
+   delete.common format generate list.common map run
  """),
  ('User', '25-sd-tcl-ed.md', """
    ed
  """),
+ # Windows only: edit has a page of its own here (Linux explains it on 25).
  ('User', '26-sd-tcl-edit.md', """
    edit
  """),
  ('User', '27-sd-tcl-micro.md', """
    micro
  """),
- # 13 Nov 26 (RELEASE_1.1 269): the pages carried with the TUI (RELEASE_1.1 197) had no entry here.
  ('User', '27a-sd-tcl-sed.md', """
    sed
  """),
- ('User', '27b-sd-tcl-ced.md', """
-   ced
- """),
  ('User', '28-sd-tcl-printing-and-spooling.md', """
-   block.print block.term printer setptr
-   sp.view spool como report.style
+   printer setptr sp.view spool como report.style
  """),
  ('User', '29-sd-tcl-the-terminal-and-the-session.md', """
-   autologout bell clear.prompts command.logging date
-   date.format echo hush list.term.types logmsg nls pterm sleep term time
+   autologout bell clear.input clear.prompts date date.format echo
+   hush list.term.types logmsg pterm sleep term time tool.gates tool.keys
  """),
- # 26 Oct 26 the home screen page (Linux 4a50799 docs; RELEASE_1.1 172)
  ('User', '29a-sd-tcl-the-home-screen.md', """
-   exit home menu my.menu set.start.default set.tile tool.keys
+   exit home menu my.menu
  """),
- # 13 Nov 26 (RELEASE_1.1 246): the AI, carried from Linux S.69 (Linux's map has the same two entries).
  ('User', '29b-sd-tcl-asking-the-ai.md', """
    ai
  """),
  ('User', '29c-sd-tcl-the-development-tools.md', """
    tool.files tool.voc tool.dict tool.query tool.bulk tool.catalog tool.test
  """),
- # 15 Nov 26 (RELEASE_1.1 299): file transfer, carried from Linux S.242 (Linux's map has the same entry).
  ('User', '29e-sd-tcl-moving-files-in-and-out.md', """
    receive send
  """),
  ('User', '30-sd-tcl-processes-and-phantoms.md', """
-   list.phantoms pdebug pdump phantom pstat status
+   pdebug pdump phantom pstat status
  """),
  ('User', '31-sd-tcl-locks.md', """
    release
  """),
  ('Administrator', '01-accounts-and-security.md', """
-   create.account load.help modify.account modify.password
-   tool.gates tool.menus tool.accounts
+   create.account modify.account modify.password set.start.default set.tile tool.accounts tool.menus
  """),
  # THE MAINTENANCE VERBS MOVED TO 01a AND ONLY ONE OF THEM SAID SO.  tclmap
  # reported set.date and passed the other four, because 01 still MENTIONS
@@ -173,57 +169,90 @@ DOCS = [
  # arriving from the other direction: the name is on the page and the
  # explanation is not.  Each verb is assigned where it is actually explained.
  ('Administrator', '01a-account-maintenance.md', """
-   clean.account config delete.account list.voc.removed load.examples remove.examples
-   restore.voc set.date update.accounts
- """),
- # 9 Nov 26 (RELEASE_1.1 197): set.batch is explained on the scheduled jobs page of Getting Started; Core's Administrator guide has no such page.
- ('GettingStarted', '04-scheduled-jobs.md', """
-   set.batch
- """),
- ('Administrator', '01b-backup-and-restore.md', """
-   backup.account restore.account set.backup.directory settings.report tool.backups
+   backup.account clean.account config delete.account restore.account set.backup.directory
+   set.date settings.report tool.backups update.accounts
  """),
  ('Administrator', '02-sessions-and-locks.md', """
-   clear.locks inhibit.login list.locks list.readu listu lock lock.tracer logout tool.sessions unlock
+   clear.locks list.locks list.readu listu lock logout tool.sessions unlock
  """),
  ('Administrator', '03-operating-system-access.md', """
-   sh docs.install
+   sh docs.install load.help
  """),
+ ('Administrator', '20-the-ai-helper.md', """
+   set.ai tool.ai
+ """),
+ # Windows: append.sd.path and ssh.server exist here (SD's own ssh server and
+ # PATH tools; Linux leaves both to the distribution), so they are explained on
+ # 05 with remote.api, remote.ssh and tool.remote.
  ('Administrator', '05-remote-access-and-the-machine.md', """
    append.sd.path remote.api remote.ssh ssh.server tool.remote
  """),
- # 13 Nov 26 (RELEASE_1.1 269): the configuration verbs (RELEASE_1.1 218), scheduled jobs (222), the master files and run.in (201).
- ('Administrator', '07-sd-admin-configuration.md', """
-   set.config tool.config
+ # S.65 (SDNet): the three server-definition verbs, SDSYS's alone (voc_template), and
+ # delete.netlogin and set.netlogin, a person's own login on a server; in newvoc, so in every VOC.
+ ('Administrator', '12-sdnet.md', """
+   delete.netlogin delete.server list.servers set.netlogin set.server
  """),
- ('Administrator', '17-scheduled-jobs.md', """
-   set.job tool.jobs
- """),
- ('Administrator', '19-the-master-files.md', """
-   run.in tool.entries
- """),
- # 14 Nov 26 (RELEASE_1.1 247): the audit trail page, carried from Linux; in voc_template (SDSYS's set), not in newvoc.
- ('Administrator', '20-the-audit-trail.md', """
-   tool.audit
- """),
- # 13 Nov 26 (RELEASE_1.1 246): Linux's page is Administrator 20; here 20 is the audit trail, so the AI is 21 (the help records name it).
- ('Administrator', '21-the-ai-helper.md', """
-   set.ai tool.ai
- """),
- # 13 Nov 26 (RELEASE_1.1 202): remote administration over ssh (Linux's remote.sdsys, the SDRADMIN account here).
- ('Administrator', '22-remote-administration.md', """
-   remote.sdsys
- """),
- # 25 Oct 26 SDNet carry (RELEASE_1.1 171): the SDNet client's five verbs are explained on the Administrator page for SDNet.
- ('Administrator', '12a-sdnet.md', """
-   set.server delete.server list.servers set.netlogin delete.netlogin
- """),
- # 26 Oct 26: both pages already explain these; the map had no entry for them.
+ # S.66 (the shared account): list.shared, in voc_template (SDSYS's set), not in newvoc.
  ('Administrator', '13-the-shared-account.md', """
    list.shared
  """),
+ # S.67 (the master files): the chapter documents tool.entries and run.in
+ # (in voc_template, SDSYS's set, not in newvoc).
+ ('Administrator', '19-the-master-files.md', """
+   tool.entries run.in
+ """),
+ # S.75 A5 (the audit trail page): tool.audit, in voc_template (SDSYS's set), not in newvoc.
+ ('Administrator', '21-the-audit-trail.md', """
+   tool.audit
+ """),
+ # S.102 stage 5 (the scheduled jobs): set.batch, set.job and tool.jobs, in voc_template (SDSYS's set), not in newvoc.
+ ('Administrator', '23-scheduled-jobs.md', """
+   set.batch set.job tool.jobs
+ """),
+ # S.75 A6 (the configuration page): tool.config and set.config, in voc_template (SDSYS's set), not in newvoc.
+ ('Administrator', '07-sd-admin-configuration.md', """
+   tool.config set.config
+ """),
+ # Verbs the roster has that are explained on a page of another number than Linux's.
+ ('User', '20-sd-tcl-files-and-records.md', """
+   file.stat find.file fstat.user profiler
+ """),
+ ('User', '22-sd-tcl-select-lists.md', """
+   execute.list move.list show.list
+ """),
+ ('User', '23-sd-tcl-alternate-key-indexes.md', """
+   analyse.index disable.index
+ """),
+ ('User', '24-sd-tcl-programs-and-the-catalogue.md', """
+   find.program ide
+ """),
+ ('User', '27b-sd-tcl-ced.md', """
+   ced
+ """),
+ ('User', '28-sd-tcl-printing-and-spooling.md', """
+   block.print
+ """),
+ ('User', '29-sd-tcl-the-terminal-and-the-session.md', """
+   block.term command.logging
+ """),
+ ('User', '30-sd-tcl-processes-and-phantoms.md', """
+   list.phantoms
+ """),
+ # Windows: encrypt.key is explained on the encryption page of the Administrator set.
  ('Administrator', '04-sd-encryption.md', """
    encrypt.key
+ """),
+ ('Administrator', '02-sessions-and-locks.md', """
+   inhibit.login lock.tracer
+ """),
+ # Windows: the example-record verbs load.examples and remove.examples are on the maintenance page.
+ ('Administrator', '01a-account-maintenance.md', """
+   list.voc.removed load.examples remove.examples restore.voc
+ """),
+ # Windows: remote administration goes through the API and the SDRADMIN account,
+ # so its page is not Linux's 22-remote-administration-over-ssh.
+ ('Administrator', '22-remote-administration.md', """
+   remote.sdsys
  """),
 ]
 
@@ -244,23 +273,23 @@ EXEMPT = {}
 # the map need not change each time a section moves from one part to the next.
 SPLITS = {
     ('Administrator', '01-accounts-and-security.md'): [
-        '01-accounts-and-security-2-making-an-account.md',
-        '01-accounts-and-security-3-edit-switches.md',
-        '01-accounts-and-security-4-modify-account.md',
-        '01-accounts-and-security-5-gates-recovery-transfer-and-start.md',
-        '01-accounts-and-security-6-home-screen-shared-account-and-net.md',
-        '01-accounts-and-security-7-files-only-ai-and-passwords.md'],
+        '01-accounts-and-security-%s.md' % s for s in (
+            '2-making-an-account', '3-edit-switches', '4-shared-and-files-only',
+            '5-files-write-ai-pointers', '6-modify-account', '7-other-keywords',
+            '8-home-screen-ssh-keys-passwords')],
+    ('Administrator', '01a-account-maintenance.md'): ['01b-backup-and-restore.md'],
     ('Administrator', '02-sessions-and-locks.md'): ['02a-locks-and-the-sessions-screen.md'],
     ('Administrator', '07-sd-admin-configuration.md'): [
         '07a-sd-admin-configuration-changing-from-sd.md',
         '07b-sd-admin-configuration-api-printing-and-netfiles.md'],
-    ('Administrator', '12a-sdnet.md'): [
+    ('Administrator', '12-sdnet.md'): [
         '12a-sdnet-servers.md', '12b-sdnet-logins.md', '12c-sdnet-files-only-route.md',
         '12d-sdnet-administration-group-and-read-only-files.md',
         '12e-sdnet-writing-and-locking.md', '12f-sdnet-waits-and-audit.md'],
     ('Administrator', '19-the-master-files.md'): [
         '19a-the-master-files-global-change.md', '19b-run-in.md'],
-    ('Administrator', '21-the-ai-helper.md'): ['21a-the-ai-helper-set-ai-and-the-key.md'],
+    ('Administrator', '20-the-ai-helper.md'): ['20a-the-ai-helper-set-ai-and-the-key.md'],
+    ('Administrator', '22-remote-administration.md'): ['22a-remote-administration-through-the-api.md'],
     ('User', '07-sd-basic-file-handling.md'): ['07a-sd-basic-locking-and-asking-about-a-file.md'],
     ('User', '12a-sd-basic-the-screen-statement.md'): [
         '12b-sd-basic-the-screen-statement-forms.md',
@@ -270,12 +299,15 @@ SPLITS = {
     ('User', '20-sd-tcl-files-and-records.md'): [
         '20-sd-tcl-files-and-records-2-comparing-triggers-and-import.md'],
     ('User', '21-sd-tcl-query-processor.md'): ['21a-sd-tcl-query-processor-headings-and-output.md'],
-    ('User', '24a-sd-tcl-find-program-dictionaries-and-the-ide.md'): [
-        '24b-sd-tcl-the-ide-keys.md', '24c-sd-tcl-the-ide-other-files-and-options.md',
+    ('User', '24-sd-tcl-programs-and-the-catalogue.md'): [
+        '24a-sd-tcl-find-program-dictionaries-and-the-ide.md', '24b-sd-tcl-the-ide-keys.md',
+        '24c-sd-tcl-the-ide-other-files-and-options.md',
         '24d-sd-tcl-the-ide-zoom-fields-and-dictionary-items.md',
         '24e-sd-tcl-the-ide-ai-and-the-window.md'],
     ('User', '29-sd-tcl-the-terminal-and-the-session.md'): [
         '29-sd-tcl-the-terminal-and-the-session-2-timers-dates-and-logging.md'],
+    ('User', '29a-sd-tcl-the-home-screen.md'): [
+        '29a-sd-tcl-the-home-screen-2-my-menu-and-the-ai-line.md'],
     ('User', '29c-sd-tcl-the-development-tools.md'): [
         '29c1-sd-tcl-tool-dict.md', '29c2-sd-tcl-tool-query.md', '29c3-sd-tcl-tool-bulk.md',
         '29c4-sd-tcl-tool-catalog-and-tool-test.md'],
@@ -296,7 +328,6 @@ def evidence(setname, filename):
 
 
 def evidence_one(setname, filename):
-    """Names backticked on the page, plus names starting a line in a fence."""
     path = os.path.join(HERE, setname, 'markdown', filename)
     if not os.path.exists(path):
         return None

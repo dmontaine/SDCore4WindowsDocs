@@ -57,7 +57,7 @@ upper left corner and stops taking keys while the cursor is off the screen — s
 the SED page. A `screen open` program of your own asks for the size it needs
 with `minsize`, and SD asks nothing more of it.)
 
-**SD's default is 140 columns by 43 lines, not 80 × 24**. It is what a session gets when there is no terminal to
+**SD's default is 140 columns by 43 lines, not 80 × 24.** It is what a session gets when there is no terminal to
 ask — a phantom, a piped script, a service — and a report that looks wrapped or
 truncated on a narrow window is usually the window, not the report.
 

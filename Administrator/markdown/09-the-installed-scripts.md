@@ -50,11 +50,6 @@ machine and nothing about any other script.
 | **Loosen it** to `RemoteSigned`, `Unrestricted` or `Bypass` | **Nothing — and you have gained nothing.** SD was already unaffected. You have made the machine more permissive for every *other* script on it, which is a real cost for no benefit |
 | **Set it through Group Policy** | **This one stops SD.** See below |
 
-**So if you loosened the policy to get SD working, you can put it back.** That
-was needed on earlier builds, where SD's own commands failed
-with *"running scripts is disabled on this system"*. It is fixed, and the
-workaround is no longer doing anything for you.
-
 **One thing it does not cover.** The `sh` verb opens an ordinary PowerShell
 prompt for you, and that prompt gets **no** such switch — it runs under
 whatever policy your machine sets. That is deliberate: SD lifts the

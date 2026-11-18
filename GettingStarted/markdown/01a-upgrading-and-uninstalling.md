@@ -27,10 +27,7 @@ says so at the end rather than finishing quietly, and `upgrade-dicts.log` in
 
 **Every account's VOC is brought up to date for you.** The installer runs
 `update.accounts all`, which walks every registered account, so a command this
-release adds can be typed in accounts that already existed. This did not happen
-before W1.0-0: an upgrade replaced the shipped files and no existing account —
-including the system account — ever gained a new verb.
-
+release adds can be typed in accounts that already existed.
 **Your files are converted to case-insensitive record ids for you.** Every
 file `create.file` makes now treats ids as one whatever the
 case (see [Lower case](11-lower-case.html)), and an upgrade keeps your existing
@@ -76,7 +73,7 @@ Two limits are worth knowing before you rely on it.
 > record you marked `[locked]` is kept — a locked verb excepted.
 
 > **A record you have customized can be held back on purpose.** Put `[locked]`
-> in field 1 after the type code and the upgrade leaves that record alone,
+> in field 1 after the type code and the update leaves that record alone,
 > naming it in a message so you know what was withheld — and therefore which
 > corrections this release made that you have not taken. Verbs are the
 > exception: a locked verb is updated anyway, and you are told which. The
@@ -97,15 +94,17 @@ upgrade start with everything off. The Administrator set's *Installation* page
 has the details, including what to do if the installer says it could not carry
 them forward.
 
-### Upgrading from W1.1-0 to W1.1-1
+**The installer makes the `shared` account** (a group account whose data files
+every account can open by file name; see [Accounts](05-account-types.html#the-shared-account)),
+just after the account for the installing user and before the accounts you kept are
+brought up to the release. If you kept your accounts, the one you had is kept. Every
+account, new or existing, can read the `shared` account's files and none can write them,
+until SDSYS says otherwise with `shared-read-off` and `shared-write-on`; nothing is
+written to your existing accounts for that.
 
-W1.1-1 removes the language commands. **SD Core is English only:**
-`SET.LANGUAGE` and `LOAD.LANGUAGE` no longer exist, and messages, month names
-and day names are English. Neither was in any account's VOC in W1.1-0, so no
-account loses a command it could type. **`NLS` is back:** W1.0-0 and W1.1-0 had
-no `NLS` command in any VOC, and W1.1-1 puts it in new ones. Accounts that
-already exist get it from `update.accounts`. Everything else in this upgrade is
-as described above.
+**The installer stops, before it changes anything, if an account named `shared`
+already exists that is not SD's own.** The name is reserved. It names the account's
+register record, and you rename that account by hand and run the installer again.
 
 ### Setup refuses a data folder that has a system folder and no accounts
 
@@ -169,6 +168,9 @@ afterwards. The "Install the OpenSSH server" box is still shown, and ssh is
 still limited to SD's accounts.
 
 ## Continued in
+
+[Your first thirty minutes](02-first-run.html) — install to a second user
+signing in, in eight steps.
 
 [Differences from W1.0-0](01b-differences-from-w1-0-0.html) — everything
 that changed since the previous release, and what an upgrade might break.

@@ -36,9 +36,9 @@ IDE](24a-sd-tcl-find-program-dictionaries-and-the-ide.html).
 | Search, Expand tabs | every tab character in the text becomes blanks to the next tab stop of the tab width, as SED's EXPAND.TABS did; one undo step |
 | Build, Run with arguments | asks for the words to put after the program's name, then compiles and runs it as Run does (`run bp prog words`); the program reads them with `SENTENCE()` |
 | Alt-= · View, Character code | the code of the character at the cursor, its name when it is a control character, and its field, value and subvalue, on the status line |
-| View, Syntax color · View, Line numbers | switch the color and the line numbers off for every tab, and on again (SED's SYNTAX OFF and LNUM OFF) |
-| View, Mouse | stops the terminal reporting the mouse, and starts it again (SED's MOUSE OFF); while it is off a click does nothing and the terminal's own selection works. Every command has a key or a menu entry, so nothing needs the mouse |
-| Ctrl-Up · Ctrl-Down · View, Scroll the view up a line · Scroll the view down a line | moves the text a line in the editor and leaves the cursor where it is, unless it would leave the window (SED's nudge) |
+| View, Syntax color · View, Line numbers | switch the color and the line numbers off for every tab, and on again |
+| View, Mouse | stops the terminal reporting the mouse, and starts it again; while it is off a click does nothing and the terminal's own selection works. Every command has a key or a menu entry, so nothing needs the mouse |
+| Ctrl-Up · Ctrl-Down · View, Scroll the view up a line · Scroll the view down a line | moves the text a line in the editor and leaves the cursor where it is, unless it would leave the window |
 | F5, Ctrl-L · View, Refresh | draws the screen again from what the IDE holds |
 | Ctrl-T · View, Theme | the next color theme, kept for you (below) |
 | Ctrl-K · Help, Keys | the IDE's keys, in a box |

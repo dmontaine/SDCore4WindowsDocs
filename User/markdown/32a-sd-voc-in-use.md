@@ -107,7 +107,10 @@ Removes the record. **`.d` *name* at the command prompt asks first**;
 `.s` writes stack lines *s* to *e* into the VOC as *name* — a sentence
 when the range is one line, a paragraph when it is more. `.r` loads a
 sentence or paragraph from the VOC into the stack. **The record type
-follows from what you saved** rather than from anything you say.
+follows from what you saved** rather than from anything you say. **A new
+record is saved under the name in lower case**, however you typed it. A name
+already in the VOC is found in any case and you are asked "Overwrite VOC record
+...?" as before; if you say yes the record keeps the name it has.
 
 ### Listing the VOC by type
 
@@ -167,9 +170,12 @@ entry actually contains without an editor.
 **386 records**, counted directly, and identical for every ordinary
 account. SDSYS's own VOC is copied from `voc_template` instead — **448
 records** — which carries the administration verbs `NEWVOC` does not:
-`create.account`, `delete.account`, and `modify.account` (which also gives and takes away entry to an account, with `add` and
-`delete`; `grant`, `revoke` and `list.grants` were removed in 2.0-0), and the rest of the set the *Administrator* documentation
-covers.
+`create.account`, `delete.account`, `modify.account`, `config`, `set.date`,
+`update.accounts`, `clean.account`, `list.readu`, `list.locks`, `lock`,
+`unlock`, `listu`, `remote.ssh`, `remote.api`, and the rest of the set the
+*Administrator* documentation covers. **There is no separate
+`grant`/`revoke`/`list.grants` set** — `modify.account add`/`delete` folds the
+grant into one place; see *Accounts and Security* in the Administrator set.
 
 **What SDSYS alone can do is in the VOC, not in the verb.** An ordinary
 account does not have `create.account` because the VOC record for it is

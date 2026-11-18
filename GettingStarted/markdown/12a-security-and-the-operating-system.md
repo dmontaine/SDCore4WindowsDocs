@@ -7,21 +7,46 @@ This page continues [Security](12-security.html).
 
 **SD is delivered with the ways out of SD shut, and the administrator opens
 them one account at a time.** A new user account has none of these until
-SDSYS turns it on (`modify.account` *name* `sh-on` / `os-on`). There are three
-ways out of SD onto the machine, and each is a switch of the account:
+SDSYS turns it on (`modify.account` *name* `sh-on` / `os-on`):
 
-| | What it is | Governed by |
+| | What it is | The switch |
 |---|---|---|
-| **`sh`** | a shell at the `:` prompt | the account's `sh-on` switch |
-| `OS.EXECUTE` | the operating system from inside a BASIC program | the account's `os-on` switch |
-| **`edit`** and **`micro`** | a text editor, running outside SD | the account's `os-on` switch |
+| **`sh`** | a shell at the `:` prompt | `sh-on` |
+| `OS.EXECUTE` | the operating system from inside a BASIC program | `os-on` |
+| **`edit`** and **`micro`** | a text editor, running outside SD | `os-on` |
+| the embedded Python | arbitrary code in the account's own process | `os-on` |
+| a file or directory of the operating system **by its path**, outside the account's own directory | `OPENSEQ` and `OPENPATH` with a path, `DIR()` and `select.dir`, `DELETESEQ` of a path, `!OSCOPY`, `!IOSCOPY` and the `oscopy` verb, printing into a file by path | `os-on` |
 
-`os-on` also decides whether the account may name a file outside its own
-directory (by its path, through a pointer, with `dir()`, as a print file); the
-narrower `sd-on` allows the directories of other SD accounts the person could
-`logto`. **The switches are in the register, which is in SDSYS and is
-read-only to everybody else on disk.** That ACL is the whole of the protection:
-without it a user grants themselves any of them in one line.
+`sed` is not in the table: it runs inside SD, so editing a record of an SD file
+needs no switch. The narrower `sd-on` allows the directories of other SD
+accounts the person could `logto`. **The switches are in the register, which is
+in SDSYS and is read-only to everybody else on disk.** That ACL is the whole of
+the protection: without it a user grants themselves any of them in one line.
+
+**Without a switch SD says so in words** — "*name* is not permitted to use the
+operating system shell", "*name* is not permitted to use OS.EXECUTE", or "*name*
+has no OS access, so outside its own account it can reach by pathname only a
+directory the administrator opened to all (SDSYS can give it: `modify.account`
+*name* `os-on`)" — and a program is told with status 3035, so `OPEN ... ELSE`
+and `DELETESEQ ... ELSE` take their ELSE as for any other refusal.
+
+**What an account without `os-on` still has** is everything that stays inside
+SD: every file its VOC names (dictionaries and other SD files included) and
+anything inside its own directory.
+
+**A VOC pointer is held to the same rule.** A file pointer in an account's VOC
+must lead inside the account (or be one of the pointers SD itself puts in every
+VOC), so a pointer written by hand at a system directory or at another account's
+directory is refused, status 3035, unless the account holds `os-on`. **A
+Q-pointer into another account is followed only if you could `logto` that
+account** — whether or not you hold `os-on`. The Administrator set's *Accounts
+and security* chapter has the full rule.
+
+**One setting of the administrator's opens a directory without `os-on`.**
+`NETDIRS` in `sd.conf` lists directories outside every account that an account
+without `os-on` may read and write by pathname, as it may inside its own
+directory. It is empty as delivered; the Administrator set's *Configuration*
+chapter has it.
 
 **Four rules hold for all of them:**
 
@@ -70,16 +95,13 @@ where any local user could read it through Task Manager or WMI.
 
 Those scripts go in **`PSTMP`**, a directory of its own inside the database
 directory, where each file belongs to the session that wrote it. Other SD users
-cannot read or change them.
+cannot read or change them. In a directory every SD user could write,
+**another SD user could replace the script between SD writing it and SD running
+it, and their version would run with full administrator privilege**, which is
+why it is not there.
 
-Before that they went where every SD user could write, and the second
-consequence was the serious one: **another SD user could replace the script
-between SD writing it and SD running it, and their version would run with full
-administrator privilege.**
-
-**If `PSTMP` is missing, SD refuses the privileged work** rather than falling
-back to the old location. You see the command fail rather than quietly running
-unprotected.
+**If `PSTMP` is missing, SD refuses the privileged work.** You see the command
+fail rather than quietly running unprotected.
 
 ## The audit trail
 
@@ -94,7 +116,7 @@ change an account's ssh and API routes or its `sh` and `os` switches, and
 names the account it concerns.
 
 ```
-2026-08-16 11:42:07 user=don uid=1 pid=8624 logto account=SDSYS
+2026-08-16 11:42:07 user=sam uid=1 pid=8624 logto account=SDSYS
 2026-10-06 21:03:55 user=sdsys uid=1 pid=4120 delete.account account=ANN
 2026-10-06 21:04:31 user=sdsys uid=1 pid=4120 remote.api local
 ```
@@ -103,8 +125,9 @@ Every word before the first `=` is lower case, the event names included
 (`login`, `logto`, `logto refused`, `api refused`, `elevation granted`,
 `modify.account route api`). What follows an `=` is data and keeps its case:
 the account name as it is registered, a `reason=` text, and what a caller
-typed in `command=`. A file that was started before this was the rule holds
-both spellings, so search it without regard to case.
+typed in `command=`. A file written by an older version may hold upper case
+lines, which are not rewritten, so match without regard to case when you search
+a long-lived file.
 
 **An account's gates are on the trail whenever they are given.** `modify.account`
 writes one line for each word it carries out (`modify.account sh-on account=fred`;

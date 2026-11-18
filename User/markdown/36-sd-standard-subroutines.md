@@ -93,8 +93,7 @@ of numbers.
 Both need a real terminal. Neither does anything useful in a phantom, a
 scheduled job or an API session.
 
-**The routine is `!PICKLIST`.** An earlier version of this page called it
-`!PICKLST`, which is the name of the program that holds it; there is no
+**The routine is `!PICKLIST`.** `!PICKLST` is the name of the program that holds it; there is no
 catalog entry of that name, and `call !picklst(...)` stops at run time with
 *"Unable to load '!picklst' object code"*.
 
@@ -107,7 +106,7 @@ with *value* null. If *index.col* is not zero the characters typed (up to ten)
 search that column, which must be sorted, for a shortcut to a row; zero turns
 that off. Up to thirteen rows show at a time. Two cases end the call with
 *value* null and no key pressed: a list so wide that its box would not fit in
-the terminal's width less four columns (tried with a 500-character row). An
+the terminal's width less four columns. An
 empty list ends it the same way after it has shown *"No items to display"* and
 waited for a key. **The box is not
 erased afterwards:** a program that needs the screen under it back must redraw

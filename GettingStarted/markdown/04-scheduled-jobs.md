@@ -4,12 +4,11 @@ Subtitle: Running an SD command on a timer, and the permit list that decides whi
 **A scheduled task can run an SD command, and only the commands an
 administrator has named for it.**
 
-Typing a command after `sd` — `sd my.report` — needed a session started with
-*Run as administrator* in earlier builds of this port. A scheduled task does
-not run that way, so there was no way to have SD do anything on a timer without
-handing the job administrator rights.
+Typing a command after `sd` — `sd my.report` — needs an elevated session. A
+scheduled task does not run that way, so without a list there would be no way to
+have SD do anything on a timer without handing the job administrator rights.
 
-There are two ways past that now:
+There are two ways past that:
 
 | | |
 |---|---|
@@ -39,24 +38,13 @@ and the two are usually the same. `sd -a<name>` cannot be used to reach
 somebody else's list: that form is refused unless the account is your own.
 
 **Any account can be given a list.** Every account has the same VOC now, so
-there is nothing about the account type to consider here; SDSYS's own
-`batch.jobs` record is what decides who may run one.
+there is nothing about the account type to consider here; the account's
+record in `batch.jobs` is what decides what it may run. SDSYS itself has
+no list: its sessions run anything.
 
 Both shapes of record are read — one name per line, and a multivalued field 1 —
 so a record written with **`ed`** and a record written by a program agree. A name
 still has to match exactly.
-
-**`set.batch` is the way to change a list.** Signed in as SDSYS:
-
-```
-:set.batch add fred my.report
-```
-
-`set.batch` checks that the name is a paragraph or a sentence in that account's
-VOC, the same test SD makes each time the command runs, and records the change in
-the audit trail. `set.batch remove fred my.report` takes it off, and `set.batch`
-alone lists every account's commands. SDSYS itself has no list: its sessions may
-run any command. Nothing is allowed as delivered.
 
 ## What may be listed
 
@@ -111,12 +99,30 @@ elevated:
 my.report may now be run from the command line in account fred
 ```
 
+`set.batch` checks that the name is a paragraph or a sentence in that
+account before it adds it, writes the account's record in `batch.jobs`,
+and records the change in the audit trail. `set.batch remove fred my.report`
+takes it off, and `set.batch` alone lists every account's commands. The
+administrator's own account has no list. Nothing is allowed as delivered.
+
 **Or use the Scheduled jobs page**, `tool.jobs`. It lists every account
 with the number of commands it may run this way. F6 or Enter moves to
 the account's paragraphs and sentences, each marked as allowed or not.
 Enter on one shows the `set.batch` command and what it does, and runs it
-only when you answer Run. The page does not write an account's schedule:
-step 4 is done in Task Scheduler.
+only when you answer Run. A name still on the list whose VOC record has
+gone, or is no longer a paragraph or a sentence, is shown as such, and
+Enter takes it off. A name holding a character other than a lower-case
+letter, a digit, a dot, a dash or an underscore cannot be sent from the
+page: it shows the `set.batch` command to type at the prompt.
+
+The page does not write an account's schedule: step 4 is done in Task
+Scheduler. (The page's **Jobs** view, below, schedules the administrator's
+own jobs.)
+
+`batch.jobs` can still be edited directly (`ed batch.jobs fred`, one
+command name per line), but `set.batch` makes the same checks the login
+makes, so a mistake shows up when you make it, not at the job's first
+run.
 
 **4. Create the scheduled task.** Windows Task Scheduler runs it; two fields
 carry the whole of it:
@@ -164,8 +170,8 @@ An administrator grants it by adding the name to the account's record in
 the SD system file batch.jobs, which only an administrator can change.
 ```
 
-**A refusal is not a hang.** `sd <command>` no longer walks into a password
-prompt it cannot answer — see [Running SD](03-running-sd.html#the-command-line).
+**A refusal is not a hang.** `sd <command>` is never asked to set a
+password it cannot answer — see [Running SD](03-running-sd.html#the-command-line).
 
 ## The administrator's own jobs
 

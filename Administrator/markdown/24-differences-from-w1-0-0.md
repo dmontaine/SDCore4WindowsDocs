@@ -53,7 +53,7 @@ letter, a digit and a symbol (any printable character that is not a letter
 or digit; a space counts). It applies everywhere SD sets a password —
 `modify.password`, `create.account`, an elevated session's first-run prompt,
 and the SDSYS password the installer asks for. See
-[Passwords: `modify.password`](01-accounts-and-security-7-files-only-ai-and-passwords.html#passwords-modifypassword).
+[Passwords: `modify.password`](01-accounts-and-security-8-home-screen-ssh-keys-passwords.html#passwords-modifypassword).
 
 **`modify.password` typed alone now changes the caller's own password, for
 every account** — before this it belonged to SDSYS alone, so an ordinary

@@ -24,9 +24,7 @@ everything else about running SD Core on Windows.
 | API | if granted |
 
 **Every account `create.account` makes is denied the console — there is no
-exception any more.** SD Core 1.0 exempted an account created with an
-`administrator` keyword; that keyword is gone, and so is the exemption.
-**Local console access belongs to SDSYS alone**, a single Windows account
+exception.** **Local console access belongs to SDSYS alone**, a single Windows account
 the installer makes, never `create.account`.
 
 **"Denied the console" is about logging in to Windows, not about reaching
@@ -37,11 +35,9 @@ terminal session at all.
 **Multi-user access over remote Desktop is not supported.** This is not an
 oversight and not a gap to be filled later. One Windows setting covers Remote
 Desktop and the physical keyboard together, so an account allowed to use RDP
-could also walk up to the machine and log in — which was never the intention. A
-verb that lifted the restriction (`RDPACCOUNT`) was built and deleted the next
-day for exactly that reason.
+could also walk up to the machine and log in — which is not the intention.
 
-**The rule that now holds without exception:** nobody `create.account` makes
+**The rule holds without exception:** nobody `create.account` makes
 can log in to Windows at this machine, full stop. **SD accounts reach the
 machine over ssh or through an API client**, and administration happens only
 as SDSYS, at the console.
@@ -100,7 +96,7 @@ are not firewalled.
 Remote-control tools that copy files are unaffected, and so are the console and
 Remote Desktop.
 
-> **Do not "fix" this with a `Match Group administrators` exemption.** Beyond
+> **A `Match Group administrators` exemption is not a way round this.** Beyond
 > giving administrators a PowerShell prompt instead of SD — which is *more*
 > access than the global form gives them — it may not even work: `sshd_config`
 > takes the **first** obtained value for a keyword, and SD's block is inserted
@@ -115,15 +111,10 @@ logon, `AllowGroups` decides who may connect at all — and it names one group,
 `modify.account` put in `sdssh`.** A session that is not a member is refused
 at authentication, before sshd even reaches `ForceCommand`.
 
-**THE "Limit ssh" CHECKBOX IS GONE. IT IS NOW A STATEMENT.** SD limits ssh to
-accounts with the `sdssh` route and puts every one of those sessions straight
-into SD. It had been ticked by default for some time and was not really meant
-to be turned off, so presenting it as a checkbox suggested a choice that was
-not one. It is described on the *Before you install* page instead, with the
-scp cost stated plainly.
-
-The reason it can no longer be declined is that the machine it existed for —
-one with somebody else's ssh server — is now [turned away before the install
+**SD limits ssh to accounts with the `sdssh` route and puts every one of those
+sessions straight into SD.** The installer offers no choice about it; the page
+*Before you install* describes it, with the scp cost stated plainly. A machine
+with somebody else's ssh server is [turned away before the install
 starts](01-installation.html#it-checks-the-machine-before-it-changes-anything).
 
 **Your existing `sshd_config` is kept as `sshd_config.before-sd`, and
@@ -241,7 +232,7 @@ need the connection itself refused, take the account out of `sdssh` too with
 run*.** Confining a user to SD rather than to a shell is the separate
 `ForceCommand` control above, and reaching the operating system from inside SD
 is the separate `sh-on` and `os-on` switches of each account — see
-[Administrator commands](06-administrator-commands.html#the-shell-escape-sh).
+[Administrator commands](06-administrator-commands.html#the-shell-sh).
 
 **And ssh-only does not give users isolation from each other's data.** Every SD
 process opens the database under the invoking user's own token, so everyone who

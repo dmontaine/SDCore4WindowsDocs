@@ -131,7 +131,7 @@ the separators used by sequential file I/O. Controlled per file with
 statements in SDBasic.
 
 **Matrix** — a two-dimensional array in SDBasic. Declared with
-`dim`. Indexed from 1.
+`dimension` or `dim`. Indexed from 1.
 
 **Multivalue** — a value within a field, separated by a value mark
 (char 253). A field can hold any number of multivalues; each multivalue

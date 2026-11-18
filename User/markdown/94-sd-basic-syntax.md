@@ -174,7 +174,7 @@ exist.**
 
 | | |
 |---|---|
-| **`fcontrol`** | `fcontrol(`*file.var*, *action* {, *qualifier*}`)` — *action* `FC$SET.SEQ.KEY` 2, `FC$GET.SEQ.KEY` 3, 5 (field access, always 1), `FC$VALID.ID` 6, `FC$MINMOD` 7, `FC$SYNC` 1 (forced writes: qualifier 1 on, 0 off, -1 only asks), `FC$CRLF` 4 (line terminator mode of a directory or sequential file: qualifier 0 to 3 sets it, -1 only asks) ([File Handling](07-sd-basic-file-handling.html)) |
+| **`fcontrol`** | `fcontrol(`*file.var*, *action* {, *qualifier*}`)` — *action* `FC$SYNC` 1 (forced writes: qualifier 1 on, 0 off, -1 only asks; gives the earlier state), `FC$SET.SEQ.KEY` 2 and `FC$GET.SEQ.KEY` 3 (the counter of `write … creating.seqkey`), `FC$CRLF` 4 (line terminator mode of a directory or sequential file, qualifier 0 to 3, -1 only asks), 5 (field access, always 1), `FC$VALID.ID` 6, `FC$MINMOD` 7 ([File Handling](07-sd-basic-file-handling.html)) |
 | **`field`** | `field(`*string*, *delimiter*, *occurrence* {, *count*}`)` |
 | **`fields`** | `fields(`*arr*, *delimiter*, *occurrence* {, *count*}`)` |
 | **`fieldstore`** | `fieldstore(`*a*, *b*, *c*, *d*, *e*`)` |
@@ -240,12 +240,12 @@ exist.**
 | **`indices`** | `indices(`*file.var* {, *index*}`)` |
 | **`inherit`** | `inherit` *object* |
 | **`inmat`** | `inmat()`   ·   `inmat(`*matrix*`)` |
-| **`input`** | `input` *var* {, *length* {, *fill*}} {`:`} {`_`} {`hidden`} {`no.echo`} {`raw`} {`overlay`} {`upcase`} {`waiting` *n*} |
+| **`input`** | `input` *var* {, *length* {, *fill*}} {`:`} {`_`} {`hidden`} {`no.echo`} {`raw`} {`overlay`} {`upcase`} {`waiting` *n*} — a *fill* cannot be used with `hidden` |
 | **`inputblk`** | `inputblk(`*a*`)` |
 | **`inputcsv`** | `inputcsv` *var*, … |
 | **`inputerr`** | `inputerr` *message* |
 | **`inputfield`** | `inputfield` *var*, *length* {, *mask*} |
-| **`inputif`** | `inputif` *var* {, *length* {, *fill*}} {`:`} {`_`} {`hidden`} {`no.echo`} {`upcase`} `then` … `else` … |
+| **`inputif`** | `inputif` *var* {, *length* {, *fill*}} {`:`} {`_`} {`hidden`} {`no.echo`} {`upcase`} `then` … `else` … — a *fill* cannot be used with `hidden` |
 | **`inputnull`** | `inputnull` *char* |
 | **`inputtrap`** | `inputtrap` *chars* `goto` *label* {, *label* …}   ·   `inputtrap` *chars* `gosub` *label* {, *label* …} |
 | **`ins`** | `ins` *value* `before` *arr*`<`*f* {, *v* {, *sv*}}`>` |
@@ -363,9 +363,9 @@ exist.**
 | **`oconv`** | `oconv(`*a*, *b*`)` |
 | **`oconvs`** | `oconvs(`*a*, *b*`)` |
 | **`on`** | `on` *n* `goto` *label*, … — ***clamps, it does not fall through*** |
-| **`open`** | `open` {*dict*`,`} *name* {`sync`} `to` *file.var* {`readonly`} {`on error` …} `then` … `else` … — `sync` writes every write and delete of the file to disk |
+| **`open`** | `open` {*dict*`,`} *name* {`readonly`} {`non.transactional`} {`sync`} `to` *file.var* {`on error` …} `then` … `else` … — the three words come before `to`, in any order; `sync` writes every write and delete of the file to disk |
 | **`open.socket`** | `open.socket(`*addr*, *port*, *flags* {, *context*}`)` |
-| **`openpath`** | `openpath` *path* {`sync`} `to` *file.var* {`readonly`} {`on error` …} `then` … `else` … |
+| **`openpath`** | `openpath` *path* {`readonly`} {`non.transactional`} {`sync`} `to` *file.var* {`on error` …} `then` … `else` … — the three words come before `to`, in any order |
 | **`openseq`** | `openseq` *path* `to` *file.var* {`append`} {`overwrite`} {`readonly`} `then` … `else` … — ***`then` = it existed, `else` = it was created*** |
 | **`opentemp`** | `opentemp` {*path*} {`non.transactional`} `to` *file.var* {`on error` …} `then` … `else` … |
 | **`ors`** | `ors(`*a*, *b*`)` |

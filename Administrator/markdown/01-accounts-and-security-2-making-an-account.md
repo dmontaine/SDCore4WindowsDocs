@@ -15,15 +15,10 @@ create.account group <name> {start-menu | start-terminal} {pins-on} {no.query}
 create.account other <name> <pathname> {start-menu | start-terminal} {pins-on} {no.query}
 ```
 
-`start-menu` and `start-terminal` say where the account starts (below, *Where a session
-starts*) and `pins-on` lets the person add programs of their own to their home screen
-(below, *What the home screen shows*); any kind of account may have them, and both are
-off or default as delivered.
-
 | | |
 |---|---|
 | **`user`** | an SD account **and** a Windows local account to sign in as |
-| **`group`** | a shared workspace with no Windows account, reached only with `logto` |
+| **`group`** | a shared workspace with no Windows account, reached only with `logto`. The name `shared` is reserved for the installer's own account (below) and is refused here |
 | **`other`** | an SD account over a directory you name |
 
 **A new user account starts with every door shut** (but one: it can read the
@@ -54,17 +49,39 @@ Account fred has SH no, OS.EXECUTE no
 Account fred has VOC.EDIT no, BP.EDIT no, DICT.EDIT no
 Account fred has NET no
 Account fred has files no
+Account fred has files-write no
+Account fred has files-admin no
+Account fred has ai no
 Account fred has shared.read yes, shared.write no
+Account fred keeps a recovery copy of unsaved editor text: no
+Account fred may move files over its ssh login (receive / send): no
+Account fred may sign in over ssh with a key: no
 ```
 
-(More lines, for `files-write`, `files-admin`, `ai`, the recovery copy
-(`Account fred keeps a recovery copy of unsaved editor text: no`) and file transfer
-(`Account fred may move files over its ssh login (receive / send): no`), follow the `files`
-line; the remote-route line is the one for the words you gave. The last line is
-`Account fred may sign in over ssh with a key: no`, the state of `ssh-key-on` (see *Signing in
-over ssh with a key*, in [Accounts and Security: Files-Only, AI and
-Passwords](01-accounts-and-security-7-files-only-ai-and-passwords.html)); it is not said for an
-account attached to an existing Windows user.)
+The last line is `ssh-key-on`'s state (see *Signing in over ssh with a key*, in [Accounts
+and Security: The Home Screen, ssh Keys and
+Passwords](01-accounts-and-security-8-home-screen-ssh-keys-passwords.html)); it is not said for an account
+attached to an existing Windows user.
+
+**Two words set up the home screen, in the same command** (they are not gates; *Where a
+session starts* and *What the home screen shows*, below): `start-menu` or `start-terminal`
+says where the new account starts, and `pins-on` lets the person add programs of their own
+to their home screen. Neither is typed, the account follows the system default
+(`set.start.default`) and may not add programs of its own. They are the words `modify.account`
+takes, and the verb says them back in the same lines (`Account fred starts at: menu`,
+`Account fred may add its own programs to the home screen: yes`); **any kind of account may have
+them**, a group or an `other` account included. Two different start words in one command are
+refused ("start-menu and start-terminal set the same access to different states ... give one of
+them") before anything is made, and so is a start word that is neither (a program that calls the
+account-making routine itself gets "Unexpected token"): the Windows user, the password and the
+directory come after, so a refused word creates **nothing**. The words that restate what an
+account has when they are left out, `start-default` and `pins-off`, are for `modify.account`
+only, as `shared-read-on` is. The audit line gains `pins-on` in its `gates=` list and, when a
+start word was typed, a tail `start=menu` or `start=terminal`:
+
+```
+create.account account=fred type=user gates=pins-on start=menu
+```
 
 **One more word, for a user account only: `recovery-on`** makes the account's `ide` keep a recovery copy of
 text that was not saved (*The recovery copy*, below). It is off when the word is left out, a group or `other`
@@ -74,6 +91,13 @@ it back in a line, `Account fred keeps a recovery copy of unsaved editor text: y
 **And one that opens a door, for a user account only: `xfer-on`** lets the account's person move plain-text
 files in and out with an sftp client (*File transfer*, below). It is off when the word is left out, a group or
 `other` account is refused it before anything is made, and `xfer-off` is for `modify.account` only.
+
+**The installing user's own account is no exception**: the account the
+installer makes so that somebody can sign in starts with all of them off too.
+The installer has one option, unticked, that opens every gate for that account;
+left alone it opens nothing, and `modify.account` changes any of them
+afterwards. The accounts that keep their access are the ones that already exist
+when you *upgrade* — see *Changing one*, below.
 
 **A group account and an `other` account have no Windows user of their own,
 so `sh-on` and `os-on` are refused for them** — "is a group account and has
@@ -98,25 +122,27 @@ or the API route is checked: if this computer has no ssh server installed,
 or the API listener is off (`remote.api on` turns it on), `create.account`
 says so after the route line. The warning does not stop anything: the
 account is made and the route works the day the server or listener is
-turned on.
+turned on. `modify.account` gives the same two warnings when it grants `ssh`,
+`api` or `both`, again with no refusal and nothing undone.
+
+**`create.account` ends with `@system.return.code` 0 when the account is made**, so
+a paragraph that tests the code after it sees success as success.
 
 **Every account gets the same VOC**, the whole of `newvoc` — there is no
-tier to choose at creation. What differs from one account to the next is what
-it is *allowed to do* with the verbs it has: its remote routes and its
+tier. What differs from one account to the next is what it is *allowed to
+do* with the verbs it has: its remote routes and its two operating-system
 switches are per-account settings, all off until you turn them on (the exception
-is reading the shared account). **SDSYS is the exception and it is not a
-setting** — it is never refused by these switches.
+is reading the shared account). **SDSYS is the exception and it is not a setting**
+— see above; it is never refused by these switches, and it has no remote access
+whatever it is given.
 
 **The audit trail records what was granted.** The line `create.account` writes
 ends with `gates=`, the words of the sentence that grant or withdraw an access,
 in the program's fixed order, or `gates=none`:
 
 ```
-create.account account=FRED type=user gates=ssh,api,sh-on
+create.account account=fred type=user gates=ssh,api,sh-on
 ```
-
-(The words up to `type=` are as they always were; the account name is in upper
-case here.)
 
 ### Two settings that are easy to conflate
 
@@ -125,17 +151,16 @@ case here.)
 | `ssh`, `api`, `files-on` | say who may **connect**, and by which route |
 | `sh-on`, `os-on` | say who may reach the **operating system** |
 
-Holding the first has never implied the second. They are independent
-settings and are checked in different places. **ssh alone does not give a
+Holding the first has never implied the second. **ssh alone does not give a
 shell**: every ssh session is forced into `sd`, so what the person can do is
 what SD lets them do — and an account without `sh-on` gets no shell from SD.
 
 ### The operating-system switches: `sh-on` and `os-on`
 
-Two independent switches, kept per account in the register (fields 7 and 8).
-**Both are off for a new account** and SDSYS turns each on with `modify.account`
-(below). An account with neither is still a full SD user: it runs programs,
-opens every file its VOC names, builds indexes, runs queries — everything that
+Two independent switches, kept per account in the register. **Both are off
+for a new account** and SDSYS turns each on with `modify.account` (below).
+An account with neither is still a full SD user: it runs programs, opens
+every file its VOC names, builds indexes, runs queries — everything that
 stays inside SD.
 
 | | |
@@ -157,24 +182,24 @@ these:
 | | without `os-on` |
 |---|---|
 | `OPENSEQ` and `OPENPATH` with a path | status 3035, so `OPEN ... ELSE` works as before |
-| `DIR()` and the `select.dir` verb | refused (the verb says why) |
-| `DELETESEQ` of a bare path | refused; the file is left alone |
+| `DIR()` and the `select.dir` verb | no entries, and `STATUS()` is set (the verb says why) |
+| `DELETESEQ` of a bare path | status 3035; the file is left alone |
 | the socket trace file (`set.socket.mode` with `skt$info.trace`) | `set.socket.mode` returns 0 and nothing is written |
 | `OPENTEMP` with a pathname or in the temporary directory, `DIGEST` of a file, and the file keys of `OSPATH()` | the `ELSE` branch, or a null result, with status 3035 (`DIGEST`'s `STATUS()` says the file is outside what the account may reach) |
 | `!OSCOPY`, `!IOSCOPY` and the `oscopy` verb | refused, status -4 (the verb says why) |
-| printing into a file by path (`setptr ... as pathname`, `SETPU`, or a `$hold` print name that climbs out with `..`) | refused |
+| printing into a file by path (`setptr ... as pathname`, `SETPU`, or a `$hold` print name that climbs out with `..`) | the verb refuses when the unit is set; for either, the first line printed is refused and the program stops |
 
-`..` is resolved before the test, so it does not get round it, and a path inside
-the account's own directory always works. Three more places are open to an
-account without the switch: the shipped SDSYS entries that every VOC names
-(**read only**) and the directories the administrator listed in `NETDIRS`
-(read and write; see *`NETDIRS`: directories outside an account* in [Configuration: The API, Printing and the Rest](07b-sd-admin-configuration-api-printing-and-netfiles.html#netdirs-directories-outside-an-account)).
+The containment is by **real path**: `..` is resolved before the test, so it
+does not get round it. A path inside the account's own directory always works.
+Three more places are open to an account without the switch: the shipped SDSYS
+entries that every VOC names (**read only**) and the directories the administrator
+listed in `NETDIRS` (read and write; see *`NETDIRS`: directories outside an account* in [Configuration: The API, Printing and the Rest](07b-sd-admin-configuration-api-printing-and-netfiles.html#netdirs-directories-outside-an-account)).
 
 **SD says no in words.** `sh` gives "*name* is not permitted to use the
 operating system shell", `OS.EXECUTE` gives "*name* is not permitted to use
-OS.EXECUTE", and the path routes give "*name* has no OS access, so a file or
-directory outside its own account cannot be reached by pathname (SDSYS can give
-it: `modify.account` *name* `os-on`)" (message 12185). **SDSYS is never
+OS.EXECUTE", and the path routes give "*name* has no OS access, so outside its
+own account it can reach by pathname only a directory the administrator opened
+to all (SDSYS can give it: `modify.account` *name* `os-on`)". **SDSYS is never
 refused.**
 
 **The upgrade keeps what the old file said.** The installer's `upgrade_gates`
@@ -201,7 +226,13 @@ shut:
 
 - **The other account's VOC** (`voc`, `voc.dic` at the top of its directory)
   is never reachable this way; the account's own VOC is, as always.
-- Any directory that is not an SD account's still needs `os-on`.
+- Any directory that is not an SD account's, a system directory included, still needs
+  `os-on`.
+
+**A smaller thing to open than `os-on` is `NETDIRS`** in `sd.conf`: directories outside every
+account that every account without `os-on` may read and write by pathname, for a site whose
+data lives in a shared directory. It is empty as delivered and filling it is a loosening
+for every such account on every route; see *`NETDIRS`* in *Configuration*.
 
 **SDSYS is not affected** — it is never refused. `os-on` implies `sd-on`.
 The setting lives in field 9 of the register record and is not carried by an
@@ -209,6 +240,6 @@ account archive, so a restored account starts with it off.
 
 ## Continued in
 
-[Accounts and Security: The Edit
-Switches](01-accounts-and-security-3-edit-switches.html) — the edit switches,
-VOC pointers and what os-on costs.
+[Accounts and Security: The Edit Switches and the NET
+Switch](01-accounts-and-security-3-edit-switches.html) — the edit switches and
+the NET switch.

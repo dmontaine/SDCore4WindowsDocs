@@ -113,7 +113,7 @@ be fed down a pipe.
 
 `@tty` reads empty in a piped session, and the debugger works there anyway.
 
-SD does not support AccuTerm.
+(The full-screen display does not use AccuTerm, which SD does not support.)
 
 ## Asking the AI
 

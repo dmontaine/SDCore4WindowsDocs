@@ -80,39 +80,40 @@ machine when you type the command, so installing an ssh server later makes
 | Makes a Windows local account | created disabled, then enabled when the password is set |
 | Creates the group `sdu_<name>` | and writes it to the account record |
 | Joins `sdusers` | which is what grants access to the data tree |
-| Joins `sdsshonly` | this is what denies the console and Remote Desktop — every ordinary account gets it now; only SDSYS's own Windows account does not |
+| Joins `sdsshonly` | this is what denies the console and Remote Desktop — every ordinary account gets it; only SDSYS's own Windows account does not |
 | Joins `sdssh` and/or `sdapi` | to match the route keyword — see below |
 | Prompts for a password | in SD, masked; it never goes on a command line |
 
 **A user account cannot be created without a password.** Refusing the prompt
-creates nothing at all. Previously it left an account you could not sign in
-to.
+creates nothing at all.
 
 **`sdssh` and `sdapi` govern the ssh and API doors specifically, separately
 from `sdsshonly`.** An account with route `none` still joins `sdsshonly` like
-every other ordinary account — that has always denied the *Windows* console
+every other ordinary account — that denies the *Windows* console
 and Remote Desktop, and has nothing to do with ssh — it simply also has
 neither `sdssh` nor `sdapi`, so it has no remote door of any kind and can
 only be reached with `logto`.
 
 ### What every account can do
 
-**Every verb, from the moment it is created.** The VOC withholds nothing. But
-having a verb is not being allowed to use it, and a new account is allowed
-only what stays inside SD: it runs programs, opens the files its VOC names,
-builds indexes and runs queries. What it cannot do is administer (create,
-delete, grant, or suspend another account, or change system-wide
-configuration); reach the operating system through `sh` or `OS.EXECUTE`, or
-name a file outside its own directory; or save a change to a VOC, a program
-file or a dictionary — unless SDSYS has switched that on for it, account by
-account. See
-[Managing accounts](05a-managing-accounts.html#remote-access-sh-and-osexecute-four-switches-all-off-for-a-new-account).
+**Every verb, from the moment it is created.** Compile, catalog, edit,
+define files and indexes, run the bulk record editors, inspect processes —
+none of that is withheld. What an account cannot do is administer: create,
+delete, or suspend another account; change system-wide configuration. And
+reaching the operating system — the `sh` verb, `OS.EXECUTE`, `micro`,
+the embedded Python, a file or directory of the operating system
+by its path outside the account's own directory — takes the switch above:
+see
+[Security and the operating system](12a-security-and-the-operating-system.html#the-shell-and-operating-system-access-are-per-account-switches).
+Saving a change to a VOC, a program file or a dictionary takes the account's
+`voc-on`, `bp-on` or `dict-on` switch, which SDSYS turns on account by account;
+see [Managing accounts](05a-managing-accounts.html#remote-access-sh-and-osexecute-four-switches-all-off-for-a-new-account).
 
-> **None of this is a wall inside SD.** The VOC is the same for every
-> ordinary account; what actually stops one account reaching another's data
-> is the operating system's file permissions, the ssh confinement, and the
-> account's own `sh` and `OS.EXECUTE` switches — not the contents of a VOC.
-> See the *Administrator* set's *Accounts and security* chapter.
+> **The VOC is the same for every ordinary account and is not the wall.**
+> What stops one account reaching another's data is the operating system's
+> own file permissions and the ssh confinement, and — for the verbs and
+> statements that name an operating-system path — the account's `os-on`
+> switch. See the *Administrator* set's *Accounts and security* chapter.
 
 ## The `shared` account
 

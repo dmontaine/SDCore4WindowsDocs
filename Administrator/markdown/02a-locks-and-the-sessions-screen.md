@@ -223,9 +223,6 @@ and shows them so; the page sends the id in lower case, which the verb folds.
 ordinary account's own work. An ordinary account has no such page: its own sessions are
 `!listu` from a program.
 
-It asks the same `logout`, `unlock` and `inhibit.login` as the prompt does, so
-the privilege rules of each (elevated, SDSYS) apply to it unchanged.
-
 ## Who has these verbs
 
 **All of them are SDSYS's**, so an ordinary account does not have the names

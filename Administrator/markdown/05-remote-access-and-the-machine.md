@@ -13,7 +13,10 @@ SD opens its API socket, and whether `sd` runs from any directory.
 | `append.sd.path` | puts SD's program directory on the Windows system PATH, or takes it off |
 
 > **None of these gives SDSYS remote access, and no setting of these four verbs does.** Opening
-> ssh or the API to other computers opens it for ordinary accounts. **SDSYS
+> ssh or the API to other computers opens it for ordinary accounts only — and
+> of those, only the accounts SDSYS has given the route (`ssh`, `api` or
+> `both`, in `create.account` and `modify.account`, or `files-on`, the
+> narrower files-only API route), since a new account has none of them. **SDSYS
 > has neither route under any setting these four verbs
 > control** — it is never joined to `sdssh` or `sdapi`, so opening a route
 > here does not touch SDSYS at all. The administrator's own remote doors are
@@ -24,6 +27,11 @@ SD opens its API socket, and whether `sd` runs from any directory.
 > Administration needs a session Windows can show a consent prompt on, which
 > means the console, or a remote desktop or remote-control product installed
 > as a service. The operating system access page covers this in full.
+
+**An account that has the ssh route signs in with its password, not a key, as delivered.**
+Key sign-in for a Windows user SD made is a separate, per-account loosening
+(`modify.account` *name* `ssh-key-on`), and `remote.ssh on` does not open it. See *Signing in
+over ssh with a key* in [Accounts and Security: The Home Screen, ssh Keys and Passwords](01-accounts-and-security-8-home-screen-ssh-keys-passwords.html#signing-in-over-ssh-with-a-key-ssh-key-on-and-ssh-key-off).
 
 > This document is separate so that it can be withheld. It links to nothing
 > outside the administrator set. Where a page in another set is worth naming,

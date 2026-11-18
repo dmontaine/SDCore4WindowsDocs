@@ -68,13 +68,15 @@ The page size is worked out at login in this order:
 
 A console or ssh session normally gets its real window size. 140 × 43
 is the fallback when nothing answers — a phantom or a piped script.
+The terminfo entries that name a width and a depth say 140 and 43; the
+132-column entries keep their own depth.
 
 ## The page is 140 × 43
 
 SD's default is **140 columns by 43 lines**, not 80 × 24. A console window
-narrower than that makes ordinary reports look wrapped or truncated — which
-reads as a formatting bug and is not one. `term 120,36` gives the old size
-back for a session that wants it.
+narrower than that makes wide reports look wrapped or truncated — which
+reads as a formatting bug and is not one. `term 120,36` sets a smaller
+size for a session that wants it.
 
 The default is only a default. `term w,h` takes any width from 20 to 32767 and
 any depth from 10 to 32767, larger or smaller than 140 × 43, and nothing else

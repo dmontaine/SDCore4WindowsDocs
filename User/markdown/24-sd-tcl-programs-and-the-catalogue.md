@@ -8,11 +8,11 @@ SD folds case, so a command may be typed in either case. Commands are shown here
 in lower case. In the tables, *italics* mark something you supply and **bold**
 marks a word typed as it stands; braces mark an optional part.
 
-> The examples use a two-line program in an account's `bp` file.
+> The listings use a two-line program in an account's `bp` file.
 
 An account that SDSYS has not given `bp-on` cannot save a program to `bp`, and
 `basic`, `catalog`, `delete.catalog` and `decatalog` are refused for it. A new
-account starts without it.
+account starts without it; accounts that existed at an upgrade have it.
 
 ## Compiling
 
@@ -186,4 +186,4 @@ is removed with `delete.catalog`.
 
 [Programs: find.program, Dictionaries and the
 IDE](24a-sd-tcl-find-program-dictionaries-and-the-ide.html) — find.program,
-formatting source, compiling dictionaries, named common and the IDE
+dictionaries and the opening of the IDE.

@@ -63,8 +63,6 @@ another directory, and it is changed); what it points at is never edited from th
 dictionary item marked `>` lives in another account's dictionary, SDSYS's included, and is only read
 through this account's pointer: it is edited in the account it lives in.
 
-## Editing a record: `E` and `N`
-
 **`E` edits the record under the cursor and `N` makes a new one, in the account it belongs to.** In the
 VOC view they edit **VOC entries only**: the record of the VOC, as text, never the file a pointer
 leads to. In the dictionary view they edit **dictionary items only**, as the item form (the
@@ -98,8 +96,6 @@ Each edit that reaches the editor writes one line to the audit trail, for exampl
 `master edit account=ZE1 kind=voc file=voc id=zzonly1 new=0` (`kind=dict` and the file's name for an
 item, `new=1` for `N`); the page's other line is `tool start app=tool.entries`.
 
-## Deleting a record: `D`
-
 **`D` deletes the record under the cursor**, a VOC entry in the VOC view or a dictionary item in the
 dictionary view, in the account it belongs to. It goes the same way as `E`: the register and the
 account's VOC are read again, the rule above is asked, and the file is reached through the same
@@ -130,8 +126,6 @@ catalog name), and the box says so; remove it in that account, for example
 local one. The audit line is `master delete account=ZE1 kind=bp file=bp id=prog object=deleted`
 (`object=none` when there was no compiled program, `object=failed` when the `.out` file refused the
 delete).
-
-## Programs: `E`, `N` and `C`
 
 **In the programs view, `E` and `N` open the program in the editor and `C` compiles it, in the
 account it belongs to.** `E` and `N` go the same way as for a VOC entry: the program file must lie

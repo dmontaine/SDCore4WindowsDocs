@@ -3,9 +3,9 @@ Subtitle: What this set covers, who it is for, and what it deliberately leaves o
 
 You already know MultiValue. This set does not teach it.
 
-SD Core for Windows is a version of SD, with elements found in the main SD
-version and in ScarletDME. ScarletDME was a fork of the original GPL release of
-OpenQM 2.6.6.
+SD Core for Windows is built from **upstream `sdb64`**, a MultiValue database
+with elements found in the main SD version and in ScarletDME. ScarletDME was
+a fork of the original GPL release of OpenQM 2.6.6.
 
 **That lineage matters when you go looking for documentation.** Not all the
 features of the **commercial** OpenQM 2.6.6 were in the GPL release, and **no
@@ -16,21 +16,27 @@ OpenQM documents are not authoritative here.
 additions, changes and deletions — of features, of structure, of security and
 of commands. **These pages cover those changes.**
 
-If you have used OpenQM, or SD on Linux, much of SD Core will still be
+If you have used OpenQM, or upstream `sdb64`, much of SD Core will still be
 familiar: the same data model, the same query processor, the same BASIC. If you
 are bringing programs over from another MultiValue database, start with
 [Migrating to SD](15-migrating-to-sd.html).
+
+**SD Core for Linux is a separate product, built independently** — see
+[SD Core for Linux](https://github.com/dmontaine/SDCore4Linux). The two
+behave alike — what a verb does, what it refuses and why, its messages —
+while the mechanism underneath differs where the operating system does.
+Where this set says something differs from SD Core for Linux, that is
+usually why.
 
 ## What "used to" means in these pages
 
 These pages describe changes, so **used to**, **no longer** and **now**
 run all through them. **The comparison is against the code this version was
-made from** — SD on Linux, and ScarletDME and OpenQM 2.6.6 behind it.
+made from** — upstream `sdb64`, and ScarletDME and OpenQM 2.6.6 behind it.
 
-**It never means an earlier release of SD Core for Windows**, because this is
-the first one. Some of the changes are Windows-only and have no Linux original
-to differ from; those say **earlier builds of this port** instead, so the two
-are never confused.
+Some of the changes are Windows-only and have no upstream original to differ
+from. What changed since an earlier release of SD Core for Windows is on the
+*Differences from W1.0-0* page and in the Changes document.
 
 ## The pages
 
@@ -60,10 +66,10 @@ so on. Nothing was renumbered when they were split.
 | **11** | [Lower case](11-lower-case.html) | Case in commands, file names, record ids and account names |
 | **12** | [Security](12-security.html) | The identity model, and what protects the database |
 | **12a** | [Security and the operating system](12a-security-and-the-operating-system.html) | Reaching the machine from inside SD, how privileged work is done, and the audit trail |
-| **13** | [Other hardening](13-hardening.html) | Auditing, the shell switches, and the rest |
+| **13** | [Other hardening](13-hardening.html) | The global catalog, the pcode library, scheduled jobs, the logs, line endings, the terminal, and running SD |
 | **14** | [Not in SD Core](14-not-in-sd-core.html) | What has been removed, and what to use instead |
 | **15** | [Migrating to SD](15-migrating-to-sd.html) | Bringing programs and queries from another MultiValue database: where the compatibility words are set, and the words SD does not accept |
-| **15a** | [Option words](15a-migrating-option-words.html) | The words of the `option` command, one line each |
+| **15a** | [Option words](15a-migrating-option-words.html) | The eight words of the `option` command, one line each |
 | **15b** | [Mode words](15b-migrating-mode-words.html) | The names `$mode` accepts and the lines of a `$basic.options` record, one line each |
 
 ## The five things most likely to surprise you
@@ -122,19 +128,19 @@ installed tree carries it as a file.
 
 | | |
 |---|---|
-| The server, the client libraries and the installer | <https://github.com/dmontaine/sd4windows> |
+| The server, the client libraries and the installer | <https://github.com/dmontaine/SDCore4Windows> |
 | These pages | <https://github.com/dmontaine/SDCore4WindowsDocs> |
 
 **Neither repository contains a built binary, deliberately** — no `.exe`, no
 `.dll`, no object files. A clone builds. That is why installing means building,
-and why there is no download of a compiled artefact in the repository itself.
+and why there is no download of a compiled artifact in the repository itself.
 
 The documentation repository holds the **Markdown only**; the HTML and PDF you
 are reading are generated from it and are not stored there.
 
 ## Reporting what you find
 
-**Open an issue on the server repository** — <https://github.com/dmontaine/sd4windows/issues>
+**Open an issue on the server repository** — <https://github.com/dmontaine/SDCore4Windows/issues>
 — for anything about SD itself, and on the documentation repository for an
 error in these pages. If you are not sure which, the server one is the right
 guess.

@@ -2,14 +2,12 @@ Title: Installing SD Core
 Subtitle: What the installer does to the machine, the two kinds of installation, and the choices it puts in front of you.
 
 There is no compiler to run and no dependency to resolve. SD Core for Windows
-ships as a single `sd-setup-W1.1-3.exe`, carries its own runtime beside
-`sd.exe`, and installs in one pass.
+ships as a single installer, `sd-setup-` and the version, carries its own
+runtime beside `sd.exe`, and installs in one pass.
 
-This is the largest single difference from the regular SD version — that, and
-the fact that this version is for Windows and not Linux. In regular SD,
-`installsdai.sh` existed because ScarletDME targeted four distributions and the
-end user had to compile; Windows has one target and one ABI, so none of that
-transfers.
+This is a real difference from SD Core for Linux, where `installsdcore.sh`
+clones the source and builds it on your machine. Windows has one target and
+one ABI, so there is nothing to build.
 
 ## Before you start
 

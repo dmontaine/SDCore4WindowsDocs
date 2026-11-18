@@ -33,23 +33,28 @@ It is plain text in one section:
 SDSYS=C:\ProgramData\SD\sdsys
 GRPSIZE=4
 NUMUSERS=20
+USRDIR=C:\ProgramData\SD\user_accounts
+GRPDIR=C:\ProgramData\SD\group_accounts
+DUMPDIR=C:\ProgramData\SD\sdsys\dumps
 ```
 
 Lines beginning `#` are comments. The shipped file is heavily commented and
 those comments record why each value was chosen. Read them before changing
-anything.
+anything. **An upgrade keeps your `sd.conf`**: the installer puts a kept file
+back and takes out only the parameters SD no longer has.
 
 ### A name SD does not recognize stops it starting
 
 An unrecognized parameter is not ignored. The parser abandons the file with
 `Unrecognized configuration parameter`, and SD does not start.
 
-That is why a name SD has dropped has to be taken out of the file. Eleven parameters have been removed (`APILOGIN`, `CODEPAGE`, `CREATUSR`,
-`EXCLREM`, `FIXUSERS`, `GDI`, `JNLDIR`, `JNLMODE`, `PORTMAP`, `RINGWAIT` and
-`TXCHAR`), and `INVCASE` and `FILERULE` are gone too. The
-installer removes those lines from an `sd.conf` it keeps across a re-install or an
-upgrade, and logs which it removed. A file copied in by hand must have them taken
-out before SD will start.
+That is why a name SD has dropped has to be taken out of the file. These
+twelve parameters no longer exist (`APILOGIN`, `CODEPAGE`, `CREATUSR`,
+`EXCLREM`, `FIXUSERS`, `GDI`, `JNLDIR`, `JNLMODE`, `PORTMAP`, `RINGWAIT`,
+`TXCHAR` and `FILERULE`), and so does `INVCASE`. The installer removes those
+lines from a `sd.conf` it restores when you keep the configuration across a
+re-install, and writes which it removed to the setup log. A file copied in by hand must have them
+taken out before SD will start.
 
 Range failures behave the same way. `GRPSIZE`, `INTPREC`, `LPTRHIGH`,
 `LPTRWIDE`, `MAXCALL`, `RECCACHE`, `SORTMRG` and `MAXIDLEN` are bounds-checked
@@ -62,8 +67,9 @@ The `config` verb reports what is in force:
 
 ```
 :config
-Virtual Machine Version Number W1.1-3
+Virtual Machine Version Number W2.0-0
 APIPORT   4247
+CLEANUP   300 seconds
 CMDSTACK  99
 DEADLOCK  0
 DUMPDIR   C:\ProgramData\SD\sdsys\dumps
@@ -72,8 +78,9 @@ ERRLOG    50 kb
 YEARBASE  1930
 ```
 
-SD accepts **51** parameters. The verb prints all of them except `BACKUPDIR`,
-`NETDIRS` and `SDSYS`, and `DEBUG` and `FDS` only when they are set.
+SD accepts **59** parameters. The verb prints all of them except `APILOCAL`,
+`BACKUPDIR`, `NETDIRS` and `SDSYS`, and `DEBUG`, `FDS` and `PHANTOMS` only when
+they are set.
 
 `NETDIRS` is the one to know about. It names the directories outside any
 account that an account **without** `os-on` may still open by their path (see
@@ -90,10 +97,11 @@ The `config()` function reads one parameter from a program:
 group.size = config('GRPSIZE')
 ```
 
-**47 parameters are readable this way.** The four that are not are `BACKUPDIR`,
-`NETDIRS`, `SCREENTHEME` and `SDSYS`. The name is truncated to eight
-characters before it is matched; no parameter name is longer than eight, so
-that only shows up if you pass something which is not a parameter.
+**56 parameters are readable this way.** The three that are not are `BACKUPDIR`,
+`NETDIRS` and `SDSYS`. A name of more than sixteen characters is not found (the
+function answers an empty string and `status()` is not 0); no parameter name is
+that long, so that only shows up if you pass something which is not a
+parameter.
 
 Two further forms exist. `config lptr` reports the settings of the default
 printer, and `config gpl` and `config contrib` display the license and the list
@@ -105,7 +113,7 @@ Editing `sd.conf` and restarting SD is the durable route, and for most
 parameters it is the only one. Fourteen tuning parameters can also be changed from SD itself, with
 `set.config` or the `E` key of `tool.config` (see *Changing a parameter from SD*, below).
 
-**23 parameters can also be changed for the current session:**
+**28 parameters can also be changed for the current session:**
 
 ```
 config sortmem 8192
@@ -115,11 +123,11 @@ That writes to the session's own copy of the settings, which the session read
 from `sd.conf` when it started. It does not reach `sd.conf`, it does not affect any
 other session, and it is gone when the session ends.
 
-The 23 are `DUMPDIR`, `FLTDIFF`, `FSYNC`, `GRPSIZE`, `INTPREC`,
-`LPTRHIGH`, `LPTRWIDE`, `MAXCALL`, `MUSTLOCK`, `OBJECTS`, `OBJMEM`, `RECCACHE`,
-`SAFEDIR`, `SDCLIENT`, `SH`, `SH1`, `SORTMEM`, `SORTMRG`, `SORTWORK`,
-`SPOOLER`, `TEMPDIR`, `TERMINFO` and `YEARBASE`. (The list predates `MAXRLOCK`, `PWDELAY`,
-`NETWAIT` and `NETREPLY`, which can be changed for the session in the same way.)
+The 28 are `DHCACHE`, `DUMPDIR`, `FLTDIFF`, `FSYNC`, `GRPSIZE`, `INTPREC`,
+`LPTRHIGH`, `LPTRWIDE`, `MAXCALL`, `MAXRLOCK`, `MUSTLOCK`, `NETREPLY`,
+`NETWAIT`, `OBJECTS`, `OBJMEM`, `PWDELAY`, `RECCACHE`, `SAFEDIR`, `SDCLIENT`,
+`SH`, `SH1`, `SORTMEM`, `SORTMRG`, `SORTWORK`, `SPOOLER`, `TEMPDIR`,
+`TERMINFO` and `YEARBASE`.
 
 Everything else takes effect only when SD is next started. That includes every
 limit which sizes the shared memory segment and every setting the API listener
@@ -127,7 +135,7 @@ reads.
 
 **A session reads `sd.conf` itself when it starts.** It does not copy the
 settings the service left in shared memory, which an SD user with a shell could
-change. So an edit to a setting a session keeps for itself (the 23 above, and
+change. So an edit to a setting a session keeps for itself (the 28 above, and
 others such as `USRDIR` and `GRPDIR`) reaches the sessions started after it,
 without a restart. **A bad line in `sd.conf` stops a new session from starting**,
 with the message `sd -start` gives, until it is repaired; SD and the sessions
@@ -164,7 +172,6 @@ acts on it:
 |---|---|
 | `live` | something acts on it |
 | `file` | read from `sd.conf` by a program each time it is used, not by the kernel (`BACKUPDIR`) |
-| `inert` | accepted, and nothing on Windows acts on it (none at present) |
 | `unknown` | a name in the file that SD does not know |
 
 A row marked `*` is one where the file and the running SD disagree. The box at the foot says for that
@@ -176,14 +183,15 @@ shows only the rows where the file and SD disagree, and `S` only the parameters 
 column, `Change`, says `e` for a parameter the page can change (press `E`) and `by hand` for every
 other.
 
-`SDSYS`, `BACKUPDIR` and `NETDIRS` cannot be read with the `config()` function; the page says `(not readable)`
-for what SD is running with and shows the file's value. `DEBUG` is not compared: the function reports
-it in another form than the file writes it.
+`SDSYS`, `BACKUPDIR` and `NETDIRS` cannot be read with the `config()` function (a name longer than sixteen characters, or one the function does not have); the page says
+`(not readable)` for what SD is running with and shows the file's value. `DEBUG` is not compared: the
+function reports it in another form than the file writes it.
 
 **B, the backup directory**: the directory saved with `set.backup.directory` and whether it is there;
 **R, the report**: the operating system part of `settings.report` (ssh, the API and its firewall rule,
 the SD service and the groups), made when the view is opened and on F5. It holds no key and no
-password hash. `F5` reads the file, the backup directory and the report again; `E` changes the
+password hash. `F5` reads the file, the backup directory and the report again, and while the report
+is made the status line says "Reading the settings (a few seconds)..."; `E` changes the
 parameter under the cursor, or says why it cannot be changed here; `F1` explains the page; `Ctrl-Q`
 leaves. Opening the page writes the audit line `tool start app=tool.config`; a change writes the line
 of `set.config` (below), and nothing else the page does is written.

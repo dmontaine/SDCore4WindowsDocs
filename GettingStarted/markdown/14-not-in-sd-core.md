@@ -5,13 +5,15 @@ This page exists so you do not spend time hunting for something that is not
 there. **It names what is gone and what to use in its place; it does not
 document the removed features themselves.**
 
-Everything here was in OpenQM, in ScarletDME, or in SD on Linux, and is not in
-SD Core for Windows.
+Everything here was in OpenQM, in ScarletDME, or in upstream `sdb64`, and is not
+in SD Core for Windows. **Most of these removals were made independently on SD
+Core for Linux too, for the same reasons** — see that port's own version of this
+page — which is worth knowing if you come across a decision recorded on one side
+and wonder whether it binds the other.
 
 > **If you had a use for any of these, say so.** Several were removed on the
 > reasoning that nothing needed them. That reasoning is worth testing against
-> real use, and for some of them an administrator can put the verb back into an
-> account's VOC — the programs behind a few of them are still installed.
+> real use.
 
 ## Editors
 
@@ -58,8 +60,9 @@ and `sort` are unaffected. They are a different thing despite the similar name.
 ## SDNet — remote file access
 
 SD could open a file held on another SD server by putting `server;file` in a
-VOC entry. **That is gone. A VOC entry containing a semicolon is now simply a
-file name that does not resolve.**
+VOC entry, with each server's password in `sd.conf`. **That form is gone, and
+it stays gone. A VOC entry containing a semicolon is simply a file name that
+does not resolve.**
 
 **A different SDNet has replaced it.** A VOC entry of type `N` names a server
 that SDSYS has defined with `set.server` and a file on it; the verbs
@@ -72,18 +75,22 @@ login change files there (`files-write-on` on that server); configuring, indexin
 creating and deleting a remote file, and the file's counter, need a third permission
 there (`files-admin-on`). It uses the other
 server's API port over TLS and does not put a password in any file. The
-*Administrator* set's *SDNet* page describes it. Nothing from the old
-version is back: no `;` in a path, no port 4245, no password in any file.
+*Administrator* set's *SDNet* page describes it.
 
 **The API is not affected.** `!sdclient` and the remote API are a separate
 mechanism and are unchanged. See [API access](09-api-access.html).
 
 **`NETFILES` is still accepted in `sd.conf`**, so an existing configuration file
-will not stop SD starting. The new SDNet client does not use it. The one thing that
-reads it is the API server's request to open an SDNet file, which is refused unless
-bit 2 of `NETFILES` is set (the value is 0 unless `sd.conf` sets it) **and** the
-account's NET switch is on. The *Administrator* set's *Configuration* page has the
-detail.
+will not stop SD starting, and the new SDNet does not use it. The only
+thing that reads it is the API server's old request to open an SDNet file,
+which is refused unless bit 2 of `NETFILES` is set (and
+unless the caller could `logto` that account and the account has `net-on`, and
+a file pointer that leads out of the account is followed only if the
+account has `os-on`); the
+value is 0 unless `sd.conf` sets it. The two settings the new SDNet does read
+are `NETWAIT` and `NETREPLY`, the seconds to wait for a connection and for each
+reply.
+The *Administrator* set's *Configuration* page has the detail.
 
 ## Virtual file systems
 
@@ -106,39 +113,32 @@ ER$VFS.CLASS     SYSCOM ERR.H
 ER$VFS.NGLBL     SYSCOM ERR.H
 ```
 
-`ftype` no longer returns `VFS` for a `VFS:` pathname.
+`ftype` no longer returns `VFS` for a `VFS:` pathname. **Error numbers 3038,
+3039 and 3040 are retired and will not be given a new meaning.**
 
-**IF ONE OF YOUR PROGRAMS REFERS TO ANY OF THESE, it was testing for a state
-SD could not reach, and the test can be deleted.**
-
-Two unreachable pieces went with it: `_EXTENDLIST`, installed into the SDSYS
-`GPL.BP` file and loaded at every start-up although nothing ever called it; and
-the debugger's `(Networked)` file type, which no file could report once SDNet
-was gone.
+**If one of your programs refers to any of these, it was testing for a state SD
+could not reach, and the test can be deleted.**
 
 ## Tape and restore
 
 The `TAPE`/`RESTORE` subsystem is gone, along with the assumption of a
 tape-backed sequential medium it was built around. Back up and restore SD
-data with `backup.account` and `restore.account` (see [Administrator
-commands](06-administrator-commands.html)), at the file level with the service
-stopped, or through your own export/import BASIC.
+data the ordinary Windows way — at the file level, with the service stopped,
+or through your own export/import BASIC.
 
 ## Language and locale
 
-**SD Core is English only.** `SET.LANGUAGE` and `LOAD.LANGUAGE` do not exist.
+**SD Core is English only.** `set.language` and `load.language` do not exist.
 `NLS` does: it shows and sets the currency symbol and the thousands and decimal
 separators.
 
-## Embedded Python — reversed again, and reversed differently
+## Embedded Python
 
-**Python inside `sd.exe` is dropped, permanently — but calling Python from
-SD BASIC is back**, as a separate, native helper process SD talks to over a
-pipe rather than a library loaded into the server. The distinction is not
-cosmetic: the earlier removal was because Python and the MSYS2 runtime
-`sd.exe` is built on cannot share one process safely (§5.3 — `long` is a
-different width on each side). The helper avoids that by never being the
-same process at all.
+**Python inside `sd.exe` is not there — calling Python from SD BASIC is**, as a
+separate, native helper process SD talks to over a pipe rather than a library
+loaded into the server. Python and the runtime `sd.exe` is built on cannot share
+one process safely (`long` is a different width on each side); the helper avoids
+that by never being the same process at all.
 
 **21 `gpl.bp/PY_*` programs** are BASIC-callable (`CALL !PY_CREATEDICT`,
 and so on) — there is no TCL verb, so this is a programming capability, not
@@ -150,12 +150,12 @@ set's *SD BASIC - Python Integration* chapter.
 
 ## Field-level encryption
 
-**`encrypt.field` is gone, and with it field-level encryption from TCL.**
-
-**Encryption in SD BASIC is unaffected and is the supported route.**
-`sdencrypt()` and `sddecrypt()` ship — see *SD Basic - System and Environment*
-— and replaced the older `encrypt()` and `decrypt()` functions. What has gone
-is the TCL verb that encrypted a field in place, and **nothing replaces that**.
+**`encrypt.field` is gone, and with it the TCL verb that encrypted a field in
+place.** What replaces it is the application's own: `sdencrypt()` and
+`sddecrypt()` with a key that `sdkey()` makes from a passphrase, and the `XE`
+conversion, which shows an encrypted field decrypted to a session that holds the
+key. SD does not keep the key. See *Encryption and the SDEXT interface* in the
+Administrator set and *SD Basic - Encrypting Data* in the User set.
 
 ## Account and configuration items
 
@@ -199,17 +199,14 @@ another MultiValue system will otherwise assume they exist.
 
 **Multi-user access over remote Desktop is not supported.** It follows from
 the access model and is settled. One Windows setting covers Remote Desktop and
-the physical keyboard together, so allowing one allows the other. A verb that
-lifted the restriction was built and deleted the next day for exactly that
-reason. If you want it, you want Windows Server, RDP client access licenses and
+the physical keyboard together, so allowing one allows the other. If you want it, you want Windows Server, RDP client access licenses and
 probably a commercial product built for it. See
 [ssh access](08-ssh-access.html).
 
 **SD cannot be installed silently.** `/SILENT` and `/VERYSILENT` are refused,
 with a message saying why, and there is no switch to override it. Installing
-ends by asking for a password and a silent install has nobody to ask — it used
-to finish with **no password on any account** and say nothing about it.
-Unattended deployment is not supported.
+ends by asking for a password, and a silent install has nobody to ask: it would
+finish with **no password on any account**. Unattended deployment is not supported.
 
 **scp AND sftp DO NOT WORK INBOUND ONCE SD HAS CONFIGURED THE ssh SERVER**,
 for anybody, administrators included. This is the accepted cost of putting

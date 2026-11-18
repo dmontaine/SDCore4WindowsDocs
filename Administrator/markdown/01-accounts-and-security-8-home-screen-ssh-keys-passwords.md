@@ -1,0 +1,250 @@
+Title: Accounts and Security: The Home Screen, ssh Keys and Passwords
+Subtitle: set.tile, pins-on, ssh-key-on, suspended, add and delete, and modify.password.
+
+This page continues [Accounts and Security: The Other Keywords](01-accounts-and-security-7-other-keywords.html).
+
+### What the home screen shows: `set.tile`, `pins-on` and the menu management page
+
+```
+tool.menus
+```
+
+**Menu management** is a full-screen page for the administrator (SDSYS's VOC only;
+it is also a tile on the administrator's own home screen). It lists every account
+but SDSYS with where it starts, whether it may add its own programs, and the tiles
+turned off for it; for the account you select it shows the standard tiles with `[x]`
+on and `[ ]` off, and a box that says in plain words what the settings mean. **It
+writes nothing itself:** every change is the command it will run, shown with its
+effect in a box you answer *Run* or *Cancel* (Cancel is the button Enter chooses),
+run by the same verbs you can type, and the line under the page is the verb's own
+answer. **Every setting has a `[?]` at the end of its row** (and one on the accounts
+list and on the system default): F1 or `?` on the selected row, or a click on the
+`[?]`, opens a box that says what the setting means. The text is the record of that
+setting in the file `context.help` of the shared account. **`load.help`, run by
+SDSYS, fills that file from the `helptext` directory of the SD system directory**
+(it replaces the shipped records and keeps any you added under another id); the
+Windows installer does not run it yet, so run it once after an install or an
+upgrade, or a `[?]` finds no text.
+
+```
+set.tile                          says which tiles are off, one line for each account that has any
+set.tile account tile off         turn a tile off for that account
+set.tile account tile on          turn it on again
+modify.account account pins-on    the person may add their own programs to their home screen
+modify.account account pins-off   they may not (the delivered state)
+```
+
+* **Tiles are on as delivered and are turned off one account at a time**; there is
+  no setting for every account. The standard tile ids are `editor`, `ide`, `ced`,
+  `terminal`, `keys`, `switch` and `signout`, and `recent`,
+  which is not a tile but the **Recent group** of the home screen: the tiles the person
+  started last, newest first, which they turn on themselves in the View menu (it is
+  off as delivered). `set.tile account recent off` forbids it for the account: the
+  group is not on the page, nothing is read or written for it, and the person cannot
+  turn it on. **Sign out cannot be turned off**, and neither can the **Back** tile of
+  a sub-menu page: a person must always be able to leave. Any other id is accepted
+  and said not to be standard.
+* The setting is **field 17** of the account's register record (tile ids separated by
+  spaces). A tile that is off is not on the page, its menu entry cannot be chosen, and
+  a group with no tile left has no heading. It takes effect when the home screen is
+  next built (sign-on, F5, Switch account).
+* **The Terminal tile off is a wall for an account that starts in the home screen**:
+  the screen never leaves the person at the command prompt, whatever ends it, and signs
+  them out instead (a window too small to take the screen ends the session after the
+  message). An account that starts at the prompt (`start-terminal`) keeps it. **It is a
+  wall only for the prompt the screen gives**: the programs behind the other tiles are
+  the account's own, so an account that is to be kept to the screen should have the
+  editor, IDE and record editor tiles off as well, and a command that gives a shell
+  needs `sh-on`, which is off as delivered.
+* **`pins-on` is off as delivered.** An account that has it gets a group *My programs*
+  on its home screen and the verb `my.menu`, with which the person adds **their own**
+  programs (a label and a command they could type at their prompt): they manage only
+  their own list, never the standard tiles, and a program of theirs adds no access. It
+  is **field 18** of the register record, and the administrator always may. `pins-off`
+  hides the group and `my.menu` refuses; the list stays in the person's file.
+* `set.tile` says `Tile ide is now off for fred` (and `... was already off ...; nothing
+  changed`) and is audited as `set.tile off tile=ide account=fred`; `modify.account`
+  says `Account fred may add its own programs to the home screen: yes`.
+
+### Signing in over ssh with a key: `ssh-key-on` and `ssh-key-off`
+
+```
+modify.account fred ssh-key-on
+modify.account fred ssh-key-off
+create.account user fred ssh ssh-key-on
+```
+
+**A Windows user that `create.account` makes cannot sign in over ssh with a key, as delivered.**
+It signs in with its password, and only if the account's ssh route is on. `ssh-key-on` lets
+that one account sign in with a key as well as with its password; `ssh-key-off` takes it
+back; `create.account user` *name* `ssh-key-on` makes the account with it on. Only SDSYS may
+use the words. `ssh-key-on` does not give the ssh route: the account still needs `ssh` or
+`both`. The gate matrix (`tool.gates`) has a column for it, turning it ON there asks you to
+type the account's name, and each account's own gate page shows its state, as `own` for a user
+SD did not make. After the word SD says `Account fred may sign in over ssh with a key: yes` (or
+`no`). The word is audited as `modify.account ssh-key-on account=fred`, and the audit line of a
+`create.account` that used it ends `gates=` with `ssh-key-on` among the words.
+
+**What opening it means for security.** A key is a second way in that the account's password
+does not control. Whoever holds the private key signs in without the password, SD cannot see
+who holds a copy, and changing or removing the password does not close it: the key stays valid until it
+is taken out of the person's `authorized_keys` file. Turn it on only for an account whose
+keys you trust, and leave it off for everything else; leaving it off is the tighter choice.
+
+**How it is done.** The installer makes a Windows group, `sdsshnokey`, empty, and adds to the
+end of the ssh server's SD block two lines (the host name is the computer's, in lower case):
+
+```
+Match Group sdsshnokey,<host>\sdsshnokey User *,!sdsys,!<host>\sdsys,!sdradmin,!<host>\sdradmin
+    PubkeyAuthentication no
+```
+
+`create.account` puts each Windows user it makes in the group. `ssh-key-on` takes the user out
+of the group and `ssh-key-off` puts it back. The two lines set `PubkeyAuthentication no` and
+nothing else, so a member still signs in with its password and every other setting comes
+from where it came before. It is the first `Match` block of the ssh server's file, with the
+global settings above it, and the remote administration user (`sdradmin`) and SDSYS are
+named out of it. The group is not `sdsshonly`: that group carries the rights that
+deny the console and Remote Desktop, which no verb may lift.
+
+**Who it never affects.** Only a Windows user that SD itself made. The user who ran the
+installer, a Windows user attached to an account, SDSYS and every user outside SD keep
+exactly the ssh settings they had, and `modify.account` refuses `ssh-key-on` and
+`ssh-key-off` for them. The refusal (message 15170) reads *name*: its Windows user *user* was not
+made by SD, so its ssh keys are its own and `ssh-key-on` and `ssh-key-off` do not apply to it;
+nothing was changed. A group account or an `other` account has no Windows user and refuses
+them too. **The gate pages show a dash** for them, and the holder's own page says `own`.
+
+**A backup and a restore.** The backup's manifest carries `ssh.key`, 1 for an account whose
+Windows user may sign in with a key. `restore.account` gives it back to an account it has to
+make; a backup made without it restores with keys off, and `ssh-key-on` afterwards turns them
+on (see [Moving an Account](17-moving-an-account.html)).
+
+**What it does not do:**
+
+* **An upgrade changes no existing account.** The installer makes the group empty, so every
+  account that existed before keeps the key sign-in it had; only accounts made after the
+  upgrade start with keys off. To shut keys for an older account, `ssh-key-off` puts it in the
+  group.
+* **It does not help on a machine whose own ssh server allows no password sign-in.** There an
+  account SD makes cannot use ssh at all until `ssh-key-on`.
+* **It does not override a rule you wrote.** A `Match` block or setting of your own in the ssh
+  server's configuration that is read before SD's block and sets `PubkeyAuthentication yes`
+  for the user wins: the first value the server finds is the one it uses.
+* **The group must exist.** It fails open: if `sdsshnokey` is missing or cannot be read, the
+  ssh server offers keys according to the machine's own settings, and `create.account`
+  refuses to make a user until the group is there.
+
+### `suspended`/`unsuspended` is a state, not a tier
+
+**Nothing about the account moves except the one field.** No Windows
+membership changes, no VOC changes — every account's VOC is the whole of
+`newvoc` regardless of the field. Three doors refuse a suspended account:
+signing in, `logto`, and the API. **Suspending prints two lines**, *Account fred
+is now suspended* and *Nothing on Windows has changed: fred keeps its Windows
+account, its password and every group it belongs to, including any administrator
+rights it had.* A `logto` refused for a suspended account is audited with
+`reason=suspended`.
+
+## Who may enter an account: `modify.account add` and `delete`
+
+```
+modify.account account add user
+modify.account account delete user
+```
+
+**`add` and `delete` are the grant.** There is no separate `grant`, `revoke` or
+`list.grants` verb: they were removed in 2.0-0, and `list.voc.removed` names
+`modify.account` as what replaces them. **The grant is Windows group membership and nothing is written to the
+account record.** Every SD account has a Windows group — `sdu_`*name* for a
+user account, `sdg_`*name* for a group account — and entry to the account
+**is** membership of that group. `add` puts a Windows user into that group and
+`delete` takes one out.
+
+| | |
+|---|---|
+| *%1 added to group %2* | `add` worked |
+| *%1 removed from group %2* | `delete` worked |
+| *%1 is already a member of group %2* | `add` for somebody who already has it; nothing changed |
+| *%1 is not a member of %2* | `delete` for somebody who has not got it; nothing changed |
+| *%1 is not a member of sdusers, not allowed* | the person is not a Windows user SD knows (`add` only) |
+| *Unable to add user %1 to group %2 status: %3* | Windows refused the change |
+| *SDRADMIN is the remote administration account* | `add` of `sdradmin`, which joins no group account |
+
+**To see who is in an account,** read the Windows group: `tool.accounts` shows a
+group account's members, and any account's group can be listed with `net localgroup sdu_`*name*
+(`sdg_`*name* for a group account) or in Windows' own tools. The account's own user is a member
+like any other. It is not a grant — creating the account put them there.
+
+**A successful `add` or `delete` writes an audit record** to SD's audit
+trail (`modify.account add account=`*name*` to=`*user* and `modify.account delete
+account=`*name*` from=`*user*), stamped with the user and process that did it. The identity is
+stamped by SD and is not passed in, so a caller cannot get it wrong or
+forge it. Windows records the group change in its own security log as
+well, and the two are independent records of the same act.
+
+**`delete` is deliberately unguarded**: taking access away is always allowed.
+**A change reaches the person at their next sign-in to Windows**, because
+Windows fixes a person's groups when they sign in; a person you have just taken out keeps the account
+until then.
+
+## Passwords: `modify.password`
+
+```
+modify.password {account}
+```
+
+With no account name it changes **your own**, and asks for the current
+password first. With one, from SDSYS, it changes that account's — any
+account, including SDSYS's own — and does not ask for the old password: an
+administrator resetting a forgotten password does not know it.
+
+**The password is never an argument, and a trailing token is refused rather
+than ignored:**
+
+```
+:modify.password fred hunter2
+A password is never given on the command line; modify.password prompts for it
+```
+
+**That refusal is the point of the verb's design.** The older behavior set
+the password from the prompt and threw the extra word away without a word,
+so every visible sign said it had worked — while the password had already
+reached SD's command stack, and a shell's history and process list if the
+verb was reached from one. Refusing does not put it back, but it says so.
+
+The prompts are hidden, and the account must already exist in
+the register. **The rule is checked before the repeat is asked for**, and
+there are up to three tries:
+
+```
+A password needs at least 8 characters, with a lower-case letter, an upper-case letter, a digit and a symbol.
+New password:
+ERROR: A password needs at least 8 characters, with a lower-case letter, an upper-case letter, a digit and a symbol.
+That was attempt 1 of 3.
+New password:
+Repeat new password:
+ERROR: Passwords do not match.  That was attempt 2 of 3.
+```
+
+A password that does not meet the rule is refused at once and is not asked for
+again; one that does is asked for a second time, and a difference between the two
+says *Passwords do not match.* Each failure names which it was and says which
+attempt it was; the third ends the command with *ERROR: Password not changed.*
+and nothing is changed. An empty line at *New password* leaves the password as it
+was. `create.account user` asks the same way, with the same three tries, saying the
+rule first and asking *Retype new password*; its failure lines carry no `ERROR: `
+prefix.
+**`modify.password` cannot be scripted**, by design.
+
+**SDSYS's *Windows* sign-in password is a separate thing** — set once,
+during installation, and changed afterward the ordinary Windows way, not
+with this verb.
+
+## Continued in
+
+[Account Maintenance](01a-account-maintenance.html) — clean.account,
+update.accounts, [locked], config, set.date and delete.account.
+
+[Differences from W1.0-0](24-differences-from-w1-0-0.html) — what changed
+since the previous release, for an administrator upgrading into it.

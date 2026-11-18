@@ -265,9 +265,11 @@ removed in 2.0-0.) `@system.return.code` is `0` on success and `-1` if the argum
 wrong.
 
 **`cname` on a file renames the VOC record too**, which is the point — the
-name you type and the name on disk stay together. **A new name that differs from the old
-only in case is refused** (message 6151, *name is already defined in your VOC*): a VOC does
-not tell the two spellings apart, so the rename would lose the record.
+name you type and the name on disk stay together. **The new name is stored in lower
+case**, in the VOC and as the file's directory, whatever case you typed: `cname old to NEW`
+leaves the file as `new`. A new name that is already in the VOC in any case, or that differs
+from the old name only in case, is refused with "... is already defined in your VOC". A file
+that already has an upper-case name is not renamed by this.
 
 ## Seeing what is actually in a record
 

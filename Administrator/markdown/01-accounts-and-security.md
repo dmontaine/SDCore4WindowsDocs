@@ -33,7 +33,7 @@ page is refused outright to any session that is not actually SDSYS, whether
 or not that session is elevated:
 
 ```
-:modify.account fred add don
+:modify.account fred suspended
 Command requires administrator privileges
 :delete.account sdsys
 Command requires administrator privileges
@@ -44,6 +44,14 @@ Command requires administrator privileges
 **Every one of those refusals came before the command was looked at.**
 `delete.account sdsys` would have been refused anyway — you cannot delete
 `SDSYS` — and it never got that far.
+
+**A gate is a wall for an SD *session*, not for a person who has a shell on the
+machine.** Every SD user is in the Windows group `sdusers`, and a member who has a
+shell can write SD's shared memory (the lock, file and user tables): such a person
+can release other people's locks or log sessions out, which is damage and denial of
+service, not a way to become SDSYS or to turn a gate on. How far that matters, and
+how an installation that cannot accept it closes it, is in [SD
+installation](08-sd-installation.html), *What this does not close*.
 
 **Being SDSYS means having signed in to Windows as the account named
 `sdsys`**, made once by the installer, and nothing else. Being a Windows

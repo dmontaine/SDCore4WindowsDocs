@@ -9,7 +9,7 @@ send file id {id ...}
 `receive` and `send` move plain-text files between your SD account and another computer: a CSV or JSON
 file to load, the source of a program, a report to take away. You type the command in SD, it waits, and you
 move the files with an **sftp program** on your own computer, signed in with **the same name and password
-you use to reach SD over ssh**. Nothing can be moved before you type the command or after it ends.
+(or key) you use to reach SD over ssh**. Nothing can be moved before you type the command or after it ends.
 
 **It is off until the administrator turns it on**, for the system and for your account. If it is not, the
 command says which is missing:
@@ -137,7 +137,7 @@ temporary name ending `.filepart`, which is refused where only certain kinds of 
 file's permissions itself; what the sftp program asks for them is not applied.
 
 **FileZilla.** In the Site Manager choose *SFTP - SSH File Transfer Protocol*, the host, the port, *Logon
-Type: Normal*, your name and password. The remote side shows one directory, `/`.
+Type: Normal* (or *Key file*), your name and password. The remote side shows one directory, `/`.
 
 **Any of them** will show an error in words when SD refuses something, or only "Permission denied" or
 "Failure"; the reason is always one of those on this page. If it says no transfer is open, type `receive`

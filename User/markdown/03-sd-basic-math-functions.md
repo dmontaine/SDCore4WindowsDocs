@@ -74,8 +74,8 @@ evaluated before the expression around it.
 ### Dividing by zero
 
 Dividing by zero stops the program with a runtime error, in `/`, `div()`,
-`idiv()` and `rdiv()` alike. There is no option
-that turns the error into a warning. Test the divisor before you divide.
+`idiv()` and `rdiv()` alike. (There is no option
+that turns the error into a warning that yields zero. Test the divisor before you divide.)
 
 ## Dividing to a whole number
 

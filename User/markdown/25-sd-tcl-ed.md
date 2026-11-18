@@ -20,7 +20,7 @@ marks a word typed as it stands; braces mark an optional part. **`ed`'s own
 commands are shown in upper case**, which is how `ed`'s `HELP` prints them; it
 folds case too.
 
-> The examples use a scratch record in an account's `bp` file.
+> The listings use a scratch record in an account's `bp` file.
 
 ## Starting it
 

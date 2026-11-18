@@ -27,8 +27,10 @@ sdidx -q C:\ProgramData\SD\user_accounts\acct\orders      # where are its indexe
   (`Copy-Item -Recurse` in PowerShell). `-m` deletes the old index files
   afterwards and `-d` deletes indexes. Neither can be undone.
 * **Give full paths, for the data file and for the index folder.** Either
-  slash will do. A relative index path given to `-m` or `-p` is made absolute
-  from the current folder before it is stored, as `C:\...`. A path longer than 255 characters, which
+  slash will do. The data path is resolved for you. A relative index path given
+  to `-m` or `-p` is made absolute from the current folder before it is used and
+  stored, as `C:\...` (SD's own current folder is somewhere else, so a relative
+  path would not be found). Other `..` parts are kept as typed. A path longer than 255 characters, which
   the file header cannot hold, is refused: `Path is too long (the limit
   is 255 characters)`, status 1.
 * **Close the file in every session first.** The program refuses if the file is
@@ -104,6 +106,13 @@ file to the new place; writes the new path into the data header; **then deletes
 the old index files.** If it stops before the header is written, the copy at the
 target is left behind and the file is as before.
 
+**If the target folder cannot be made, it says so and changes nothing.** It
+prints `Cannot create directory` *akpath*`:` and the reason on standard output,
+and ends with status 1. The reason is the operating system's, or *a file of that
+name exists* when a component of the path is a file. *akpath* in the message is
+the whole path as you typed it, not the component that failed, and the indexes
+and the header are where they were.
+
 * **With no `akpath`, it moves the indexes back** into the data file's own
   folder and clears the path in the header.
 * **Only the index files are deleted from the old place**: the `%2`,
@@ -111,18 +120,12 @@ target is left behind and the file is as before.
   relocated folder, that folder is removed afterwards **only if it is then
   empty**; if it holds anything else (a file named `note-from-admin`, say) the
   folder and the file stay, and the program says `path holds other files and has
-  been left`.
+  been left`. A new `akpath` inside the old folder therefore survives the move.
 * If an old index file cannot be deleted the program says `Cannot delete path
   [n]`, then `Indices have been moved, but the old index files could not all be
   deleted`, and exits 1. The move itself is complete: the header names the new
   place.
 * It needs room for a second copy of the indexes while it moves them.
-* **If the target folder cannot be made, it says so and changes nothing.** It
-  prints `Cannot create directory` *akpath*`:` and the reason on standard
-  output, and ends with status 1. The reason is the operating system's, or *a file
-  of that name exists* when a component of the path is a file. *akpath* in the
-  message is the whole path as you typed it, not the component that failed, and
-  the indexes and the header are where they were.
 
 ### `-p`, point
 `-p` writes the path into the header and moves nothing. Use it when you have

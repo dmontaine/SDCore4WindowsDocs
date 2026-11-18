@@ -6,7 +6,7 @@ Route](12c-sdnet-files-only-route.html).
 
 ### The administration group: `sdfilesadmin`
 
-**Remote administration of files, behind a third permission that is off for everyone.** A
+**QMNet's remote administration, behind a third permission that is off for everyone.** A
 files-only login that is in **both** `sdfileswrite` and the Windows group **`sdfilesadmin`** may, on
 that server and for the account it enters there, do the things below. They are requests 68 to 71
 of the API, and they are the only door a files-only login has to them.
@@ -118,9 +118,11 @@ Opening it with `OPEN 'customers' TO f` (using the VOC name) gives a file variab
 `RECORDLOCKED()` is **not** on this list: it needs a `write` definition and the write group like
 a lock (see "Writing and locking" below).
 `OPEN 'DICT', 'customers' TO d` opens the **dictionary** of the remote file, from the same
-server, and the same statements work on it. (The client asks for it as `dict customers`,
-in lower case. The server opens `dict` and a name, in any case, as a dictionary. A client on
-this release against a server that has not been updated cannot open a dictionary.)
+server, and the same statements work on it. (The request the client sends for a dictionary
+is `dict customers` in lower case; the server opens `dict` and a name, in any case, as a
+dictionary. A client on this release against a server that has not been updated cannot
+open a dictionary, so `LIST`, `COUNT`, `SORT` and `SELECT` on a remote file stop at
+"Cannot open dictionary".)
 **Nothing else does.** Every other statement
 given the file variable (writes, deletes, `CLEARFILE`, locks including `FILELOCK` and
 `FILEUNLOCK`, `AKREAD`...) stops with
@@ -182,7 +184,8 @@ A remote file is whatever the remote **account's VOC** names, opened by the serv
 ordinary `OPEN`, so the rules are the server's. What the client adds is on this page: the
 name is 63 characters or fewer, an id is 1 to 63 characters (anything longer is refused on
 the client before it is sent), and what a program receives is the record the server sends,
-with the marks as the server holds them.
+with the marks as the server holds them. The User set's page 42,
+*Programming with a Remote File*, has the table of ids, directory files and the case of ids.
 
 ## Continued in
 

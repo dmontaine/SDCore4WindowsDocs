@@ -46,11 +46,10 @@ the machine's.
 | | |
 |---|---|
 | The `encrypt.field` verb | Removed. It pointed at a program, `$CRYPTO`, which never existed in the GPL release, so the verb could not have worked in any build derived from it |
-| `encrypt()` and `decrypt()` | Removed upstream and replaced by `sdencrypt()` and `sddecrypt()`. The old names do not compile |
+| `encrypt()` and `decrypt()` | Removed and replaced by `sdencrypt()` and `sddecrypt()`. The old names do not compile |
 
-**The Python half of SDEXT is no longer on this list.** It was removed along
-with the embedded interpreter, then rebuilt as a separate
-helper process, `sdpy.exe`, rather than restored as a library inside
+**The Python half of SDEXT is not on this list.** It is a separate
+helper process, `sdpy.exe`, not a library inside
 `sd.exe` - the two cannot safely share a process (`long` is a different
 width on each side of the MSYS2 boundary). `SDPYFUNC.H` and its twenty-one
 `PY_*` functions are documented in full in the User set's *SD BASIC -
@@ -80,16 +79,14 @@ application derives the key once per run.
 
 `status()` after a failure: **10206** the salt is not base64 for 16 bytes,
 **10207** the passphrase is empty or over 65,536 bytes, **10204** a key of the
-wrong length, **10201** a wrong key or a damaged value.
+wrong length (a passphrase passed straight in as the key is this), **10201** a wrong key or a damaged value.
 
-### Before this existed
+### A passphrase is not a key
 
 `sdencrypt('The quick brown fox', 'secretkey', 202)` returns nothing and sets
-`status()` to **10204**: a passphrase is not a key. Until the three functions
-above the only way to turn a passphrase into a key was `sdext()`'s
-`SD_KEYFROMPW`, which is internal-only, so an ordinary program could not obtain
-a key these functions accepted. That is no longer so, and `10204` for a
-passphrase passed straight in is still the answer.
+`status()` to **10204**: a passphrase is not a key. The way to turn a passphrase
+into a key these functions accept is the function above that does it; `sdext()`'s
+`SD_KEYFROMPW` is internal-only, so an ordinary program cannot call it.
 
 ## The XE conversion and the key ring
 
@@ -98,12 +95,12 @@ A dictionary item names a key and never holds one: field 3 is `XE` or
 process**, put there by `!keyset` (a subroutine a program calls) or by the
 `encrypt.key` verb (a person, at a hidden prompt), and taken out by `!keyclear`.
 
-- **Held in memory only.** The ring is libsodium's protected memory
-  (`sodium_malloc`): guard pages that fault, no access at all between uses, and
-  zeroed when released; the source also asks the system to keep it out of swap
-  and out of a dump, which the system may refuse. It is never written to a file,
-  the audit trail, the error log or `$como`.
-- **Cleared** at sign-on, at `logto` (going in and coming back), at sign-off and
+- **Held in memory only.** The ring is `sodium_malloc` memory: locked against
+  swap and left out of a dump where the system allows it, guarded by pages
+  that fault, protected against all access between uses and zeroed when
+  released. It is never written to a file, the audit trail, the error log or
+  `$como`.
+- **Cleared** at `logto` (going in and coming back), at sign-off and
   by `!keyclear`. **Not handed to a phantom**: a phantom starts with an empty
   ring.
 - **16 keys**, each under a name of 1 to 31 letters, digits, dots, dashes or
@@ -145,14 +142,12 @@ rtnval = sdext(arg, isargmv, key)
 whether `arg` holds several values rather than one.
 
 **It cannot be called from an application.** `sdext` is in the compiler's
-internal function table, so an ordinary account does not merely get refused —
-it gets a misleading error. An unknown function is read as a matrix reference,
+internal function table, so an ordinary account does not merely get refused. It
+gets a misleading error: an unknown function is read as a matrix reference,
 so the complaint is about a `dim` statement the program does not contain,
 reported at the last line rather than at the call. That behavior is covered by
 [SD Basic - Restricted Commands](10-sd-basic-restricted-commands.html) in this
-set.
-
-`$internal` needs both halves: the compiler tests for internal mode **and** for
+set. `$internal` needs both halves: the compiler tests for internal mode **and** for
 the administrator flag.
 
 ### The keys
@@ -173,7 +168,9 @@ ends.
 | `SD_RANDBYTES` | 107 | count | Random bytes |
 | `SD_XORBYTES` | 108 | two equal-length values | Their exclusive-or |
 | `SD_CTEQUAL` | 109 | two values | `1` or `0`, compared in constant time |
-| `SD_TLS_CBIND` | 110 | none | The TLS channel binding the API login carries, base64, or empty when the session is not TLS |
+| `SD_TLS_CBIND` | 110 | none | This session's TLS channel binding, as the `c=` value its SCRAM login must carry; empty when the session is not TLS |
+| `SD_FILE_PRIVATE` | 111 | path, `FILE` or `DIR` | `1` when the path is the kind of object a credential may be trusted in, else `0`; every failure answers `0` |
+| `SD_USER_HOME` | 112 | path relative to the caller's home (empty for the home itself) | The absolute path when the home and that directory can be trusted, else empty |
 | `SD_KEYRING` | 120 | `set` name key · `clear` name · `list` | The key ring of the XE conversion: the key id, the number removed, or one field per key. Reached only through `!keyset`, `!keyclear` and `!keylist` |
 
 Numbers 102 and 103 were the POSIX effective-identity calls. They were removed
@@ -188,16 +185,13 @@ refusal.
 
 ### What uses it
 
-Nine shipped programs call `sdext()` for the cryptographic keys, and they are the
-whole of that use: `apisrvr`, `cred_set`, `cred_verify`, `sd_get_salt`,
-`sd_key_from_pw`, `sdclient`, and the three key ring subroutines `keyring_set`,
-`keyring_clear` and `keyring_list`. (The `PY_` functions also go through
-`sdext()`, with their own keys.)
-
-The last three are cataloged for general use as `!keyset`, `!keyclear` and
-`!keylist`, so an application reaches the ring without reaching `sdext()`. The
-first six are not cataloged for general use, and none has a VOC entry, so they
-are not an indirect route to the interface either.
+The shipped programs that call `sdext()` are `apisrvr`, `cred_set`,
+`cred_verify`, `sd_get_salt`, `sd_key_from_pw`, `sdclient` and the three key ring
+subroutines `keyring_set`, `keyring_clear` and `keyring_list`. (The `PY_`
+functions also go through `sdext()`, with their own keys.) The last three are
+cataloged for general use as `!keyset`, `!keyclear` and `!keylist`, so an
+application reaches the ring without reaching `sdext()`. There is no `euid_set` or
+`euid_restore`: Windows has no effective user identity to switch.
 
 ## Two constants that are not SDEXT keys
 

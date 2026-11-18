@@ -15,17 +15,18 @@ listed by `config`) say how long SD waits on another server. Both are in **secon
 | `NETWAIT` | the connection: `set.server ... connect`, `set.netlogin`, and the first use of a defined server by an `OPEN` of a remote file. **Each of the two steps of making it has this long: the TCP connect, then the TLS handshake** | 5 |
 | `NETREPLY` | each wait for a reply from the server once connected, in the login and in every request, **whatever the server has sent meanwhile** (the TLS session tickets, or half of a record, do not use the wait up) | 30 |
 
-A server that is slower than `NETREPLY` is treated as lost; **a changing request that gets no
-answer is never sent again** whatever the setting is. A `CLEARFILE` waits for the longer of five
+A server that is slower than `NETREPLY` is treated as lost, as it always was (the 30 seconds
+were fixed in the programs); **a changing request that gets no answer is never sent again**
+whatever the setting is. A `CLEARFILE` waits for the longer of five
 minutes and `NETREPLY`, because a big file takes longer than a reply bound. The login exchange of
 `set.netlogin` keeps its own 15 seconds for each packet. **A zero is refused**, and SD does not
 start with `NETWAIT=0` or `NETREPLY=0` in `sd.conf` (openQM reads zero as "wait for ever"; here
 that is never what an administrator of a pinned peer wants). **A value that is too large is
-refused whatever it looks like in 16 bits**: the two are 32 bit values and SD does not start
-with `NETWAIT=65541` (`PWDELAY` and `DHCACHE` are read the other way and still wrap). The names
-are eight characters or fewer because `config()` reads no longer one. openQM's `NETDELAY`, which
-keeps a connection open after the last file is closed, is not this and does not exist in SD.
-See also [SD Admin Configuration](07-sd-admin-configuration.html).
+refused whatever it looks like in 16 bits**: `NETWAIT=65541` is refused and SD does not start
+(`NETWAIT` and `NETREPLY` are 32 bit values; `PWDELAY` and `DHCACHE` are read as 16 bit values
+and wrap). The names are eight characters
+or fewer because `config()` reads no longer one. openQM's `NETDELAY`, which keeps a
+connection open after the last file is closed, is not this and does not exist in SD.
 
 **A reply that cannot be true.** The client reads the length a reply announces before it reads
 the reply. A server that announces less than the ten bytes of its own header, or more than the
@@ -60,9 +61,9 @@ still waited for one read at a time; the limit is for each read, not for a whole
 Defining and deleting are written to the audit trail, in lower case:
 
 ```
-set.server name=hq2 host=192.168.1.40 port=4247 mode=read replaced=no pin=typed
+set.server name=solo2 host=192.168.1.40 port=4249 mode=read replaced=no pin=typed
 set.server name=hq host=hq.example.com port=4247 mode=read replaced=no pin=confirmed
-delete.server name=hq2 host=192.168.1.40 port=4247
+delete.server name=solo2 host=192.168.1.40 port=4249
 set.netlogin server=hq remote=reports
 delete.netlogin server=hq
 ```
@@ -120,12 +121,11 @@ the route does not allow or, for a login without the write or administration gro
 lock or an administration request (the number is the request; `write` and `admin` are the state of
 the login), the third to fifth the administrator giving the route and the two groups, the seventh
 an administration act (written before the verb runs, so a killed command is on the trail), and the
-last a login of a person who is in neither `sdapi` nor `sdfiles`. All of them are written on the
-server being reached. The `admin=` word is new in this release.
+last a login of a person who is in neither `sdapi` nor `sdfiles` (the decision is made on both).
+All of them are written on the server being reached.
 
 ## See also
 
-[Accounts and Security](01-accounts-and-security.html) for the NET switch beside the
+[Accounts and Security: The Edit Switches and the NET Switch](01-accounts-and-security-3-edit-switches.html) for the NET switch beside the
 other per-account switches. [Remote Access and the Machine](05-remote-access-and-the-machine.html)
-for the API listener a server's port refers to. [SD Admin Configuration](07-sd-admin-configuration.html)
-for `NETWAIT`, `NETREPLY` and `NETFILES`.
+for the API listener a server's port refers to.

@@ -27,17 +27,6 @@ The `*client` names are for new work and are what the installers put on `PATH`.
 > name its symbols come from, so a renamed copy would send the application back
 > to the original.
 
-## Both builds come from one source
-
-`sd4windows\sdb_ai\sd64\gplsrc\sdclilib` is the single source of truth. The
-32-bit build points straight at it.
-
-**There is deliberately no second copy.**
-
-**If you are testing the 32-bit client, confirm which build you have.** A
-client that predates SCRAM is refused outright by this server, and the refusal
-reads as a wrong password.
-
 ## Which one does my application need?
 
 | | |
@@ -98,7 +87,7 @@ clear, and the identity it runs as is on [API access](09-api-access.html).
 ## Building from source
 
 **There is one repository and it builds all four DLLs**:
-<https://github.com/dmontaine/sd4windows>. The client source is in it, at
+<https://github.com/dmontaine/SDCore4Windows>. The client source is in it, at
 `sdb_ai/sd64/gplsrc/sdclilib`, and `make sd` produces the 64-bit and 32-bit
 pairs together with the server. **No built DLL is committed**, so a clone
 builds — the same no-binaries rule the whole repository follows.

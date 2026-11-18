@@ -176,7 +176,7 @@ because the person has just proved the new one.
 | `No server is defined with the name x` | there is no such definition |
 | `Account x is not listed for server y.  Ask the administrator to list it (set.server ... accounts)` | the account is not in the definition's list |
 | `The administrator has no Windows login of its own to keep a server login in.  Use an ordinary user's account` | the session is SDSYS |
-| `The directory for your server logins is not ready or is not private (...).  Nothing was done` | `sd-net` is missing (an installation from before this release has not been given it), your folder could not be made, or it failed the private check; the text in the brackets is the folder |
+| `The directory for your server logins is not ready or is not private (...).  Nothing was done` | `sd-net` is missing (the installer makes it), your folder could not be made, or it failed the private check; the text in the brackets is the folder |
 | `The remote user name is not valid (...)` / `A password is required.  Nothing was changed` | the prompts |
 | `Cannot connect to host:port (status n, os error m).  Nothing was sent or stored` | nothing is listening, the address is wrong, or `NETWAIT` seconds passed |
 | `The TLS handshake with host:port did not complete.  Nothing was sent or stored` | something answered but not with TLS |
@@ -202,7 +202,7 @@ nothing; the definition is not touched. If there is no login:
 `There is no login stored for server hq.  set.netlogin hq makes one`. **A file
 that is not the plain private file `set.netlogin` makes is refused and left where
 it is** (the message says the stored login is not trusted); a person with such a
-file in the way removes it at the operating system.
+file in the way removes it from the shell.
 
 `delete.server` leaves people's login files behind. They are inert: a login made
 for a pin the definition no longer has is refused, so it cannot be used. But a
@@ -213,9 +213,9 @@ people who do not want that run `delete.netlogin` first.
 
 `set.netlogin` and `delete.netlogin` are meant for a **local session of an ordinary
 Windows user**: the file is that user's and the ownership check is made against the
-user the session runs as. Whether they work in an API session has not been tried,
-and a check that cannot tell whose the file is fails closed (the stored login is
-"not trusted"). SDSYS has no login of its own to keep.
+user the session runs as. In an API session a check that cannot tell whose the
+file is fails closed (the stored login is "not trusted"). SDSYS has no login of
+its own to keep.
 
 ## Continued in
 

@@ -44,7 +44,7 @@ clear.stack = **`clear.stack`**
 clr = **`clr`**
 cname = **`cname`** *old.file* **`to`** *new.file*
 como = **`como on`** {*record*} | **`off`** | **`pause`** | **`resume`**
-compile.dict = **`compile.dict`** {**`dict`** | **`data`**} *file* {*i-type* …} {**`no.query`**} {**`no.page`**}  ·  **`compile.dict local`**  ·  **`compile.dict all`**
+compile.dict = **`compile.dict`** *file* {*i-type* …} {**`no.query`**} {**`no.page`**}  ·  **`compile.dict data`** *file* {*i-type* …}  ·  **`compile.dict local`**  ·  **`compile.dict all`**
 config = **`config`** {**`lptr`** | **`gpl`** | **`contrib`** | *param* *value*}
 configure.file = **`configure.file`** {**`dict`**} *voc.name* {*parameters*} | **`default`**  ·  **`configure.file`** *voc.name* **`next`** *n* | **`query`**
 copy = **`copy from`** {**`dict`**} *src* {**`to`** {**`dict`**} *tgt*} {*id* …} {**`(options`**}
@@ -159,7 +159,7 @@ unlock = **`unlock file`** *n* {**`user`** *n*} *id* … | **`all`** | **`filelo
 update.accounts = **`update.accounts`** {**`all`**}
 who = **`who`**
 who.am.i = **`who.am.i`**
-# 13 Oct 26: the verbs that had no line (1.2-0 and the backup and restore verbs), so that the card can be written
+# 13 Oct 26: the verbs that had no line (2.0-0 and the backup and restore verbs), so that the card can be written
 # again.  Their pages are named in tclmap.py.
 compare.files = **`compare.files`** {**`dict`**} *file1* {**`dict`**} *file2* {**`detail`**}
 decatalog = **`decatalog`** {*file*} *name* …

@@ -38,6 +38,12 @@ to the SD prompt. It needs the account's `sh-on` switch like any other `sh`: an
 account without it is refused first, with "<name> is not permitted to use the
 operating system shell".
 
+**Never type `sh` with nothing after it in a script.** The configured shell for the
+bare form is interactive (`SH` in `config`: `powershell.exe -NoProfile -NoLogo`), so a
+bare `sh` in a piped session, a phantom or a scheduled job hands control to a shell
+with nobody at the keyboard and **waits for ever**. The `SH1` form, which is what
+`sh command` uses, is `-NonInteractive`.
+
 ## The shell you get is Windows PowerShell 5.1
 
 Not `pwsh`, and the difference bites:
@@ -45,7 +51,8 @@ Not `pwsh`, and the difference bites:
 **`&&` and `||` do not exist in that PowerShell**, and SD refuses a command that
 holds one before PowerShell sees it (see the next section). Nor do the ternary,
 null-coalescing or null-conditional operators. Chain with `;` in a script, and
-test with `if ($?) { … }`.
+test with `if ($?) { … }`. Each `sh` is a new shell, but **the working directory
+persists between them**.
 
 ## One rule about the shape of the command, for everybody
 
@@ -65,7 +72,7 @@ every account, SDSYS included, whether or not the account has `sh-on`. So **no
 pipe, no redirection, no chaining and no variable expansion is available from
 the prompt.** What an account that has the switch can do about that is the
 obvious thing: write the work into a script file and run the script
-(`sh powershell -File .\nightly.ps1`, or `sh .\nightly.cmd`). The script's own
+(`sh powershell -File nightly.ps1`, or `sh nightly.cmd`). The script's own
 contents are not filtered. This is why `sh-on` is a decision to give a person a
 shell on the machine, not a decision to give them a restricted one.
 
@@ -103,11 +110,9 @@ Account fred has SH yes, OS.EXECUTE no
 ```
 
 **The switch is read when a session signs in or `logto`s into the account**,
-so a change reaches the account the next time it is entered, and a session that
+so a change reaches the account the next time it is entered. A session that
 is already open keeps what it started with. To take the shell from somebody who
-is signed in now, change the switch and then end their session. **It follows
-the account, not the person:** a person who is allowed the shell in one account
-is not allowed it in another that does not have the switch, and the reverse.
+is signed in now, change the switch and then end their session.
 
 | | `sh` |
 |---|---|
@@ -145,6 +150,12 @@ for everything `os-on` covers.
 **The form that does go through this gate is `execute 'sh …'` from a program**,
 because that runs the TCL verb.
 
+**Reaching one directory outside the account takes less than `os-on`.** Where an
+account only has to read and write files in a shared directory, `NETDIRS` in `sd.conf`
+lists such directories (empty as delivered) and every account without `os-on` may
+reach them by pathname, on every route. It is a loosening for all of those accounts at
+once; see *`NETDIRS`* in [Configuration](07b-sd-admin-configuration-api-printing-and-netfiles.html).
+
 ## Over the API
 
 **A session that arrived over the API is held to the same switch**: the API
@@ -164,50 +175,23 @@ from another computer only through the door `remote.sdsys api on` opens
 **Having the verb is not having the permission**: an account without `sh-on`
 has the verb and is refused by it.
 
-## SDSYS is a shell on this machine, and only on this machine
+## SDSYS's own shell
 
-State this plainly to anyone with the credential for the `sdsys` Windows
-account:
-
-**SDSYS can run operating-system commands on the server as itself, the
-Windows account it signed in as — from this machine, and nowhere else.**
-Signing in to SDSYS at all means being at the console (or a remote-desktop
-or remote-control product installed as a service, which Windows treats the
-same way) — `sdsys` is denied ssh and denied network sign-in outright, so
-there is no remote session for this to ever apply to.
-
-The register is not consulted for SDSYS: the same identity check that grants
-administration — see [Accounts and Security](01-accounts-and-security.html#read-this-before-anything-else-being-sdsys-is-the-whole-of-it)
-— grants `sh` and `OS.EXECUTE` too, unconditionally. That is *narrower*
-than the old model, not wider: an elevated session in an ordinary account
-used to pass this gate as well, and no longer does. **The metacharacter rule
-above applies to SDSYS too.**
-
-### Why there is no tunnel to worry about here
-
-**The old concern was an administrator tier reachable through a forwarded
-ssh connection that arrives looking local.** That does not apply to SDSYS:
-`sshd_config`'s `AllowGroups` never includes the `sdsys` Windows account, so
-there is no ssh session for SDSYS to exist in the first place, tunnelled or
-not — the refusal is at the door, before authentication, not a check on
-where the connection appears to originate. The API has its own rule for the
-same account, separately: it is shut to SDSYS from another computer unless the
-administrator opens it for chosen addresses with `remote.sdsys api on`
-([Remote Administration through the API](22a-remote-administration-through-the-api.html)). See
-[Remote access and the machine](05-remote-access-and-the-machine.html).
-
-**An ordinary account's own `sh-on` or `os-on` is a different question and
-still deserves the same caution.** `os-on` plus API access on *any* account
-puts an operating-system shell behind that account's own credential,
-reachable from wherever the API is reachable from — see [What `os-on`
-actually costs](01-accounts-and-security-3-edit-switches.html#what-os-on-actually-costs). That
-risk did not go away with the tiers; it just no longer has anything to do with
-being an administrator.
-
-The verify suite asserts all of this — the local session working, the remote one
-refused, and an ordinary account admitted over that same remote route as the
-control — so a future change that quietly reopened it shows up as a failing test
-rather than as a page that had silently become false.
+**SDSYS reaches `sh` the way it reaches everything else — as the Windows
+account `sdsys`, on a session that is already a real local sign-in** — see
+[Accounts and Security](01-accounts-and-security.html#read-this-before-anything-else-being-sdsys-is-the-whole-of-it).
+Reaching SDSYS at all means being at the console, or a remote-desktop or
+remote-control view of it (a product installed as a service, which Windows
+treats the same way): `sdsys` is denied ssh and network sign-in outright, and
+the API is shut to SDSYS from another computer unless the administrator opens it
+for chosen addresses with `remote.sdsys api on` ([Remote Administration through
+the API](22a-remote-administration-through-the-api.html)). The register is not
+consulted for SDSYS: the same identity check that grants administration grants
+`sh` and `OS.EXECUTE` too, unconditionally, and **the rule on the shape of the
+command, above, applies to SDSYS too.** An ordinary account's own `sh-on` or
+`os-on` is a different question: see [What `os-on`
+actually costs](01-accounts-and-security-5-files-write-ai-pointers.html#what-os-on-actually-costs).
+See also [Remote access and the machine](05-remote-access-and-the-machine.html).
 
 ## Leaving SDSYS by `logto` is one-way
 
@@ -226,7 +210,7 @@ may `logto sdsys` to come back. SDSYS is first reached one way only, by signing
 in to Windows as the `sdsys` account and starting `sd` fresh. See
 [Accounts and Security](01-accounts-and-security.html#read-this-before-anything-else-being-sdsys-is-the-whole-of-it).
 
-**This is deliberate, and stricter than the old design it replaced.** A
+**This is deliberate.** A
 session that could `logto` back into SDSYS would let the elevated helper
 outlive the rights it belongs to; refusing the return closes that rather
 than relying on the helper alone to behave.

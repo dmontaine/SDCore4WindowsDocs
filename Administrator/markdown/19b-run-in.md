@@ -1,15 +1,14 @@
 Title: run.in
-Subtitle: One command run inside an account for the administrator: compile, catalog, debug and the checks made first.
+Subtitle: The administrator's account-scoped run: one command from a fixed list, inside a registered account, and always back in SDSYS.
 
 This page continues [The Master Files: Global
 Changes](19a-the-master-files-global-change.html).
 
 ## Running one command inside an account: `run.in`
 
-A program is compiled and cataloged in its own account: its VOC, its private catalog, the files its
-I-types translate through. An account that is locked out of its own programs (`bp-off`) cannot do
-that, so the administrator does it for the account. `tool.entries` (described
-above) and the editor it opens use it for every compile.
+A program is compiled, cataloged and debugged in its own account: its VOC, its private catalog,
+the files its I-types translate through. An account that is locked out of its own programs
+(`bp-off`) cannot do any of that, so the administrator does it for the account.
 
 ```
 run.in acme basic bp prog
@@ -17,17 +16,17 @@ run.in acme basic bp prog debugging no.query
 run.in acme catalog bp prog local no.query
 run.in acme decatalog prog
 run.in acme delete.catalog prog local
-run.in acme compile.dict cust total
 run.in acme debug bp prog
+run.in acme compile.dict cust total
 ```
 
 The verb is in the SDSYS VOC only and refuses anyone else ("Command requires administrator
 privileges"). It runs **one** command from the list above, in a **registered** account (never
 SDSYS itself, never a path), and **it is back in SDSYS when the command ends**. That includes a
-command that aborts, a break and a run-time error: the session is put back before anything else
+command that aborts, a break and a run-time error in a program being debugged: the session is put back before anything else
 happens and says so ("run.in: the command did not finish; the session is back in account acme").
 Without this an administrator would be left in the account, with the command's reach, until typing
-`LOGTO SDSYS` (the administrator's way back by hand; it is refused to every other session).
+`logto sdsys` (the administrator's way back by hand; it is refused to every other session).
 
 ### Debugging a program in another account: `run.in` *account* `debug` *file* *program*
 

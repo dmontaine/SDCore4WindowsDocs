@@ -202,10 +202,11 @@ Actions 2, 3 and 7 are refused on a file opened `readonly`: `status()` is 3018 a
 qualifier under 1 sets `status()` to 1. `FC$CRLF` on a hashed file gives 0 with `status()` 3004 (*not a directory
 file*: a hashed file has no line terminators); a mode outside 0 to 3 gives the mode the file is in and sets
 `status()` to 1, changing nothing. Any action number SD does not know stops the program with *the action is not one SD
-knows* (message 12360). `FC$SYNC` works on a hashed file only (`status()` is 3005 on any other). The
+knows*. `FC$SYNC` works on a hashed file only (`status()` is 3005 on any other). The
 qualifier may be left out where the action does not use it. The internal programs' own function is called `fcontrol.int` and is not available to
 ordinary programs. On a file reached through an `N` pointer to another SD server the call goes to
-that server, which decides whether to allow it ([Programming with a Remote File](42-sd-programming-with-a-remote-file.html)).
+that server: the test for an id (action 6) needs only read access there, and every other action needs
+the server's administration group (`sdfilesadmin`), as the server decides ([Programming with a Remote File](42-sd-programming-with-a-remote-file.html)).
 
 ### Forced writes: `sync`
 

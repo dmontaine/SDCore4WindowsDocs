@@ -1,10 +1,7 @@
 Title: The AI Helper
-Subtitle: One provider and one model for every account, a key that SD never keeps, and a gate for each account.
+Subtitle: One provider and one model for every account, a key that SD never sees, and a gate for each account.
 
-SD can ask an AI model a question for an account holder (the `ai` verb, described in the User set under *SD TCL - Asking the AI*). This page is for the administrator: it says what is set up, what leaves the machine, how to choose the provider and give it a model and a key, and how to allow or stop an account.
-
-> **This document is separate so that it can be withheld.** It links to nothing outside the
-> administrator set. Where a user-set page is worth naming, it is named in words.
+SD can ask an AI model a question for an account holder (the `ai` verb, see *SD TCL - Asking the AI* in the User documentation). This page is for the administrator: it says what is set up, what leaves the machine, how to choose the provider and give it a model and a key, and how to allow or stop an account.
 
 > **Nothing is on as delivered.** There is no provider, no key, and no account has the gate (each named provider comes with a default model, so the model is the one thing you need not supply). Until you have done the other three, the `ai` verb says so in words and nothing is sent anywhere. Turning one of them on is your act, and each is one command (or one key on the AI choice page) that can be undone. The one exception is the installer's box *Open every access gate for your SD Core account*: ticked, it gives the installing user's own account the `ai` gate along with the others. It still sends nothing until you have chosen a provider and set its key.
 
@@ -22,7 +19,7 @@ When a person types `ai some text`, SD shows them the provider, the model and th
 
 SD adds nothing of the account, the session or the data. A person can of course type or paste whatever they like into the question, which is why the preview is not optional and why the gate is yours to give.
 
-**The standing text.** Every request, from the `ai` verb and from every AI line, begins with a few lines of yours: what SD is, how its commands are written, which gates there are, and where SD's help is. SD ships a default; you can replace it (see [The standing text](21a-the-ai-helper-set-ai-and-the-key.html#the-standing-text) below). It is invisible to the person asking: it is not in their preview and it does not change their question. The preview's size counts it.
+**The standing text.** Every request, from the `ai` verb and from every AI line, begins with a few lines of yours: what SD is, how its commands are written, which gates there are, and where SD's help is. SD ships a default; you can replace it (see [The standing text](20a-the-ai-helper-set-ai-and-the-key.html#the-standing-text) below). It is invisible to the person asking: it is not in their preview and it does not change their question. The preview's size counts it.
 
 **Passages of the documentation.** The AI line (the home screen, the pages of the toolkit, the IDE, SED, the collection editor and the debugger; not the `ai` verb) also adds up to four sections of SD's own documentation that match the request, at most 2,400 bytes each and 6,000 in all. They are sent and counted in the preview's size, but the preview does not list them. The installer puts the markdown of the User and Administrator documents in `docs\user` and `docs\admin` under the system directory (`C:\ProgramData\SD\sdsys`), from the documentation repository (`SDCore4WindowsDocs`) beside the source on the machine that builds the installer. `docs` and `docs\user` are read-only for the group `sdusers`. **`docs\admin` is yours alone: only SYSTEM and the Administrators group can open it, there is no entry for `sdusers`, and the routine asks SD for the administrator before it looks there.** An account holder's request is never answered from those pages. An upgrade replaces the directory whole and locks it again, and it is not a place to put your own text. The installer is not built without the documentation repository, so an installed system always has the pages. This is documentation, not source: the rule below that the AI is never given SD's own code is unchanged.
 
@@ -78,7 +75,7 @@ It prints what it made, read back from the machine (the service's state, account
 ## The things that turn it on
 
 1. **A provider.** One for the whole machine: Anthropic, OpenAI, Google, DeepSeek or Custom.
-2. **A model** for that provider. Each of the four named providers comes with a default model, shown on the page and used until you name another (`set.ai model PROVIDER NAME`; a dash goes back to the default). The defaults are the balanced model of each provider as its own documentation named it when this release was made: **model names change, so check the one you will pay for.** On the page the model is chosen from the provider's own list in the setup dialog (S), and `set.ai models PROVIDER` prints that list at the prompt. Model names are case-sensitive: `deepseek-v4-pro` works, `Deepseek-V4-Pro` does not. Custom has no default; its model is yours.
+2. **A model** for that provider. Each of the four named providers comes with a default model, shown on the page and used until you name another (`set.ai model PROVIDER NAME`; a dash goes back to the default). The defaults are the balanced model of each provider as its own documentation named it (DeepSeek's is `deepseek-v4-flash` since DeepSeek retired `deepseek-chat`): **model names change, so check the one you will pay for.** On the page the model is chosen from the provider's own list in the setup dialog (S), and `set.ai models PROVIDER` prints that list at the prompt. Model names are case-sensitive: `deepseek-v4-pro` works, `Deepseek-V4-Pro` does not. Custom has no default; its model is yours.
 3. **A key** for that provider, from the provider's own account. It is typed or pasted in the setup dialog (shown as `*`) or at the helper's own prompt, and kept for the helper only.
 4. **The gate for each account that may use it**: `modify.account NAME ai-on`.
 
@@ -106,7 +103,7 @@ An administrator-only full-screen page (140 columns by 43 lines at least; it is 
 | A | the file of certificate authorities (you type `ca` to confirm) | |
 | L | change a limit | |
 | T | the standing text, in a box with an editor | the same |
-| F6, Shift-F6, Left, Right | change box (F6 goes on to the AI line when the AI is on) | change box |
+| F6, Shift-F6, Left, Right | change box (F6 goes on to the AI line when the AI is on for this account) | change box |
 | F1, `?` or a click on `[?]` | explain the box | explain the box |
 | F5 | read the machine again | read the machine again |
 | Ctrl-Q | leave | leave |
@@ -127,5 +124,5 @@ Opening the page changes nothing and writes one audit line, `tool start app=tool
 ## Continued in
 
 [The AI Helper: set.ai, the Key and
-Troubleshooting](21a-the-ai-helper-set-ai-and-the-key.html) — set.ai, the
+Troubleshooting](20a-the-ai-helper-set-ai-and-the-key.html) — set.ai, the
 standing text, the key and troubleshooting.

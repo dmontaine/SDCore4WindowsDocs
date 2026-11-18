@@ -37,15 +37,16 @@
 #     more) have shapes the count cannot express.  Those lines were taken from
 #     documents 01 to 17, where they were measured, and from BCOMP's own
 #     statement compilers where no page covers them.
+#
+# The data file wins wherever both have an opinion, so a measured shape always
+# beats a derived one.
+#
 #   * THE BUILT-IN FUNCTIONS (bf.rows, 15 Oct 2026) are a third place a name can
 #     live, and need a line each.  A line "@card NAME = ..." or "@admin NAME =
 #     ..." puts one extra line on that page for what the roster cannot name
 #     ($include, the public ospath(), the no-sort-variable forms of sortadd and
 #     its three companions); the script refuses an extra that the roster
 #     already puts on the same page.
-#
-# The data file wins wherever both have an opinion, so a measured shape always
-# beats a derived one.
 #
 import io
 import os
@@ -183,6 +184,7 @@ for name, (hnd, _c) in list(zip(pub, hp)) + list(zip(internal, hi)):
 
 # ------------------------------------------------------------- the data file
 
+shapes = {}
 # EXTRA LINES: "@card NAME = ..." and "@admin NAME = ..." put a line on ONE page
 # for something the roster has no name for, or has on the other page.  $include
 # is a directive and not a statement; the public ospath() shares its name with
@@ -191,7 +193,6 @@ for name, (hnd, _c) in list(zip(pub, hp)) + list(zip(internal, hi)):
 # Never checked against the roster, so each is checked here instead: a name the
 # roster already puts on that page is refused, because the extra would hide it.
 extras = {'card': {}, 'admin': {}}
-shapes = {}
 with io.open(SHAPES, encoding='utf-8', newline='') as f:
     for n, line in enumerate(f, 1):
         line = line.rstrip('\r\n')
@@ -286,16 +287,16 @@ if missing:
     print('         is worse than none - the reader concludes it does not')
     print('         exist.  Add the lines to syntax-shapes.txt.')
     sys.exit(1)
+if bogus:
+    print('REFUSED: a name in the data file that BCOMP does not accept is either')
+    print('         a typo or a statement that has been removed.')
+    sys.exit(1)
 if clash:
     print('=== AN EXTRA LINE FOR A NAME THE ROSTER ALREADY PUTS ON THAT PAGE (%d) ===' % len(clash))
     print('  ' + ', '.join(clash))
     print()
     print('REFUSED: the extra would hide the roster\'s own line.  Give the name an')
     print('         ordinary line, or take the extra out.')
-    sys.exit(1)
-if bogus:
-    print('REFUSED: a name in the data file that BCOMP does not accept is either')
-    print('         a typo or a statement that has been removed.')
     sys.exit(1)
 
 # ----------------------------------------------------------------- the pages
@@ -387,7 +388,7 @@ exist, and this account may not call it.
 
 **`$internal` needs both halves.** `BCOMP` tests
 `kernel(K$INTERNAL, -1) and kernel(K$ADMINISTRATOR, -1)` — internal mode alone
-was enough until 13 Aug 2026, and it was not safe: internal programs are the
+is not safe: internal programs are the
 only ones that may set the administrator flag, and `sd -internal` is not itself
 gated, so any account could have compiled a three-line program that granted
 itself administrator rights. That was demonstrated, not theorised.

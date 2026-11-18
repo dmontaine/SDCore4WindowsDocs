@@ -34,7 +34,7 @@ opened again.
 | `FILEUNLOCK` | one request; `STATUS()` afterwards is 0 (it was this session's and is free now), 3011 (another user's, still held) or 3012 (nobody held it), as for a local file. Same conditions as `FILELOCK`. It is never stopped by the definition being set back to `read`: giving a lock back changes no data |
 | `RELEASE` | the record form, the file form (which also gives the file lock back) and plain `RELEASE` (every lock this process holds on a write-mode server) |
 | `RECORDLOCKED()` | the other server's answer (-3 -2 -1 another user holds a file, update or read lock; 0 none; 1 2 3 this session holds a read, update or file lock), and `STATUS()` is the lock owner's user number on that server. **Only for a server defined `write` and a login in the other server's `sdfileswrite` group**, like a lock. A `read` definition stops the program with message 12506 (`recordlocked`) and nothing is sent; a login without the write group is refused by the other server (message 12505 with its text, "request 34"). It is allowed inside `BEGIN TRANSACTION` for a `write` definition: it changes nothing, so a rollback has nothing to undo |
-| `GETLOCKS()` | **the local view, for either mode, and nothing is sent**: the one field of three counters (`NUMLOCKS`, the lock count, the peak) of *this* machine's lock table and no lock line. The locks of a remote file are held on the other server and never appear here, in `GETLOCKS()` or in `LIST.READU`; look on the other server for them. `GETLOCKS()` is an internal-programs-only function |
+| `GETLOCKS()` | **the local view, for either mode, and nothing is sent**: the one field of three counters (`NUMLOCKS`, the lock count, the peak) of *this* machine's lock table and no lock line. The locks of a remote file are held on the other server and never appear here, in `GETLOCKS()` or in `LIST.READU`, which is what openQM's QMNet documents too; look on the other server for them. `GETLOCKS()` is an internal-programs-only function |
 
 **A verb that takes the file lock works.** `CLEAR.FILE` locks the file, clears it and gives the
 lock back, so on a write-mode remote file it clears one, to the same two conditions as a
@@ -57,7 +57,7 @@ administrator put this login in `sdfileswrite`. A login that is only in `sdfiles
 the other server with message 12526 and the line `api refused request=32 route=sdfiles write=off
 user=...` in its audit trail. The administrator of the server that is reached sees a file lock in
 `list.readu` (type `FX`, on the server's own user number) and can clear one with
-`unlock file n filelock` (see [Sessions and Locks](02-sessions-and-locks.html)); the lock also ends when the session that
+`unlock file n filelock` (the *Sessions and locks* page); the lock also ends when the session that
 holds it does. The first `FILELOCK` through each file variable is audited on the client
 (`netfile filelock server=... file=...`); a file lock waited for is one line, not one for each
 request.
@@ -90,21 +90,48 @@ read the record to find out.
 `FILELOCK` and `FILEUNLOCK` too, where openQM's QMNet lets them through without a rollback, which
 is a silent loss of the guarantee the program asked for); the statements that read or change the
 tree of an index (`AKREAD`, `AKWRITE`, `AKDELETE`, `CLEAR.AK`, `AKENABLE`, `AKMAP`), `OPENSEQ` and
-the other sequential-file statements (message 12516). `CONFIGURE.FILE`, `ANALYZE.FILE`, `FCONTROL`,
-`CREATE.INDEX` and the other index verbs, creating or deleting a remote file and
-`WRITE ... CREATING.SEQKEY` work for a login that also has the administration group ("The
-administration group", above), and are refused with nothing sent for a `read` definition.
-`MUSTLOCK` is honored as for a local file: a write
-without the lock held is refused with `STATUS()` 3023 (for a login without the write group see
-`RECORDLOCKED()` above).
+the other sequential-file statements (message 12516). `FILELOCK`, `FILEUNLOCK`,
+`GETLOCKS` and `RECORDLOCKED()` are not on this list; they work as the table above says
+(`RECORDLOCKED()` and the file lock for a `write` definition and the write group).
+**`CONFIGURE.FILE`, `ANALYZE.FILE`, `FCONTROL`, `CREATE.INDEX` and the other index verbs,
+creating or deleting a remote file and `WRITE ... CREATING.SEQKEY` work for a login that also has
+the administration group (*The administration group*, above), and are refused, with nothing
+sent, for a `read` definition.** `MUSTLOCK`
+is honored as for a local file (there is no `$MODE AUTOLOCK`): a write without the lock held is refused
+with `STATUS()` 3023 (for a login without the write group see `RECORDLOCKED()` above).
 
 **The local edit gates apply by the remote file's name.** A write, delete or clear of a remote
-file that is a VOC, a program file or a dictionary (`OPEN 'DICT', ...`) needs the account to
-hold `voc.edit`, `bp.edit` or `dict.edit` as it would for a local file (messages 12410 to
-12412).
+file named `voc`, `bp`, `bp.out`, `*.bp`, `*.bp.out` or `*.dic`, or of a remote dictionary
+(`OPEN 'DICT', ...`), needs the account to hold `voc.edit`, `bp.edit` or `dict.edit` as it would for
+a local file (messages 12410 to 12412). The programs the system supplies that edit a file the
+user names (`ED`, `COPY` and the like) ask the same question.
 
 **The cache is off for a write-mode handle**, so a record is never read from memory a second
 before it is changed; a `LIST` or `SORT` over such a file makes about twice the read requests.
+
+**What to expect.** A second session that finds a record locked by the first is told so. A
+connection lost while a change is in flight stops the program with message 12514, and no
+change is sent twice. `CLEARFILE` of a remote file works; a change inside `BEGIN TRANSACTION` is
+refused; the edit gates are applied by the remote file's name; and a gate that is off, a
+definition that says `read`, an account that is not listed, a wrong pin and a login removed
+from its group are each refused. A write is refused until the person has `files-write-on`;
+then `WRITE`, `WRITEU`, `DELETE`, `READU`, `RECORDLOCKU`, `READVU` and `CLEARFILE` work on the
+server's file.
+
+`FILELOCK` and `FILEUNLOCK` are refused by the server for a login without the write group
+(message 12526; the audit trail has `api refused request=32` and `request=33 route=sdfiles
+write=off`), and by the client for a `read` definition and inside `BEGIN TRANSACTION`. With
+the write group, `FILELOCK` shows in the server's own `list.readu` as a file lock (type `FX`,
+no id) held by the client's session; a second session finds the file busy, with the holder's
+user number in `STATUS()`, and then waits for it; `FILEUNLOCK` leaves 0 and 3012; and the lock
+is gone from `list.readu` after `CLOSE`, after `RELEASE f`, after a bare `RELEASE` and after a
+program that ended holding it.
+
+**`RECORDLOCKED()` and request 34.** A `read` definition stops the program with message 12506
+and nothing is sent. A login without the write group is refused by the other server with
+message 12526 and the audit line `api refused request=34 route=sdfiles write=off`, and the
+client reports message 12505; `MUSTLOCK` is refused for such a login. `RECORDLOCKED()` is
+allowed inside `BEGIN TRANSACTION` for a `write` definition.
 
 ## Continued in
 

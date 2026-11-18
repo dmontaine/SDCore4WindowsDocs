@@ -15,7 +15,7 @@ apply — it is what `create.account` and the installer already do:
 |---|---|
 | Every SD account | a standard Windows account with no privileged token — see [Being a Windows administrator gets you nothing](#being-a-windows-administrator-gets-you-nothing) |
 | ssh | `ForceCommand`s straight into `sd`, no shell, no `sh`, no `OS.EXECUTE` — see [ssh access](08-ssh-access.html) |
-| the account's `sh-on` and `os-on` switches | off for every account `create.account` makes — `sh`, `OS.EXECUTE`, the two full-screen editors and any file outside the account's own directory are all refused until SDSYS grants them, account by account — see [Administrator commands](06-administrator-commands.html#how-you-grant-it) |
+| `sh`, `OS.EXECUTE`, the editors, the embedded Python, and operating-system files named by path | **off for a new account**, in two independent switches (`sh-on`, `os-on`) that SDSYS turns on account by account — see [Security and the operating system](12a-security-and-the-operating-system.html#the-shell-and-operating-system-access-are-per-account-switches) |
 | ssh and the API, per account | **off for a new account**; SDSYS gives each account the route it needs (`ssh`, `api`, `both`) — see [Managing accounts](05a-managing-accounts.html) |
 | Saving a change to a VOC, a program file or a dictionary (and compiling) | **off for a new account**, in three independent switches (`voc-on`, `bp-on`, `dict-on`) that SDSYS turns on account by account; reading is never stopped — see [Managing accounts](05a-managing-accounts.html) |
 | The `shared` account | the one door that is **open** in a new installation, on purpose: every account can read the data files of the `shared` account by file name, and none can write them — see [The shared account](#the-shared-account-is-open-to-read-by-design) |
@@ -79,11 +79,6 @@ elevated or not — grants nothing by itself, and there is no route from any
 other account into SDSYS once a session has started. See
 [Accounts](05-account-types.html#sdsys-is-the-only-administrator).
 
-> **This reverses how SD Core 1.0 and early 1.1 builds worked**, where any
-> Windows administrator's own account was an SD administrator, and `logto
-> sdsys` from an elevated session was the way in. If you read that in an
-> older document, it no longer holds.
-
 **SDSYS has its own Windows sign-in password**, set once during installation
 in the window that appears after the wizard closes. It is an ordinary
 Windows password, not something SD stores or checks — see
@@ -105,7 +100,7 @@ it; every SD-level check is unchanged.
 SDSYS itself is refused ssh and the API outright, from this machine or any
 other — see [ssh access](08-ssh-access.html) and
 [API access](09-api-access.html). There is no "administrator, but only
-locally" middle case any more.
+locally" middle case.
 
 ## Taking an account out of use without deleting it
 
@@ -166,9 +161,9 @@ Substitutes for it.**
 `C:\ProgramData\SD\user_accounts\<name>` is granted to that account's own
 group, to administrators and to the system, **and to nobody else**.
 
-Before this, every SD user could read and rewrite every other user's account
+Without that, every SD user could read and rewrite every other user's account
 files from Explorer or a command prompt — outside SD, so none of SD's own
-permission checks applied. SD has always refused to let you **`logto`** an account
+permission checks applied. SD refuses to let you **`logto`** an account
 you are not a member of; this makes the files agree with that.
 
 **Nothing you type changes, and your own account is unaffected** — you are a
@@ -229,6 +224,14 @@ The global catalog and the pcode library are locked the same way.
 > ```
 > powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\secure-sysdirs.ps1" -Path "C:\ProgramData\SD\sdsys" -KeepChildren
 > ```
+
+### `batch.jobs` is read-only to ordinary accounts
+
+The allow-list [Scheduled jobs](04-scheduled-jobs.html) reads from is readable
+by every SD user (needed, since `login` checks it on their behalf) and writable
+only by an administrator: the installer locks it with the same script as the
+other permit files. A user who could add a line to their own record would be
+granting themselves the unattended command line.
 
 ### The credential file
 
