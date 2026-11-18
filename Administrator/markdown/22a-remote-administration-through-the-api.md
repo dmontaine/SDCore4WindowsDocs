@@ -74,7 +74,8 @@ Several addresses are given with commas: `-Entries 192.168.1.20,10.0.0.0/8`.
 **The API must also be open to other computers** for a client to reach it at all: the installer's
 question about API access, or `remote.api on` later. That opens TCP port 4247 for every account;
 this door decides whether SDSYS may use it. With `remote.api local`, SD listens on `127.0.0.1`
-only, and the door matters only for a client on this computer that connects to that address.
+only, and this door then admits nobody: a client on this computer is decided by the list described
+in [Reaching SDSYS from Your Own Login](22b-reaching-sdsys-from-your-own-login.html).
 
 ## SDSYS's SD password
 
@@ -95,8 +96,11 @@ after the same delay.
 * **Travelling** is safest through a VPN into your own network, so that the client arrives from a
   listed range. `any` is there for when a VPN is not possible: with it, anyone who can reach this
   computer's API port, from anywhere on the internet, can try the password.
-* **This computer** (`127.0.0.1`) is an address like any other on this door: a program here that
-  connects over the network port as SDSYS must be listed too.
+* **This computer** (`127.0.0.1`) is never covered by this door: neither a listed address nor `any`
+  admits a connection from it, and `remote.sdsys api on` refuses a loopback address. A program here
+  that connects over the network port as SDSYS is admitted only if the Windows user it runs as is on
+  the list of [Reaching SDSYS from Your Own Login](22b-reaching-sdsys-from-your-own-login.html),
+  which is empty as delivered.
 
 A client that comes in through a gateway that translates addresses (a home router, a cloud load
 balancer) arrives from the gateway's address, not its own; name that one. A refusal says which
@@ -108,7 +112,10 @@ SDSYS may always use the API from this computer, whatever the door says, by the 
 (no network port): a program signed in to Windows as SDSYS and running elevated starts SD itself,
 and no SD password is asked, as at the keyboard. Such a session has every right of the
 administrator. A program that is not running as SDSYS, or that Windows has not elevated, is
-refused, exactly as it is at the keyboard.
+refused, exactly as it is at the keyboard. The administrator can also list Windows users whose
+programs on this computer may sign in as SDSYS over the network port at `127.0.0.1`, with SDSYS's SD
+password; the list is empty as delivered (see
+[Reaching SDSYS from Your Own Login](22b-reaching-sdsys-from-your-own-login.html)).
 
 ## What refuses
 
@@ -122,7 +129,8 @@ refused, exactly as it is at the keyboard.
 * Each change of the door: an audit line `remote.sdsys api on from=192.168.1.0/24 status=0` and the
   like, with the addresses you gave and the helper's exit status.
 * Each SDSYS sign-in through the API: `elevation granted reason=sdsys api from=192.168.1.20`, or
-  `from=this machine` for the local connection.
+  `from=this machine` for the local connection, or `from=this machine user=fred` for a listed user's
+  program at `127.0.0.1`.
 * Each refusal: the reason and the address, in the audit trail.
 
 ## What SD changes on the computer

@@ -113,6 +113,7 @@ list.locks = **`list.locks`**
 list.readu = **`list.readu`** {*user.no*} {**`detail`**} {**`wait`**} {**`no.page`**} {**`lptr`** {*n*}}
 list.vars = **`list.vars`** {*pattern*}
 listu = **`listu`** {**`detail`**} {**`no.page`**} {**`lptr`** {*n*}}
+local.sdsys = **`local.sdsys`** {**`ssh`** | **`api`**} {**`add`** *user* {**`no.query`**} | **`remove`** *user* | **`clear`**}
 lock = **`lock`** *n* {**`no.wait`**}
 lock.tracer = **`lock.tracer`** **`on`** | **`off`** | {**`user`** *n*} {**`lptr`** {*n*}} {**`no.page`**}
 logmsg = **`logmsg`** *text*

@@ -24,7 +24,8 @@ apply — it is what `create.account` and the installer already do:
 | Scheduled jobs | **nothing is allowed or scheduled as delivered**. An account's command runs unattended only when SDSYS lists its name for that account (`set.batch add`), and SDSYS's own jobs (`set.job`) exist only when SDSYS adds them. A listed command runs with nobody at the keyboard, as the account's Windows user; a `set.job` job runs one of two fixed commands (`backup-all`, `update-accounts`) as the administrator — see [Scheduled jobs](04-scheduled-jobs.html) |
 | The `shared` account | the one door that is **open** in a new installation, on purpose: every account can read the data files of the `shared` account by file name, and none can write them — see [The shared account](#the-shared-account-is-open-to-read-by-design) |
 | The API | off (`APIPORT` unset in `sd.conf`) until an administrator turns it on — see [API access](09-api-access.html) |
-| SDSYS | no ssh route, ever; no API route from another computer until an administrator has opened that door for chosen addresses (`remote.sdsys api on`), and then its SD password stands between those addresses and the administrator — the one thing this page treats as non-negotiable rather than a default |
+| SDSYS from a listed user's own login on this computer | **off**: both lists (`local.sdsys ssh` and `local.sdsys api`) are empty. An administrator who lists a Windows user lets that user, from any session of theirs on this computer, become SDSYS with SDSYS's SD password; the Administrator set's *Reaching SDSYS from Your Own Login* says what that means and how to take a name off |
+| SDSYS | no ssh sign-in as SDSYS, ever (a listed user's route from this computer is the row above); no API route from another computer until an administrator has opened that door for chosen addresses (`remote.sdsys api on`), and then its SD password stands between those addresses and the administrator — the one thing this page treats as non-negotiable rather than a default |
 | The console and Remote Desktop | denied to every ordinary account (`sdsshonly`) — see [Accounts](05-account-types.html) |
 
 **Only SDSYS administers SD.** No other account, whatever its Windows group
@@ -77,8 +78,10 @@ are.**
 | `sd -a<name>` | **refused unless `<name>` is your own account** (10051) |
 | `logto sdsys` from any other account | **refused** to every session that did not sign in to Windows as `sdsys` at its desktop, whether or not it is elevated — 10002, audited `logto refused account=sdsys reason=sdsys is entered by its own session only`; the administrator's own session, having gone to another account, may `logto sdsys` to come back (audited as `logto account=sdsys`) |
 
-**SDSYS is reached one way only: sign in to Windows as the account literally
-named `sdsys`, and run `sd` elevated.** Being a Windows administrator —
+**As delivered, SDSYS is reached one way only: sign in to Windows as the account literally
+named `sdsys`, and run `sd` elevated.** (An administrator can list Windows users who may
+also reach it from their own login on this computer; both lists are empty as delivered.)
+Being a Windows administrator —
 elevated or not — grants nothing by itself, and there is no route from any
 other account into SDSYS once a session has started. See
 [Accounts](05-account-types.html#sdsys-is-the-only-administrator).

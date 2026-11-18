@@ -26,6 +26,17 @@ system knows (an account name, a reason) and keeps its case. A value may hold sp
 **Every line written by a run of a scheduled administrator job ends `job=`*name***, starting with
 `elevation granted reason=scheduled job`; see Scheduled Jobs, in this set.
 
+**The lists of Windows users who may reach SDSYS from this computer write these lines**
+(see Reaching SDSYS from Your Own Login, in this set): a change by the administrator,
+`local.sdsys ssh add user=fred status=ok` (or `status=refused`; `remove` and `clear` the same, `clear`
+with no `user=`); a grant over ssh, `elevation granted reason=sdsys local ssh user=fred`; a refusal after
+the password was asked, `elevation refused reason=sdsys local ssh wrong password user=fred` or
+`... no credential user=fred`; a grant through the API,
+`elevation granted reason=sdsys api from=this machine user=fred`; and, while the ssh list has names, the
+existing refusal of an SDSYS session that is not elevated at a desktop with a `why=` word added
+(`why=not-listed`, `why=no-terminal` and so on). A `sd-sdsys` that the SD service refuses before SDSYS is
+started is not in the trail: SD never ran; the service writes it to `C:\ProgramData\SD\sdsvc.log`.
+
 ## Who writes it
 
 **The user and the process on a line are not the session's word.** Every session hands its record to the

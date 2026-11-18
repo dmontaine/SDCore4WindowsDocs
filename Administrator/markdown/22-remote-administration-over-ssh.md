@@ -20,6 +20,9 @@ and then whether the API door is open (`remote.sdsys ssh` shows the walls alone)
 opened with `remote.sdsys api on`, for chosen addresses; it is described on its own page,
 [Remote Administration through the API](22a-remote-administration-through-the-api.html). This page is about ssh.
 
+**Reaching SDSYS from a listed Windows user's own login on this computer is a third, separate thing**,
+off as delivered, described in [Reaching SDSYS from Your Own Login](22b-reaching-sdsys-from-your-own-login.html).
+
 An elevated administrator can show or shut the ssh walls from PowerShell:
 
 ```

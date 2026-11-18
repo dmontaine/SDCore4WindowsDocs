@@ -102,9 +102,18 @@ from one arriving through a tunnel; **it cannot name a remote person.**
 > from another computer only from an address the administrator listed, and it
 > decides that from the address the connection came from. A tunnelled
 > connection arrives from `127.0.0.1` because it really does start here, so it
-> is treated as this computer. If that matters to you, keep the door shut
-> (`remote.sdsys api off`) and turn port forwarding off in `sshd_config`; no
-> check inside SD can see through a tunnel.
+> is treated as this computer: the addresses of that door never admit it, and
+> it is SDSYS only if the process that connects runs as a Windows user the
+> administrator listed with `local.sdsys api`. A listed user's tunnel is that
+> user. If that matters to you, keep the list empty and turn port forwarding
+> off in `sshd_config`; no check inside SD can see through a tunnel.
+
+**Listed users are a third way to SDSYS, and it is off as delivered.** The administrator can list
+Windows users (`local.sdsys ssh add`, `local.sdsys api add`) who may become SDSYS from this computer
+with SDSYS's SD password. Both lists are empty until someone lists a name. A connection from
+`127.0.0.1` is admitted as SDSYS only for a program SD identifies, in the way this line does, as
+running as a listed user, and never by the addresses of `remote.sdsys api`. List only your own
+administrator login, and check with `local.sdsys` that the lists say what you expect.
 
 *"peer process not identified"* means the client had already gone by the time
 the connection was looked up. It is not an error and the connection proceeds

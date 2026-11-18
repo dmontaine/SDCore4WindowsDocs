@@ -265,13 +265,13 @@ chosen with the keys `1` to `6`:
 | `3` servers | the SDNet servers of the `netservers` file: name, address, remote account and mode, the pin shortened, the local accounts that may use it. `X` deletes the one under the cursor (`delete.server`, which does not ask itself, so the box is the question). `N` asks every field, checks them the way `set.server` does and gives **the terminal to the verb**, whose `connect` step shows the key the server presents and asks whether to trust it |
 | `4` connected | every session now by the door it came through: the user number, the kind (user, api, sdnet, phantom), the login user, the account and where it came from |
 | `5` TLS | this machine's TLS identity as `settings.report` gives it: the certificate fields and the public-key hash another SD server pins. Never the private key |
-| `6` remote administration | what `remote.sdsys` says with no keyword: the walls that remote administration for SDRADMIN stands behind, one line each (shut as delivered). `O` opens it (its box wants the word `open` typed) and gives **the terminal to the verb**, because the first opening makes the account and asks its Windows password twice; `F` shuts it. See Remote Administration over ssh |
+| `6` remote administration | what `remote.sdsys` says with no keyword: the walls that remote administration for SDRADMIN stands behind, one line each (shut as delivered). `O` opens it (its box wants the word `open` typed) and gives **the terminal to the verb**, because the first opening makes the account and asks its Windows password twice; `F` shuts it. See Remote Administration over ssh. Below the report are two fields, **Local ssh users** and **Local API users**: the Windows users who may reach SDSYS from this computer, both empty as delivered. Up and Down choose a field; `U` adds a name to it (its box shows the warning and wants the name typed again), `X` removes a name chosen from the list, `C` clears the list. See [Reaching SDSYS from Your Own Login](22b-reaching-sdsys-from-your-own-login.html) |
 
 **`A` can end your own session.** Any move between `on`, `local` and `off` moves the listener, which SD
 opens only when it starts, so `A`'s form asks whether to restart SD now (`later` is the default), and a
 restart ends every SD session, this page's too. Answered `later`, the setting waits for the next start of SD.
 
-`remote.api`, `remote.ssh`, `delete.server` and `remote.sdsys off` run through the routine all the toolkit pages use, each only after a
+`remote.api`, `remote.ssh`, `delete.server`, `remote.sdsys off` and `local.sdsys` with `add`, `remove` or `clear` run through the routine all the toolkit pages use, each only after a
 box that shows the command and what it does was answered Run (**Cancel is what Enter chooses**); while the change runs the status line says
 "Making the change (a few seconds)...";
 `set.server` and `remote.sdsys on` are run by the verb itself on the terminal, after the same box. The verbs

@@ -62,6 +62,13 @@ as SDSYS and running it elevated.** The three verbs on this page that do
 each of them acts only on the account you are already standing in or on
 your own session.
 
+**The administrator can also list Windows users who may reach SDSYS from
+their own login on this computer** (`local.sdsys`), by
+`ssh -t` *user*`@localhost sd-sdsys` or from a program over the API at
+`127.0.0.1`, each asked for SDSYS's SD password. It is off as delivered:
+both lists are empty. See [Reaching SDSYS from Your Own
+Login](22b-reaching-sdsys-from-your-own-login.html).
+
 **SDSYS may be signed on in more than one place, and when it is you can see it.**
 Nothing stops a second console window or a second sign-in of the `sdsys` user from
 starting SD, and one reason to want that is recovery: a session that is stuck at a
