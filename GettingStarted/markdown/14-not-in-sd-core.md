@@ -7,9 +7,7 @@ document the removed features themselves.**
 
 Everything here was in OpenQM, in ScarletDME, or in upstream `sdb64`, and is not
 in SD Core for Windows. **Most of these removals were made independently on SD
-Core for Linux too, for the same reasons** — see its own version of this
-page — which is worth knowing if you come across a decision recorded on one side
-and wonder whether it binds the other.
+Core for Linux too, for the same reasons.**
 
 > **If you had a use for any of these, say so.** Several were removed on the
 > reasoning that nothing needed them. That reasoning is worth testing against
@@ -30,7 +28,7 @@ and `ide`, a workbench for programs and files.
 
 **SD Core's full-screen editing is `sed`, `edit` and `micro`**; the last two open
 the record in Microsoft Edit and in micro — see
-[Programmer commands](07-programmer-commands.html#editors), which also says
+[Development and file commands](07-programmer-commands.html#editors), which also says
 what each is good for and what they cannot do. The three removed programs above are
 gone as *programs*; the capability is not.
 
@@ -123,8 +121,9 @@ could not reach, and the test can be deleted.**
 
 The `TAPE`/`RESTORE` subsystem is gone, along with the assumption of a
 tape-backed sequential medium it was built around. Back up and restore SD
-data the ordinary Windows way — at the file level, with the service stopped,
-or through your own export/import BASIC.
+data with `backup.account` and `restore.account` — see the Administrator
+set's *Backing Up and Restoring Accounts* — at the file level, with the
+service stopped, or through your own export/import BASIC.
 
 ## Language and locale
 

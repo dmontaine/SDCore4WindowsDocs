@@ -93,7 +93,7 @@ The prompt shows the selected subfile (`0?`). Commands:
 *n*, `ga` all groups; `h` the header, with the file offset of each field in hex;
 `Lid` the hash value, group and address of a record id; `Sn` select a subfile (0
 primary, 1 overflow, 2 onward indexes); `n` and `p` next and previous window; a
-number shows the window at that address; `rebuild n` dump and rebuild group *n*;
+number shows the window at that decimal address; `rebuild n` dump and rebuild group *n*;
 `recover`; `z` the file's statistics counters; `?`; `q`.
 
 * **Addresses it prints with an `x` in front are decimal.** `Header size 2048

@@ -72,10 +72,9 @@ takes, and the verb says them back in the same lines (`Account fred starts at: m
 `Account fred may add its own programs to the home screen: yes`); **any kind of account may have
 them**, a group or an `other` account included. Two different start words in one command are
 refused ("start-menu and start-terminal set the same access to different states ... give one of
-them") before anything is made, and so is a start word that is neither: the Windows user, the
-password and the directory come after, so a refused word creates **nothing**. The words that restate what an
-account has when they are left out, `start-default` and `pins-off`, are for `modify.account`
-only, as `shared-read-on` is. The audit line gains `pins-on` in its `gates=` list and, when a
+them") before anything is made, and so is a start word that is neither: a refused word creates
+**nothing**. `start-default` and `pins-off` are for `modify.account` only, as `shared-read-on`
+is. The audit line gains `pins-on` in its `gates=` list and, when a
 start word was typed, a tail `start=menu` or `start=terminal`:
 
 ```
@@ -194,10 +193,10 @@ these:
 | `OPENSEQ` and `OPENPATH` with a path | status 3035, so `OPEN ... ELSE` works as before |
 | `DIR()` and the `select.dir` verb | no entries, and `STATUS()` is set (the verb says why) |
 | `DELETESEQ` of a bare path | status 3035; the file is left alone |
-| the socket trace file (`set.socket.mode` with `skt$info.trace`) | `set.socket.mode` is refused with status 3035 and nothing is written |
 | `OPENTEMP` with a pathname or in the temporary directory, `DIGEST` of a file, and the file keys of `OSPATH()` | the `ELSE` branch, or a null result, with status 3035 (`DIGEST`'s `STATUS()` says the file is outside what the account may reach) |
 | `!OSCOPY`, `!IOSCOPY` and the `oscopy` verb | refused, status -4 (the verb says why) |
 | printing into a file by path (`setptr ... as pathname`, `SETPU`, or a `$hold` print name that climbs out with `..`) | the verb refuses when the unit is set; for either, the first line printed is refused and the program stops |
+| the socket trace file (`set.socket.mode` with `skt$info.trace`) | `set.socket.mode` is refused with status 3035 and nothing is written |
 
 The containment is by **real path**: `..` is resolved before the test, so it
 does not get round it. A path inside the account's own directory always works.

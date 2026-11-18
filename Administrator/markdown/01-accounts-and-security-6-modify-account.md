@@ -8,22 +8,17 @@ This page continues [Accounts and Security: File Writing, the AI and VOC Pointer
 ```
 modify.account account add | delete  <user.name>
 modify.account account ssh | api | both | none
-modify.account account ssh-key-on | ssh-key-off
 modify.account account sh-on | sh-off
 modify.account account os-on | os-off
 modify.account account sd-on | sd-off
-modify.account account voc-on | voc-off
-modify.account account bp-on | bp-off
-modify.account account dict-on | dict-off
+modify.account account voc-on | voc-off | bp-on | bp-off | dict-on | dict-off
 modify.account account recovery-on | recovery-off
 modify.account account xfer-on | xfer-off
 modify.account account net-on | net-off
-modify.account account shared-read-on | shared-read-off
-modify.account account shared-write-on | shared-write-off
-modify.account account files-on | files-off
-modify.account account files-write-on | files-write-off
-modify.account account files-admin-on | files-admin-off
+modify.account account shared-read-on | shared-read-off | shared-write-on | shared-write-off
+modify.account account files-on | files-off | files-write-on | files-write-off | files-admin-on | files-admin-off
 modify.account account ai-on | ai-off
+modify.account account ssh-key-on | ssh-key-off
 modify.account account start-menu | start-terminal | start-default
 modify.account account pins-on | pins-off
 modify.account account suspended | unsuspended

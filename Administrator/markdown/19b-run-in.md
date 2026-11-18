@@ -92,7 +92,7 @@ it is in the account and before the command runs, `run.in` also refuses:
   bp.out in account ACME names a path outside the account; nothing was run`.
 * **a file the command opens that has a trigger**: the VOC, the named file and its dictionary, the
   `.out` file and the private catalog. The account's VOC is looked at first. A trigger is a program found in the account's own catalog,
-  and it would run in this session. `run.in: bp in account ACME has a trigger; nothing was run`.
+  and it would run in this session. `run.in: bp in account ACME has a trigger; nothing was run`. Edit such a file in the account it lives in, or take the trigger off first.
 * **a `$execute` line in the source it compiles.** The compiler runs the command a `$execute`
   directive names while it compiles; under `run.in` it refuses it instead, and the compile fails
   with `$execute is refused in a compile started by run.in: it would run a command from the
@@ -117,7 +117,8 @@ in the source are not listed in advance.
 
 ### The audit trail
 
-Every use writes `run.in begin account=… command=…` and `run.in end account=…` (or
+It adds no authority: the administrator can already `logto` into any registered account. What it
+adds is the way back and a shorter list. Every use writes `run.in begin account=… command=…` and `run.in end account=…` (or
 `run.in revert account=… reason=abort`) to the audit trail, and a refusal writes `run.in refused …`
 with the reason.
 

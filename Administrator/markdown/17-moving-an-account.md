@@ -142,14 +142,15 @@ lines.
 
 A key the zip does not have (an older backup) gives the delivered default: every gate off,
 `shared.read` on, `shared.write` off. **An existing account keeps its own switches whatever the zip
-says**: a zip with `os.sh: 1` restored over an account with `sh` off leaves it off; to change one,
+says**: a zip with `os.sh: 1` restored over an account with `sh` off leaves it off. To change one,
 use `modify.account`.
 
 **Global programs.** The backup notes each global program whose object file is in the account, and
-the restore catalogs it again from the restored file. A program recompiled after it was cataloged
-no longer matches, so it is not carried; `settings.report` lists the global catalog. A name that
-the new machine's global catalog already uses for a different program is left alone and listed
-(message 13017).
+the restore catalogs it again from the restored file, printing *… re-cataloged globally*. A
+program recompiled after it was cataloged no longer matches, so it is not carried;
+`settings.report` lists the global catalog. **Check any name the new machine already uses.** A
+different program already under the name is left alone and reported (message 13017: *… is already
+in the global catalog as a different program, so it was not replaced*).
 
 ## Continued in
 

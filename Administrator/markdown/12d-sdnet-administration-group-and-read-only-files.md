@@ -43,7 +43,8 @@ of the API, and they are the only door a files-only login has to them.
   machines. The server runs the verb itself *for the login*, in the account the login entered, so that
   account's switches apply as they would to the same person at a terminal: the edit switches
   (`voc.edit`, `bp.edit`, `dict.edit`) are asked by the file's name for everything but the report
-  (`analyze.file`).
+  (`analyze.file`), and the shared account's structure rule holds (a files-only login is never
+  SDSYS).
 - **What the server checks before it runs anything.** The verb is chosen by the number of the
   operation and never read from the text. The file is **named by the open file** (the name it was
   opened under on this connection), so a login cannot name one it did not open. The words are
@@ -63,8 +64,8 @@ of the API, and they are the only door a files-only login has to them.
   file named is the new one), so a killed command is still on the trail. A login is written
   `api login route=sdfiles write=on admin=on user=name`.
 - **The group is read at login**, like the other two, from the Windows groups, so a change takes
-  effect at the person's next login on that server. A group that cannot be read counts as **not** a
-  member: a doubt never grants administration.
+  effect at the person's next login on that server. A group that cannot be read refuses the login
+  with its own reason, so a doubt never grants administration.
 - **On the client** the same four things are the statements and verbs of *Programming with a Remote
   File* (User set): `WRITE ... CREATING.SEQKEY`, `FCONTROL`, the six verbs on an `N` pointer,
   `CREATE.FILE name SERVER srv {AS remote}` and `DELETE.FILE` of a pointer. The server definition
@@ -122,9 +123,8 @@ a lock (see "Writing and locking" below).
 `OPEN 'DICT', 'customers' TO d` opens the **dictionary** of the remote file, from the same
 server, and the same statements work on it. (The request the client sends for a dictionary
 is `dict customers` in lower case; the server opens `dict` and a name, in any case, as a
-dictionary. A server that does not open `dict` and a name as a dictionary cannot be used for
-this, so `LIST`, `COUNT`, `SORT` and `SELECT` on a remote file stop at
-"Cannot open dictionary".)
+dictionary. A server that does not answer this request leaves `LIST`, `COUNT`, `SORT` and
+`SELECT` on a remote file stopped at "Cannot open dictionary".)
 **Nothing else does.** Every other statement
 given the file variable (writes, deletes, `CLEARFILE`, locks including `FILELOCK` and
 `FILEUNLOCK`, `AKREAD`...) stops with

@@ -88,17 +88,17 @@ that a login kept for SDNet (see [SDNet](12-sdnet.html)) never needs `sdapi`: th
 other server's administrator gives that login `sdfiles`, and whoever steals the
 stored login can open and read files on that server and cannot run a command
 there. **Changing files there is a further permission, `files-write-on` (the
-Windows group `sdfileswrite`)**, given separately and off for a new account, and
+Windows group `sdfileswrite`)**, given separately and off for a new account (below, *Changing files: `files-write-on`*), and
 **administering them there - configure, index, create and delete a file, the file's
 counter - is a third, `files-admin-on` (the Windows group `sdfilesadmin`)**, off for every
 account (below, *Administering files: `files-admin-on`*).
 
 **Off for a new account, like every other door.** `create.account user` takes
-`files-on`, `files-write-on` and `files-admin-on`; `modify.account` *name* `files-on` / `files-off`,
+`files-on`, `files-write-on` and `files-admin-on` (each needs the one before it: `files-write-on` needs `files-on`, and `files-admin-on` needs both); `modify.account` *name* `files-on` / `files-off`,
 `files-write-on` / `files-write-off` and `files-admin-on` / `files-admin-off` turn them on and off. Membership of the
 group *is* the route, as membership of `sdapi` is for `api`, so there is no field
 for it in the register. After a change SD says where the account stands, **read
-back from the group** rather than taken from the request:
+back from the group** rather than taken from the request, in a line of its own:
 
 ```
 :modify.account fred files-on
@@ -107,8 +107,12 @@ Account fred has files yes
 Account fred has files no
 ```
 
+(SD writes a keyword it prints in lower case.)
+
 Asking for what is already so changes nothing and says so ("fred already had that
 access; nothing changed"). The change is written to the audit trail (`modify.account files-on account=fred`).
+If the group does not show the state asked for afterwards, SD reports the failure
+("Unable to change remote access for fred, status: 2") and not a success.
 The three groups are made, empty, by the installer (its `sync-route-groups.ps1`),
 and removed by an interactive uninstall. The write permission and its removal are
 described under *Changing files*, on the next page.
@@ -175,7 +179,14 @@ lock files here: ask the administrator for files-write-on (request *n*)"), **the
 request is not carried out**, and a line goes to the audit trail
 (`api refused request=16 route=sdfiles write=off admin=off user=fred`; a login by this route
 is `api login route=sdfiles write=on admin=off user=fred`, with `admin=on` for a person in
-`sdfilesadmin`). The connection stays open.
+`sdfilesadmin`). The connection stays open, so a client that asks for something it should not can carry on with files.
+
+**What is not changed.** Everything else about the session applies as it does to any
+other: the account must be entered, the account's own switches (the OS-access
+gate, the three edit switches, the NET switch) are loaded and enforced, `SDCLIENT` in
+`sd.conf` still decides whether a client may open the files it names, and the
+API listener must be on (`remote.api`). **`sdfiles` alone is a read-only route**: the
+numbers marked above are refused unless the person is also in `sdfileswrite`.
 
 ## Continued in
 

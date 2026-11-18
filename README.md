@@ -51,10 +51,15 @@ pip install markdown
 python tools\mkdoc.py --in GettingStarted\markdown --out GettingStarted\html
 ```
 
+Every step is a plain Python script; the only dependency is **python-markdown**
+(`pip install markdown`). Run `mkdoc.py` once for each set, with that set's
+`markdown` and `html` folders.
+
 `tools\mkdoc.py` renders each Markdown page to one self-contained HTML file (the
 style is embedded, so a page can be copied anywhere). `tools\add_nav.py` adds the
 previous/next links and checks that each set has its license page first, and
-`tools\mkbook.py` joins a set into one book. `tools\mkpdf.ps1` makes the PDF of
+`tools\mkbook.py` joins a set into one book (`tools\mkbookpdf.ps1` makes a PDF of
+a book). `tools\mkpdf.ps1` makes the PDF of
 a rendered page and needs Edge or Chrome, which every supported Windows machine
 has. The generated pages are not tracked; the Markdown is the source.
 
@@ -75,9 +80,9 @@ accepts, or a verb the VOC holds, has no line in `tools\syntax-shapes.txt` or
 `tools\tcl-syntax-shapes.txt`, one `NAME = syntax` per line. `linkup.py` turns
 the page names the two cards write in italics into links.
 
-`tools\checklinks.py`, `tools\docmap.py`, `tools\tclmap.py`, `tools\confmap.py`
-and `tools\verbcounts.py` check the links and that every SD BASIC name, TCL verb
-and `sd.conf` parameter is documented.
+`tools\checklinks.py`, `tools\docmap.py`, `tools\tclmap.py`, `tools\confmap.py`,
+`tools\verbcounts.py` and `tools\scriptmap.py` check the links and that every SD
+BASIC name, TCL verb, `sd.conf` parameter and installed script is documented.
 
 `tools\` also holds the PowerShell programs (`sdtcl.ps1`, `sdprobe.ps1`,
 `sdprobe2.ps1`, `sdcompile.ps1` and `sddebug.ps1`) that run something inside a

@@ -185,7 +185,7 @@ a definition that is not there.
 
 ### The page is 140 × 43, not 80 × 24
 
-**SD's default terminal size is 140 columns by 43 lines.** **A console window narrower than that makes ordinary reports
+**SD's default terminal size is 140 columns by 43 lines.** **A console window narrower than that makes wide reports
 look wrapped or truncated**, which reads as a formatting bug and is not one. SD's
 own full-screen programs (`sed`, `ced`, `ide`, the home screen) want at least
 140 columns by 43 lines and refuse a smaller window.
@@ -251,9 +251,10 @@ Scripts page in the Administrator set has the detail.**
 | | |
 |---|---|
 | The service | **String Database (SD)** |
-| After an unclean shutdown | SD starts anyway, rather than refusing because the last stop was abrupt |
-| Nested sessions | SD will not start a second time inside itself |
+| After an unclean shutdown | SD starts anyway, once the daemon's own liveness — not just the segment's presence — is checked. See [Running SD](03-running-sd.html) |
+| Nested sessions | SD will not start a second time inside itself — see [Running SD](03-running-sd.html) |
 | `sd <command>` | needs an elevated session, or an entry in `batch.jobs` — see above |
+| End of piped input | ends the session — at the command prompt, at `PAUSE` and at the Ctrl-R search |
 
 ## Setting no password
 

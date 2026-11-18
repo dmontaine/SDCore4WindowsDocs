@@ -54,8 +54,8 @@ all counts as **not** a member, so a doubt never grants write.
 ### The write group: `sdfileswrite`
 
 **A login on the target server may change something only if the target's administrator
-allows it.** That is why a *write* server definition on a client is not enough by
-itself: the definition says what the client is willing to do, the write group says
+allows it.** That is the rule, and it is why a *write* server definition on a client is no
+longer enough by itself: the definition says what the client is willing to do, the write group says
 what the target is willing to let that login do.
 
 - The Windows group **`sdfileswrite`** is made, empty, by the installer beside `sdfiles`.
@@ -74,7 +74,8 @@ what the target is willing to let that login do.
   group, reads it back, then removes `sdfiles` and reads that back, and it does the work
   for a person who is in only one of the two: a person who is in `sdfileswrite` and
   not in `sdfiles` (a removal that stopped half way, or a change made by hand) is
-  taken out of it. If a removal fails the command says so ("Unable to change remote
+  taken out of it, so a membership left in place cannot become write access at the next
+  `files-on`. If a removal fails the command says so ("Unable to change remote
   access for *name*, status: *n*") and stops: a failure of the write group's removal
   leaves the person exactly as they were, and a failure of the second removal leaves
   them in `sdfiles` alone, with read access and never write access without read. **In
@@ -112,7 +113,7 @@ what the target is willing to let that login do.
   request number.
 - **The group is read at login**, from the Windows groups, so a change takes effect at the
   person's **next** login on that server, and a refusal to read the groups refuses the
-  login.
+  login with its own reason.
 - **A server defined `write` on a client** writes only when the remote user has been
   given the group on the target (one `modify.account` word there). Reads are unaffected.
 - A machine without the groups has neither until the installer is run again; until

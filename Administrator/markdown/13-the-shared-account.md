@@ -102,8 +102,8 @@ with `logto shared`.
 | an account with `shared.read` on (the default) | yes | no — refused | no | no |
 | `shared.read` and `shared.write` on | yes | yes | only if `dict-on` too | no |
 | `shared.read` off | not found | — | — | no |
-| the SDSYS session (`logto shared`, signed on at a terminal) | — | yes | yes | **yes** |
-| SDSYS over the API, when the administrator has opened that door | — | yes | yes | yes |
+| the local SDSYS session (`logto shared`) | — | yes | yes | **yes** |
+| SDSYS over the API (door opened by `remote.sdsys api on`) | — | yes | yes | **yes** |
 | a member of `sdg_shared`, in `logto shared` | — | only if the account `shared` has `shared-write-on` | likewise | no |
 
 * **A record write** — `write`, `writev`, `matwrite`, `delete`, `clearfile`, and the verbs that save

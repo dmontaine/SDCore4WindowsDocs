@@ -11,35 +11,32 @@ This page continues [Accounts and Security: Changing One Account](01-accounts-an
 | **`ssh-key-on`** \| **`ssh-key-off`** | ssh sign-in with a key, for a user account whose Windows user SD made (see [Signing in over ssh with a key](01-accounts-and-security-8-home-screen-ssh-keys-passwords.html#signing-in-over-ssh-with-a-key-ssh-key-on-and-ssh-key-off)). **Off as delivered**; independent of `ssh`: the account still needs its ssh route |
 | **`sh-on`** \| **`sh-off`** | the `sh` verb |
 | **`os-on`** \| **`os-off`** | `OS.EXECUTE`, the screen editors, the embedded Python, and operating-system paths outside the account's own directory (see above) |
-| **`sd-on`** \| **`sd-off`** | may reach files under the directory of an account the person could `logto` (also allowed on a group account) |
-| **`voc-on`** \| **`voc-off`** | may save a change to a VOC (see *The edit switches*) |
-| **`bp-on`** \| **`bp-off`** | may save a change to a program file (source or object code), and compile and catalog |
-| **`dict-on`** \| **`dict-off`** | may save a change to a dictionary |
+| **`sd-on`** \| **`sd-off`** | the directories of other SD accounts the user could `logto` (see above) |
+| **`voc-on`** \| **`voc-off`** | saving a change to a VOC (see *The edit switches*) |
+| **`bp-on`** \| **`bp-off`** | saving a change to a program file, and compiling and cataloging |
+| **`dict-on`** \| **`dict-off`** | saving a change to a dictionary |
 | **`recovery-on`** \| **`recovery-off`** | whether the `ide` keeps a recovery copy of text that was not saved (see *The recovery copy*). Not a gate; **off as delivered**; user accounts only |
 | **`xfer-on`** \| **`xfer-off`** | moving plain-text files in and out with an sftp client over the ssh login (see *File transfer*). **Off as delivered**; user accounts only; needs `XFER=1` in `sd.conf` as well |
-| **`start-menu`** \| **`start-terminal`** \| **`start-default`** | where a session on a terminal starts: the home screen, the command prompt, or the system default (see *Where a session starts*) |
-| **`pins-on`** \| **`pins-off`** | may add its own programs to the home screen (see *What the home screen shows*) |
-| **`shared-read-on`** \| **`shared-read-off`**, **`shared-write-on`** \| **`shared-write-off`** | open, and write, the files of the shared account by name (blank read means on, blank write means off; see [The Shared Account](13-the-shared-account.html)) |
-| **`net-on`** \| **`net-off`** | may use SDNet: open a file on another SD server (see [The NET switch](01-accounts-and-security-3-edit-switches.html#the-net-switch-net-on-and-net-off)) |
-| **`files-on`** \| **`files-off`**, **`files-write-on`** \| **`files-write-off`**, **`files-admin-on`** \| **`files-admin-off`** | may log in over the API for files only, and, with the second pair, change files there, and, with the third, administer them there (see [The files-only route](01-accounts-and-security-4-shared-and-files-only.html#the-files-only-route-files-on-and-files-off)) |
-| **`ai-on`** \| **`ai-off`** | may use the AI the administrator has chosen: the `ai` verb and the AI line of the pages and editors (see [The AI](01-accounts-and-security-5-files-write-ai-pointers.html#the-ai-ai-on-and-ai-off)) |
+| **`net-on`** \| **`net-off`** | the right to use a server defined for SDNet (see *The NET switch*) |
+| **`shared-read-on`** \| **`shared-read-off`** | opening the files of the `shared` account by name. **On unless the field says no** (see *The shared account*) |
+| **`shared-write-on`** \| **`shared-write-off`** | writing to the files of the `shared` account. Off unless the field says yes |
+| **`files-on`** \| **`files-off`** | the files-only API login: membership of the Windows group `sdfiles` (see *The files-only route*). Independent of `ssh`/`api`/`both`/`none`: those words leave it alone |
+| **`files-write-on`** \| **`files-write-off`** | the right to CHANGE files over the files-only login: membership of the Windows group `sdfileswrite`, which needs `files-on` first (`files-off` takes every files group away) |
+| **`files-admin-on`** \| **`files-admin-off`** | the right to ADMINISTER files over the files-only login: membership of the Windows group `sdfilesadmin`, which needs `files-on` and `files-write-on` first (see *Administering files*) |
+| **`ai-on`** \| **`ai-off`** | the right to use the AI the administrator has chosen: membership of the Windows group `sdaiusers` (see [The AI](01-accounts-and-security-5-files-write-ai-pointers.html#the-ai-ai-on-and-ai-off)) |
+| **`start-menu`** \| **`start-terminal`** \| **`start-default`** | where a session on a terminal starts (see *Where a session starts*) |
+| **`pins-on`** \| **`pins-off`** | whether the person may add their own programs to the home screen |
+| **`suspended`** \| **`unsuspended`** | whether the account can be entered at all |
 | **`add`** \| **`delete`** *user* | put a Windows user in, or out of, the account's group |
 
 **The first group is absolute and the second is not.** `ssh`/`api`/`both`/
-`none` are four names for one state, so whatever is not named is
-withdrawn. `sh-on` and `os-on` are two independent switches over two
-separate settings, so **`sh-off` says nothing about `OS.EXECUTE`** and
-leaves it alone.
+`none` are four names for one state, so whatever is not named is withdrawn
+(of ssh and the API: `files-on` is its own setting and is not withdrawn by them).
+`sh-on` and `os-on` are two independent switches over two separate settings,
+so **`sh-off` says nothing about `OS.EXECUTE`** and leaves it alone; the
+other switches are each their own as well.
 
-**Every keyword on this page refuses `SDSYS` as the target account,
-outright, before the keyword itself is even read** — *"Remote access is
-never available to SDSYS"* is the message whatever you asked for. SDSYS's
-own routes are not a setting; see [Read this before anything
-else](01-accounts-and-security.html#read-this-before-anything-else-being-sdsys-is-the-whole-of-it). A
-group account is refused too, for the `sh-on`/`sh-off`/`os-on`/`os-off`
-forms: it has no Windows user, and a shell is a fact about a person.
-
-After `sh` or `os` SD says where the account **now** stands, both fields at
+After either pair SD says where the account **now** stands, both fields at
 once, so that a command that did only what it named is plain to see:
 
 ```
@@ -64,7 +61,13 @@ started with. To take a grant away from somebody who is signed in now, change
 the setting and then end their session.
 
 **Every one of these words is written to the audit trail** (`modify.account
-sh-on account=fred` and its siblings), in lower case.
+sh-on account=fred` and its siblings), and **SDSYS is never a target**: the
+account is refused before the word is read, whatever you asked for, with *"Remote
+access is never available to SDSYS"* (SDSYS's own routes are not a setting; see
+[Read this before anything
+else](01-accounts-and-security.html#read-this-before-anything-else-being-sdsys-is-the-whole-of-it)).
+A group account is refused too for the `sh-on`/`sh-off`/`os-on`/`os-off` forms: it
+has no Windows user to hold the switch.
 
 **Upgrading keeps what accounts have.** The installer carries `sh` and
 `OS.EXECUTE` into each account once, from what the earlier system had given its
@@ -75,7 +78,9 @@ Ssh and the API are left exactly as they were. Group and other accounts are
 left off on purpose. **`net-on` is not part of it**: nothing used SDNet before,
 so every existing account has it off. **The `shared` switches are not part of it
 either**: a blank field already reads as `shared.read` on and `shared.write`
-off, which is how they are delivered. **Neither is `files-on`**: the `sdfiles`
+off, which is how they are delivered, so every existing account can read the
+`shared` account's files and none can write them (take the read right away with
+`shared-read-off` before you put anything private there). **Neither is `files-on`**: the `sdfiles`
 group is made empty, and nobody is in it until you say so. You can then turn
 them off one account at a time, and a later install does not turn them back
 on. Only accounts made after the upgrade start with everything off.
@@ -190,18 +195,18 @@ set.start.default                        says which it is now
   everyone, run `set.start.default terminal` (as SDSYS); to keep it for some,
   `modify.account name start-terminal`.
 * The setting is **field 16** of the account's register record. `modify.account`
-  writes it; it applies at the person's next sign-on, and when they type `logto` at
+  writes it; nothing else needs to change, and it applies at the person's next sign-on, and when they type `logto` at
   the prompt to enter the account. It may be set on any kind of account.
 * **It is not a wall.** Starting in the home screen confines nobody: its *Terminal*
   tile gives the ordinary command prompt (and `exit` comes back). To keep a person from a
   prompt you would need a setting that removes the prompt itself, which SD does not have.
 * The screen is never given to a session that cannot use it: a window under 140 by
-  43, a session with no terminal (a pipe, a phantom), an API server, or a `logto`
+  43, a pipe, a phantom, an API server, or a `logto`
   that a program ran with `execute`. Scripts and scheduled jobs are unchanged.
 * `modify.account` says `Account fred starts at: menu` (or `terminal`, or `system
   default`) and `fred already starts that way; nothing changed` when the word is the
   one already set. It is audited as `modify.account start-menu account=fred`, and
-  `set.start.default menu` as `set.start.default menu`.
+  `set.start.default menu` is audited as `set.start.default menu`.
 * `create.account` takes `start-menu` and `start-terminal` too, so an account can be made
   with its start in one command (see *Making an account*); `start-default` is not a word of
   `create.account` (an account made without a start word follows the default already).

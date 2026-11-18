@@ -24,7 +24,7 @@ the group on its own gives nothing; `files-off` takes the person out of both gro
 and it does the work for a person who is in only one of them. A person who is in `sdfileswrite`
 and not in `sdfiles` (a removal that stopped half way, or a change made by hand) is taken out
 of `sdfileswrite` too, so the next `files-on` cannot turn that membership into write access
-nobody gave. If a removal fails SD says so and stops, leaving the person with the lower access
+nobody gave; SD says `Account fred has files-write no` before `Account fred has files no`. If a removal fails SD says so and stops, leaving the person with the lower access
 and never a higher one without it. `files-on` takes a leftover `sdfileswrite` or `sdfilesadmin`
 membership away before it adds `sdfiles`, and stops with the same message if it cannot. A
 refused change is answered "This login cannot change or lock files here: ask the
@@ -41,64 +41,18 @@ A files-only login may configure a file, build and delete its indices, create an
 and set or take the file's counter (`WRITE ... CREATING.SEQKEY`, `FCONTROL`) **only if the person
 is in both `sdfileswrite` and the Windows group `sdfilesadmin`**: `modify.account` *name*
 `files-admin-on` (needs `files-on` and `files-write-on` first, else "Account fred does not have
-files-write, so it cannot be given files-admin: use files-write-on first", message 12531),
-`files-admin-off`, and `files-admin-on` after `files-on` and `files-write-on` in `create.account
-user` (without them it is refused the same way, before anything is made). **It is off for every new
-account, and the installer turns it on only for the installing user's own account, when its box "Open every access gate" is ticked.** The line
-printed is `Account fred has files-admin yes`, read back from the group. A group account or an
-`other` account is refused as it is for `files-on`.
-
+files-write, so it cannot be given files-admin: use files-write-on first"), `files-admin-off`, and
+`files-admin-on` after `files-on` and `files-write-on` in `create.account user`. **It is off for
+every new account, and the installer turns it on only for the installing user's own account, when its box "Open every access gate" is ticked.** The line printed is `Account fred has files-admin yes`, read back from the group.
 The three groups are a chain, `sdfiles` < `sdfileswrite` < `sdfilesadmin`: `files-write-off` and
 `files-off` take the higher groups away first (administration, write, files), each removal read
-back, and a failure half way reports the removals that did happen (`Account fred has files-admin
-no`, and the audit line `modify.account files-admin-off account=fred`) before it reports the
-failure. `files-on` and `files-write-on` take a stray higher membership away before they add. Two
-words that ask for opposite things in one command are refused with message 12796 and nothing is
-changed (`files-admin-on` with `files-off` or with `files-write-off`, and `files-write-on` with
-`files-off`). What the permission allows, what the server checks and how it is audited is in
-[SDNet: The Administration Group and Read-only Files](12d-sdnet-administration-group-and-read-only-files.html). A refused request is answered "This login
-cannot administer files here: ask the administrator for files-admin-on (request *n*)" (message
-12529) and nothing is carried out. The account's backup manifest records the membership as
-`route.files.admin`, and `restore.account` gives it back only to an account that is in `sdfiles`
-and `sdfileswrite`.
-
-**What is not changed.** Everything else about the session applies as it does to any
-other: the account must be entered, the account's own switches (the OS-access
-gate, the three edit switches, the NET switch) are loaded and enforced, `SDCLIENT` in
-`sd.conf` still decides whether a client may open the files it names, and the
-API listener must be on (`remote.api`). **`sdfiles` alone is a read-only route.**
-
-**The route words are not one state.** `ssh`, `api`, `both` and `none` are
-absolute about the two routes they name, and **leave `files-on` alone**:
-`modify.account fred none` takes away ssh and the API and not the files-only
-login. Withdraw it with `files-off`. `sdapi` is never touched by `files-on` or
-`files-off`.
-
-**User accounts only.** A group account, which has no Windows user, is refused
-`files-on` and `files-off` ("is a group account and has no remote access"), an
-`other` account too ("Unable to change remote access ... status: 2"), and
-`create.account group` and `create.account other` refuse the word the same way.
-`files-on` also refuses a person who is not in `sdusers`, because the login would
-refuse them first. If the Windows group `sdfiles` does not exist, `files-on` says
-"sdfiles is not a valid Windows group" and changes nothing.
-
-**A change takes effect at the person's next login.** The group is read when the
-login finishes, so a connection already open keeps the route it started with.
-To take the route away from somebody who is connected now, `files-off` and end the
-connection.
-
-**Audit trail.** A files-only login writes `api login route=sdfiles write=off admin=off user=fred`
-(`write=on` for a person in `sdfileswrite`, `admin=on` for one in `sdfilesadmin`). Each refusal writes
-`api refused request=26 route=sdfiles write=off admin=off user=fred` (the number is the
-request; `write` and `admin` are the state of the login, so a refusal with both `on` is a request
-no files-only login may make). A user in neither group, as before, has the refused login in the usual
-`api refused` form.
-
-**The archive.** For a user account the manifest carries `route.files: 1` or `0`
-beside `route.ssh` and `route.api` (not `files:`, which is already the count of files
-in the archive), and `restore.account` puts an account it has to create back in
-`sdfiles` if the manifest says so. An archive from before this release has no such
-line and restores the account out of the group.
+back, and a failure half way reports the removals that did happen; `files-on` and `files-write-on`
+take a stray higher membership away before they add. What the permission allows, what the server
+checks and how it is audited is in [SDNet](12d-sdnet-administration-group-and-read-only-files.html), *The administration group*. A
+refused request is answered "This login cannot administer files here: ask the administrator for
+files-admin-on (request *n*)" and nothing is carried out. The account's manifest records it as
+`route.files.admin`, and `restore.account` gives it back only to an account that is in
+`sdfiles` and `sdfileswrite`.
 
 ### The AI: `ai-on` and `ai-off`
 
@@ -116,6 +70,44 @@ pipe. SDSYS has no gate and may always use the AI. The account's manifest record
 `route.ai`, and `restore.account` gives it back. Which provider, model and key, what leaves the
 machine, the security warning, and the page that does all of this, `tool.ai`, are in
 [The AI Helper](20-the-ai-helper.html).
+
+**The route words are not one state.** `ssh`, `api`, `both` and `none` are
+absolute about the two routes they name, and **leave `files-on` alone**:
+`modify.account fred none` takes away ssh and the API and not the files-only
+login. Withdraw it with `files-off`. `sdapi` is never touched by `files-on` or
+`files-off`.
+
+**User accounts only.** A group account, which has no Windows user, is refused
+`files-on` and `files-off` ("is a group account and has no remote access"), an
+`other` account too ("Unable to change remote access ... status: 2"), and
+`create.account group` and `create.account other` refuse the word the same way.
+`files-on` also refuses a person who is not in `sdusers`, because the login would
+refuse them first. If the Windows group `sdfiles` does not exist, `files-on` says
+"sdfiles is not a valid Windows group" and changes nothing, and
+`create.account user ... files-on` looks for the group **before** it makes the Windows
+user, so nothing is left behind. **An installation that has no
+`sdfiles` group needs the installer run again**; the installer makes the group (empty)
+beside `sdssh` and `sdapi`. An interactive uninstall of SD removes it with the others.
+
+**A change takes effect at the person's next login.** The group is read when the
+login finishes, so a connection already open keeps the route it started with.
+To take the route away from somebody who is connected now, `files-off` and end the
+connection.
+
+**Audit trail.** A files-only login writes `api login route=sdfiles write=off admin=off user=fred`
+(`write=on` for a person in `sdfileswrite`, `admin=on` for one in `sdfilesadmin`). Each refusal writes
+`api refused request=26 route=sdfiles write=off admin=off user=fred` (the number is the
+request; `write` and `admin` are the state of the login, so a refusal with both `on` is a request
+no files-only login may make). A user in neither group, as before, has the refused login in the usual
+`api refused` form.
+
+**The archive.** For a user account the manifest carries `route.files: 1` or `0`
+beside `route.ssh` and `route.api` (not `files:`, which is already the count of files
+in the archive), and `restore.account` puts an account it has to create back in
+`sdfiles` if the manifest says so. An archive with no such
+line restores the account out of the group. A manifest that says `1`, restored on
+a machine with no `sdfiles` group, fails for that account with the group message
+and creates nothing.
 
 ### VOC pointers: where a file pointer may lead, and which Q-pointers are followed
 

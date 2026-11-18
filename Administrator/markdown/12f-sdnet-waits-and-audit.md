@@ -53,30 +53,22 @@ sends after the handshake, and a half record, cost what they have used and no mo
 
 | the server | the caller waits |
 |---|---|
-| completes the handshake, never sends the acknowledgement byte | about 3 s (`NETREPLY`) |
-| accepts the connection and never answers the TLS hello | about 2 s (`NETWAIT`) |
-| sends the acknowledgement byte as half of a TLS record | about 3 s (`NETREPLY`) |
-| answers the first login message with half of a TLS record | about 3 s (`NETREPLY`) |
+| completes the handshake, never sends the acknowledgement byte | about 3 s |
+| accepts the connection and never answers the TLS hello (`NETWAIT=2`) | about 2 s |
+| sends the acknowledgement byte as half of a TLS record | about 3 s |
+| answers the first login message with half of a TLS record | about 3 s |
 | answers a request after 1.5 s (a slow server inside the limit) | 1.5 s, and the record is read |
 
-These are the limits `sdclient` sets from the two settings (the connection `NETWAIT`, every
-read `NETREPLY`).
-
-**The silent server.** A server that completes the TLS handshake and then sends nothing at all,
-or sends half of a TLS record and stops, is given up on at `NETREPLY` seconds (and a server that
-accepts the connection and never answers the TLS hello at `NETWAIT` seconds). After the handshake
-a TLS 1.3 server sends its session tickets; the read is made without waiting and the wait is on
-the connection, for the time that is *left* of the caller's limit, so the tickets and a half
-record cost what they have used and no more. What the caller sees is what it sees for any lost connection:
+What the caller sees is what it sees for any lost connection:
 `set.netlogin` and the login of an `OPEN` say "No acknowledgement from host:port at the start of
 the session", "No reply from host:port during the login" or "The TLS handshake with host:port
 did not complete"; a request that was sent and got no answer is message 12502 (message 12514 for
 a change, and **a change that got no answer is never sent again**). A reply that stops in the
-*middle of its body* is the same lost connection as a reply that never started, with message
-12502 and the connection dropped. A server that sends a little at a time and never stops is
+*middle of its body* is the same lost connection as a reply that never started: message
+12502, and the connection is dropped. A server that sends a little at a time and never stops is
 still waited for one read at a time; the limit is for each read, not for a whole reply.
 
-`OPEN.SOCKET` takes the number of seconds to wait for the connection as its fourth argument
+`open.socket` takes the number of seconds to wait for the connection as its fourth argument
 (`NETWAIT` for every SDNet caller); see the User set's page on sockets.
 
 ## What is audited

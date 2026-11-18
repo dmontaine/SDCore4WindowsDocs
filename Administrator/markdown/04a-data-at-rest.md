@@ -41,16 +41,16 @@ process that sorts: for a person at the keyboard their own
 `%LOCALAPPDATA%\Temp`, for the SD service its own. The work files of a large
 sort hold the keys being sorted, in plain text. On an encrypted system drive
 they are covered. If SD's data is on another drive and only that drive is
-encrypted, point both at a folder on it, written in POSIX form as `sd.conf` does
+encrypted, point `SORTWORK` at a folder on it, written in POSIX form as `sd.conf` does
 (`/cygdrive/d/` is the drive `D:\`):
 
 ```
-TEMPDIR=/cygdrive/d/SDData/temp
 SORTWORK=/cygdrive/d/SDData/sortwork
 ```
 
-Create the folders first. A folder that does not exist when SD starts is ignored,
-and the default applies without a message. A change to either parameter needs a
+Create the folder first. A folder that does not exist when SD starts is ignored,
+and the default applies without a message. `TEMPDIR` itself, for SD's other temporary
+files, is not covered by this page. A change to either parameter needs a
 restart ([Configuration](07-sd-admin-configuration.html)).
 
 **The page file and the hibernation file.** SD's shared memory can be paged out

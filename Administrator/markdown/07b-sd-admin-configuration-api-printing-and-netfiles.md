@@ -164,9 +164,10 @@ cannot resolve (a link that leads nowhere, say). It is then compared
 with each entry ignoring upper and lower case, and the whole folder name must
 match: `D:\Data\xkey` is not inside `D:\Data\x`.
 
-SD reads the line when it starts, so a change reaches sessions after SD has been
-restarted. **A value longer than 191 characters is refused, by name**: SD says
-`NETDIRS value is longer than 191 characters.` rather than cutting it, because
+A session reads the line when it starts, so a change reaches the sessions started
+after it; no restart is needed. **A value longer than 191 characters is refused, by name**: SD does not
+start, and a new session does not begin, with
+`NETDIRS value is longer than 191 characters.` It is never cut, because
 a cut path is a shorter directory and would admit more than you wrote. It is not
 shown by `config()`, and `config('NETDIRS')` does not read it: read the file.
 
@@ -180,23 +181,23 @@ inside the account, whatever `NETDIRS` lists.
 SDNet is the way a program opens a file that lives on another SD server: a VOC
 entry of type `N`, a server you define with `set.server`, and a per-account
 `net-on` switch, all off until SDSYS turns them on. It is built and is
-described on the SDNet page of this set ([SDNet](12-sdnet.html)). None of it reads `NETFILES`,
+described on the SDNet page of this set. None of it reads `NETFILES`,
 and the older SDNet (a `server;file` VOC
 entry, with each server's password in `sd.conf`) does not exist: that form of
 name is refused. `NETFILES` is parsed, stored, shown by `config` and readable
 with `config('NETFILES')`. **One
 thing reads it:** the API server's request 29, "open an SDNet
-file", answers "Remote server disallowed access" unless bit 2 of
+file", answers "Remote server disallowed access" (7009) unless bit 2 of
 `NETFILES` is set, and the files-only API route refuses request 29 whatever the
-value is. **Setting the bit is not enough.** The request also refuses unless
+value is. **`NETDIRS` does not widen this request**: a pointer followed there must
+still lead inside the account, whatever `NETDIRS` lists. **Setting the bit is not enough.** The request also refuses unless
 `SDCLIENT` is 0, the account has a register record (a path names none), the
 caller may enter the account by the same rule as `logto` (a member of its
 group, the account not suspended, the reason never told to the caller), and
 the account's `net-on` switch is on (SDSYS's own account excepted). It also asks the
 operating-system question of the file the VOC names: a file pointer that leads out of
 the account's folder is followed only if the account holds `os-on` (see *Accounts and
-Security: File Writing, the AI and VOC Pointers*, the VOC pointers section), and
-**`NETDIRS` does not widen this request**. Each
+Security*, the VOC pointers section). Each
 refusal is on the audit trail as `api refused request=29 reason=...`. The value
 is 0 unless `sd.conf` sets it, and the installer does not, so the request is
 refused as delivered. Leave it at 0: no client function in this set sends

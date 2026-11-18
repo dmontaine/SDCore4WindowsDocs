@@ -83,7 +83,7 @@ whole.
 |---|---|
 | Up, Down, PgUp, PgDn | move; above the first loaded line, older lines are loaded when the file has them |
 | Home, End | the first loaded line; the newest line (End reads the file again) |
-| F | asks, one after another: from, to, event words, account, user, text. `from` and `to` are the start of a time stamp (`2026-10-25`, or `2026-10-25 14:30`; `to` with only a date includes the whole day). Event, account, user and text are matched without regard to case; `account` is the line's `account=` value, `user` its `user=` |
+| F | asks, one after another: from, to, event words, account, user, text. `from` and `to` are the start of a time stamp (`2026-10-25`, or `2026-10-25 14:30`; `to` with only a date includes the whole day). Event, account, user and text are matched without regard to case; `account` is the line's `account=` value, `user` its `user=`. Esc leaves every filter as it was |
 | / | the same as F: on every page `/` is the key that finds by typing |
 | C | clears the filters |
 | D | goes to the first line at or after a time; no filter changes |

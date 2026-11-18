@@ -144,9 +144,29 @@ character, and `~` is the only escape character.**
 | `~,` | a literal `,`, where one would otherwise read as a separator |
 
 **Marks in a row are separated by a comma** — a text mark, a text mark and a
-value mark is `~!,~!,~~`. The conversion is lossless: no record is refused and
-none is mangled. The full rules are on
-[SD TCL - The edit Screen Editor](26-sd-tcl-edit.html#marks-and-how-to-type-one).
+value mark is `~!,~!,~~`. Written token against token a run of marks cannot be
+read, so SD puts a comma between them. **Type the comma yourself when you enter
+marks in a row.** It is a separator and not data — which is why a literal comma
+standing in exactly that position, between two marks, is written `~,`.
+
+**The conversion is lossless: no record is refused and none is mangled**,
+whatever it contains. A tilde is written `~-` **only where the character after
+it would make the pair look like a token** — another `~`, a backtick, a `!`, a
+`-`, a `,`, or a mark. Everywhere else a tilde is left exactly as you wrote it,
+so `a~b` is still `a~b` and ordinary source reads normally.
+
+## The gate — `os-on`, off for a new account
+
+**`micro` needs the account's `os-on` switch**, the same one as `OS.EXECUTE`
+(and not `sh-on`: an account can be refused the shell and still run the editor,
+or the reverse). SDSYS turns it on with `modify.account` *name* `os-on`; a new
+account does not have it, and an account without it is told so when it types
+the verb. With it the editor runs at once, and what it can read or write outside
+SD is exactly what the account's Windows user may touch, because they are the
+same permissions. See the *Administrator* set's *Accounts and Security* chapter,
+"The operating-system switches: `sh-on` and `os-on`". The full account of the
+gate is on [SD TCL - The edit Screen
+Editor](26-sd-tcl-edit.html#one-gate-and-it-is-separate-from-the-verb).
 
 ## Who has these verbs
 

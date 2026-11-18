@@ -12,18 +12,18 @@ tool.menus
 **Menu management** is a full-screen page for the administrator (SDSYS's VOC only;
 it is also a tile on the administrator's own home screen). It lists every account
 but SDSYS with where it starts, whether it may add its own programs, and the tiles
-turned off for it; for the account you select it shows the standard tiles with `[x]`
+turned off for it; for the account you select it shows the standard tiles (the six of the
+account, the seven development tiles and the Recent group: 14 rows after the two settings
+above them) with `[x]`
 on and `[ ]` off, and a box that says in plain words what the settings mean. **It
 writes nothing itself:** every change is the command it will run, shown with its
 effect in a box you answer *Run* or *Cancel* (Cancel is the button Enter chooses),
 run by the same verbs you can type, and the line under the page is the verb's own
 answer. **Every setting has a `[?]` at the end of its row** (and one on the accounts
 list and on the system default): F1 or `?` on the selected row, or a click on the
-`[?]`, opens a box that says what the setting means. The text is the record of that
-setting in the file `context.help` of the shared account. **`load.help`, run by
-SDSYS, fills that file from the `helptext` directory of the SD system directory**
-(it replaces the shipped records and keeps any you added under another id); the
-installer runs it after an install or an upgrade, and it can be run again at any time.
+`[?]`, opens a box that says what the setting means, ending with the name of the
+administrator's guide PDF that says more (in the shared account's `pdf` directory), and a *Close* button. The text is the record of that setting in
+the file `context.help` of the shared account.
 
 ```
 set.tile                          says which tiles are off, one line for each account that has any
@@ -168,8 +168,8 @@ one, and `modify.account fred unsuspended` lifts the suspension.
 ### `add`/`delete` is the grant
 
 ```
-modify.account account add user
-modify.account account delete user
+:modify.account fred add pete
+:modify.account fred delete pete
 ```
 
 **`add` and `delete` are the grant.** There is no separate `grant`, `revoke` or
@@ -180,20 +180,16 @@ a group account — and entry to the account **is** membership of that group (th
 test `logto` makes). `add` puts a Windows user into that group and
 `delete` takes one out.
 
-| | |
-|---|---|
-| *%1 added to group %2* | `add` worked |
-| *%1 removed from group %2* | `delete` worked |
-| *%1 is already a member of group %2* | `add` for somebody who already has it; nothing changed |
-| *%1 is not a member of %2* | `delete` for somebody who has not got it; nothing changed |
-| *%1 is not a member of sdusers, not allowed* | the person is not a Windows user SD knows (`add` only) |
-| *Unable to add user %1 to group %2 status: %3* | Windows refused the change |
-| *SDRADMIN is the remote administration account* | `add` of `sdradmin`, which joins no group account |
+SD says *added to group*, *removed from group*, *is already a member of group*
+or *is not a member of* (nothing changed), *is not a member of sdusers, not
+allowed* (the person is not a Windows user SD knows; `add` only), *SDRADMIN is the
+remote administration account* (`add` of `sdradmin`, which joins no group account), or
+*Unable to add user ... status: n* when Windows refused the change.
 
 **To see who is in an account,** read the Windows group: `tool.accounts` shows a
 group account's members, and any account's group can be listed with `net localgroup sdu_`*name*
-(`sdg_`*name* for a group account) or in Windows' own tools. The account's own user is a member
-like any other. It is not a grant — creating the account put them there.
+(`sdg_`*name* for a group account) or in Windows' own tools. The account's own
+user is a member like any other.
 
 **A successful `add` or `delete` writes an audit record** to SD's audit
 trail (`modify.account add account=`*name*` to=`*user* and `modify.account delete

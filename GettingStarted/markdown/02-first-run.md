@@ -58,7 +58,7 @@ terminal setting in its VOC until **`update.accounts`** updates it.
 
 **`term` also reports the page size, and SD's default is 140 × 43 — not
 80 × 24.** **A console window narrower
-than that makes ordinary reports look wrapped or truncated** and the report is
+than that makes wide reports look wrapped or truncated** and the report is
 not at fault. SD's own full-screen programs (`sed`, `ced`, `ide`, the home
 screen) want a window of at least 140 columns by 43 lines, **which is the size
 SD's own window starts at**: SD always runs in a window of its own, whether
@@ -77,13 +77,14 @@ create.file customers
 ed customers 1001
 ```
 
-**`ed`** is the **line** editor, and it needs nothing installed. If you would
-rather have a full screen, **`edit`** opens the same record in Microsoft Edit
-and **`micro`** opens it in micro — see
+**`ed`** is the **line** editor, and it needs nothing installed. For a full
+screen, **`sed`** is SD's own editor, with drop-down menus, and needs no
+operating-system permission (see *The SED Screen Editor* in the User set);
+**`edit`** opens the same record in Microsoft Edit, which comes with current
+Windows, and **`micro`** opens it in micro, which the installer fetches. See
 [Development and file commands](07-programmer-commands.html#editors). The old
-full-screen editors `update.record` and `modify` are gone; `sed` is back, and
-runs inside SD with no operating-system permission — see *The SED Screen
-Editor* in the User set, and [Not in SD Core](14-not-in-sd-core.html).
+full-screen editors `update.record` and `modify` are gone; see
+[Not in SD Core](14-not-in-sd-core.html).
 
 In **`ed`**: `i` to insert, type your lines, a full stop on its own line to stop
 inserting, then `fi` to file and exit.

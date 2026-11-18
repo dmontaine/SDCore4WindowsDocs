@@ -74,7 +74,7 @@ any `PY_` function, and the decision stands for the rest of the session:
 | `PY_IS_INITIALIZED()` | 1 if the interpreter is running, 0 if not. Never fails and never needs the permission check, so it is the one `PY_` call safe to make from any session as a probe |
 | `PY_FINALIZE()` | Shuts the interpreter down. Rarely needed - a session ending does this for you |
 | `PY_RUNSTRING(script)` | Runs `script` as Python source in the interpreter's global namespace. An empty `script` is refused before it reaches Python (`status()` 1) |
-| `PY_RUNFILE(path)` | Runs the Python file at `path`, read on the machine `sdpy.exe` runs on. `path` is checked for shape before it is sent - an obviously unsafe or malformed path is refused (`status()` 1) without reaching Python |
+| `PY_RUNFILE(path)` | Runs the Python file at `path`, read on the machine `sdpy.exe` runs on. `path` is checked for shape before it is run: a path that is empty, is longer than 255 characters, or holds anything but letters, digits, spaces and `. _ - / : \` is refused (`status()` 1) without reaching Python |
 
 ```
 st = PY_INITIALIZE()

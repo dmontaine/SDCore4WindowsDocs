@@ -213,21 +213,6 @@ are the same**. A phantom whose records do not check ends at once, says so in it
 process that started it, nothing was run*), and writes `phantom refused phantom=n` to
 the audit trail. If the secret cannot be made, no process is started.
 
-**The phantom debugger does not use `$IPC`.** `pdebug` and the phantom it debugs
-leave each other their messages in a private folder of the Windows user who runs
-them, `sd\pdebug` in the `AppData\Local` folder of that user's profile (found from
-the profile, never from `%LOCALAPPDATA%`). SD makes the folders when they are missing,
-with access for that user, SYSTEM and Administrators only, and uses the store only
-when no folder on the way is a link and nobody else can add, delete or rename
-anything from the profile down. So a `pdebug` and a phantom reach each other only
-when both run as the same Windows user; `pdebug` waiting and a phantom started
-afterwards by the same person works as before. When the store cannot be set up,
-`pdebug` says so and stops (*The debugger's private directory could not be set up
-(reason), so the phantom debugger cannot start*), and a phantom behaves as if no
-`pdebug` were waiting. The store outlives a restart of SD, so `pdebug` removes the
-records of its own user number when it starts, and a phantom ignores a start record
-whose `pdebug` has gone.
-
 ## What phantoms have I started: `status`
 
 ```
@@ -352,6 +337,21 @@ one to ask for a debugger, and **`Q`** gives up waiting.
 It refuses inside a phantom or an API session — *Phantom debugger can only be
 executed from an interactive session* — because it needs a terminal to draw the
 debugger on.
+
+**`pdebug` and the phantom leave each other their messages in a private store**,
+not in `$IPC`: a private folder of the Windows user who runs them, `sd\pdebug` in
+the `AppData\Local` folder of that user's profile (found from the profile, never
+from `%LOCALAPPDATA%`). SD makes the folders when they are missing, with access for
+that user, SYSTEM and Administrators only, and uses the store only when no folder
+on the way is a link and nobody else can add, delete or rename anything from the
+profile down. So a `pdebug` and a phantom reach each other only when both run as
+the same Windows user; `pdebug` waiting and a phantom started afterwards by the
+same person works as before. When the store cannot be set up, `pdebug` says so and
+stops (*The debugger's private directory could not be set up (reason), so the
+phantom debugger cannot start*), and a phantom behaves as if no `pdebug` were
+waiting. The store outlives a restart of SD, so `pdebug` removes the records of its
+own user number when it starts, and a phantom ignores a start record whose
+`pdebug` has gone.
 
 > **Do not send `pdebug` down a pipe.** It polls the keyboard while it waits,
 > and in a piped session the input stream is the script, so it consumes the

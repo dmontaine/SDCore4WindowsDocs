@@ -90,6 +90,19 @@ shell is held to one rule only: at the prompt `sh` refuses a pipe, a
 redirect, a chain and a variable, for every account; the way round is a script
 file.
 
+**What the switches do not do.** They stop SD handing the operating system to
+an account that has not been given it. They do not change what the account's
+Windows account may do — that stays whatever Windows says, checked by the
+operating system.
+
+> **When you do turn `sh-on` or `os-on` on, you are giving that person a
+> shell on this machine as their own Windows account.** An editor can open any
+> file the account may open, in the data tree or outside it. Set the
+> account's Windows permissions deliberately, the way you would for any other
+> user with a shell — and think twice before giving it to an account that is
+> also reachable from outside (`ssh`, `api`), because then the shell is
+> behind that account's credential from wherever the route reaches.
+>
 > **So `sh-on` and `os-on` are statements of trust in an account.** They are
 > not a convenience to be handed out because somebody asked for a full-screen
 > editor. Grant them on the same basis you would grant a shell account on the
@@ -192,10 +205,11 @@ constrain somebody who owns the machine.
 
 ## What is still not true
 
-**SD users are not isolated from each other's data at the file level, beyond
-the Per-account directory lock.** Everyone who uses SD needs file access to
+**SD accounts are not isolated from each other's data at the file level, beyond
+the lock on each account's own directory.** Everyone who uses SD needs file access to
 the tree, because their own process does the I/O. Anyone deploying SD for ten
-people over ssh should be told that plainly.
+people over ssh should be told that plainly — see
+[Security](12-security.html#your-account-directory-is-locked-to-you).
 
 **SD's own access control to operating-system files is the account's `os-on`
 switch, and it is the only one.** While the switch is off, as delivered, SD holds

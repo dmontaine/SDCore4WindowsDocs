@@ -121,7 +121,7 @@ switch: "A program file can only be changed by an account that has bp.edit
 (SDSYS can give it: modify.account *name* bp-on)". The editors `sed` and `ide`
 show that in their message line; every other verb prints it.
 
-When the installer is run over accounts that already exist, the upgrade
+When the installer is run by the user whose own account already exists, the upgrade
 switches all three on, once, for the *user* accounts in the register. Group and
 other accounts are left off on purpose, and a member who signs on to one
 directly (`sd -a`*name*, a batch job, or the API) gets that account's own

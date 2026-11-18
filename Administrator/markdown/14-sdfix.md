@@ -119,7 +119,7 @@ start the answers with `s`.
 
 ## A check, with nothing wrong
 ```
-> sdfix -B C:\sdi_demo\plain
+> sdfix C:\sdi_demo\plain
 [ SDFIX W2.0-0   Copyright, Ladybridge Systems, 2007.  All rights reserved. ]
 
 Processing C:\sdi_demo\plain
