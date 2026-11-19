@@ -63,7 +63,8 @@ is installed without administrator rights either.
 **There is no route to this that does not already carry the flag.** Signing
 in to Windows as SDSYS and starting `sd` elevated is the only way in, and it
 sets the flag at session start; a session that reached an ordinary account by
-`logto` never had it, and `logto sdsys` from there is refused outright — see
+`logto` never had it, and `logto sdsys` from there is refused unless the
+session started in SDSYS — see
 [SDSYS is the only administrator](01-accounts-and-security.html#read-this-before-anything-else-being-sdsys-is-the-whole-of-it)
 in this set's own *Accounts and Security* chapter.
 

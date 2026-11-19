@@ -143,7 +143,7 @@ the long form means *I have moved* — which makes `who` the quick way to find
 out whether a `logto` actually took effect.
 
 **`from SDSYS` means a session that signed in to Windows as the administrator.**
-Only such a session can `logto sdsys` to come back from an account it visited;
+Only a session that started in SDSYS can `logto sdsys` to come back from an account it visited;
 `logto sdsys` from any other session is refused outright. Becoming the
 administrator means signing in to Windows as the `sdsys` account itself and
 starting a fresh session — see the *Administrator* set's *Accounts and

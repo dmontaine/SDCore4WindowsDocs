@@ -41,10 +41,11 @@ no longer gets you into SDSYS, or gives your own account anything SDSYS has
 follow from Windows elevation; none of it does now. See
 [SDSYS is the only administrator](05-account-types.html#sdsys-is-the-only-administrator).
 
-**`logto SDSYS` is refused unconditionally**, from anywhere, elevated or
-not — the only way in is the elevated start itself. An elevated session that
-`logto`s down to an ordinary account can `logto SDSYS` back up again, which
-did not work before: leaving SDSYS used to end the elevated session.
+**`logto SDSYS` never enters SDSYS for the first time**, from anywhere,
+elevated or not — the only way in is a session that starts there. A session
+that started in SDSYS and `logto`s down to an ordinary account can
+`logto SDSYS` back up again, which did not work before: leaving SDSYS used to
+end the elevated session.
 
 **`SH` and `!` are back on ordinary accounts** — gated the same way they
 always should have been, by an administrator's grant

@@ -76,7 +76,7 @@ are.**
 | no SD account of that name | refused — *Account %1 not in register* (5018) |
 | not in `sdusers` | refused at the door — *not registered for SD use* (5009) |
 | `sd -a<name>` | **refused unless `<name>` is your own account** (10051) |
-| `logto sdsys` from any other account | **refused** to every session that did not sign in to Windows as `sdsys` at its desktop, whether or not it is elevated — 10002, audited `logto refused account=sdsys reason=sdsys is entered by its own session only`; the administrator's own session, having gone to another account, may `logto sdsys` to come back (audited as `logto account=sdsys`) |
+| `logto sdsys` from any other account | **refused** to every session that did not start in SDSYS, whether or not it is elevated — 10002, audited `logto refused account=sdsys reason=sdsys is entered by its own session only`; the administrator's own session, having gone to another account, may `logto sdsys` to come back (audited as `logto account=sdsys`) |
 
 **As delivered, SDSYS is reached one way only: sign in to Windows as the account literally
 named `sdsys`, and run `sd` elevated.** (An administrator can list Windows users who may

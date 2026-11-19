@@ -209,17 +209,18 @@ stopped** — and there is no `logto` back.
 :logto sales
 ```
 
-This session is now `sales`, an ordinary account. `logto sdsys` from here is
-refused, whatever the session's elevation, unless this very session signed in to
-Windows as the `sdsys` account at its desktop: that session, and only that one,
-may `logto sdsys` to come back. SDSYS is first reached one way only, by signing
-in to Windows as the `sdsys` account and starting `sd` fresh. See
+This session is now `sales`, an ordinary account. `logto sdsys` brings it back,
+as on SD Core for Linux: a session that started in SDSYS — signed in to Windows
+as the `sdsys` account at its desktop, through the SDSYS door from your own
+login, or as a scheduled administrator job — may `logto sdsys` to come back,
+however many accounts it has visited. Every other session is refused, whatever
+its elevation. SDSYS is never first reached by `logto`. See
 [Accounts and Security](01-accounts-and-security.html#read-this-before-anything-else-being-sdsys-is-the-whole-of-it).
 
-**This is deliberate.** A
-session that could `logto` back into SDSYS would let the elevated helper
-outlive the rights it belongs to; refusing the return closes that rather
-than relying on the helper alone to behave.
+**The return adds no way in.** Only a session that already held SDSYS can make
+it: the rights and the helper are given up at the `logto` out and given back at
+the `logto sdsys`, so between the two the session has an ordinary account's
+reach.
 
 **A Windows process cannot give up its own administrator rights, and SD tells
 you so.** The flag and the helper end at the `logto`, but the Windows process

@@ -139,8 +139,8 @@ myprog
 is reached only by signing in to Windows as the `sdsys` account itself and
 starting `sd` elevated — a fresh session, not a command typed from inside
 one you already have. `logto sdsys` is refused outright to every other session,
-whatever its elevation; only a session that signed in to Windows as `sdsys` can
-use it, to come back from an account it visited.
+whatever its elevation; only a session that started in SDSYS can use it, to
+come back from an account it visited.
 
 **This needs the console, or a remote desktop or remote-control product
 installed as a service** — something Windows can draw a UAC consent prompt

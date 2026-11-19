@@ -26,7 +26,7 @@ SDSYS itself, never a path), and **it is back in SDSYS when the command ends**. 
 command that aborts, a break and a run-time error in a program being debugged: the session is put back before anything else
 happens and says so ("run.in: the command did not finish; the session is back in account acme").
 Without this an administrator would be left in the account, with the command's reach, until typing
-`logto sdsys` (the administrator's way back by hand; it is refused to every other session).
+`logto sdsys` (the administrator's way back by hand; it is refused to every session that did not start in SDSYS).
 
 ### Debugging a program in another account: `run.in` *account* `debug` *file* *program*
 
