@@ -383,7 +383,7 @@ Commands and VOC verbs that every account has, and the command language.
 | `setptr` | Changed | `form.feed`, `inform`, `eject`, `as ... in file`; the digits of `next` <!--s 51 59 70 139 448--> |
 | `pause`, `ctrl-r` search | Changed | a session whose input has ended no longer spins at 100% CPU at `pause` or at the search prompt |
 | `list.readu`, `pstat`, `getlocks()`, `system(1083)` | Changed | another session's text (a lock's record id, file path or user name, a command, a program name, `@pstat`) shows a control character, `del`, bytes 128-159 and a mark character as `?` and cannot send a code to your terminal; the locks and `fileinfo(f, 1039)` are unchanged |
-| `remove.examples` | Added | administrator only: takes the shipped example programs and their compiled objects out of `examples.bp` of every account in service, or of the accounts named (a list); keeps programs the administrator added, and deletes the file only when nothing is left in it |
+| `remove.examples` | Added | takes the shipped example programs and their compiled objects out of `examples.bp` of the account you are in (with `bp.edit`), or of the accounts named (a list, the administrator only); keeps programs that were added, and deletes the file only when nothing is left in it |
 | `sh` with no command | Changed | fixed: starts the interactive shell again (it said *Error 2 executing operating system command*); it still needs the `sh` switch |
 | `show.list` | Added | a page at a time, starring and clearing items <!--s 449--> |
 | `sort.list`, `select.dir` | Added | sort a saved list; select the files of a directory <!--s 158 465--> |
@@ -516,12 +516,12 @@ the fixes to SD's own code. The sections above are the openQM items that were bu
 | `create.account` start and pins words | Changed | takes `start-menu`, `start-terminal` and `pins-on` on any kind of account; a refused word makes nothing; the audit line gains `pins-on` and a `start=` tail |
 | `dict-on` and `dict-off` | Added | per-account switch for saving a change to a dictionary |
 | `docs.install` | Added | SDSYS puts a directory of PDFs into the shared account's `pdf` directory |
-| `examples.bp` | Added | every account has its own file of example programs, compiled: the TUI guide's five and 23 programs of a first course in programming; the installer and `create.account` put it there, an upgrade refreshes it; read-only as delivered (`bp.edit`) |
+| `examples.bp` | Added | an account's own file of example programs, compiled: the TUI guide's five and 23 programs of a first course in programming; loaded by the account's person with `load.examples` or the home screen's Example programs tile (needs `bp.edit`), or by the administrator for accounts named; no account gets it by itself |
 | `files-admin-on` | Added | third remote permission: the login may configure, index, create and delete files on this server (group `sdfilesadmin`) |
 | `files-on` and `files-off` | Added | per-account switch for the files route SDNet uses (group `sdfiles`) |
 | `files-write-on`, `-off` | Added | per-account switch for changing files over the files route (group `sdfileswrite`); `files-off` removes it first |
 | `list.shared` | Added | administrator only: the files of the shared account that an account with shared read can open by name, and a count; with no shared account in service it says so |
-| `load.examples` | Added | administrator only: puts the shipped example programs into `examples.bp` of every account in service, or of the accounts named (a list), and compiles them there; keeps programs the administrator added |
+| `load.examples` | Added | puts the shipped example programs into `examples.bp` of the account you are in and compiles them there, for an account with `bp.edit` (refused without it, before anything is written); the administrator may name accounts (a list); keeps programs that were added |
 | `load.help` | Added | SDSYS loads the text of the `[?]` help buttons into the shared account; keeps records the administrator added |
 | `local.sdsys` | Added | administrator only: two lists of Windows users who may reach SDSYS from this computer, by `ssh -t` *user*`@localhost sd-sdsys` and from a program over the API at `127.0.0.1`, each with the SD password of `sdsys`; both empty as delivered; `add`, `remove` and `clear` per list, and also two fields on the remote administration view of `tool.remote`. The addresses of `remote.sdsys api` no longer cover `127.0.0.1` |
 | `remote.api` | Changed | `local` listens on 127.0.0.1 only (it listened on every address with the firewall shut); every move between `on`, `local` and `off` offers to restart SD (`local` from `off` did not), and `on` when it is already on does not ask; `restart` or `no.restart` answers the question in advance |
