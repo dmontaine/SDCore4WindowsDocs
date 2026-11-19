@@ -124,10 +124,10 @@ login to guess the password from offline.
 | **Where** | `%USERPROFILE%\.sdcore\known_servers`, or the file named by the environment variable `SD_KNOWN_SERVERS`; one line per server, `host:port` and the digits. A different port is a different server |
 | **When it is checked** | right after the secure connection is made and before anything is sent — no login byte, no password |
 
-**A changed certificate is refused**, with *"THE SERVER'S CERTIFICATE HAS CHANGED
-since this client first connected to host:port (pinned ..., now ...). The
-connection was refused before any password was sent. If the server was
-reinstalled, remove the line for host:port from ... and connect again"*. Nothing
+**A changed certificate is refused**, with *"The certificate of host:port has
+changed since the first connection (pinned ..., now ...). No password was sent.
+If the server was reinstalled, remove the line for host:port from ... and connect
+again."* Nothing
 updates the file by itself and nothing asks you; **removing the line is the
 remedy**, and only if you know why the certificate changed. **A file that cannot
 be opened or written refuses the connection** ("cannot pin the server: cannot

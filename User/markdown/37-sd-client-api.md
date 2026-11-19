@@ -11,9 +11,12 @@ talks to SD needs API access and may need nothing else.
 
 ## The library
 
-Four DLLs are installed. They are built from one source: each pair is the same
-code compiled twice under two output names, so the two files are not identical
-on disk but behave identically.
+The client library is written new for SD Core (a clean-room library under the
+Blue Oak Model License 1.0.0), so an application of any licence may link it.
+It is delivered as binaries in the release package's `clients` folder
+(`clients\Windows64` and `clients\Windows32`); its source is not published.
+Four DLLs are installed: each pair is the same code under two names, so the two
+files are not identical on disk but behave identically.
 
 | | |
 |---|---|
@@ -24,7 +27,12 @@ The `*clilib` names are what existing applications ask for; the `*client` names
 are for new work. **Renaming one to the other does not work**: an import library
 records the DLL name its symbols come from, so an application built against
 `sdclilib` loads `sdclilib.dll` whatever you call the file on disk. That is why
-both names are built rather than one being a copy of the other.
+both names are delivered rather than one being a copy of the other.
+
+**The installer copies them from the `clients` folder beside it.** An installer
+run without that folder beside it (one built from a copy of the source) installs
+no client library; copy the files from a release package's `clients` folder
+instead.
 
 > **The architecture must match the application, not the machine.** A 32-bit
 > application on 64-bit Windows needs the 32-bit DLL. The 32-bit build is a
