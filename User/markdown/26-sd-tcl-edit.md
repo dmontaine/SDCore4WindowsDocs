@@ -154,12 +154,12 @@ it always has — signing in as SDSYS is what grants somebody the right not
 to have to.
 
 **`modify.account` refuses `SDSYS` as the target, for these keywords and
-every other one, before the keyword is even read** — SDSYS's own routes are
-not a setting to change:
+every other one, before the keyword is even read** — SDSYS's remote access is
+opened and shut with `remote.sdsys`, not here:
 
 ```
 :modify.account sdsys os-off
-Remote access is never available to SDSYS; it is administered at this computer
+modify.account does not change sdsys, the administrator; its remote access is opened and shut with remote.sdsys
 ```
 
 **And a session with no terminal is refused before anything is written** — an

@@ -62,8 +62,8 @@ the setting and then end their session.
 
 **Every one of these words is written to the audit trail** (`modify.account
 sh-on account=fred` and its siblings), and **SDSYS is never a target**: the
-account is refused before the word is read, whatever you asked for, with *"Remote
-access is never available to SDSYS; it is administered at this computer"* (SDSYS's own routes are not a setting; see
+account is refused before the word is read, whatever you asked for, with *"modify.account
+does not change sdsys, the administrator; its remote access is opened and shut with remote.sdsys"* (SDSYS's own routes are not a `modify.account` setting; see
 [Read this before anything
 else](01-accounts-and-security.html#read-this-before-anything-else-being-sdsys-is-the-whole-of-it)).
 A group account is refused too for the `sh-on`/`sh-off`/`os-on`/`os-off` forms: it
