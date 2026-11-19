@@ -120,15 +120,16 @@ password; the list is empty as delivered (see
 ## A tunnelled connection does not show where it began
 
 An ssh tunnel (port forwarding to the API port) ends on this computer, so what SD sees is an
-address of this computer and not the address of the computer the person is sitting at. **Do not
-put this computer's own address, or a range that contains it, in the list.** A tunnel that is
-aimed at this computer's network address arrives from that address and is then listed: whoever
-holds an ssh login on this computer that may forward a port can reach SDSYS's sign-in with the
-password alone. Name only the addresses of the administration computers. A tunnel that ends on the
-loopback address (`127.0.0.1`) is never matched against the list: SD admits it only when the
-program at the other end is run by a Windows user the administrator listed in
-[Reaching SDSYS from Your Own Login](22b-reaching-sdsys-from-your-own-login.html), and refuses it
-otherwise, whatever this list holds. Listing the loopback address does nothing.
+address of this computer and not the address of the computer the person is sitting at. SD therefore
+treats a connection from **any of this computer's own addresses** as coming from this computer:
+loopback (`127.0.0.1`, `::1`), and also the computer's own network addresses, read from its
+interfaces at each sign-in. Such a connection is never matched against the list. A loopback one is
+admitted only when the program at the other end is run by a Windows user the administrator listed
+in [Reaching SDSYS from Your Own Login](22b-reaching-sdsys-from-your-own-login.html); one from the
+computer's network address is refused for SDSYS whatever either list holds. So a tunnel aimed at
+this computer's network address cannot reach SDSYS's sign-in even if that address, or a range
+containing it, is in the list. Listing it does nothing, so name only the addresses of the
+administration computers.
 
 ## What refuses
 
