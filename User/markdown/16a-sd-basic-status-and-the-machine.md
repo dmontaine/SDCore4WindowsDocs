@@ -146,13 +146,15 @@ names something else entirely.** This program, in an ordinary account:
       v6 = pterm(1, '')
 ```
 
-compiles to, at the **last line of the program**:
+compiles to, at the **last line of the program** (line 4 of this four-line
+file, counting its `end`):
 
 ```
-41: Matrix KERNEL is not referenced in a DIM statement
-41: Matrix OPTION is not referenced in a DIM statement
-41: Matrix PTERM is not referenced in a DIM statement
+4: Matrix KERNEL is not referenced in a DIM statement
 WARNING: KERNEL is not assigned a value
+WARNING: OPTION is not assigned a value
+WARNING: PTERM is not assigned a value
+1 error(s)
 ```
 
 A name the compiler does not know as a function is read as a **matrix

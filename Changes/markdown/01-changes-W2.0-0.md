@@ -311,7 +311,7 @@ The kernel, `sd.conf`, and the numbered keys.
 | default terminal | Changed | 140 by 43 |
 | `deadlock=2` | Added | saves the lock tables when a deadlock is found <!--s 500--> |
 | `fileinfo()` | Added | the keys 1022 to 1040 as the openQM manual numbers them; `fl$seqtype`, `fl$locks`; 1021 now answers the user numbers <!--s 62 113 498 337--> |
-| index clear failures | Changed | an index whose clear could not shrink its file reports an error |
+| print and index clear failures | Changed | a print job Windows refuses is reported on the terminal (*Print job not sent: Windows refused it for printer ...*), and an index whose clear could not shrink its file reports an error |
 | `intprec` | Changed | default 11 <!--s 6--> |
 | lock table | Changed | the time each lock was taken and each wait began is noted; a program that filled the table can be logged out <!--s 487 344 532--> |
 | `logto` out of SDSYS | Changed | prints once that the session keeps its Windows administrator rights and to sign out and in to work without them (Windows only) |
