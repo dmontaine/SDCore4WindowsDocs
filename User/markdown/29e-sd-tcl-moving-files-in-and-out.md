@@ -49,7 +49,11 @@ Transfer closed (closed here): 2 file(s), 18422 bytes
 
 The SHA-256 of each file is printed so that you can compare it with the same sum taken on your own
 computer (`sha256sum orders.csv`, or `Get-FileHash orders.csv` in PowerShell): equal sums mean the file
-arrived exactly as it left.
+arrived exactly as it left. PowerShell prints the sum in capitals and SD in small letters; the case of the
+letters does not matter.
+
+**Each transfer is a connection of its own.** When it ends, the sftp program is disconnected; to `send`
+after a `receive` (or to `receive` again), type the command and connect the sftp program again.
 
 **The files are records of the file `xfer.in`** in your account, which SD makes the first time you use
 `receive`. Each file is one record, its name the record id, each line a field:
