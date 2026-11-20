@@ -64,7 +64,7 @@ they were doing.
 | `api-listener.ps1` | `remote.api on` \| `off` - writes or comments out the `APIPORT` line in `sd.conf` |
 | `api-firewall.ps1` | `remote.api on` \| `local` - opens or restricts the API port |
 | `sd-path.ps1` | `append.sd.path on` \| `off` - puts SD's program directory on the system PATH, or takes it off |
-| `restart-sd.ps1` | offered by `remote.api on` and `off`, because the listener is only read at start-up |
+| `restart-sd.ps1` | offered by `remote.api on`, `local` and `off`, because the listener is only read at start-up; it runs as a one-time SYSTEM task, and if the restart fails, `remote.api` shows that task's lines (also kept in `C:\ProgramData\SD\restart-sd.log`) |
 | `dism-capability.ps1` | loaded by `install-ssh.ps1` and `remove-ssh.ps1`, never run on its own. It reads, adds and removes a Windows capability through `dism.exe` |
 
 The verbs are covered in the SD Core for Windows administrator documentation,
