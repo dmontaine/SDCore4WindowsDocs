@@ -213,6 +213,32 @@ which half succeeded and prints the two commands that set the rule by hand.
 This is a real state and not a theoretical one: the setting and the rule are
 different objects and either can fail on its own.
 
+**A Windows firewall Block rule wins over SD's own rule, and SD reports one but
+never removes it.** Windows makes such a rule when somebody presses Cancel at
+its "allow this program through the firewall?" alert for `sdwind.exe`, and an
+administrator or another tool may make one on purpose. While an enabled inbound
+Block rule covers `sdwind.exe` (the program SD's API listens in) or TCP port
+4247, other computers cannot connect, whatever `remote.api on` set. So
+`remote.api on`, `remote.api` with no word, and the `tool.remote` page each name
+the rule:
+
+```
+WARNING - the Windows firewall rule "<display name>" (<name>) BLOCKS the API,
+so other computers cannot connect until it is disabled or removed
+```
+
+SD leaves the rule alone because it may be somebody's deliberate choice. To let
+other computers in, an administrator disables or removes it in Windows Defender
+Firewall with Advanced Security (`wf.msc`, Inbound Rules), or from an elevated
+PowerShell with the name the warning gives:
+
+```
+Disable-NetFirewallRule -Name "<name>"
+```
+
+Doing so opens the API port to every computer the network lets reach this one,
+subject to SD's own rule and SD's sign-in.
+
 ## append.sd.path
 
 ```
