@@ -27,6 +27,14 @@ sd -stop
 sd -start
 ```
 
+**If SD stops on its own, the service starts it again.** When SD's background
+program ends without being asked to (it crashed, or something ended it), the
+service starts SD again after 5 seconds, and once more after 15 seconds if it
+stops again; after that it leaves it stopped until the next day or the next
+restart, so a fault that keeps SD from running is not hidden by a loop. A stop
+you asked for, with `sd -stop` or `Stop-Service SD`, is never undone. The
+service's log, `C:\ProgramData\SD\sdsvc.log`, says which of the two it was.
+
 **A session still running ten seconds after the stop is ended.** `sd -stop`
 and `sd -restart` send every session the termination signal, wait up to ten
 seconds for them to leave, and end any SD process still running by force (the
