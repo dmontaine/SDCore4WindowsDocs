@@ -141,9 +141,37 @@ to it.
 and says exactly what it destroys and where. **A silent uninstall never
 deletes the database**, whatever the prompt would have offered.
 
-**The administrator's scheduled jobs are removed either way**: every SD task
-in Task Scheduler and its definition, since a task left behind would name a
-program that is gone.
+**The administrator's scheduled jobs: their tasks are removed by every
+uninstall, and their definitions stay with a kept database.** Every SD task in
+Task Scheduler goes, since a task left behind would name a program that is gone.
+The definitions (`C:\ProgramData\SD\sd-jobs`) are in the data folder, so a
+**Keep** leaves them and a **Delete** takes them with the folder. After a
+reinstall over a kept database the closing page says how many definitions it
+found and that none is scheduled: Windows lets only SDSYS register a task that
+runs as SDSYS, so the installer cannot give them their tasks back. `set.job`
+lists them with no next run; `set.job change <name> <job> <schedule>` in an SDSYS
+session gives one its task again.
+
+**The access groups stay with the accounts you keep.** An interactive uninstall
+removes `sdsshonly`, the group that denies the console and Remote Desktop to
+accounts confined to SD, because it would otherwise go on denying them after SD
+is gone. The six groups that say which account may use ssh (`sdssh`), the API
+(`sdapi`), files (`sdfiles`, `sdfileswrite`, `sdfilesadmin`) and the AI
+(`sdaiusers`) are kept when the database and the Windows accounts are kept, so a
+reinstall finds them and leaves every account's ssh, API, files and AI access as
+it was. They go with the accounts, if you choose to remove those, and where no
+database is left; a silent uninstall keeps them. A machine whose groups were
+already gone gets them made again: ssh for every member of `sdusers`, and no one
+for the API, files or the AI, as the closing page says.
+
+**Remote administration is closed by every uninstall, and a reinstall says it
+was on.** The uninstaller shuts it (the SDRADMIN account, its `sshd_config`
+block and its broker task) and, when it was on, notes that in the same registry
+key as the API's note. After a reinstall over a kept database the closing page
+says remote administration is off and was on before. Windows registers the
+broker task only for SDSYS itself, so the installer cannot open it again;
+`remote.sdsys on` in an SDSYS session does. The note is removed by that install,
+and by any uninstall that leaves no database.
 
 **The uninstaller does not remove OpenSSH.** It may predate SD or be in use by
 something else. It does restore `sshd_config`, keeping the original as
