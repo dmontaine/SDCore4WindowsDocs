@@ -148,9 +148,11 @@ The definitions (`C:\ProgramData\SD\sd-jobs`) are in the data folder, so a
 **Keep** leaves them and a **Delete** takes them with the folder. After a
 reinstall over a kept database the closing page says how many definitions it
 found and that none is scheduled: Windows lets only SDSYS register a task that
-runs as SDSYS, so the installer cannot give them their tasks back. `set.job`
-lists them with no next run; `set.job change <name> <job> <schedule>` in an SDSYS
-session gives one its task again.
+runs as SDSYS, so the installer cannot give them their tasks back. **The closing
+page gives the exact steps, at the top, in bold red**: sign in to Windows as SDSYS, start SD Core and type
+one line for each definition, such as `set.job change nightly backup-all daily 02:30`,
+with that job's own name, job and schedule. `set.job` lists them with no next run
+until you have.
 
 **The access groups stay with the accounts you keep.** An interactive uninstall
 removes `sdsshonly`, the group that denies the console and Remote Desktop to
@@ -169,9 +171,10 @@ was on.** The uninstaller shuts it (the SDRADMIN account, its `sshd_config`
 block and its broker task) and, when it was on, notes that in the same registry
 key as the API's note. After a reinstall over a kept database the closing page
 says remote administration is off and was on before. Windows registers the
-broker task only for SDSYS itself, so the installer cannot open it again;
-`remote.sdsys on` in an SDSYS session does. The note is removed by that install,
-and by any uninstall that leaves no database.
+broker task only for SDSYS itself, so the installer cannot open it again.
+**The closing page gives the exact steps, at the top, in bold red**: sign in to Windows as SDSYS, start SD
+Core and type `remote.sdsys on`. The note is removed by that install, and by any
+uninstall that leaves no database.
 
 **The uninstaller does not remove OpenSSH.** It may predate SD or be in use by
 something else. It does restore `sshd_config`, keeping the original as
