@@ -145,14 +145,18 @@ deletes the database**, whatever the prompt would have offered.
 uninstall, and their definitions stay with a kept database.** Every SD task in
 Task Scheduler goes, since a task left behind would name a program that is gone.
 The definitions (`C:\ProgramData\SD\sd-jobs`) are in the data folder, so a
-**Keep** leaves them and a **Delete** takes them with the folder. After a
-reinstall over a kept database the closing page says how many definitions it
-found and that none is scheduled: Windows lets only SDSYS register a task that
-runs as SDSYS, so the installer cannot give them their tasks back. **The closing
-page gives the exact steps, at the top, in bold red**: sign in to Windows as SDSYS, start SD Core and type
-one line for each definition, such as `set.job change nightly backup-all daily 02:30`,
-with that job's own name, job and schedule. `set.job` lists them with no next run
-until you have.
+**Keep** leaves them and a **Delete** takes them with the folder. **A reinstall
+over a kept database schedules them again.** Windows lets only SDSYS register a
+task that runs as SDSYS, so the installer does it as SDSYS: it starts one
+Windows task as SYSTEM, `sdsvc.exe -restore-kept`, which runs a fixed script as
+SDSYS. The script gives each kept definition to the same checking step as
+`set.job` itself, so a definition that is damaged or edited is refused rather than
+trusted, and a job that is already scheduled is replaced, not doubled. The closing
+page says how many were scheduled again. **If any could not be, the closing page
+says so at the top, in bold red, with the reason and the exact steps**: sign in to
+Windows as SDSYS, start SD Core and type one line for each definition, such as
+`set.job change nightly backup-all daily 02:30`, with that job's own name, job and
+schedule.
 
 **The access groups stay with the accounts you keep.** An interactive uninstall
 removes `sdsshonly`, the group that denies the console and Remote Desktop to
@@ -166,15 +170,18 @@ database is left; a silent uninstall keeps them. A machine whose groups were
 already gone gets them made again: ssh for every member of `sdusers`, and no one
 for the API, files or the AI, as the closing page says.
 
-**Remote administration is closed by every uninstall, and a reinstall says it
-was on.** The uninstaller shuts it (the SDRADMIN account, its `sshd_config`
-block and its broker task) and, when it was on, notes that in the same registry
-key as the API's note. After a reinstall over a kept database the closing page
-says remote administration is off and was on before. Windows registers the
-broker task only for SDSYS itself, so the installer cannot open it again.
-**The closing page gives the exact steps, at the top, in bold red**: sign in to Windows as SDSYS, start SD
-Core and type `remote.sdsys on`. The note is removed by that install, and by any
-uninstall that leaves no database.
+**Remote administration is closed by every uninstall, and a reinstall over a kept
+database opens it again if it was on.** The uninstaller shuts it (the SDRADMIN
+account, its `sshd_config` block and its broker task) and, when it was on, notes
+that in the registry key beside the API's note, which only an administrator can
+write. The reinstall reads that note as SDSYS, through the same SYSTEM task as
+the jobs, and opens it again only if no one but SYSTEM, Administrators and
+TrustedInstaller can write the note and it says exactly `on`. The note is
+deleted whatever it said, so nothing planted there can wait for a later install,
+and an uninstall that leaves no database removes it too. **If it could not be
+opened again, the closing page says so at the top, in bold red, with the reason
+and the exact steps**: sign in to Windows as SDSYS, start SD Core and type
+`remote.sdsys on`.
 
 **The uninstaller does not remove OpenSSH.** It may predate SD or be in use by
 something else. It does restore `sshd_config`, keeping the original as
