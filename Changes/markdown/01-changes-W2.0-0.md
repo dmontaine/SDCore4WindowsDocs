@@ -77,7 +77,7 @@ Administrator commands from the openQM list.
 | `lock.tracer` | Added | administrator only: logs every lock taken and released, with program and line, to the file `locktrace`, which only the SD service writes |
 | `logout` | Changed | `logout n group` also ends the phantoms n started; `logout` of a session whose process has gone clears the entry and its locks <!--s 386--> |
 | `newvoc.mods` | Added | an optional directory file of VOC records of your own in the SD system directory, written to every account's VOC (SDSYS's included) after the standard ones at install and at every `update.accounts`; an upgrade that keeps the accounts leaves the file where it is <!--s 501--> |
-| `SCREENTHEME` | Changed | readable with `config()`; the shipped `sd.conf` says `SCREENTHEME=paper`; an upgrade adds that line to a kept `sd.conf` that has none and changes a kept `SCREENTHEME=blue` to `paper` once (a comment line in the file marks the change, so setting `blue` again afterwards is kept; any other value is kept); a terminal with no color stays `mono` |
+| `SCREENTHEME` | Changed | readable with `config()`; the shipped `sd.conf` says `SCREENTHEME=paper`, written only on a new install; an upgrade or a reinstall that keeps `sd.conf` leaves its `SCREENTHEME` exactly as it is, with or without the line, and each user keeps the theme they chose with Ctrl-T; a terminal with no color stays `mono` |
 
 ## API
 
