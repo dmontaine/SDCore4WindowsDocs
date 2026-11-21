@@ -183,6 +183,14 @@ opened again, the closing page says so at the top, in bold red, with the reason
 and the exact steps**: sign in to Windows as SDSYS, start SD Core and type
 `remote.sdsys on`.
 
+**The PATH box of a reinstall starts as you had it.** Every uninstall takes SD's
+program folder off the system PATH. When the folder was not on the PATH, the
+uninstaller notes that in the same registry key as the API's note (value `Path`,
+the word `off`), and the reinstall shows the "Add SD Core to the system PATH" box
+cleared instead of ticked. The box is still there to change. A folder that was on
+the PATH leaves no note, and the box is ticked as on a new machine. The install
+removes the note, and so does an uninstall that leaves no database.
+
 **The uninstaller does not remove OpenSSH.** It may predate SD or be in use by
 something else. It does restore `sshd_config`, keeping the original as
 `sshd_config.before-sd` — but it deliberately does **not** widen the firewall
