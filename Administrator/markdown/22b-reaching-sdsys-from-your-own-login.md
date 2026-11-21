@@ -11,7 +11,9 @@ were; a full uninstall removes them.
 * A user on the **ssh list** types `ssh -t fred@localhost sd-sdsys` on this computer, is asked for
   the SD password of `sdsys` once, and is then the administrator in an SDSYS session. The session
   takes the size of the user's window when it starts; a window made larger or smaller afterwards is
-  not passed on, so sign off and start it again to use the new size.
+  not passed on, so sign off and start it again to use the new size. The full-screen pages (`home`,
+  the `tool.` pages) need at least 140 columns by 43 lines, so make the window that big **before**
+  typing the `ssh` command (in Windows Terminal, maximize it and press Ctrl+minus until it is).
 * A user on the **api list** may have a program of theirs on this computer sign in as `sdsys` over
   the API at this computer's loopback address, `127.0.0.1`, with the SD password of `sdsys`.
 
