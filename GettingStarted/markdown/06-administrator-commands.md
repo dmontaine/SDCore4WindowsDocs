@@ -87,8 +87,10 @@ any local user through Task Manager or `Get-CimInstance Win32_Process`, so
 SD prompts for it instead, masked.
 
 Run with no argument it changes your own; from SDSYS, naming an account
-changes that account's — every account, including SDSYS's own. The password
-matters for **API logins only**. Console and ssh logins ask for nothing —
+changes that account's — every account, including SDSYS's own. **It needs an
+elevated session**, and says so at once in one that is not: a Windows
+administrator starts SD Core with *Run as administrator*; anyone else asks
+SDSYS. The password matters for **API logins only**. Console and ssh logins ask for nothing —
 see [Security](12-security.html).
 
 **SDSYS's *Windows* sign-in password is a different thing entirely** — set

@@ -15,7 +15,10 @@ accounts are a different thing again: a shared place, not a person.
 `create.account` can produce.** Administering SD — creating, deleting or
 granting accounts, changing system-wide state, reaching another account's
 files without a grant — means signing in to *Windows* as SDSYS and running
-`sd`, elevated. Being a Windows administrator grants nothing by itself: the
+`sd`, elevated. Signed in as SDSYS, the Start menu's **SD** asks Windows for
+that elevation itself: Windows shows its consent prompt and SD opens in SDSYS;
+declined, SD says SDSYS needs an elevated session and stops. Being a Windows
+administrator grants nothing by itself: the
 account that ran this installer is an ordinary account like any other once
 setup finishes, and **elevating a session does not make it SDSYS**.
 

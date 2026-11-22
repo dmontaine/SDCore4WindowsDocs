@@ -215,6 +215,13 @@ password first. With one, from SDSYS, it changes that account's — any
 account, including SDSYS's own — and does not ask for the old password: an
 administrator resetting a forgotten password does not know it.
 
+**It needs an elevated session.** The password store is open to administrators
+only, so in a session that was not started elevated `modify.password` says so
+before it asks for anything. A Windows administrator starts SD Core with
+*Run as administrator*; anyone else asks SDSYS to change it. (SD Core for Linux
+lets an ordinary account change its own password through a narrow helper;
+Windows has no such path yet.)
+
 **The password is never an argument, and a trailing token is refused rather
 than ignored:**
 
