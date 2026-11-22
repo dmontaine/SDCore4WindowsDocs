@@ -150,9 +150,10 @@ made the change: `cred-own set account=`*name*, or `cred-own refused account=`*n
 made of the refusal, such as `the-current-password-is-not-correct`, as SD Core for Linux writes it. These
 lines carry `uid=-`: the service has no SD user number.
 
-**A restart of SD asked for from a page writes `sd restart app=`*page*` status=asked`,** or `status=refused`
-when the restart could not be started (`tool.config`, after a change to a parameter SD reads only when it
-starts). The line is written before SD stops; the sessions the restart ends write nothing of their own.
+**A restart of SD asked for from a page writes `sd restart app=`*page*` status=asked`** (`tool.config`, after
+a change to a parameter SD reads only when it starts), before the restart is started, because the restart
+stops the SD service that writes the trail; a restart that then could not be started adds a second line,
+`status=refused`. The sessions the restart ends write nothing of their own.
 
 ## What the trail does not do
 
