@@ -66,9 +66,9 @@ Neither root can be changed. The installer does not ask.
 > system.
 
 The client DLLs are the one thing under `Program Files` meant to be copied
-elsewhere. `usr\clients\client64\` holds the 64-bit pair and
-`usr\clients\client32\` the 32-bit pair, for applications that link against
-SD. The 64-bit pair also appears in `usr\bin`, and that copy is the server's
+elsewhere. `usr\clients\client64\` holds the 64-bit pair, for applications
+that link against SD; there is no 32-bit client. The pair also appears in
+`usr\bin`, and that copy is the server's
 own — a local client connection resolves `sd.exe` beside the DLL, so only a
 copy sitting next to `sd.exe` can make one.
 

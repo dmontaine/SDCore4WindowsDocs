@@ -265,9 +265,9 @@ includes PowerShell (see [Differences from W1.0-0](01b-differences-from-w1-0-0.h
 
 | | |
 |---|---|
-| 64-bit | `sdclilib.dll` |
-| 32-bit | built separately; 32-bit remains a supported target, not a test convenience |
+| 64-bit | `sdclilib.dll` (and `sdclient.dll`) |
+| 32-bit | none; a 32-bit application must be rebuilt as 64-bit |
 
-**Both must speak SCRAM.** A client library that sends the password in clear
+**The library must speak SCRAM.** A client library that sends the password in clear
 is refused by the server — check which one your application is actually
 loading.

@@ -14,17 +14,12 @@ talks to SD needs API access and may need nothing else.
 The client library is written new for SD Core (a clean-room library under the
 Blue Oak Model License 1.0.0), so an application of any licence may link it.
 It is delivered as binaries in the release package's `clients` folder
-(`clients\Windows64` and `clients\Windows32`); its source is not published.
-Four DLLs are installed: each pair is the same code under two names, so the two
-files are not identical on disk but behave identically.
+(`clients\Windows64`); its source is not published. Two 64-bit DLLs are
+installed, `sdclilib.dll` and `sdclient.dll`: the same code under two names, so
+the two files are not identical on disk but behave identically.
 
-| | |
-|---|---|
-| 64-bit | `sdclilib.dll` and `sdclient.dll` |
-| 32-bit | `qmclilib.dll` and `qmclient.dll` |
-
-The `*clilib` names are what existing applications ask for; the `*client` names
-are for new work. **Renaming one to the other does not work**: an import library
+`sdclilib.dll` is the name existing applications ask for; `sdclient.dll` is for
+new work. **Renaming one to the other does not work**: an import library
 records the DLL name its symbols come from, so an application built against
 `sdclilib` loads `sdclilib.dll` whatever you call the file on disk. That is why
 both names are delivered rather than one being a copy of the other.
@@ -34,15 +29,16 @@ run without that folder beside it (one built from a copy of the source) installs
 no client library; copy the files from a release package's `clients` folder
 instead.
 
-> **The architecture must match the application, not the machine.** A 32-bit
-> application on 64-bit Windows needs the 32-bit DLL. The 32-bit build is a
-> shipping deliverable rather than a testing convenience.
+> **There is no 32-bit client.** The architecture must match the application,
+> not the computer, so a 32-bit application cannot load these DLLs; it has to be
+> rebuilt as a 64-bit program. **A program written for QM does not work with SD
+> out of the box**: the login, the network session and the server's rules have
+> changed, so it needs changing.
 
 ### Where they are, and how to use them
 
 ```
 C:\Program Files\SD\usr\clients\client64\     sdclilib.dll  sdclient.dll
-C:\Program Files\SD\usr\clients\client32\     qmclilib.dll  qmclient.dll
 ```
 
 Copy the DLL your application needs either **beside the application's own
@@ -52,7 +48,7 @@ and either works.
 > **`C:\Program Files\SD\usr\bin` is normally on the system PATH**, because the
 > installer offers to put it there — the *"Add SD Core to the system PATH"*
 > task, which is ticked unless you untick it, and it is what makes `sd` run from
-> any directory. **All four client DLLs live in that directory too**, so an
+> any directory. **Both client DLLs live in that directory too**, so an
 > application may find one without your having copied anything. That is
 > convenient, and it is not the same as choosing which copy it loads: PATH order
 > decides, and a stale copy earlier on the PATH wins. **Put the DLL where your
@@ -63,17 +59,14 @@ files, GNU-style, for linking rather than loading:
 
 ```
 client64\     libsdclilib.dll.a  libsdclient.dll.a
-client32\     libqmclilib.dll.a  libqmclient.dll.a
 ```
 
 They sit beside the DLLs so that everything a client *build* needs is in one
 place. **No header travels with them**: `sdclilib.h` reaches every installation
 at `C:\ProgramData\SD\sdsys\syscom\sdclilib.h`.
 
-**All four DLLs also appear in `C:\Program Files\SD\usr\bin`, beside `sd.exe`**,
-and each copy is byte-identical to the one under `usr\clients`. The 32-bit pair
-is there because `usr\bin` is on the PATH, and that is where a **32-bit
-administrative utility** finds its client. Those copies are the server's own and
+**Both DLLs also appear in `C:\Program Files\SD\usr\bin`, beside `sd.exe`**,
+and each copy is byte-identical to the one under `usr\clients`. Those copies are the server's own and
 are not the ones you should be taking — with one exception, which is the next
 section. **The import libraries are deliberately not in `usr\bin`**: a linker
 input has no business in a directory that goes on the PATH.

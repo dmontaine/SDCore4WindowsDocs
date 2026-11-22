@@ -1,42 +1,35 @@
 Title: Client distribution
-Subtitle: Which library an application needs, why there are four names, and the one file no installer can update.
+Subtitle: Which library an application needs, why there are two names, and the one file no installer can update.
 
-An application reaches SD Core through a client DLL. **You do not have to find
-it inside an installed SD system** — the clients are packaged separately, with
-their own installers, because the person writing an application and the person
-running the server are usually not the same person.
+An application reaches SD Core through a client DLL. **The installer puts the
+clients on the computer**, in the folders below; there is no client-only
+package.
 
-## The four names, and why
+## Two names, one library
 
-Two builds, each producing its DLL under **two names from one source in one
-build**:
+One 64-bit library, under **two names from one build**:
 
-| Build | Names | For |
-|---|---|---|
-| 64-bit | `sdclilib.dll` · `sdclient.dll` | new work, and existing SD applications |
-| 32-bit | `qmclilib.dll` · `qmclient.dll` | QM applications |
+| Names | For |
+|---|---|
+| `sdclilib.dll` · `sdclient.dll` | new work, and existing SD applications |
 
-**The `*clilib` names are what existing applications ask for and they never
-move.** `qmclilib.dll` in particular is the original QMClient library name —
-it is **how an unmodified QM application finds its client at all**, so it is a
-name rather than a label and it is not going to be renamed.
-
-The `*client` names are for new work and are what the installers put on `PATH`.
+**`sdclilib.dll` is the name existing applications ask for and it never
+moves.** `sdclient.dll` is for new work.
 
 > They are second **links**, not file copies. An import library records the DLL
 > name its symbols come from, so a renamed copy would send the application back
 > to the original.
 
-## Which one does my application need?
+## No 32-bit client
 
-| | |
-|---|---|
-| A 64-bit application | `sdclient.dll`, or `sdclilib.dll` if it already asks for that name |
-| A 32-bit application | `qmclient.dll`, or `qmclilib.dll` if it already asks for that name |
+**SD Core for Windows ships no 32-bit client library.** The architecture must
+match the application, not the computer, so a 32-bit application cannot load
+the 64-bit DLL; it has to be rebuilt as a 64-bit program.
 
-**The architecture must match the application, not the machine.** A 32-bit
-application on 64-bit Windows needs the 32-bit DLL. **The 32-bit build is a
-shipping deliverable, not a testing convenience.**
+**A program written for QM does not work with SD out of the box**, whatever its
+architecture: the login, the network session and the server's rules have
+changed (below, and [API access](09-api-access.html)), so such a program needs
+changing to work with SD.
 
 ## The one file no installer can update
 
@@ -61,13 +54,13 @@ credential to check; `modify.password` sets one.
 
 ## Connecting
 
-Your application code does not change. `SDConnect()` and `SDConnectLocal()`
-take the same arguments and return the same things they always did.
+`SDConnect()` and `SDConnectLocal()` take the same arguments and return the
+same things they always did.
 
 | | |
 |---|---|
 | `SDConnect()` | over the network, to port **4247** |
-| `SDConnectLocal()` | on the same machine. **Sends no password and never did**, so SCRAM does not apply |
+| `SDConnectLocal()` | on the same computer. **Sends no password and never did**, so SCRAM does not apply |
 
 BASIC programs reaching another SD server use the `!sdclient` class, which
 speaks the same SCRAM login, so a program that uses it needs no change.
@@ -75,34 +68,30 @@ speaks the same SCRAM login, so a program that uses it needs no change.
 Everything about what a connected session may open, the three gates it must
 clear, and the identity it runs as is on [API access](09-api-access.html).
 
-## Building from source
+## Where the clients are after an install
 
-**There is one repository and it builds all four DLLs**:
-<https://github.com/dmontaine/SDCore4Windows>. The client source is in it, at
-`sdb_ai/sd64/gplsrc/sdclilib`, and `make sd` produces the 64-bit and 32-bit
-pairs together with the server. **No built DLL is committed**, so a clone
-builds — the same no-binaries rule the whole repository follows.
-
-### Where the built clients are after an install
-
-The server installer places them under `C:\Program Files\SD`:
+The installer places them under `C:\Program Files\SD`:
 
 | | |
 |---|---|
-| `usr\clients\client64\` | `sdclilib.dll`, `sdclient.dll`, and the import libraries to link against |
-| `usr\clients\client32\` | `qmclilib.dll`, `qmclient.dll`, and their import libraries |
-| `usr\bin\` | **both** DLL pairs again, beside `sd.exe`. That directory is on `PATH`, so it is where a 32-bit utility finds its client at run time |
+| `usr\clients\client64\` | `sdclilib.dll`, `sdclient.dll`, and the import libraries (`libsdclilib.dll.a`, `libsdclient.dll.a`) to link against |
+| `usr\bin\` | the DLL pair again, beside `sd.exe`. That copy is the server's own: `SDConnectLocal()` starts the `sd.exe` beside the DLL, so only a copy next to `sd.exe` can make a local connection |
 
-**The C headers are not shipped yet.** Take them from the repository.
+**The C header is installed, but not beside the DLLs**: `sdclilib.h` is in
+`C:\ProgramData\SD\sdsys\syscom`, with the language bindings that ship:
+`sdclient.py` (Python), `sdclient.cs` (C#), `sdclient.php` (PHP),
+`sdclient.module` (Gambas), `sdclilibbind.pas` (Lazarus and Free Pascal),
+`sdclient.bas` (Visual Basic) and `sdclient.pb` (PureBasic).
 
-> **A note on how the 32-bit client is built, because it constrains changes to
-> it:** the DLL must stay a **single self-contained file that can be copied
-> next to an application** — hence static linking of the compiler runtime, and
-> hence a preference for Windows' own `bcrypt.dll` and `crypt32.dll` over
-> third-party crypto libraries. Any change to the client has to keep working in
-> a 32-bit process.
+If you need a client on a computer that has no SD Core, copy the pair from
+`usr\clients\client64` on one that does.
 
-## How the clients are published
+## Where the library comes from
 
-The server installer places all four DLLs, as the section above describes; there
-is no client-only package.
+The client library is a **clean-room** library, written without the original
+GPL client's source, so a commercial program may link to it. It is the same
+library for every SD Core. **Its source is not published and it is not built
+from this repository**: the DLLs are in the release package, in
+`clients\Windows64` beside the installer, each listed with its SHA-256 in that
+folder's `COMMIT.txt`, and the installer copies them from there. An installer
+run with no `clients` folder beside it installs no client library.
