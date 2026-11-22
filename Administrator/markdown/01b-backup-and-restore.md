@@ -159,7 +159,7 @@ and says which are not. Restore such an archive at the prompt.
 
 The packing of a backup and the placing of a restored account are done by SDSYS, which runs elevated;
 where they cannot be done, the verb says why and the page
-shows its last line on the status line. `F5` reads the directory, the archives and the sessions again,
+shows its last message on the status line. `F5` reads the directory, the archives and the sessions again,
 `F1` explains the page and `Ctrl-Q` leaves. Opening the page writes the audit line
 `tool start app=tool.backups`.
 
