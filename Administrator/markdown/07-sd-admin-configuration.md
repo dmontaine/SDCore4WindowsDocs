@@ -179,7 +179,7 @@ A row marked `*` is one where the file and the running SD disagree. The box at t
 parameter whether the sessions started now will read the file's value (`session`) or SD keeps the old
 one until it is restarted (`restart`). After `E` changes a `restart` parameter, a box says why a restart is
 needed, that a restart signs out everyone using SD and ends this session too, and offers **Restart** or
-**Not now** (the default): Restart closes the page, clears the screen, says SD is restarting and restarts it (the window closes), Not now leaves the change for SD's next start. **A name in the file that SD does not know is listed at the end
+**Not now** (the default): Restart closes the page, clears the screen, says SD is restarting and restarts it (the window closes), Not now leaves the change for SD's next start. The box is offered only when the file then differs from what SD is running with: a value set back to the one SD already runs with needs no restart. One audit line is written each time a restart is asked for: `sd restart app=tool.config status=asked`, or `status=refused` when the restart could not be started. **A name in the file that SD does not know is listed at the end
 as `unknown`, and the top of the page names it: SD does not start with it, and no new session starts
 while the file holds it** (the section *A name SD does not recognize stops it starting* above). `D`
 shows only the rows where the file and SD disagree, and `S` only the parameters the file sets. The last
