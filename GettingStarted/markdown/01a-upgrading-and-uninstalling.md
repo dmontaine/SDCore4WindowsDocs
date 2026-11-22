@@ -153,10 +153,12 @@ SDSYS. The script gives each kept definition to the same checking step as
 `set.job` itself, so a definition that is damaged or edited is refused rather than
 trusted, and a job that is already scheduled is replaced, not doubled. The closing
 page says how many were scheduled again. **If any could not be, the closing page
-says so at the top, in bold red, with the reason and the exact steps**: sign in to
-Windows as SDSYS, start SD Core and type one line for each definition, such as
-`set.job change nightly backup-all daily 02:30`, with that job's own name, job and
-schedule.
+says so at the top, in bold red, with the exact steps**: sign in to Windows as
+SDSYS, start SD Core and, at the colon prompt, type one line for each definition,
+such as `set.job change nightly backup-all daily 02:30`, with that job's own name,
+job and schedule. A definition that is damaged is shown as
+`set.job change nightly <job> <schedule>`: put in the job and the schedule it
+should have.
 
 **The access groups stay with the accounts you keep.** An interactive uninstall
 removes `sdsshonly`, the group that denies the console and Remote Desktop to
@@ -179,8 +181,8 @@ the jobs, and opens it again only if no one but SYSTEM, Administrators and
 TrustedInstaller can write the note and it says exactly `on`. The note is
 deleted whatever it said, so nothing planted there can wait for a later install,
 and an uninstall that leaves no database removes it too. **If it could not be
-opened again, the closing page says so at the top, in bold red, with the reason
-and the exact steps**: sign in to Windows as SDSYS, start SD Core and type
+opened again, the closing page says so at the top, in bold red, with the exact
+steps**: sign in to Windows as SDSYS, start SD Core and, at the colon prompt, type
 `remote.sdsys on`.
 
 **The PATH box of a reinstall starts as you had it.** Every uninstall takes SD's
