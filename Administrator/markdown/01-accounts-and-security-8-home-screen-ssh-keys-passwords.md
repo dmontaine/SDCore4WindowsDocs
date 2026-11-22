@@ -220,7 +220,8 @@ to administrators only, so a session that was not started elevated asks the SD
 service to make the change. The service changes one record only, the one of the
 Windows user the session runs as (it is never told an account), and only after
 the current password is proved; it writes the audit line
-`cred-own set account=`*name*, or `cred-own refused account=`*name*` mode=`*m*` reason=`*why*.
+`cred-own set account=`*name*, or `cred-own refused account=`*name*` mode=`*m*` reason=`*why*, *why* being one word
+made of the refusal, such as `the-current-password-is-not-correct`.
 If the SD service is not running, `modify.password` says so and changes nothing.
 This is the same result as SD Core for Linux, which uses a narrow helper for it.
 

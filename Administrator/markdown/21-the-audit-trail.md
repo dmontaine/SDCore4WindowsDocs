@@ -146,7 +146,8 @@ for an account they may not enter, so the register cannot be probed); and for `l
 
 **A person's own password changed outside an elevated session is written by the SD service**, which
 made the change: `cred-own set account=`*name*, or `cred-own refused account=`*name*` mode=`*m*` reason=`*why*
-(a wrong current password, a suspended account, an account that is not a person's own). These
+(a wrong current password, a suspended account, an account that is not a person's own), where *why* is one word
+made of the refusal, such as `the-current-password-is-not-correct`, as SD Core for Linux writes it. These
 lines carry `uid=-`: the service has no SD user number.
 
 ## What the trail does not do
