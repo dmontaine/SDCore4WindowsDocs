@@ -144,6 +144,11 @@ for an account they may not enter, so the register cannot be probed); and for `l
 `logto refused account=sdsys reason=sdsys is entered by its own session only`. Add and delete are
 `modify.account add account=`*name*` to=`*user* and `modify.account delete account=`*name*` from=`*user*.
 
+**A person's own password changed outside an elevated session is written by the SD service**, which
+made the change: `cred-own set account=`*name*, or `cred-own refused account=`*name*` mode=`*m*` reason=`*why*
+(a wrong current password, a suspended account, an account that is not a person's own). These
+lines carry `uid=-`: the service has no SD user number.
+
 ## What the trail does not do
 
 It does not show an account holder's own lines: the trail names every account, user and address on the

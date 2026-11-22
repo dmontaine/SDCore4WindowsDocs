@@ -215,12 +215,14 @@ password first. With one, from SDSYS, it changes that account's — any
 account, including SDSYS's own — and does not ask for the old password: an
 administrator resetting a forgotten password does not know it.
 
-**It needs an elevated session.** The password store is open to administrators
-only, so in a session that was not started elevated `modify.password` says so
-before it asks for anything. A Windows administrator starts SD Core with
-*Run as administrator*; anyone else asks SDSYS to change it. (SD Core for Linux
-lets an ordinary account change its own password through a narrow helper;
-Windows has no such path yet.)
+**Every account changes its own, elevated or not.** The password store is open
+to administrators only, so a session that was not started elevated asks the SD
+service to make the change. The service changes one record only, the one of the
+Windows user the session runs as (it is never told an account), and only after
+the current password is proved; it writes the audit line
+`cred-own set account=`*name*, or `cred-own refused account=`*name*` mode=`*m*` reason=`*why*.
+If the SD service is not running, `modify.password` says so and changes nothing.
+This is the same result as SD Core for Linux, which uses a narrow helper for it.
 
 **The password is never an argument, and a trailing token is refused rather
 than ignored:**
