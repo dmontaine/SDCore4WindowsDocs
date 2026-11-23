@@ -191,8 +191,8 @@ session: the next session starts from the defaults. Anything other than the thre
 names is refused, *"x is not a recognized NLS key"*.
 
 These are the same three values that **`getnls`** and **`setnls`** read and set
-from SD BASIC (see [Data Conversion](06-sd-basic-data-conversion.html)). SD Core
-is English only; `nls` has nothing to do with the language of messages, month
+from SD BASIC (see [Data Conversion](06-sd-basic-data-conversion.html)). SD Core for
+Windows is English only; `nls` has nothing to do with the language of messages, month
 names or day names.
 
 Large letters on the terminal, `block.term`, are described with `block.print` in

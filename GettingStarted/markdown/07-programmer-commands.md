@@ -188,7 +188,7 @@ reporting** with the terminal you connected from.
 
 The removed full-screen editors are a different matter: `update.record` and
 `modify` are gone and are not coming back. See
-[Not in SD Core](14-not-in-sd-core.html).
+[Not in SD Core for Windows](14-not-in-sd-core.html).
 
 ## Files
 

@@ -1,8 +1,8 @@
-Title: Installing SD Core: Warnings and Things to Know
+Title: Installing SD Core for Windows: Warnings and Things to Know
 Subtitle: What Setup changes in Windows, what to check afterwards, and what to do when a step does not complete.
 
-This page continues [Installing SD Core: What Lands Where and Changing
-It](01-installation-2-what-lands-where-and-changing-it.html).
+This page continues [Installing SD Core for Windows: What Lands Where and
+Changing It](01-installation-2-what-lands-where-and-changing-it.html).
 
 ## Warnings and things to know
 

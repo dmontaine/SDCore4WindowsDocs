@@ -1,7 +1,7 @@
 Title: Your first thirty minutes
 Subtitle: From a finished install to a working account, a file and a second user signing in over ssh.
 
-This page assumes SD Core is installed and you have never used SD Core for Windows
+This page assumes SD Core for Windows is installed and you have never used it
 before. It is a walkthrough, not a reference — every step links to the page
 that explains it properly.
 
@@ -83,7 +83,7 @@ operating-system permission (see *The SED Screen Editor* in the User set);
 **`edit`** opens the same record in Microsoft Edit and **`micro`** opens it in micro, and both come with SD. See
 [Development and file commands](07-programmer-commands.html#editors). The old
 full-screen editors `update.record` and `modify` are gone; see
-[Not in SD Core](14-not-in-sd-core.html).
+[Not in SD Core for Windows](14-not-in-sd-core.html).
 
 In **`ed`**: `i` to insert, type your lines, a full stop on its own line to stop
 inserting, then `fi` to file and exit.

@@ -10,7 +10,7 @@ an account may use is chosen when it is created — see
 [Per-account control](#per-account-control) below. This page covers the ssh
 route; [API access](09-api-access.html) covers the other.
 
-This has no equivalent in OpenQM or in SD on Linux, and it shapes almost
+This has no equivalent in OpenQM or in SD Core for Linux, and it shapes almost
 everything else about running SD Core on Windows.
 
 ## The rule, and the one exception

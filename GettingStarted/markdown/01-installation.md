@@ -1,4 +1,4 @@
-Title: Installing SD Core
+Title: Installing SD Core for Windows
 Subtitle: What the installer does to the machine, and the choices it puts in front of you.
 
 There is no compiler to run and no dependency to resolve. SD Core for Windows
@@ -208,7 +208,7 @@ the account's `ssh` simply starts working.
 
 ## Continued in
 
-[Installing SD Core: What Lands Where and Changing
+[Installing SD Core for Windows: What Lands Where and Changing
 It](01-installation-2-what-lands-where-and-changing-it.html) — where the files
 go, what the installer creates, OpenSSH, the full-screen editors, changing any
 of it afterwards, and the end of the installation.

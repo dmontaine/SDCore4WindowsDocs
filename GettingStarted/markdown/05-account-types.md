@@ -71,7 +71,7 @@ and of the routes. The same words change an account afterwards in
 `modify.account` — see [Managing accounts](05a-managing-accounts.html), which has a
 section on the edit switches. **No new account is an
 exception — not even the one the installer creates for whoever installed SD on a
-fresh machine** (see [Installing SD Core](01-installation.html#what-you-are-asked)); the accounts that keep
+fresh machine** (see [Installing SD Core for Windows](01-installation.html#what-you-are-asked)); the accounts that keep
 their shell, `OS.EXECUTE` and edit rights are the user accounts that already
 exist when the installing user upgrades.
 
@@ -83,7 +83,7 @@ remote doors are not among these words: `remote.sdsys on` opens remote administr
 separate account SDRADMIN over ssh, and `remote.sdsys api on` *address* opens SDSYS's API login
 for a listed address; both are shut as delivered. The test
 is made against the machine when you type the command. See
-[Installing SD Core](01-installation.html#what-you-are-asked).
+[Installing SD Core for Windows](01-installation.html#what-you-are-asked).
 
 ### What creating a user account actually does
 

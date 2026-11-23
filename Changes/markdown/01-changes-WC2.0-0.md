@@ -58,7 +58,7 @@ is the short form.
 
 **[REMOVED](#removed)**: what SD no longer has, and what to write instead.
 
-**[New Features Unique to SD Core](#new-features-unique-to-sd-core)**, not part of openQM and not on the spreadsheet:
+**[New Features Unique to SD Core for Windows](#new-features-unique-to-sd-core-for-windows)**, not part of openQM and not on the spreadsheet:
 [Administration](#administration) · [AI](#ai) · [API and client library](#api-and-client-library) ·
 [Commands](#commands) · [Data formats](#data-formats) · [Encryption](#encryption) · [Files](#files-1) ·
 [Installer](#installer) · [Screen library](#screen-library) · [SDNet](#sdnet) · [Security](#security) · [System](#system-1) ·
@@ -502,7 +502,7 @@ compiled with until it is compiled again.
 | `grant`, `revoke` and `list.grants` | Removed | write `modify.account` *account* `add` *user* and `modify.account` *account* `delete` *user* (the same group change and the same audit lines, as on SD Core for Linux); to see who is in an account read the members of its Windows group (`net localgroup sdu_`*name*); `list.voc.removed` names the replacement |
 | dictionary field numbers 9998 and 9999 | Removed | a `d`, `a` or `s` item whose location was 9998 gave the item count and one whose location was 9999 the record length in bytes; they are ordinary field numbers now. Write an I-type with `@ni` or `len(@record)` |
 
-## New Features Unique to SD Core
+## New Features Unique to SD Core for Windows
 
 Everything in this section is SD Core's own. None of it is on the openQM list, so none of it has a row in the
 feature spreadsheet: the administrator's gates and the shared account, the screen library, the installer's additions and

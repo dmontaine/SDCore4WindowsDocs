@@ -56,7 +56,7 @@ the command at all.
 ## Passwords are stronger, and yours to change
 
 **A password must now be at least 8 characters and contain a lower-case
-letter, an upper-case letter, a digit and a symbol**, everywhere SD Core
+letter, an upper-case letter, a digit and a symbol**, everywhere SD Core for Windows
 sets one: `modify.password`, `create.account`, an elevated session's
 first-run prompt, and the SDSYS password the installer asks for.
 
@@ -189,7 +189,7 @@ and [Upgrading and uninstalling](01a-upgrading-and-uninstalling.html).
 **Every installer screen was cut down to what you need to install**: what
 Setup changes, what to do next, and what to run if a step failed. The
 explanations of *why* are gone from the wizard and live instead in
-[Installing SD Core: Warnings and Things to Know](01-installation-3-warnings-and-things-to-know.html#warnings-and-things-to-know),
+[Installing SD Core for Windows: Warnings and Things to Know](01-installation-3-warnings-and-things-to-know.html#warnings-and-things-to-know),
 under *Warnings and things to know*. Nothing Setup actually does changed.
 
 **`voc_template` keeps SDSYS's own VOC current**: an upgrade replaces it, and

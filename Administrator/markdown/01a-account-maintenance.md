@@ -142,7 +142,7 @@ To keep an edit of your own to a record SD still ships, mark it — see below.
 
 ## Keeping your own version of a VOC record: `[locked]`
 
-This has no equivalent in OpenQM or in SD on Linux. Nothing you know from
+This has no equivalent in OpenQM or in SD Core for Linux. Nothing you know from
 another MultiValue system will tell you it exists.
 
 A site that has customized one of SD's own VOC records marks it by putting

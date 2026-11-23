@@ -1,7 +1,7 @@
-Title: Installing SD Core: What Lands Where and Changing It
+Title: Installing SD Core for Windows: What Lands Where and Changing It
 Subtitle: Where the files go, what the installer creates, OpenSSH, the editors, and changing the choices afterwards.
 
-This page continues [Installing SD Core](01-installation.html).
+This page continues [Installing SD Core for Windows](01-installation.html).
 
 ## What lands where
 
@@ -157,7 +157,7 @@ time. It closes on a keypress.
 
 ## Continued in
 
-[Installing SD Core: Warnings and Things to
+[Installing SD Core for Windows: Warnings and Things to
 Know](01-installation-3-warnings-and-things-to-know.html) — what to know
 before you install, after the install, when a step reports that it did not
 complete, and uninstalling.

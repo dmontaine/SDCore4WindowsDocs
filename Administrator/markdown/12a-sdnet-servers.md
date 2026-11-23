@@ -136,7 +136,7 @@ the **same key** therefore has the same hash, and a pin does not go stale at a
 renewal; a new key is a new hash and the pin has to be set again.
 
 **How the other administrator gets the hash.** The administrator of the server
-being defined asks that server for it. On a Windows SD Core server, `settings.report`
+being defined asks that server for it. On an SD Core for Windows server, `settings.report`
 (see [Backup and Restore](01b-backup-and-restore.html)) writes a line
 `public key sha256: ` followed by the 64 digits in the `[api]` section of its report.
 It decodes the certificate in `C:\ProgramData\SD\sd-tls\api.pem` and never prints the

@@ -1,4 +1,4 @@
-Title: SD Core - Introduction and Getting Started
+Title: SD Core for Windows - Introduction and Getting Started
 Subtitle: What a multivalue database is, what SD is, the four components, and your first session.
 
 This page orients you to SD Core for Windows: what a multivalue database is,
@@ -147,7 +147,7 @@ installed as a service** — something Windows can draw a UAC consent prompt
 on. Over an ordinary ssh session there is no such screen, and in any case
 SDSYS itself has no ssh route to arrive over.
 
-## What is not in SD Core
+## What is not in SD Core for Windows
 
 The following were in OpenQM, in ScarletDME, or in upstream `sdb64`, and
 are not in SD Core for Windows:
