@@ -114,7 +114,7 @@ connect. See [API access](09-api-access.html).
 
 ## What this release is
 
-**W2.0-0.** Windows only, and English only. SD Core for Linux is a separate
+**WC2.0-0.** Windows only, and English only. SD Core for Linux is a separate
 project and this is not a build of it.
 
 **It is a hobby project with no release schedule.**
@@ -158,7 +158,8 @@ differently from OpenQM and is not described here**, and **anything in these
 pages that turns out not to be true of the build you are running**. The second
 is as valuable as the first.
 
-**Quote the version as `W2.0-0`** — the string in the header bar of every
+**Quote the version as `WC2.0-0`** — the string in the header bar of every
 page here, in the installer's file name, and in what `sd --version` reports.
-The bare `2.0-0` is the same release; the `W` says it is the Windows one, and
-that is the part worth keeping in a report.
+The bare `2.0-0` is the same release; the `WC` says it is SD Core for Windows
+(SD Core Solo for Windows is `WS2.0-0`), and that is the part worth keeping in
+a report.

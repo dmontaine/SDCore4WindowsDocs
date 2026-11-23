@@ -304,7 +304,7 @@ config contrib             display the contributors
 
 ```
 :config
-Virtual Machine Version Number W2.0-0
+Virtual Machine Version Number WC2.0-0
 APIPORT   4247
 CLEANUP   300 seconds
 CMDSTACK  99

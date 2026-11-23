@@ -40,7 +40,7 @@ behind a warning that gives both sizes until the window is big enough again.
  File  Go  View  AI  Help                                                       home  alice@sales
 
    alice @ sales                                                  <> Switch account   -> Sign out
-   Thursday 22 Oct 2026  -  18:52  -  SD Core for Windows W2.0-0
+   Thursday 22 Oct 2026  -  18:52  -  SD Core for Windows WC2.0-0
 
    My tools
      [=]                  </>

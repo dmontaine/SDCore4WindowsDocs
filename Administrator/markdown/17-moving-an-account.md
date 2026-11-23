@@ -93,7 +93,7 @@ plain ASCII text: a header, then one section per account.
 ```
 format: 1
 product: windows-full
-sd.version: W2.0-0
+sd.version: WC2.0-0
 created: 2026-10-18T11:49:48
 host: oldbox
 source.root: C:\ProgramData\SD

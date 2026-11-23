@@ -1,8 +1,8 @@
-Title: Changes in W2.0-0
+Title: Changes in WC2.0-0
 Subtitle: What was added, changed and removed since W1.1-3 (10 October 2026), by section and in alphabetical order.
 Columns: 23 11 66
 
-**This is the list of what changed between W1.1-3 and W2.0-0.** The release changelog
+**This is the list of what changed between W1.1-3 and WC2.0-0.** The release changelog
 (`sdsys/changelog`) has the full story of each change: what it does, why, and what it does not do. This document
 is the short form.
 
@@ -409,7 +409,7 @@ The debugger, from the openQM list.
 
 ## REMOVED
 
-These were in W1.1-3 - or were added and taken out again during W2.0-0 - and **SD no longer has them**. This is the one place where a removal is listed,
+These were in W1.1-3 - or were added and taken out again during WC2.0-0 - and **SD no longer has them**. This is the one place where a removal is listed,
 whatever the area it belonged to. Most were removed because they existed only to make SD behave like another MultiValue
 product, or gave a second way to do something SD already does one way. **A program, a login paragraph or a `$basic.options` record that uses one has to
 be edited**; the last column says what to write instead. A program that was compiled with a removed mode keeps what it was
@@ -419,7 +419,7 @@ compiled with until it is compiled again.
 |---|---|---|
 | AccuTerm terminal types | Removed | the eleven `-at` terminal types and AccuTerm's escape sequences |
 | `$contrib` and `$licence` | Removed | the VOC records of the contributors and the license notice; read the files `contrib` and `licence` in the system folder, as on SD Core for Linux |
-| `$mode` words that imitated other products | Removed | `prclose.default.0` (write `printer close on` *unit*), `unassigned.common` (a common variable starts as zero), `no.case.invert` (give `input` the `nocaseinvert` clause) and `optional.then.else` (a `read` takes a `then` or an `else`) are refused now with *Unrecognized mode name*; `conditional.statements`, `implied.stop` (end a program with `stop`) and `exception.save.stack` (write `saving.stack` on the `catch`) were added and removed within W2.0-0, so they never shipped |
+| `$mode` words that imitated other products | Removed | `prclose.default.0` (write `printer close on` *unit*), `unassigned.common` (a common variable starts as zero), `no.case.invert` (give `input` the `nocaseinvert` clause) and `optional.then.else` (a `read` takes a `then` or an `else`) are refused now with *Unrecognized mode name*; `conditional.statements`, `implied.stop` (end a program with `stop`) and `exception.save.stack` (write `saving.stack` on the `catch`) were added and removed within WC2.0-0, so they never shipped |
 | `option` words that imitated other products | Removed | `option pick` and 22 words, refused now with *Option name not recognized*: `assoc.unassoc.mv`, `pick.breakpoint`, `pick.breakpoint.u`, `pick.explode`, `pick.grand.total`, `pick.implied.eq`, `pick.null`, `pick.wildcard`, `qualified.display`, `with.implies.or`, `query.no.case`, `query.priority.and`, `ampm.upcase`, `crdb.upcase`, `no.date.wrapping`, `space.mct`, `lock.beep`, `ed.no.query.fd`, `create.file.upcase`, `select.keep.case`, `debug.rebind.keys`, `proc.a`. SD does what it did with them off: write `with city = "Reno"`, use `like` for wildcards, brackets and `or` for the order of tests, `no.case` after an operator for case; times and amounts are `am`, `pm`, `cr`, `db`; a date such as 31 February rolls into the next month; a lock wait is silent; `fd` in `ed` asks first; `create.file` names a file in lower case |
 | screen save and restore | Removed | `save.screen()` and `restore.screen`: still exist and do nothing the terminal could see |
 | `sdterm` terminal type | Removed | with SDTerm and SDConsole, and the `term display` line about them |
@@ -873,7 +873,7 @@ Fixes that close a way round a gate, and what the gates now ask.
 | home screen small window | Changed | an account that starts in the home screen is signed out when the window is too small for it, even with the Terminal tile on (it used to be left at the prompt); SDSYS always starts at the prompt |
 | home screen sub-menus | Added | a tile can open a second page of tiles (a tile whose action is `menu:name`) with a Back tile, Esc and the path on the status line; eight deep; the delivered page declares none yet |
 | home screen tiles | Changed | a tile for a `tool.` page whose verb is not in the account's VOC is not shown |
-| home screen version | Added | the date line in the header ends with the product and its version: `SD Core for Windows W2.0-0` |
+| home screen version | Added | the date line in the header ends with the product and its version: `SD Core for Windows WC2.0-0` |
 | `ide` | Added | tree, tabs, compile errors table, find, run, catalog and debug; Ctrl-E zooms the editor to the whole screen, and Go > Edit in SED hands a record to `sed` |
 | `ide` breakpoints | Added | Shift-F7 or a click in the gutter marks a line of a program tab (`*`); F7 runs to the first mark, Build / Debug from the first line stops at line 1 with them set; what the debugger still has comes back as marks; up to 20, only lines where a statement begins |
 | `ide` autologout countdown | Added | with `autologout` set, the status line counts down the last 60 seconds before the session is signed out and says whether unsaved changes will be lost; any key stops it; it reads the inactivity clock `autologout` itself uses |
