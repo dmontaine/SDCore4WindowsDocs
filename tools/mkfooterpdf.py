@@ -36,7 +36,8 @@ WHAT IS LOST.  The join does not carry the bookmark tree, so this PDF has no
 outline.
 
 The section is the page's last <h2>; under the h2 "New Features Unique to SD
-Core" it is that h2 and the last <h3>.
+Core for Windows" it is that h2 and the last <h3>.  (22 Nov 26: the heading
+took the product's full name, owner's naming rule; this constant follows it.)
 """
 
 import argparse
@@ -57,7 +58,7 @@ import urllib.parse
 import urllib.request
 import uuid
 
-UNIQUE = 'New Features Unique to SD Core'
+UNIQUE = 'New Features Unique to SD Core for Windows'
 
 
 def find_browser():
