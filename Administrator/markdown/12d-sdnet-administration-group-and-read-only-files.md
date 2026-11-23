@@ -98,7 +98,8 @@ remote reads and queries work for that user; writes and locks work once it is al
 **On the machine being reached:** the groups `sdfiles`, `sdfileswrite` and `sdfilesadmin` are made, empty,
 by the installer beside `sdssh` and `sdapi`. An uninstall that keeps the database and the
 Windows accounts keeps them, with the members each had; they are removed with the accounts or
-where no database is left (a silent uninstall leaves all of the groups). The API listener has to be on
+where no database is left (a silent uninstall leaves all of the groups, and the next install that
+finds no database empties them). The API listener has to be on
 (`remote.api`, see [Remote Access and the Machine](05-remote-access-and-the-machine.html)),
 as for any API login.
 

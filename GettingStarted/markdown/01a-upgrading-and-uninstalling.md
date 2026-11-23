@@ -172,6 +172,13 @@ database is left; a silent uninstall keeps them. A machine whose groups were
 already gone gets them made again: ssh for every member of `sdusers`, and no one
 for the API, files or the AI, as the closing page says.
 
+**An install that finds no database empties these six groups.** With no database
+there are no SD accounts, so anyone still in a group (left by a silent
+uninstall, or by deleting the database by hand) holds access no SD account gave
+them. The install takes every member out, then applies only what you ticked for
+your own account. An upgrade, and a reinstall over a kept database, leave the
+groups exactly as they were.
+
 **Remote administration is closed by every uninstall, and a reinstall over a kept
 database opens it again if it was on.** The uninstaller shuts it (the SDRADMIN
 account, its `sshd_config` block and its broker task) and, when it was on, notes

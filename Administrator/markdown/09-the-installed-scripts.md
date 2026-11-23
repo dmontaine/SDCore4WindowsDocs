@@ -237,8 +237,10 @@ powershell -ExecutionPolicy Bypass -File "C:\Program Files\SD\sync-route-groups.
 Exit **0** success, **1** failure; it prints what it did either way. It creates
 the groups that decide which remote route an SD account may use, and seeds
 `sdssh` from `sdusers` so an upgrade from an install that predates them does not
-lose ssh; on a first install the installer passes `-FirstInstall` and `sdssh` stays
-empty. `-Check` prints
+lose ssh. When the installer finds no database it passes `-FirstInstall`: `sdssh` is
+not seeded, and every route group that was already there (`sdssh`, `sdapi`, `sdfiles`,
+`sdfileswrite`, `sdfilesadmin`, `sdaiusers`) is emptied, each member named as it goes;
+a member that cannot be removed is a failure (exit 1). `-Check` prints
 what it would do and changes nothing.
 
 ### Re-stamping the account directories
