@@ -17,7 +17,7 @@ They are listed so that a name in a log or an error message can be looked up.
 | `internal-marker.ps1` | a helper the installer's other scripts load, never run on its own. It writes the one-shot marker an `sd -internal` session needs, and removes it; it prints nothing |
 | `deny-logon.ps1` | denies a local group the console and Remote Desktop, which is what confines an account to ssh |
 | `finish-install.ps1` | the two steps that happen after the installer closes - SD opens so you can set your own password, then the post-install check runs |
-| `install-service.ps1` | creates, starts and removes the Windows service **String Database (SD)** |
+| `install-service.ps1` | creates, starts and removes the Windows service **SD Core for Windows** |
 | `install-editors.ps1` | makes sure the editors the `edit` and `micro` verbs run are on the machine |
 | `ssh-preflight.ps1` | asks whether SD may install here at all, and refuses a machine carrying an ssh server SD does not own. Runs before the wizard is drawn |
 | `sync-route-groups.ps1` | creates the two groups that decide which remote route an account may use, and, on an upgrade from before the groups, seeds `sdssh` so an existing install does not lose ssh (a first install leaves it empty) |

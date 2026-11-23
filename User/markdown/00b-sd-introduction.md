@@ -77,7 +77,7 @@ group.
 > logon token you cannot read the data tree at all, and the symptom
 > looks like a broken install.
 
-SD is already running. It is a Windows service — **String Database (SD)**
+SD is already running. It is a Windows service — **SD Core for Windows**
 — and Windows starts it at every boot. You do not type `sd -start`.
 
 ## Your first file and record

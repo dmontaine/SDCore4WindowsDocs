@@ -6,7 +6,7 @@ Subtitle: The service, starting and stopping, and what to do when the last shutd
 
 | | |
 |---|---|
-| Display name | **String Database (SD)** |
+| Display name | **SD Core for Windows** |
 | Service name | `SD` |
 | Start type | automatic — Windows starts it at every boot |
 | Created by | the installer, which also starts it |

@@ -79,7 +79,7 @@ copy sitting next to `sd.exe` can make one.
 | `sdusers` group | grants access to the files under `C:\ProgramData\SD` |
 | `sdsshonly` group | carries the deny rights that confine an account to ssh |
 | `sdu_<name>` | one group per account, created by `create.account` |
-| The service | **String Database (SD)**, automatic start |
+| The service | **SD Core for Windows**, automatic start |
 | ACLs | inheritance broken on `C:\ProgramData\SD`, access granted narrowly |
 
 Group membership is carried in a Windows logon token, which is issued at sign-in.
@@ -91,7 +91,7 @@ symptom looks like a broken install and is not one.
 
 | | |
 |---|---|
-| Display name | **String Database (SD)** |
+| Display name | **SD Core for Windows** |
 | Service name | `SD` |
 | Start type | automatic — Windows starts it at every boot |
 | Starting | `Start-Service SD`, or `sd -start` |

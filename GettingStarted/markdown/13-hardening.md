@@ -259,7 +259,7 @@ Scripts page in the Administrator set has the detail.**
 
 | | |
 |---|---|
-| The service | **String Database (SD)** |
+| The service | **SD Core for Windows** |
 | After an unclean shutdown | SD starts anyway, once the daemon's own liveness — not just the segment's presence — is checked. See [Running SD](03-running-sd.html) |
 | Nested sessions | SD will not start a second time inside itself — see [Running SD](03-running-sd.html) |
 | `sd <command>` | needs an elevated session, or an entry in `batch.jobs` — see above |

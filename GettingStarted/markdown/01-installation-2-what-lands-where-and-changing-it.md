@@ -48,7 +48,7 @@ your edits survive both upgrade and removal.
 | `sdu_<name>` | one per account, created by **`create.account`** |
 | `sdg_shared` | the group of the **shared account**, which the installer makes: files that every account can open by name (the Administrator guide's "The Shared Account"). It has no members |
 | `sdaiusers` | the AI gate: a person in it may use the AI provider SDSYS chooses. Made empty (the "open every access gate" box adds your own account) |
-| the service | **String Database (SD)** |
+| the service | **SD Core for Windows** |
 | the AI helper service | **`sd-ai`** (*SD Core AI helper*), running as the virtual account `NT SERVICE\sd-ai`, with its folder `C:\ProgramData\SD\ai` (settings and keys) and its program in `C:\Program Files\SD\lib\sd-ai`. It sends nothing until SDSYS has chosen a provider and set a key |
 | ACLs | inheritance is broken on `C:\ProgramData\SD` and access granted narrowly. This is what makes the database private from the rest of the machine |
 

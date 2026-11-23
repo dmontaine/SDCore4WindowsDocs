@@ -29,7 +29,7 @@ sd
 You land in **the SD account named after your Windows login**. Nothing asks for
 a password — Windows has already authenticated you.
 
-**SD is already running.** It is a Windows service, `String Database (SD)`, and
+**SD is already running.** It is a Windows service, `SD Core for Windows`, and
 Windows starts it at every boot. You do not type `sd -start`. See
 [Running SD](03-running-sd.html).
 
